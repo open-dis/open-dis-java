@@ -1,0 +1,38 @@
+Index: VariableDatum.java
+===================================================================
+--- VariableDatum.java	(revision 742)
++++ VariableDatum.java	(working copy)
+@@ -92,8 +92,32 @@
+ { return variableDatumLength; 
+ }
+ 
++/**
++ * The byte array in VariableDatum must be an eight-byte quanta. So a 12 byte
++ * piece of data must be expanded to 16 bytes. This changes the nature of the
++ * set method from the usual, since we have to allocate a new array to hold
++ * the data.
++ * 
++ * @param pVariableData 
++ */
+ public void setVariableData(byte[] pVariableData)
+-{ variableData = pVariableData;
++{ 
++    int unitsOfEight = pVariableData.length / 8;
++    int remainder = pVariableData.length % 8;
++    
++    if(remainder != 0)
++        unitsOfEight++;
++    
++    byte[] newData = new byte[unitsOfEight];
++    for(int idx = 0; idx < pVariableData.length; idx++)
++    {
++        newData[idx] = pVariableData[idx];
++    }
++    
++    variableData = newData;
++    
++    
++    variableData = pVariableData;
+ }
+ 
+ @XmlElement(name="variableData" )

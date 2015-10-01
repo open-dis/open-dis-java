@@ -1,0 +1,1528 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<!-- XML description file for the DIS-1995 protocol. A few classes require manual clean up and intevention. -->
+<!-- Classes that need hand-modification include SignalPdu, TransmitterPdu, ElectromagneticEmmissionPdu. -->
+
+<classes>
+
+<java imports="java.util.*, java.io.*"
+      package="edu.nps.moves.dis"/>
+
+<!--PES added for C# support-->
+<csharp using="System, System.Collections.Generic, System.Text, System.Diagnostics, System.Xml.Serialization, DISnet.DataStreamUtilities"/>
+<csharp namespace="DIS1995net"/>
+      
+<cpp namespace="DIS"/>
+
+<class name="AngularVelocityVector" inheritsFrom="root" 
+       comment="5.2.2: angular velocity measured in radians per second out each of the entity's own coordinate axes.">
+
+  <attribute name="x" comment="velocity about the x axis">
+    <primitive type="float" defaultValue="0"/>
+  </attribute>
+  
+  <attribute name="y" comment="velocity about the y axis">
+    <primitive type="float" defaultValue="0"/>
+  </attribute>
+  
+  <attribute name="z" comment="velocity about the zaxis">
+    <primitive type="float" defaultValue="0"/>
+  </attribute>
+  
+  </class>
+  
+  <class name="AntennaLocation" inheritsFrom="root" 
+       comment="5.2.3: location of the radiating portion of the antenna, specified in world coordinates and 
+       entity coordinates.">
+
+  <attribute name="antennaLocation" comment="Location of the radiating portion of the antenna in world 
+  coordinates">
+    <classref name="Vector3Double"/>
+  </attribute>
+  
+   <attribute name="relativeAntennaLocation" comment="Location of the radiating portion of the antenna 
+   in entity coordinates">
+    <classref name="Vector3Float"/>
+  </attribute>
+  
+  </class>
+  
+  <class name="BeamAntennaPattern" inheritsFrom="root"
+         comment="Section 5.2.4.2. Used when the antenna pattern type field has a value of 1. Specifies 
+         the direction, patter, and polarization of radiation from an antenna.">
+   
+   <attribute name="beamDirection" comment="The rotation that transformst he reference coordinate sytem 
+   into the beam coordinate system. Either world coordinates or entity coordinates may be used as the 
+   reference coordinate system, as specified by teh reference system field of the antenna pattern record.">
+    <classref name="Orientation"/>
+    </attribute>
+    
+    <attribute name="azimuthBeamwidth" commment="Full width of the beam to the -3dB power density points 
+    in the x-y plane of the beam coordinnate system.  Elevation beamwidth is represented by a 32 bit 
+    floating point number in units of radians.">
+      <primitive type="float" defaultValue="0"/>
+    </attribute>
+    
+    <attribute name="referenceSystem" commment="The reference coordinate system wrt which beam direction 
+    is specified. This field should not change over the duration of an exercise. World coordindate systemis 
+    prefered for exercises. The entity coordinate system should be used only when highly directional antennas must be precisely modeled.">
+      <primitive type="float" defaultValue="0"/>
+    </attribute>
+    
+     <attribute name="padding1" commment="Padding">
+      <primitive type="short" defaultValue="0"/>
+    </attribute>
+    
+    <attribute name="padding2" commment="Padding">
+      <primitive type="byte" defaultValue="0"/>
+    </attribute>
+    
+    <attribute name="ez" comment="Magnigute of the z-component in beam coordinates at some arbitrary 
+    single point in the mainbeam 
+    and in the far field of the antenna.">
+      <primitive type="float"/>
+    </attribute>
+    
+    <attribute name="ex" comment="Magnigute of the x-component in beam coordinates at some arbitrary 
+    single point in the mainbeam 
+    and in the far field of the antenna.">
+      <primitive type="float"/>
+    </attribute>
+    
+    <attribute name="phase" comment="THe phase angle between Ez and Ex in radians.">
+      <primitive type="float"/>
+    </attribute>
+    
+</class>    
+    
+<class name="SphericalHarmonicAntennaPattern" inheritsFrom="root" 
+       comment="Section 5.2.4.3. Used when the antenna pattern type in the transmitter pdu is of value 2. 
+       Specified the direction and radiation pattern from a radio transmitter's antenna.
+       NOTE: this class must be hand-coded to clean up some implementation details.">
+    
+    <attribute name="order" commment="The highest order of the expansion in spherical harmonics, couting
+    from zero. There are 2n+1 coefficients for each order n, and a total of N^2 + 2N + 1 coefficients
+    through order N.">
+      <primitive type="byte"/>
+    </attribute>
+                    
+</class>
+
+<class name="ArticulationParameter" inheritsFrom="root" comment="Section 5.2.5. Articulation parameters for 
+movable parts and attached parts of an entity. Specifes wether or not a change has occured, 
+the part identifcation of the articulated part to which it is attached, and the type and
+value of each parameter.">
+
+  <attribute name="parameterTypeDesignator">
+    <primitive type="unsigned byte"/>
+  </attribute>
+  
+   <attribute name="changeIndicator">
+    <primitive type="unsigned byte"/>
+  </attribute>
+  
+  <attribute name="partAttachedTo">
+    <primitive type="unsigned short"/>
+  </attribute>
+  
+  <attribute name="parameterType">
+    <primitive type="int"/>
+  </attribute>
+  
+  <attribute name="parameterValue">
+    <primitive type="double"/>
+  </attribute>
+</class>
+
+ <class name="BurstDescriptor" inheritsFrom="root" 
+        comment="Section 5.2.7. Specifies the type of muntion fired, the type of warhead, the
+        type of fuse, the number of rounds fired, and the rate at which the roudns are fired in
+        rounds per minute.">
+
+    <attribute name="munition" comment="What munition was used in the burst">
+      <classref name="EntityType"/> 
+    </attribute>
+    
+    <attribute name="warhead" comment="type of warhead">
+      <primitive type="unsigned short"/>
+    </attribute>
+    
+     <attribute name="fuse" comment="type of fuse used">
+      <primitive type="unsigned short"/>
+    </attribute>
+    
+     <attribute name="quantity" comment="how many of the munition were fired">
+      <primitive type="unsigned short"/>
+    </attribute>
+    
+     <attribute name="rate" comment="rate at which the munition was fired">
+      <primitive type="unsigned short"/>
+    </attribute>
+    
+  </class>
+  
+   <class name="ClockTime" inheritsFrom="root" 
+          comment="Section 5.2.8. Time measurements that exceed one hour. Hours is the number of
+          hours since January 1, 1970, UTC">
+ 
+ <attribute name="hour" comment="Hours in UTC">
+   <primitive type="int"/>
+ </attribute>
+ 
+ <attribute name="timePastHour" comment="Time past the hour">
+   <primitive type="unsigned int"/>
+ </attribute>
+ 
+ </class>
+ 
+ <class name="EmitterSystem" inheritsFrom="root" 
+       comment="Section 5.2.11. This field shall specify information about a particular emitter system">
+                  
+  <attribute name="emitterName" comment="Name of the emitter, 16 bit enumeration">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+  <attribute name="function" comment="function of the emitter, 8 bit enumeration">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+  
+  <attribute name="emitterIdNumber" comment="emitter ID, 8 bit enumeration">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+         
+</class>
+
+<class name="SimulationAddress" inheritsFrom="root" comment="Section 5.2.14.1. A Simulation Address 
+record shall consist of the Site Identification number and the Application Identification number.">
+    
+ <attribute name="site" comment="The site ID">
+   <primitive type="unsigned short"/>
+ </attribute>
+ 
+ <attribute name="application" comment="The application ID">
+  <primitive type="unsigned short"/>
+ </attribute>
+ 
+</class>
+
+<class name="EntityType" inheritsFrom="root" comment="Section 5.2.16. Identifies the type of entity, including
+kind of entity, domain (surface, subsurface, air, etc) country, category, etc.">
+    
+    <attribute name="entityKind" comment="Kind of entity">
+        <primitive type="unsigned byte"/>
+    </attribute>
+    
+    <attribute name="domain" comment="Domain of entity (air, surface, subsurface, space, etc)">
+        <primitive type="unsigned byte"/>
+    </attribute>
+    
+    <attribute name="country" comment="country to which the design of the entity is attributed" >
+        <primitive type="unsigned short"/>
+    </attribute>
+    
+    <attribute name="category" comment = "category of entity">
+        <primitive type="unsigned byte"/>
+    </attribute>
+    
+    <attribute name="subcategory" comment="subcategory of entity">
+        <primitive type="unsigned byte"/>
+    </attribute>
+    
+    <attribute name="specific" comment="specific info based on subcategory field">
+        <primitive type="unsigned byte"/>
+    </attribute>
+    
+    <attribute name="extra">
+        <primitive type="unsigned byte"/>
+    </attribute>
+    
+</class>
+
+<class name="Orientation" inheritsFrom="root" comment="Section 5.2.17. Three floating point values representing an orientation, psi, theta, and phi, aka the euler angles, in radians">
+  <attribute name="psi">
+    <primitive type="float"/>
+  </attribute>
+  
+  <attribute name="theta">
+    <primitive type="float"/>
+  </attribute>
+  
+  <attribute name="phi">
+    <primitive type="float"/>
+  </attribute>
+</class>
+
+<class name="EventID" inheritsFrom="root" comment="Section 5.2.18. Identifies a unique event in a simulation via the combination of three values">
+
+ <attribute name="application" comment="The application ID">
+  <primitive type="unsigned short"/>
+ </attribute>
+ 
+ <attribute name="site" comment="The site ID">
+   <primitive type="unsigned short"/>
+ </attribute>
+ 
+ <attribute name="eventNumber" comment="the number of the event">
+   <primitive type="unsigned short"/>
+ </attribute>
+ 
+</class>
+
+<class name="FixedDatum" inheritsFrom="root" comment="Section 5.2.18. Fixed Datum Record">
+   
+    <attribute name="fixedDatumID" comment="ID of the fixed datum">
+      <primitive type="unsigned int"/>
+    </attribute>
+  
+    <attribute name="fixedDatumValue" comment="Value for the fixed datum">
+      <primitive type="unsigned int"/>
+    </attribute>
+     
+</class>
+  
+
+<class name="FundamentalParameterData" inheritsFrom="root" 
+       comment="Section 5.2.22. Contains electromagnetic emmision regineratin parameters that are
+       variable throughout a scenario dependent on the actions of the participants in the simulation.
+Also provides basic parametric data that may be used to support low-fidelity simulations.">
+
+     <attribute name="frequency" comment="center frequency of the emission in hertz.">
+      <primitive type="float"/>
+    </attribute>
+    
+    <attribute name="frequencyRange" comment="Bandwidth of the frequencies corresponding to the fequency field.">
+      <primitive type="float"/>
+    </attribute>
+    
+    <attribute name="effectiveRadiatedPower" comment="Effective radiated power for the emission in DdBm. For a 
+    radar noise jammer, indicates the peak of the transmitted power.">
+      <primitive type="float"/>
+    </attribute>
+    
+    <attribute name="pulseRepetitionFrequency" comment="Average repetition frequency of the emission in hertz.">
+      <primitive type="float"/>
+    </attribute>
+    
+     <attribute name="pusleWidth" comment="Average pulse width  of the emission in microseconds.">
+      <primitive type="float"/>
+    </attribute>
+    
+    <attribute name="beamAzimuthCenter" comment="Specifies the beam azimuth an elevation centers and corresponding half-angles
+    to describe the scan volume">
+      <primitive type="float"/>
+    </attribute>
+    
+    <attribute name="beamAzimuthSweep" comment="Specifies the beam azimuth sweep to determine scan volume">
+      <primitive type="float"/>
+    </attribute>
+    
+     <attribute name="beamElevationCenter" comment="Specifies the beam elevation center to determine scan volume">
+      <primitive type="float"/>
+    </attribute>
+    
+     <attribute name="beamElevationSweep" comment="Specifies the beam elevation sweep to determine scan volume">
+      <primitive type="float"/>
+    </attribute>
+    
+    <attribute name="beamSweepSync" comment="allows receiver to synchronize its regenerated scan pattern to
+    that of the emmitter. Specifies the percentage of time a scan is through its pattern from its origion.">
+      <primitive type="float"/>
+    </attribute>
+    
+</class>
+
+<class name="RadioEntityType" inheritsFrom="root" comment="Section 5.2.25. Identifies the type of radio">
+
+<attribute name="entityKind" comment="Kind of entity">
+ <primitive type="unsigned byte"/>
+</attribute>
+
+<attribute name="domain" comment="Domain of entity (air, surface, subsurface, space, etc)">
+  <primitive type="unsigned byte"/>
+</attribute>
+
+<attribute name="country" comment="country to which the design of the entity is attributed" >
+ <primitive type="unsigned short"/>
+</attribute>
+
+<attribute name="category" comment = "category of entity">
+  <primitive type="unsigned byte"/>
+</attribute>
+
+<attribute name="subcategory" comment="subcategory of entity">
+  <primitive type="unsigned byte"/>
+</attribute>
+
+<attribute name="nomenclatureVersion" comment="specific info based on subcategory field">
+  <primitive type="unsigned byte"/>
+</attribute>
+
+<attribute name="nomenclature">
+  <primitive type="unsigned short"/>
+</attribute>
+
+</class>
+
+ <class name="SupplyQuantity" inheritsFrom="root" comment="Section 5.2.30. A supply, and the amount of that supply. Similar to an entity kind but with the addition of a quantity.">
+  
+    <attribute name="supplyType" comment="Type of supply">
+    <classRef name="EntityID"/>
+  </attribute>
+   
+   <attribute name="quantity" comment="quantity to be supplied">
+      <primitive type="unsigned byte"/>
+   </attribute>
+  
+  </class>
+
+ <class name="VariableDatum" inheritsFrom="root" comment="Section 5.2.32. Variable Datum Record">
+   
+    <attribute name="variableDatumID" comment="ID of the variable datum">
+      <primitive type="unsigned int"/>
+    </attribute>
+  
+    <attribute name="variableDatumLength" comment="length of the variable datums">
+      <primitive type="unsigned int"/>
+    </attribute>
+    
+    <attribute name="variableDatums" comment="variable length list of 64-bit datums">
+     <list type="variable" countFieldName="variableDatumLength">
+       <classRef name="EightByteChunk"/>
+    </list> 
+    </attribute>
+     
+</class>
+
+<class name="Vector3Float" inheritsFrom="root" comment="Section 5.2.33. Three floating point values, x, y, and z">
+  <attribute name="x" comment = "X value">
+    <primitive type="float"/>
+  </attribute>
+  
+  <attribute name="y" comment="y Value">
+    <primitive type="float"/>
+  </attribute>
+  
+  <attribute name="z" comment="Z value">
+    <primitive type="float"/>
+  </attribute>
+</class>
+
+<class name="Vector3Double" inheritsFrom="root" comment="Section 5.3.34. Three double precision floating point values, x, y, and z">
+  <attribute name="x" comment="X value">
+    <primitive type="double"/>
+  </attribute>
+  
+  <attribute name="y" comment="Y value">
+    <primitive type="double"/>
+  </attribute>
+  
+  <attribute name="z" comment="Z value">
+    <primitive type="double"/>
+  </attribute>
+  
+</class>
+
+<class name="EntityID" inheritsFrom="root" comment="Each entity in a given DIS simulation application shall be given an entity identifier number unique to all 
+other entities in that application. This identifier number is valid for the duration of the exercise; however, 
+entity identifier numbers may be reused when all possible numbers have been exhausted. No entity shall 
+have an entity identifier number of NO_ENTITY, ALL_ENTITIES, or RQST_ASSIGN_ID. The entity iden- 
+tifier number need not be registered or retained for future exercises. The entity identifier number shall be 
+specified by a 16-bit unsigned integer. 
+An entity identifier number equal to zero with valid site and application identification shall address a 
+simulation application. An entity identifier number equal to ALL_ENTITIES shall mean all entities within 
+the specified site and application. An entity identifier number equal to RQST_ASSIGN_ID allows the 
+receiver of the create entity to define the entity identifier number of the new entity.">
+
+<attribute name="site" comment="The site ID">
+   <primitive type="unsigned short"/>
+ </attribute>
+ 
+ <attribute name="application" comment="The application ID">
+  <primitive type="unsigned short"/>
+ </attribute>
+ 
+ <attribute name="entity" comment="the entity ID">
+   <primitive type="unsigned short"/>
+ </attribute>
+ 
+</class>
+
+
+  <class name="EightByteChunk" inheritsFrom="root" comment="64 bit piece of data">
+     <attribute name="otherParameters" comment="Eight bytes of arbitrary data">
+       <list type="fixed" length="8">
+        <primitive type="byte"/>
+       </list>
+     </attribute>
+   </class>
+   
+<class name="ModulationType" inheritsFrom="root" comment="Radio modulation">
+    
+ <attribute name="spreadSpectrum" comment="spread spectrum, 16 bit boolean array">
+   <primitive type="unsigned short"/>
+ </attribute>
+ 
+  <attribute name="major" comment="major">
+   <primitive type="unsigned short"/>
+ </attribute>
+ 
+  <attribute name="detail" comment="detail">
+   <primitive type="unsigned short"/>
+ </attribute>
+ 
+  <attribute name="system" comment="system">
+   <primitive type="unsigned short"/>
+ </attribute>
+ 
+</class>
+
+<class name="DeadReckoningParameter" inheritsFrom="root" comment="represents values used in dead reckoning algorithms">
+
+<attribute name="deadReckoningAlgorithm" comment="enumeration of what dead reckoning algorighm to use">
+    <primitive type="unsigned byte"/>
+</attribute>
+  
+<attribute name="otherParameters" comment="other parameters to use in the dead reckoning algorithm">
+   <list type="fixed" length="15">
+     <primitive type="byte"/>
+   </list>
+</attribute>
+
+<attribute name="entityLinearAcceleration" comment="Linear acceleration of the entity">
+  <classRef name="Vector3Float"/>
+</attribute>
+
+<attribute name="entityAngularVelocity" comment = "angular velocity of the entity">
+  <classRef name="Vector3Float"/>
+</attribute>
+
+</class>
+
+<!-- PDUs start here -->
+  
+<class name="Pdu" inheritsFrom="root" comment="The superclass for all PDUs. This incorporates the
+PduHeader record, section 5.2.29.">
+
+  <attribute name="protocolVersion" comment="The version of the protocol. 5=DIS-1995, 6=DIS-1998.">
+    <primitive type= "unsigned byte" defaultValue="5"/>
+  </attribute>
+  
+  <attribute name="exerciseID" comment="Exercise ID">
+    <primitive type= "unsigned byte" defaultValue="0"/>
+  </attribute>
+  
+  <attribute name="pduType" comment="Type of pdu, unique for each PDU class">
+    <primitive type="unsigned byte"/>
+  </attribute>
+  
+   <attribute name="protocolFamily" comment="value that refers to the protocol family, eg SimulationManagement, et">
+    <primitive type="unsigned byte"/>
+  </attribute>
+  
+  <attribute name="timestamp" comment="Timestamp value">
+    <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="length" comment="Length, in bytes, of the PDU">
+    <primitive type="unsigned short"/>
+  </attribute>
+  
+  <attribute name="padding" comment="zero-filled array of padding">
+     <primitive type="short" defaultValue="0"/>
+  </attribute>
+  
+</class>
+
+<class name="EntityInformationPdu" inheritsFrom="Pdu" 
+       comment="Section 5.3.3. Common superclass for EntityState and Collision PDUs. This should be abstract.">
+    <initialValue name="protocolFamily" value="1"/>
+           
+</class>
+ 
+<class name="EntityStatePdu" inheritsFrom="EntityInformationPdu" comment="Section 5.3.3.1. Represents the postion and state of one entity in the world">
+ 
+ <initialValue name="pduType" value="1"/>
+ 
+ 
+  <attribute name="entityID" comment="Unique ID for an entity that is tied to this state information">
+    <classref name="EntityID"/> 
+  </attribute>
+  
+ <attribute name="forceId">
+  <primitive type="unsigned byte"/>
+ </attribute>
+ 
+ <attribute name="articulationParameterCount" comment="How many articulation parameters are in the variable length list">
+   <primitive type="byte"/>
+</attribute>
+
+<attribute name="entityType" comment="Describes the type of entity in the world">
+  <classref name="EntityType"/>
+</attribute>
+
+<attribute name="alternativeEntityType">
+  <classRef name="EntityType"/>
+</attribute>
+
+<attribute name="entityLinearVelocity" comment="Describes the speed of the entity in the world">
+  <classRef name="Vector3Float"/>
+</attribute>
+
+<attribute name="entityLocation" comment="describes the location of the entity in the world">
+  <classRef name="Vector3Double"/>
+</attribute>
+
+<attribute name="entityOrientation" comment="describes the orientation of the entity, in euler angles">
+  <classRef name="Orientation"/>
+</attribute>
+
+<attribute name="entityAppearance" comment="a series of bit flags that are used to help draw the entity, such as smoking, on fire, etc.">
+  <primitive type="int"/>
+</attribute>
+
+ <attribute name="deadReckoningParameters" comment="parameters used for dead reckoning">
+     <classRef name="DeadReckoningParameter"/>
+</attribute>
+
+ <attribute name="marking" comment="characters that can be used for debugging, or to draw unique strings on the side of entities in the world">
+   <list type="fixed" length="12">
+     <primitive type="byte"/>
+   </list>
+ </attribute>
+ 
+ <attribute name="capabilities" comment="a series of bit flags">
+  <primitive type="int"/>
+</attribute>
+
+  <attribute name="articulationParameters" comment="variable length list of articulation parameters">
+   <list type="variable" countFieldName="articulationParameterCount">
+     <classRef name="ArticulationParameter"/>
+   </list> 
+</attribute>
+
+</class>
+
+<class name="CollisionPdu" inheritsFrom="EntityInformationPdu" comment="Section 5.3.3.2. Information about a collision">
+
+ <initialValue name="pduType" value="4"/>
+ <initialValue name="protocolFamily" value="1"/>
+ 
+  <attribute name="issuingEntityID" comment="ID of the entity that issued the collision PDU">
+    <classRef name="EntityID"/>
+  </attribute>
+  
+   <attribute name="collidingEntityID" comment="ID of entity that has collided with the issuing entity ID">
+    <classRef name="EntityID"/>
+  </attribute>
+  
+   <attribute name="eventID" comment="ID of event">
+    <classRef name="EventID"/>
+  </attribute>
+  
+   <attribute name="collisionType" comment="ID of event">
+    <primitive type="unsigned byte"/>
+  </attribute>
+  
+  <attribute name="pad" comment="some padding">
+    <primitive type="byte" defaultValue = "0"/>
+  </attribute>
+  
+  <attribute name="velocity" comment="velocity at collision">
+    <classRef name="Vector3Float"/>
+  </attribute>
+  
+  <attribute name="mass" comment="mass of issuing entity">
+    <primitive type="float"/>
+  </attribute>
+  
+   <attribute name="location" comment="Location with respect to entity the issuing entity collided with">
+    <classRef name="Vector3Float"/>
+  </attribute>
+  
+</class>
+
+
+<class name="Warfare" inheritsFrom="Pdu" 
+       comment="Section 5.3.4. abstract superclass for fire and detonation pdus that have shared information">
+
+ <initialValue name="protocolFamily" value="2"/>
+ 
+ <attribute name="firingEntityID" comment="ID of the entity that shot">
+    <classRef name="EntityID"/>
+  </attribute>
+  
+  <attribute name="targetEntityID" comment="ID of the entity that is being shot at">
+    <classRef name="EntityID"/>
+  </attribute>
+
+</class>
+
+<class name="FirePdu" inheritsFrom="Warfare" comment="Sectioin 5.3.4.1. Information about someone firing something">
+
+ <initialValue name="pduType" value="2"/>
+ 
+   <attribute name="munitionID" comment="ID of the munition that is being shot">
+    <classRef name="EntityID"/>
+  </attribute>
+ 
+   <attribute name="eventID" comment="ID of event">
+    <classRef name="EventID"/>
+  </attribute>
+  
+  <attribute name="fireMissionIndex">
+   <primitive type="int"/>
+  </attribute>
+  
+   <attribute name="locationInWorldCoordinates" comment="location of the firing event">
+    <classRef name="Vector3Double"/>
+  </attribute>
+  
+  <attribute name="burstDescriptor" comment="Describes munitions used in the firing event">
+    <classRef name="BurstDescriptor"/>
+  </attribute>
+  
+  <attribute name="velocity" comment="Velocity of the ammunition">
+    <classRef name="Vector3Float"/>
+  </attribute>
+  
+  <attribute name="range" comment="range to the target">
+    <primitive type="float"/>
+  </attribute>
+  
+  </class>
+  
+  <class name="DetonationPdu" inheritsFrom="Warfare" comment="Section 5.3.4.2. Information about Stuff Exploding">
+
+ <initialValue name="pduType" value="3"/>
+ 
+  <attribute name="munitionID" comment="ID of muntion that was fired">
+    <classRef name="EntityID"/>
+  </attribute>
+  
+  <attribute name="eventID" comment="ID firing event">
+    <classRef name="EventID"/>
+  </attribute>
+  
+  <attribute name="velocity" comment="ID firing event">
+    <classRef name="Vector3Float"/>
+  </attribute>
+  
+   <attribute name="locationInWorldCoordinates" comment="where the detonation is, in world coordinates">
+    <classRef name="Vector3Double"/>
+  </attribute>
+  
+   <attribute name="burstDescriptor" comment="Describes munition used">
+    <classRef name="BurstDescriptor"/>
+  </attribute>
+  
+  <attribute name="detonationResult" comment="result of the explosion">
+    <primitive type="unsigned byte"/>
+  </attribute>
+  
+  <attribute name="numberOfArticulationParameters" comment="How many articulation parameters we have">
+    <primitive type="unsigned byte"/>
+  </attribute>
+  
+   <attribute name="pad" comment="padding">
+    <primitive type="short" defaultValue = "0"/>
+  </attribute>
+
+ <attribute name="articulationParameters">
+   <list type="variable" countFieldName="numberOfArticulationParameters">
+     <classRef name="ArticulationParameter"/>
+   </list> 
+</attribute>
+  </class>
+ 
+<class name="LogisticsPdu" inheritsFrom="Pdu" comment="Section 5.3.5. Abstract superclass for logistics PDUs">
+  <initialValue name="protocolFamily" value="3"/>
+</class>
+  
+<class name="ServiceRequestPdu" inheritsFrom="LogisticsPdu" comment="Section 5.3.5.1. Information about a request for supplies">
+
+ <initialValue name="pduType" value="5"/>
+ 
+  <attribute name="requestingEntityID" comment="Entity that is requesting service">
+    <classref name="EntityID"/>
+  </attribute>
+
+  <attribute name="servicingEntityID" comment="Entity that is providing the service">
+    <classref name="EntityID"/>
+  </attribute>
+
+  <attribute name="serviceTypeRequested" comment="type of service requested">
+    <primitive type="unsigned byte"/>
+  </attribute>
+
+  <attribute name="numberOfSupplyTypes" comment="How many requested">
+    <primitive type="unsigned byte"/>
+  </attribute>
+
+  <attribute name="serviceRequestPadding" comment="padding">
+    <primitive type="short" defaultValue = "0"/>
+  </attribute>
+
+  <attribute name="supplies">
+     <list type="variable" countFieldName="numberOfSupplyTypes">
+       <classRef name="SupplyQuantity"/>
+     </list> 
+  </attribute>
+
+</class>
+
+  
+<class name="ResupplyOfferPdu" inheritsFrom="LogisticsPdu" comment="Section 5.3.5.2. Information about a request for supplies">
+
+ <initialValue name="pduType" value="6"/>
+
+<attribute name="receivingEntityID" comment="Entity that is receiving service">
+  <classref name="EntityID"/>
+</attribute>
+
+<attribute name="supplyingEntityID" comment="Entity that is supplying">
+  <classref name="EntityID"/>
+</attribute>
+
+<attribute name="numberOfSupplyTypes" comment="how many supplies are being offered">
+  <primitive type="unsigned byte"/>
+ </attribute>
+ 
+ <attribute name="padding1" comment="padding">
+   <primitive type="short" defaultValue="0"/>
+ </attribute>
+ 
+ <attribute name="padding2" comment="padding">
+   <primitive type="byte" defaultValue = "0"/>
+ </attribute>
+
+<attribute name="supplies">
+   <list type="variable" countFieldName="numberOfSupplyTypes">
+     <classRef name="SupplyQuantity"/>
+   </list> 
+</attribute>
+
+</class>
+
+<class name="ResupplyReceivedPdu" inheritsFrom="LogisticsPdu" comment="Section 5.3.5.3. Receipt of supplies is communiated">
+
+ <initialValue name="pduType" value="7"/>
+
+
+<attribute name="receivingEntityID" comment="Entity that is receiving service">
+  <classref name="EntityID"/>
+</attribute>
+
+<attribute name="supplyingEntityID" comment="Entity that is supplying">
+  <classref name="EntityID"/>
+</attribute>
+
+<attribute name="numberOfSupplyTypes" comment="how many supplies are being offered">
+  <primitive type="unsigned byte"/>
+ </attribute>
+ 
+ <attribute name="padding1" comment="padding">
+   <primitive type="short" defaultValue="0"/>
+ </attribute>
+ 
+ <attribute name="padding2" comment="padding">
+   <primitive type="byte" defaultValue="0"/>
+ </attribute>
+ 
+ <attribute name="supplies">
+   <list type="variable" countFieldName="numberOfSupplyTypes">
+     <classRef name="SupplyQuantity"/>
+   </list> 
+</attribute>
+</class>
+
+<class name="ResupplyCancelPdu" inheritsFrom="LogisticsPdu" comment="Section 5.2.5.4. Cancel of resupply by either the receiving or supplying entity">
+
+ <initialValue name="pduType" value="8"/>
+
+
+<attribute name="receivingEntityID" comment="Entity that is receiving service">
+  <classref name="EntityID"/>
+</attribute>
+
+<attribute name="supplyingEntityID" comment="Entity that is supplying">
+  <classref name="EntityID"/>
+</attribute>
+
+</class>
+
+<class name="RepairCompletePdu" inheritsFrom="LogisticsPdu" comment="Section 5.2.5.5. Repair is complete">
+
+ <initialValue name="pduType" value="9"/>
+
+<attribute name="receivingEntityID" comment="Entity that is receiving service">
+  <classref name="EntityID"/>
+</attribute>
+
+<attribute name="repairingEntityID" comment="Entity that is supplying">
+  <classref name="EntityID"/>
+</attribute>
+
+<attribute name="repair" comment="Enumeration for type of repair">
+  <primitive type="unsigned short"/>
+</attribute>
+
+<attribute name="padding" comment="padding">
+  <primitive type="short" defaultValue="0"/>
+</attribute>
+
+</class>
+
+<class name="RepairResponsePdu" inheritsFrom="LogisticsPdu" comment="Section 5.2.5.6. Sent after repair conplete PDU">
+
+ <initialValue name="pduType" value="10"/>
+
+<attribute name="receivingEntityID" comment="Entity that is receiving service">
+  <classref name="EntityID"/>
+</attribute>
+
+<attribute name="repairingEntityID" comment="Entity that is supplying">
+  <classref name="EntityID"/>
+</attribute>
+
+<attribute name="repairResult" comment="Result of repair operation">
+  <primitive type="unsigned byte"/>
+</attribute>
+
+<attribute name="padding1" comment="padding">
+   <primitive type="short" defaultValue="0"/>
+ </attribute>
+ 
+ <attribute name="padding2" comment="padding">
+   <primitive type="byte" defaultValue="0"/>
+ </attribute>
+ 
+ </class>
+ 
+ <class name="SimulationManagementPdu" inheritsFrom="Pdu" comment="Section 5.3.6. Abstract superclass for PDUs relating to the simulation itself">
+ 
+ <initialValue name="protocolFamily" value="5"/>
+
+ <attribute name="originatingEntityID" comment="Entity that is sending message">
+  <classref name="EntityID"/>
+</attribute>
+
+<attribute name="receivingEntityID" comment="Entity that is intended to receive message">
+  <classref name="EntityID"/>
+</attribute>
+
+ </class>
+ 
+<class name="CreateEntityPdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.3.6.1. Create a new entity">
+
+ <initialValue name="pduType" value="11"/>
+
+<attribute name="requestID" comment="Identifier for the request">
+   <primitive type="unsigned int"/>
+ </attribute>
+ 
+ </class>
+ 
+<class name="RemoveEntityPdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.3.6.2. Remove an entity">
+
+ <initialValue name="pduType" value="12"/>
+
+<attribute name="requestID" comment="Identifier for the request">
+   <primitive type="unsigned int"/>
+ </attribute>
+ 
+ </class>
+
+ 
+ <class name="StartResumePdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.2.6.3. Start or resume an exercise">
+
+ <initialValue name="pduType" value="13"/>
+
+<attribute name="realWorldTime" comment="UTC time at which the simulation shall start or resume">
+   <classRef name="ClockTime"/>
+</attribute>
+
+<attribute name="simulationTime" comment="Simulation clock time at which the simulation shall start or resume">
+   <classRef name="ClockTime"/>
+</attribute>
+
+<attribute name="requestID" comment="Identifier for the request">
+   <primitive type="unsigned int"/>
+ </attribute>
+ 
+ </class>
+ 
+  <class name="StopFreezePdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.2.3.4. Stop or freeze an exercise">
+  
+  <initialValue name="pduType" value="14"/>
+
+  <attribute name="realWorldTime" comment="UTC time at which the simulation shall stop or freeze">
+   <classRef name="ClockTime"/>
+  </attribute>
+  
+  <attribute name="reason" comment="Reason the simulation was stopped or frozen">
+   <primitive type="unsigned byte"/>
+  </attribute>
+  
+   <attribute name="frozenBehavior" comment="Internal behavior of the simulation and its appearance while frozento the other participants">
+   <primitive type="unsigned byte"/>
+  </attribute>
+  
+   <attribute name="padding1" comment="padding">
+   <primitive type="short" defaultValue="0"/>
+  </attribute>
+  
+  <attribute name="requestID" comment="Request ID that is unique">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  </class>
+  
+   <class name="AcknowledgePdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.3.6.5. Acknowledge the receiptof a start/resume, stop/freeze, or RemoveEntityPDU">
+   
+   <initialValue name="pduType" value="15"/>
+
+   <attribute name="acknowledgeFlag" comment="type of message being acknowledged">
+   <primitive type="unsigned short"/>
+  </attribute>
+  
+   <attribute name="responseFlag" comment="Whether or not the receiving entity was able to comply with the request">
+   <primitive type="unsigned short"/>
+  </attribute>
+  
+  <attribute name="requestID" comment="Request ID that is unique">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+   </class>
+   
+<class name="ActionRequestPdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.3.6.6. Request from simulation manager to an entity">
+   
+   <initialValue name="pduType" value="16"/>
+
+
+  <attribute name="requestID" comment="Request ID that is unique">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+   <attribute name="actionID" comment="identifies the action being requested">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  
+   <attribute name="fixedDatumRecordCount" comment="Number of fixed datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="variableDatumRecordCount" comment="Number of variable datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="fixedDatums" comment="variable length list of fixed datums">
+   <list type="variable" countFieldName="fixedDatumRecordCount">
+     <classRef name="FixedDatum"/>
+   </list> 
+  </attribute>
+  
+  <attribute name="variableDatums" comment="variable length list of variable length datums">
+   <list type="variable" countFieldName="variableDatumRecordCount">
+     <classRef name="VariableDatum"/>
+   </list> 
+  </attribute>
+
+</class>
+
+<class name="ActionResponsePdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.3.6.7. response to an action request PDU">
+
+ <initialValue name="pduType" value="17"/>
+
+  <attribute name="requestID" comment="Request ID that is unique">
+   <primitive type="unsigned int"/>
+  </attribute>
+
+  <attribute name="requestStatus" comment="Status of response">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+   <attribute name="fixedDatumRecordCount" comment="Number of fixed datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="variableDatumRecordCount" comment="Number of variable datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="fixedDatums" comment="variable length list of fixed datums">
+   <list type="variable" countFieldName="fixedDatumRecordCount">
+     <classRef name="FixedDatum"/>
+   </list> 
+  </attribute>
+  
+  <attribute name="variableDatums" comment="variable length list of variable length datums">
+   <list type="variable" countFieldName="variableDatumRecordCount">
+     <classRef name="VariableDatum"/>
+   </list> 
+  </attribute>
+  
+  </class>
+
+<class name="DataQueryPdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.3.6.8. Request for data from an entity">
+
+ <initialValue name="pduType" value="18"/>
+
+  <attribute name="requestID" comment="ID of request">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="timeInterval" comment="time issues between issues of Data PDUs. Zero means send once only.">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+   <attribute name="fixedDatumRecordCount" comment="Number of fixed datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="variableDatumRecordCount" comment="Number of variable datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="fixedDatums" comment="variable length list of fixed datums">
+   <list type="variable" countFieldName="fixedDatumRecordCount">
+     <classRef name="FixedDatum"/>
+   </list> 
+  </attribute>
+  
+  <attribute name="variableDatums" comment="variable length list of variable length datums">
+   <list type="variable" countFieldName="variableDatumRecordCount">
+     <classRef name="VariableDatum"/>
+   </list> 
+  </attribute>
+
+</class>
+
+<class name="SetDataPdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.3.6.9. Change state information with the data contained in this">
+
+   <initialValue name="pduType" value="19"/>
+
+  <attribute name="requestID" comment="ID of request">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="padding1" comment="padding">
+   <primitive type="unsigned int" defaultValue="0"/>
+  </attribute>
+  
+   <attribute name="fixedDatumRecordCount" comment="Number of fixed datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="variableDatumRecordCount" comment="Number of variable datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="fixedDatums" comment="variable length list of fixed datums">
+   <list type="variable" countFieldName="fixedDatumRecordCount">
+     <classRef name="FixedDatum"/>
+   </list> 
+  </attribute>
+  
+  <attribute name="variableDatums" comment="variable length list of variable length datums">
+   <list type="variable" countFieldName="variableDatumRecordCount">
+     <classRef name="VariableDatum"/>
+   </list> 
+  </attribute>
+
+</class>
+
+<class name="DataPdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.3.6.10. Information issued
+in response to a data query pdu or a set data pdu is communicated using a data pdu.">
+    
+  <initialValue name="pduType" value="20"/>
+  
+  <attribute name="requestID" comment="ID of request">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+   <attribute name="padding1" comment="padding">
+   <primitive type="unsigned int" defaultValue="0"/>
+  </attribute>
+  
+   <attribute name="fixedDatumRecordCount" comment="Number of fixed datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="variableDatumRecordCount" comment="Number of variable datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+   <attribute name="fixedDatums" comment="variable length list of fixed datums">
+   <list type="variable" countFieldName="fixedDatumRecordCount">
+     <classRef name="FixedDatum"/>
+   </list> 
+  </attribute>
+  
+  <attribute name="variableDatums" comment="variable length list of variable length datums">
+   <list type="variable" countFieldName="variableDatumRecordCount">
+     <classRef name="VariableDatum"/>
+   </list> 
+  </attribute>
+  
+</class>
+
+<class name="EventReportPdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.3.6.11. Reports occurance of a significant event to the simulation manager">
+
+ <initialValue name="pduType" value="21"/>
+
+<attribute name="eventType" comment="Type of event">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="padding1" comment="padding">
+   <primitive type="unsigned int" defaultValue="0"/>
+  </attribute>
+  
+  <attribute name="fixedDatumRecordCount" comment="Number of fixed datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="variableDatumRecordCount" comment="Number of variable datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="fixedDatums" comment="variable length list of fixed datums">
+   <list type="variable" countFieldName="fixedDatumRecordCount">
+     <classRef name="FixedDatum"/>
+   </list> 
+  </attribute>
+  
+  <attribute name="variableDatums" comment="variable length list of variable length datums">
+   <list type="variable" countFieldName="variableDatumRecordCount">
+     <classRef name="VariableDatum"/>
+   </list> 
+  </attribute>
+
+</class>
+
+<class name="CommentPdu" inheritsFrom="SimulationManagementPdu" comment="Section 5.3.6.12. Arbitrary messages can be entered into the data stream via use of this PDU">
+
+ <initialValue name="pduType" value="22"/>
+
+<attribute name="fixedDatumRecordCount" comment="Number of fixed datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="variableDatumRecordCount" comment="Number of variable datum records">
+   <primitive type="unsigned int"/>
+  </attribute>
+  
+  <attribute name="fixedDatums" comment="variable length list of fixed datums">
+   <list type="variable" countFieldName="fixedDatumRecordCount">
+     <classRef name="FixedDatum"/>
+   </list> 
+  </attribute>
+  
+  <attribute name="variableDatums" comment="variable length list of variable length datums">
+   <list type="variable" countFieldName="variableDatumRecordCount">
+     <classRef name="VariableDatum"/>
+   </list> 
+  </attribute>
+
+</class>
+
+<class name="DistributedEmissionsPdu" inheritsFrom="Pdu" 
+       comment="Section 5.3.7. Electronic Emmisions">
+           
+   <initialValue name="protocolFamily" value="6"/>
+</class>
+
+<class name="ElectronicEmmisionsPdu" inheritsFrom="DistributedEmissionsPdu"
+       comment="Section 5.3.7.1. Information about active electronic warfare (EW) emissions and active EW countermeasures shall be com- 
+municated using an Electromagnetic Emission PDU.">
+    
+  <initialValue name="pduType" value="23"/> 
+  
+  <attribute name="emittingEntityID" comment="ID of the entity emitting">
+    <classRef name="EntityID"/>
+  </attribute>
+
+  <attribute name="eventID" comment="ID of event">
+    <classRef name="EventID"/>
+  </attribute>
+  
+  <attribute name="stateUpdateIndicator" comment="This field shall be used to indicate if the data in the PDU represents a state 
+update or just data that has changed since issuance of the last Electromagnetic Emission PDU [rela- 
+tive to the identified entity and emission system(s)].">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+  
+   <attribute name="numberOfSystems" comment="This field shall specify the number of emission systems being described in the 
+current PDU.">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+  
+  <attribute name="emissionsPadding" comment="padding.">
+    <primitive type= "unsigned short" defaultValue="0"/>
+  </attribute>
+  
+   <attribute name="systemDataLength" comment="This field shall specify the length of this emitter system’s data (including 
+beam data and its track/jam information) in 32-bit words. The length shall include the System 
+Data Length field. ">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+  
+  <attribute name="numberOfBeams" comment="This field shall specify the number of beams being described in the current 
+PDU for the system being described. ">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+  
+  <attribute name="emissionsPadding2" comment="padding.">
+    <primitive type= "unsigned short" defaultValue="0"/>
+  </attribute>
+  
+   <attribute name="emitterSystem" comment="This field shall specify information about a particular emitter system">
+    <classRef name="EmitterSystem"/>
+  </attribute>
+  
+  <attribute name="location" comment="Location with respect to the entity">
+    <classRef name="Vector3Float"/>
+  </attribute>
+  
+   <attribute name="beamDataLength" comment="This field shall specify the length of this beam’s data (including track/ 
+jam information) in 32-bit words. The length shall include the Beam Data Length field ">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+  
+  <attribute name="beamIdNumber" comment="This field shall specify a unique emitter database number assigned to 
+differentiate between otherwise similar or identical emitter beams within an emitter 
+system.">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+  
+  <attribute name="beamParameterIndex" comment="This field shall specify a Beam Parameter Index number that shall 
+be used by receiving entities in conjunction with the Emitter Name field to provide a 
+pointer to the stored database parameters required to regenerate the beam. ">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+  <attribute name="fundamentalParameterData" comment="Fundamental parameter data such as frequency range, beam sweep, etc.">
+      <classRef name="FundamentalParameterData"/>
+  </attribute>
+  
+</class>
+
+<class name="DesignatorPdu" inheritsFrom="DistributedEmissionsPdu"
+       comment="Section 5.3.7.2. Handles designating operations">
+  
+  <initialValue name="pduType" value="24"/> 
+   
+  <attribute name="designatingEntityID" comment="ID of the entity designating">
+    <classRef name="EntityID"/>
+  </attribute> 
+  
+   <attribute name="codeName" comment="This field shall specify a unique emitter database number assigned to 
+differentiate between otherwise similar or identical emitter beams within an emitter 
+system.">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+  <attribute name="designatedEntityID" comment="ID of the entity being designated">
+    <classRef name="EntityID"/>
+  </attribute> 
+  
+   <attribute name="designatorCode" comment="This field shall identify the designator code being used by the designating entity ">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+  <attribute name="designatorPower" comment="This field shall identify the designator output power in watts">
+    <primitive type= "float"/>
+  </attribute>
+  
+  <attribute name="designatorWavelength" comment="This field shall identify the designator wavelength in units of microns">
+    <primitive type= "float"/>
+  </attribute>
+    
+  <attribute name="designatorSpotWrtDesignated" comment="designtor spot wrt the designated entity">
+    <classRef name="Vector3Float"/>
+  </attribute> 
+  
+  <attribute name="designatorSpotLocation" comment="designtor spot wrt the designated entity">
+    <classRef name="Vector3Double"/>
+  </attribute> 
+  
+  <attribute name="deadReckoningAlgorithm" comment="Dead reckoning algorithm">
+    <primitive type= "byte"/>
+  </attribute>
+  
+  <attribute name="padding1" comment="padding">
+    <primitive type= "unsigned short" default="0"/>
+  </attribute>
+  
+  <attribute name="padding2" comment="padding">
+    <primitive type= "byte" default="0"/>
+  </attribute>
+  
+  <attribute name="entityLinearAcceleration" comment="linear accelleration of entity">
+    <classRef name="Vector3Float"/>
+  </attribute>
+  
+</class>
+
+<class name="RadioCommunicationsPdu" inheritsFrom="Pdu"
+       comment="Section 5.3.8. Abstract superclass for radio communications PDUs.">
+  
+  <initialValue name="protocolFamily" value="4"/> 
+   
+  <attribute name="entityId" comment="ID of the entitythat is the source of the communication">
+    <classRef name="EntityID"/>
+  </attribute> 
+  
+   <attribute name="radioId" comment="particular radio within an entity">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+</class>
+
+<class name="TransmitterPdu" inheritsFrom="RadioCommunicationsPdu"
+       comment="Section 5.3.8.1. Detailed information about a radio transmitter. This PDU requires
+       manually written code to complete.">
+  
+  <initialValue name="pduType" value="25"/> 
+            
+  <attribute name="radioEntityType" comment="linear accelleration of entity">
+    <classRef name="RadioEntityType"/>
+  </attribute>
+  
+   <attribute name="transmitState" comment="transmit state">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+  
+  <attribute name="inputSource" comment="input source">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+  
+  <attribute name="padding1" comment="padding">
+    <primitive type= "unsigned short" default="0"/>
+  </attribute>
+  
+  <attribute name="antennaLocation" comment="Location of antenna">
+    <classRef name="Vector3Double"/>
+  </attribute> 
+  
+  <attribute name="relativeAntennaLocation" comment="relative location of antenna">
+    <classRef name="Vector3Double"/>
+  </attribute> 
+  
+  <attribute name="antennaPatternType" comment="atenna pattern type">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+  <attribute name="antennaPatternCount" comment="atenna pattern length">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+  <attribute name="frequency" comment="frequency">
+    <primitive type= "double"/>
+  </attribute>
+  
+  <attribute name="transmitFrequencyBandwidth" comment="transmit frequency Bandwidth">
+    <primitive type= "float"/>
+  </attribute>
+  
+  <attribute name="power" comment="transmission power">
+    <primitive type= "float"/>
+  </attribute>
+  
+  <attribute name="modulationType" comment="modulation">
+    <classRef name="ModulationType"/>
+  </attribute> 
+  
+  <attribute name="cryptoSystem" comment="crypto system enumeration">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+  <attribute name="cryptoKeyId" comment="crypto system key identifer">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+  <attribute name="modulationParameterCount" comment="how many modulation parameters we have">
+    <primitive type= "unsigned byte"/>
+  </attribute>
+  
+  <attribute name="padding2" comment="padding2">
+    <primitive type= "unsigned short" defaultValue="0"/>
+  </attribute>
+  
+  <attribute name="padding3" comment="padding3">
+    <primitive type= "unsigned byte" defaultValue="0"/>
+  </attribute>
+  
+  <attribute name="modulationParametersList" comment="variable length list of modulation parameters">
+   <list type="variable" countFieldName="modulationParameterCount">
+     <classRef name="Vector3Float"/>
+   </list> 
+  </attribute>
+  
+  <attribute name="antennaPatternList" comment="variable length list of antenna pattern records">
+   <list type="variable" countFieldName="antennaPatternCount">
+     <classRef name="Vector3Float"/>
+   </list> 
+  </attribute>       
+</class>
+
+<class name="SignalPdu" inheritsFrom="RadioCommunicationsPdu"
+       comment="Section 5.3.8.1. Detailed information about a radio transmitter. This PDU requires
+       manually written code to comnplete.">
+    
+    <initialValue name="pduType" value="26"/> 
+    
+  <attribute name="encodingScheme" comment="encoding scheme used, and enumeration">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+   <attribute name="tdlType" comment="tdl type">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+   <attribute name="sampleRate" comment="sample rate">
+    <primitive type= "unsigned int"/>
+  </attribute>
+  
+  <attribute name="dataLength" comment="length od data">
+    <primitive type= "short"/>
+  </attribute>
+  
+  <attribute name="samples" comment="number of samples">
+    <primitive type= "short"/>
+  </attribute>
+   
+</class>
+
+<class name="ReceiverPdu" inheritsFrom="RadioCommunicationsPdu"
+       comment="Section 5.3.8.3. Communication of a receiver state.">
+    
+    <initialValue name="pduType" value="27"/>
+    
+  <attribute name="receiverState" comment="encoding scheme used, and enumeration">
+    <primitive type= "unsigned short"/>
+  </attribute>
+  
+  <attribute name="padding1" comment="padding">
+    <primitive type= "unsigned short" initialValue="0"/>
+  </attribute>
+  
+  <attribute name="receivedPoser" comment="received power">
+    <primitive type= "float"/>
+  </attribute>
+  
+  <attribute name="transmitterEntityId" comment="ID of transmitter">
+    <classRef name="EntityID"/>
+  </attribute>
+  
+  <attribute name="transmitterRadioId" comment="ID of transmitting radio">
+    <primitive type= "unsigned short"/>
+  </attribute>
+    
+</class>
+
+   
+</classes>
+

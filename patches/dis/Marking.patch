@@ -1,0 +1,60 @@
+--- Marking.java	2010-12-07 12:06:16.000000000 -0800
++++ newMarking.java	2010-12-07 11:56:26.000000000 -0800
+@@ -2,8 +2,6 @@
+ 
+ import java.util.*;
+ import java.io.*;
+-import edu.nps.moves.disenum.*;
+-import edu.nps.moves.disutil.*;
+ 
+ // Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
+ // javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
+@@ -78,15 +76,44 @@
+ { return characterSet; 
+ }
+ 
+-public void setCharacters(byte[] pCharacters)
+-{ characters = pCharacters;
+-}
+-
+ @XmlElement(name="characters" )
+ @Basic
+ public byte[] getCharacters()
+ { return characters; }
+ 
++    /**
++     * Ensure what is set does not go over 11 characters -- post-processing patch
++     * @param pCharacters an array of characters to set
++     */
++    public void setCharacters(byte[] pCharacters) 
++    {
++        if (pCharacters.length >= characters.length) 
++        {
++            System.arraycopy(pCharacters, 0, characters, 0, characters.length);
++        } 
++        else 
++        {
++            int pCharactersLength = pCharacters.length;
++            System.arraycopy(pCharacters, 0, characters, 0, pCharactersLength);
++            for (int ix = pCharactersLength; ix < characters.length; ix++) 
++            {
++                // Ensure all zeros in unfilled fields
++                characters[ix] = 0;
++            }
++        }
++    }
++    
++    /**
++     * An added convieniece method (added by patch): accepts a string, and either
++     * truncates or zero-fills it to fit into the 11-byte character marking field.
++     * @param marking the marking string, converted internally into a character array that
++     * is exactly 11 bytes long
++     */
++    public void setCharacters(String marking)
++    {
++        byte[] buff = marking.getBytes();
++        this.setCharacters(buff);
++    }
+ 
+ public void marshal(DataOutputStream dos)
+ {

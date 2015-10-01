@@ -1,0 +1,506 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+
+<!-- to upload to the sourceforge project web site, "sftp myUserName,open-dis@web.sourceforge.net",
+     ie your sourceforge login name, a comma, and the group name. To transfer files you can do 
+     something like scp -r aLocalDirectory myUserName,open-dis@web.sourceforge.net:/home/groups/o/op/open-dis/htdocs
+     though the location of the directory on the sourceforge side may change over time.
+-->
+
+<project name="open-dis codebase" default="dist" basedir=".">
+    <property name="src" location="src/main/java"/>
+    <property name="build" location="build"/>
+    <property name="lib" location="lib"/>
+    <property name="dist" location="dist"/>
+    <property name="test" location="src/test/java"/>
+    <property name="version" value="4.13"/>
+    <property name="testReportOutputDir" value="${build}/testReportOutputDir"/>
+    
+    <property name="jarfile" location="${dist}/open-dis_${version}.jar"/>
+    <property name="compile.debug" value="true"/>
+    <property name="javac.unchecked" value="-Xlint:unchecked"/>
+
+    <fileset id="lib.jars" dir="${lib}">
+        <include name="**/*.jar"/>
+    </fileset>
+
+    <path id="lib.path">
+        <fileset refid="lib.jars"/>
+        <pathelement location="${build}"/>
+    </path>
+    
+    <target name="init" description="create initial directories">
+        <mkdir dir="${dist}"/>
+        <mkdir dir="${dist}/lib"/>
+        <mkdir dir="${dist}/docs"/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${testReportOutputDir}"/>
+        <mkdir dir="${build}/test"/>
+        <mkdir dir="${src}/edu"/>
+        <mkdir dir="${src}/edu/nps"/>
+        <mkdir dir="${src}/edu/nps/moves"/>
+        <mkdir dir="${src}/edu/nps/moves/dis"/>
+        <mkdir dir="${src}/edu/nps/moves/dismobile"/>
+        <mkdir dir="${src}/edu/nps/moves/dis7"/>
+        <mkdir dir="${src}/edu/nps/moves/dis7mobile"/>
+
+    </target>
+
+    <!-- We have serveral products we can generate, including versions tuned for desktop and mobile java use.
+         This builds all the products.
+      -->
+
+    <target name="generateAllSource">
+      <antcall target="generateJavaDisSourceCode"/>
+      <antcall target="generateJavaMobileSourceCode"/>
+      <antcall target="generateJavaDis7SourceCode"/>
+      <antcall target="generateJavaDis7MobileCode"/>
+    </target>    
+
+    <!-- Generate the desktop Java code. This relies on the jar file xmlpg.jar, from 
+         a separate project in the trunk that is included in the lib directory of this project. You
+         must run patch after this to apply known manual fixes to the source code generated.
+         The code generated here is intended for desktop use; it includes the ability to marshal
+         to XML via JAXB and to SQL databases via hibernate. But these packages are usually not
+         present in mobile environments, such as android.
+     
+         Some source code generation properties are set in the XML file, such as the directory location.
+         These may be overridden by command line options that set java system properties via
+         the -D option.
+    --> 
+    <target name="generateJavaDisSourceCode" depends="init" description = "run program to generate desktop java">
+        <property name="xmlSourceFile" value="DIS1998.xml"/>
+        <property name="xmlpg.generatedSourceDir" value="${src}"/>
+        <property name="xmlpg.useHibernate" value="true"/>
+        <property name="xmlpg.useJaxb" value="true"/>
+        <property name="xmlpg.package" value="edu.nps.moves.dis"/>
+        <property name="product" value="dis"/>
+        <echo message="Generating DIS source code for java desktop"/>
+        <echo message="source dir=${xmlpg.generatedSourceDir}"/>
+        <antcall target="generateDisSourceCode"/>
+    </target>
+
+    <target name="generateJavaMobileSourceCode" depends="init" description = "run program to generate java mobile version">
+        <property name="xmlSourceFile" value="DIS1998.xml"/>
+        <property name="xmlpg.generatedSourceDir" value="${src}"/>
+        <property name="xmlpg.useHibernate" value="false"/>
+        <property name="xmlpg.useJaxb" value="false"/>
+        <property name="xmlpg.package" value="edu.nps.moves.dismobile"/>
+        <property name="product" value="dismobile"/>
+        <echo message="Generating DIS source code for java mobile"/>
+        <echo message="source dir=${xmlpg.generatedSourceDir}"/>
+        <echo message="Package name= ${xmlpg.package}"/>
+        <antcall target="generateDisSourceCode"/>
+    </target>
+
+
+     <target name="generateJavaDis7SourceCode" depends="init" description = "run program to generate java for DIS 2009, desktop version">
+        <echo message="Generating DIS 7 desktop version"/>
+        <property name="xmlSourceFile" value="DIS2012.xml"/>
+        <property name="javadir" value="${src}"/>
+        <property name="xmlpg.useHibernate" value="true"/>
+        <property name="xmlpg.useJaxb" value="true"/>
+        <property name="xmlpg.package" value="edu.nps.moves.dis7"/>
+        <property name="product" value="dis7"/>
+        <property name="xmlpg.generatedSourceDir" value="${src}"/>
+        <!-- apply the patches, manual changes to the code captured in the patch files -->
+        <antcall target="generateDisSourceCode"/>
+    </target>
+    
+    <target name="generateJavaDis7MobileCode" depends="init" description = "run program to generate java for DIS 2009, mobile version">
+        <property name="xmlSourceFile" value="DIS2012.xml"/>
+        <property name="xmlpg.generatedSourceDir" value="${src}"/>
+        <property name="xmlpg.useHibernate" value="false"/>
+        <property name="xmlpg.useJaxb" value="false"/>
+        <property name="xmlpg.package" value="edu.nps.moves.dis7mobile"/>
+        <property name="product" value="dis7mobile"/>
+        <!-- apply the patches, manual changes to the code captured in the patch files -->
+        <antcall target="generateDisSourceCode"/>
+        </target>
+
+
+   <target name="spatial" depends="compile" description = "Run coordinate system santity check">
+        <java classname="edu.nps.moves.spatial.RangeCoordinates">
+            <classpath refid="lib.path"/>
+        </java>
+   </target>
+
+    <target name="check-prerequisites-generate">
+        <condition property="properties-set">
+            <and>
+                <isset property="xmlSourceFile"/>
+                <!--isset property="javadir"/-->
+            </and>
+        </condition>
+        <fail message="Not all prerequisite properties are defined properly!" unless="properties-set"/>
+    </target>
+
+    <target name="generateDisSourceCode" depends="init, check-prerequisites-generate" description = "run program to generate DIS source code">
+        <echo message="Generating DIS source code for java"/>
+
+        <java classname="edu.nps.moves.xmlpg.Xmlpg">
+            <classpath refid="lib.path"/>
+            <arg value="${xmlSourceFile}"/>
+            <arg value="java"/>
+            <sysproperty key="xmlpg.generatedSourceDir" value="${src}"/>
+            <sysproperty key="xmlpg.useJaxb" value="${xmlpg.useJaxb}"/>
+            <sysproperty key="xmlpg.useHibernate" value="${xmlpg.useHibernate}"/>
+            <sysproperty key="xmlpg.package" value="${xmlpg.package}"/>
+        </java>
+
+        <!-- apply the patches, manual changes to the code captured in the patch files -->
+        <antcall target="patch"/>
+
+    </target>
+
+    <!-- compile the java code just generated -->
+    <target name="compile" depends="init" description="Compile java protocol code">
+        <javac srcdir="${src}"
+               destdir="${build}"
+               source="1.6"
+               target="1.6"
+               includeAntRuntime="no"
+               classpathref="lib.path" 
+               debug="${compile.debug}"
+               deprecation="true">
+        
+            <!-- Reveals generics warings -->
+            <compilerarg value="${javac.unchecked}"/>
+            <compilerarg value="-g:lines,vars,source"/>
+        </javac>
+
+        <copy todir="${build}">
+            <fileset dir="${src}" includes="**/*.properties"/>
+            <fileset dir="${src}" includes="**/jaxb.index"/>
+        </copy>
+    </target>
+    
+     <!-- schemagen ant task, which generates a schema from java beans-complaint source code 
+     Gag. Java8 removed a deprecated class, AnnotationProcessorFactory, that causes
+         schemagen to fail. For now simply comment out the XML-schema dependent
+         tasks, since I don't think anyone actually uses that.
+       -->
+    <!--
+    <taskdef name="schemagen" classname="com.sun.tools.jxc.SchemaGenTask">
+        <classpath>
+            <fileset dir="${lib}" includes="*.jar"/>
+        </classpath>
+    </taskdef>
+    -->
+    
+    <!-- generate schema from the java source code 
+        (removed for now due to changes in Java 8)
+
+    <target name="generateSchema" depends="compile" description="Generate a schema from the Java code">
+        <schemagen srcdir="${src}/edu/nps/moves/dis" destdir="." includeantruntime="false">
+            <classpath refid="lib.path"/>
+        </schemagen>
+        <move file="schema1.xsd" tofile="disJaxb.xsd"/>
+    </target>
+    -->
+
+    <!-- Run patch scripts on the generated code to fix various problems. This is run by the generateDisSourceCode task -->
+    <target name="patch" description="patch generated source code">
+        <!--exec executable="patches/applyPatches.bash"-->
+         <!-- use this property for most cygwin-based windows releases -->
+        <!---property name="bash" value="/cygwin/bin/bash"/-->
+        
+        
+        <!-- Use this property for most Unix platforms -->
+        <property name="bash" value="/bin/bash"/>
+        <exec executable="${bash}" osfamily="unix">
+            <!-- Add an extra dash in front of the login for cygwin. The other extra arguments seem to help -->
+            <!--arg value="-login"/-->
+            <!--arg value="-i"/-->
+            <!--arg value="-c"/-->
+  
+            <!-- The bash script to run. this applies the patches to the source code -->
+            <arg value="patches/applyPatches.bash"/>
+            <arg value="${product}"/>
+        </exec>
+    </target>
+    
+    <target name="jar" depends="compile,javadoc" description="Build jar">
+        <mkdir dir="${dist}"/>
+        <echo message="$jarfile=${jarfile}"/>
+        <!-- Exclude test classes from distribution -->
+        <jar jarfile="${jarfile}" basedir="build" excludes="test"/>
+        <copy   file="${jarfile}"   todir="."/>
+    </target>
+
+    <target name="javadoc" depends="compile" description="generate javadocs for the DIS code">
+        <javadoc destdir="${build}/javadoc" packagenames="edu.nps.moves.*" sourcepath="${src}">
+            <classpath refid="lib.path"/>
+        </javadoc>
+        <copy todir="${dist}/javadoc">
+            <fileset dir="${build}/javadoc">
+              <include name="**/*"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="hudson" depends="dist" description="generate distribution when running on hudson server">
+<!--
+<p>
+<a href="http://open-dis.sourceforge.net">Open-DIS</a>
+ is an open-source implementation of the IEEE Distributed Interactive Simulation (DIS) protocol used by the
+<a href="https://savage.nps.edu/AuvWorkbench">AUV Workbench</a>,
+<a href="https://savage.nps.edu/X3D-Edit/#Open-DIS">X3D-Edit</a>,
+<a href="https://savage.nps.edu/developers.html#Xj3D">Xj3D</a> and other tools.
+</p>
+<p>
+The overall Open-DIS project contains many components which are available via
+<a href="https://open-dis.svn.sourceforge.net">subversion</a>.
+</p>
+<p>
+This project builds the Java version of Open-DIS.
+Locally built
+<a href="ws/trunk/dist/docs/index.html">javadoc</a>
+is available.
+</p>
+-->
+    </target>
+
+    <target name="compileTest" depends="compile" description="Compile java test code and place it in the test directory of of build">
+            
+         <javac srcdir="${test}" destdir="${build}/test"
+               source="1.8" target="1.8"
+               includeAntRuntime="no">
+               <classpath>
+                 <fileset dir="${lib}">
+                   <include name="**/*.jar"/>
+                 </fileset>
+                 <pathelement location="${build}"/>
+               </classpath>
+         </javac>
+    </target>
+
+ <!-- There are potentially many gotchas with JUNit 4.4, 4.5, and ant 1.5, 1.6, and 1.7 due to classloader issues. Be careful -->
+    <!--target name="test" depends="compileTest" description="run junit unit tests on build">
+      <junit>
+      <formatter type="plain" usefile="false"/>
+      <classpath>
+        <pathelement location="${build}"/>
+        <pathelement location="${jarfile}"/>
+        <pathelement location="${build}/test"/>
+        <pathelement location="${lib}/junit-4.4.jar"/>
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+      
+      <test name="edu.nps.moves.dis.DisAllTests"/>
+      <test name="edu.nps.moves.spatial.SpatialTestSuite"/>
+      
+      </junit>
+    </target>
+    -->
+
+<!-- sends test case output to XML file, for use by Jenkins -->
+<!--
+    <target name="testxml" depends="compileTest" description="run junit unit tests on build">
+      <junit>
+      <formatter type="xml" usefile="true"/>
+      <classpath>
+        <pathelement location="${build}"/>
+        <pathelement location="${jarfile}"/>
+        <pathelement location="${build}/test"/>
+        <pathelement location="${lib}/junit-4.4.jar"/>
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+
+      <test name="edu.nps.moves.dis.DisAllTests" todir="${testReportOutputDir}"/>
+      <test name="edu.nps.moves.spatial.SpatialTestSuite" todir="${testReportOutputDir}"/>
+
+      </junit>
+    </target>
+    -->
+
+<!-- Setup for findbugs, findbugs.soruceforge.net, a static code analysis tool. You can set this
+     up on your box if you like, but this is written with the jenkins continuous integration server
+     in mind. This requires that the findbugs-ant.jar file be placed in the $ANT_HOME/lib directory.
+    
+     This is strictly a testing/continuous integration function. You can safely comment this out
+     if running on a dev box.
+-->
+
+<!--
+<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+
+<property name="findbugs.home" value="/usr/java/findbugs-1.3.9/lib"/>
+
+  <target name="findbugs-jenkins" depends="jar">
+    <findbugs home="${findbugs.home}"
+              output="xml"
+              outputFile="findbugsXml.xml" >
+    <auxClasspath>
+       <fileset id="lib.jars" dir="${lib}">
+          <include name="**/*.jar"/>
+       </fileset>
+    </auxClasspath>
+    <sourcePath path="${basedir}/src/main" />
+      <class location="${dist}/open-dis_${version}.jar" />
+    </findbugs>
+  </target>
+-->
+
+<!-- Checkstyle ant task. Used on the server side in jenkins for static code analysis on the 
+     continuous integration server. You can safely comment this out if running on a dev box.
+-->
+<!--
+<taskdef resource="checkstyletask.properties" classpath="/usr/java/checkstyle-5.4/checkstyle-5.4-all.jar"/>
+
+<target name="checkstyle-jenkins">
+  <checkstyle failOnViolation="no" config="/usr/java/checkstyle-5.4/nps_checks.xml">
+    <fileset dir="src/main" includes="**/*.java"/>
+    <formatter type="xml" toFile="checkstyle_results.xml"/>
+  </checkstyle>
+</target>
+-->
+
+    <!-- Create a distribution. This skips the target of generateDisSourceCode, since that is not typically used
+         in the development cycle. You can run that target separately.
+    -->
+    <target name="dist" depends="clean, init, compile, javadoc, jar" description="do everything">
+    <copy todir="dist/lib">
+      <fileset dir="lib"> 
+        <include name="**/*.jar"/>
+      </fileset>
+    </copy>
+    </target>
+
+    <target name="clean" description="Remove build and dist directories">
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+        <delete dir="docs"/>
+    </target>
+
+   
+       <!-- Note: by default VBS2 runs on port 3000 with broadcast, so if you want to send      -->
+       <!-- to VBS2, set the network mode to bcast, select the appropriate bcast address,       -->
+       <!-- and send to port 3000. You'll almost certainly have to adjust the location as well. -->
+       
+
+    <target name="runSender" depends="jar" description="run DIS example program">
+        <java classname="edu.nps.moves.examples.EspduSender">
+            <!-- Possible properties to pass into the program: 
+                 networkMode: unicast or multicast or broadcast
+                 destinationIp: destination IP address. Could be mcast if in mcast mode, bcast if in bcast mode 
+                 port: Both source and destination port
+            -->
+             <sysproperty key="networkMode" value="broadcast"/>   <!-- multicast, unicast, broadcast -->
+             <sysproperty key="destinationIp" value="255.255.255.255"/> <!-- could be multicast (if in mc mode) or bcast -->
+             <sysproperty key="port" value="3001"/>              <!-- Both source and destination port -->
+            <classpath>
+                <fileset dir="${dist}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </java>
+    </target>
+
+    <!-- Runs a generator that sends many or most of the PDU types, and saves an example XML file -->
+    <target name="runGenerator" depends="jar" description="run DIS PDU generator program">
+        <java classname="edu.nps.moves.examples.PduSender">
+            <arg value="62040"/>
+            <arg value="239.1.2.3"/>
+            <classpath>
+                <fileset dir="${dist}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset refid="lib.jars"/>
+            </classpath>
+        </java>
+    </target>
+
+<!-- Saves an example XML file -->
+    <target name="runXmlPdus" depends="jar" description="run DIS XML PDU generator program">
+        <java classname="edu.nps.moves.examples.MarshallExample">
+            <classpath>
+                <fileset dir="${dist}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset refid="lib.jars"/>
+            </classpath>
+        </java>
+    </target>
+
+    
+     <!-- Runs a generator that sends many or most of the PDU types, and saves an example XML file -->
+    <target name="runConcatReader" depends="jar" description="run DIS PDU program that reads IEEE concatenated PDUs from a file">
+        <java classname="edu.nps.moves.disutil.ConcatenatedDisPdus">
+            <arg value="dispackets.disbin"/>
+            <classpath>
+                <fileset dir="${dist}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset refid="lib.jars"/>
+            </classpath>
+        </java>
+    </target>
+
+    
+    <target name="runReceiver" depends="jar" description="run DIS receiver program">
+        <java classname="edu.nps.moves.examples.EspduReceiver">
+            <classpath>
+                <fileset dir="${dist}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset refid="lib.jars"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="runModelLoader" depends="jar" description="run DIS example program">
+        <java classname="edu.nps.moves.disutil.ModelLookup">
+            <classpath>
+                <fileset dir="${dist}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </java>
+    </target>
+    
+       
+    <target name="runXml" depends="jar" description="runs example XML marshal/unmarshal program">
+        <java classname="edu.nps.moves.examples.MarshallExample">
+            <classpath>
+                <fileset dir="${dist}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset refid="lib.jars"/>
+            </classpath>
+        </java>
+    </target>
+
+<target name="runSql" depends="jar" description="runs hibernate storage program">
+        <java classname="edu.nps.moves.sql.DatabaseConfiguration">
+            <classpath>
+                <fileset dir="${dist}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset refid="lib.jars"/>
+            </classpath>
+            <sysproperty key="port" value="3000"/>            <!-- UDP port to listen on -->
+            <sysproperty key="networkMode" value="broadcast"/> <!-- multicast, unicast, broadcast -->
+            <sysproperty key="mulitcastAddress" value="239.1.2.3"/> <!-- mcast address to use; ignored if unicast or broadcast mode -->
+        </java>
+    </target>
+
+
+    <target name="runLogger" depends="jar" description="runs example DIS logging program">
+        <java classname="edu.nps.moves.logger.DisLogger">
+            <arg value="logger.properties"/>
+            <classpath>
+                <fileset dir="${dist}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset refid="lib.jars"/>
+            </classpath>
+           
+        </java>
+    </target>
+
+    
+</project>
