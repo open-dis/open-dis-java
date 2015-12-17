@@ -196,6 +196,21 @@ public class PduFactory {
                 aPdu.unmarshal(dis);
                 break;
 
+            case SIGNAL:
+                aPdu = new SignalPdu();
+                aPdu.unmarshal(dis);
+                break;
+
+            case TRANSMITTER:
+                aPdu = new TransmitterPdu();
+                aPdu.unmarshal(dis);
+                break;
+
+            case RECEIVER:
+                aPdu = new ReceiverPdu();
+                aPdu.unmarshal(dis);
+                break;
+
             default:
                 logger.log(Level.INFO, "PDU not implemented. Type = " + pduType + "\n");
                 if (pduTypeEnum != null) {
@@ -294,6 +309,18 @@ public class PduFactory {
 
             case ACTION_REQUEST:
                 aPdu = new ActionRequestPdu();
+                break;
+
+            case SIGNAL:
+                aPdu = new SignalPdu();
+                break;
+
+            case TRANSMITTER:
+                aPdu = new TransmitterPdu();
+                break;
+
+            case RECEIVER:
+                aPdu = new ReceiverPdu();
                 break;
 
             default:
