@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * 5.2.44: Grid data record, representation 1
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class GridAxisRecordRepresentation1 extends GridAxisRecord implements Serializable
 {
    /** constant scale factor */
@@ -44,7 +33,6 @@ public class GridAxisRecordRepresentation1 extends GridAxisRecord implements Ser
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -67,8 +55,6 @@ public void setFieldScale(float pFieldScale)
 { fieldScale = pFieldScale;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getFieldScale()
 { return fieldScale; 
 }
@@ -77,14 +63,10 @@ public void setFieldOffset(float pFieldOffset)
 { fieldOffset = pFieldOffset;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getFieldOffset()
 { return fieldOffset; 
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfValues()
 { return (int)dataValues.size();
 }
@@ -101,8 +83,6 @@ public void setDataValues(List<TwoByteChunk> pDataValues)
 { dataValues = pDataValues;
 }
 
-@XmlElementWrapper(name="dataValuesList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<TwoByteChunk> getDataValues()
 { return dataValues; }
 

@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  *  SEES PDU, supplemental emissions entity state information. Section 7.6.6 COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class SeesPdu extends DistributedEmissionsFamilyPdu implements Serializable
 {
    /** Originating entity ID */
@@ -56,7 +45,6 @@ public class SeesPdu extends DistributedEmissionsFamilyPdu implements Serializab
     setPduType( (short)30 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -87,13 +75,6 @@ public void setOrginatingEntityID(EntityID pOrginatingEntityID)
 { orginatingEntityID = pOrginatingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_orginatingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_orginatingEntityID")
 public EntityID getOrginatingEntityID()
 { return orginatingEntityID; 
 }
@@ -102,8 +83,6 @@ public void setInfraredSignatureRepresentationIndex(int pInfraredSignatureRepres
 { infraredSignatureRepresentationIndex = pInfraredSignatureRepresentationIndex;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getInfraredSignatureRepresentationIndex()
 { return infraredSignatureRepresentationIndex; 
 }
@@ -112,8 +91,6 @@ public void setAcousticSignatureRepresentationIndex(int pAcousticSignatureRepres
 { acousticSignatureRepresentationIndex = pAcousticSignatureRepresentationIndex;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getAcousticSignatureRepresentationIndex()
 { return acousticSignatureRepresentationIndex; 
 }
@@ -122,14 +99,10 @@ public void setRadarCrossSectionSignatureRepresentationIndex(int pRadarCrossSect
 { radarCrossSectionSignatureRepresentationIndex = pRadarCrossSectionSignatureRepresentationIndex;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getRadarCrossSectionSignatureRepresentationIndex()
 { return radarCrossSectionSignatureRepresentationIndex; 
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfPropulsionSystems()
 { return (int)propulsionSystemData.size();
 }
@@ -142,8 +115,6 @@ public void setNumberOfPropulsionSystems(int pNumberOfPropulsionSystems)
 { numberOfPropulsionSystems = pNumberOfPropulsionSystems;
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfVectoringNozzleSystems()
 { return (int)vectoringSystemData.size();
 }
@@ -160,8 +131,6 @@ public void setPropulsionSystemData(List<PropulsionSystemData> pPropulsionSystem
 { propulsionSystemData = pPropulsionSystemData;
 }
 
-@XmlElementWrapper(name="propulsionSystemDataList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<PropulsionSystemData> getPropulsionSystemData()
 { return propulsionSystemData; }
 
@@ -169,8 +138,6 @@ public void setVectoringSystemData(List<VectoringNozzleSystem> pVectoringSystemD
 { vectoringSystemData = pVectoringSystemData;
 }
 
-@XmlElementWrapper(name="vectoringSystemDataList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<VectoringNozzleSystem> getVectoringSystemData()
 { return vectoringSystemData; }
 

@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.3.1. Represents the postion and state of one entity in the world. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class EntityStatePdu extends EntityInformationFamilyPdu implements Serializable
 {
    /** Unique ID for an entity that is tied to this state information */
@@ -71,7 +60,6 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
     setPduType( (short)1 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -103,13 +91,6 @@ public void setEntityID(EntityID pEntityID)
 { entityID = pEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_entityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_entityID")
 public EntityID getEntityID()
 { return entityID; 
 }
@@ -118,14 +99,10 @@ public void setForceId(short pForceId)
 { forceId = pForceId;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getForceId()
 { return forceId; 
 }
 
-@XmlAttribute
-@Basic
 public byte getNumberOfArticulationParameters()
 { return (byte)articulationParameters.size();
 }
@@ -142,13 +119,6 @@ public void setEntityType(EntityType pEntityType)
 { entityType = pEntityType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_entityType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_entityType")
 public EntityType getEntityType()
 { return entityType; 
 }
@@ -157,13 +127,6 @@ public void setAlternativeEntityType(EntityType pAlternativeEntityType)
 { alternativeEntityType = pAlternativeEntityType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_alternativeEntityType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_alternativeEntityType")
 public EntityType getAlternativeEntityType()
 { return alternativeEntityType; 
 }
@@ -172,13 +135,6 @@ public void setEntityLinearVelocity(Vector3Float pEntityLinearVelocity)
 { entityLinearVelocity = pEntityLinearVelocity;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_entityLinearVelocity;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_entityLinearVelocity")
 public Vector3Float getEntityLinearVelocity()
 { return entityLinearVelocity; 
 }
@@ -187,13 +143,6 @@ public void setEntityLocation(Vector3Double pEntityLocation)
 { entityLocation = pEntityLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_entityLocation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_entityLocation")
 public Vector3Double getEntityLocation()
 { return entityLocation; 
 }
@@ -202,13 +151,6 @@ public void setEntityOrientation(Orientation pEntityOrientation)
 { entityOrientation = pEntityOrientation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_entityOrientation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_entityOrientation")
 public Orientation getEntityOrientation()
 { return entityOrientation; 
 }
@@ -217,8 +159,6 @@ public void setEntityAppearance(int pEntityAppearance)
 { entityAppearance = pEntityAppearance;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getEntityAppearance()
 { return entityAppearance; 
 }
@@ -227,13 +167,6 @@ public void setDeadReckoningParameters(DeadReckoningParameter pDeadReckoningPara
 { deadReckoningParameters = pDeadReckoningParameters;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_deadReckoningParameters;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_deadReckoningParameters")
 public DeadReckoningParameter getDeadReckoningParameters()
 { return deadReckoningParameters; 
 }
@@ -242,13 +175,6 @@ public void setMarking(Marking pMarking)
 { marking = pMarking;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_marking;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_marking")
 public Marking getMarking()
 { return marking; 
 }
@@ -257,8 +183,6 @@ public void setCapabilities(int pCapabilities)
 { capabilities = pCapabilities;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getCapabilities()
 { return capabilities; 
 }
@@ -267,8 +191,6 @@ public void setArticulationParameters(List<ArticulationParameter> pArticulationP
 { articulationParameters = pArticulationParameters;
 }
 
-@XmlElementWrapper(name="articulationParametersList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<ArticulationParameter> getArticulationParameters()
 { return articulationParameters; }
 

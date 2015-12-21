@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Used in UA PDU
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class AcousticBeamData extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_AcousticBeamData;
-
    /** beam data length */
    protected int  beamDataLength;
 
@@ -48,7 +34,6 @@ public class AcousticBeamData extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -62,26 +47,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_AcousticBeamData()
-{
-   return pk_AcousticBeamData;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_AcousticBeamData(long pKeyName)
-{
-   this.pk_AcousticBeamData = pKeyName;
-}
-
 public void setBeamDataLength(int pBeamDataLength)
 { beamDataLength = pBeamDataLength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getBeamDataLength()
 { return beamDataLength; 
 }
@@ -90,8 +59,6 @@ public void setBeamIDNumber(short pBeamIDNumber)
 { beamIDNumber = pBeamIDNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getBeamIDNumber()
 { return beamIDNumber; 
 }
@@ -100,8 +67,6 @@ public void setPad2(int pPad2)
 { pad2 = pPad2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPad2()
 { return pad2; 
 }
@@ -110,13 +75,6 @@ public void setFundamentalDataParameters(AcousticBeamFundamentalParameter pFunda
 { fundamentalDataParameters = pFundamentalDataParameters;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_fundamentalDataParameters;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_fundamentalDataParameters")
 public AcousticBeamFundamentalParameter getFundamentalDataParameters()
 { return fundamentalDataParameters; 
 }

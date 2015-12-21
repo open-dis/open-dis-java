@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * For each type or location of Storage Fuel, this record shall specify the type, location, fuel measure- ment units, reload quantity and maximum quantity for storage fuel either for the whole entity or a specific storage fuel location (tank). Section 6.2.85.
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class StorageFuelReload extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_StorageFuelReload;
-
    /**  the standard quantity of this fuel type normally loaded at this station/launcher if a station/launcher is specified. If the Station/Launcher field is set to zero, then this is the total quantity of this fuel type that would be present in a standard reload of all appli- cable stations/launchers associated with this entity. */
    protected long  standardQuantity;
 
@@ -60,7 +46,6 @@ public class StorageFuelReload extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -78,26 +63,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_StorageFuelReload()
-{
-   return pk_StorageFuelReload;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_StorageFuelReload(long pKeyName)
-{
-   this.pk_StorageFuelReload = pKeyName;
-}
-
 public void setStandardQuantity(long pStandardQuantity)
 { standardQuantity = pStandardQuantity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getStandardQuantity()
 { return standardQuantity; 
 }
@@ -106,8 +75,6 @@ public void setMaximumQuantity(long pMaximumQuantity)
 { maximumQuantity = pMaximumQuantity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getMaximumQuantity()
 { return maximumQuantity; 
 }
@@ -116,8 +83,6 @@ public void setStandardQuantityReloadTime(short pStandardQuantityReloadTime)
 { standardQuantityReloadTime = pStandardQuantityReloadTime;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getStandardQuantityReloadTime()
 { return standardQuantityReloadTime; 
 }
@@ -126,8 +91,6 @@ public void setMaximumQuantityReloadTime(short pMaximumQuantityReloadTime)
 { maximumQuantityReloadTime = pMaximumQuantityReloadTime;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getMaximumQuantityReloadTime()
 { return maximumQuantityReloadTime; 
 }
@@ -136,8 +99,6 @@ public void setFuelMeasurementUnits(short pFuelMeasurementUnits)
 { fuelMeasurementUnits = pFuelMeasurementUnits;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getFuelMeasurementUnits()
 { return fuelMeasurementUnits; 
 }
@@ -146,8 +107,6 @@ public void setFuelType(short pFuelType)
 { fuelType = pFuelType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getFuelType()
 { return fuelType; 
 }
@@ -156,8 +115,6 @@ public void setFuelLocation(short pFuelLocation)
 { fuelLocation = pFuelLocation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getFuelLocation()
 { return fuelLocation; 
 }
@@ -166,8 +123,6 @@ public void setPadding(short pPadding)
 { padding = pPadding;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding()
 { return padding; 
 }

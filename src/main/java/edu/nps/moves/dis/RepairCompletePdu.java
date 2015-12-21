@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.2.5.5. Repair is complete. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class RepairCompletePdu extends LogisticsFamilyPdu implements Serializable
 {
    /** Entity that is receiving service */
@@ -46,7 +35,6 @@ public class RepairCompletePdu extends LogisticsFamilyPdu implements Serializabl
     setPduType( (short)9 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -65,13 +53,6 @@ public void setReceivingEntityID(EntityID pReceivingEntityID)
 { receivingEntityID = pReceivingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_receivingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_receivingEntityID")
 public EntityID getReceivingEntityID()
 { return receivingEntityID; 
 }
@@ -80,13 +61,6 @@ public void setRepairingEntityID(EntityID pRepairingEntityID)
 { repairingEntityID = pRepairingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_repairingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_repairingEntityID")
 public EntityID getRepairingEntityID()
 { return repairingEntityID; 
 }
@@ -95,8 +69,6 @@ public void setRepair(int pRepair)
 { repair = pRepair;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getRepair()
 { return repair; 
 }
@@ -105,8 +77,6 @@ public void setPadding2(short pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding2()
 { return padding2; 
 }

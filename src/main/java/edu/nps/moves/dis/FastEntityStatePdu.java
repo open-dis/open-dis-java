@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.3.1. Represents the postion and state of one entity in the world. This is identical in function to entity state pdu, but generates less garbage to collect in the Java world. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class FastEntityStatePdu extends EntityInformationFamilyPdu implements Serializable
 {
    /** The site ID */
@@ -148,7 +137,6 @@ public class FastEntityStatePdu extends EntityInformationFamilyPdu implements Se
     setPduType( (short)1 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -207,8 +195,6 @@ public void setSite(int pSite)
 { site = pSite;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSite()
 { return site; 
 }
@@ -217,8 +203,6 @@ public void setApplication(int pApplication)
 { application = pApplication;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getApplication()
 { return application; 
 }
@@ -227,8 +211,6 @@ public void setEntity(int pEntity)
 { entity = pEntity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getEntity()
 { return entity; 
 }
@@ -237,14 +219,10 @@ public void setForceId(short pForceId)
 { forceId = pForceId;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getForceId()
 { return forceId; 
 }
 
-@XmlAttribute
-@Basic
 public byte getNumberOfArticulationParameters()
 { return (byte)articulationParameters.size();
 }
@@ -261,8 +239,6 @@ public void setEntityKind(short pEntityKind)
 { entityKind = pEntityKind;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getEntityKind()
 { return entityKind; 
 }
@@ -271,8 +247,6 @@ public void setDomain(short pDomain)
 { domain = pDomain;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getDomain()
 { return domain; 
 }
@@ -281,8 +255,6 @@ public void setCountry(int pCountry)
 { country = pCountry;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getCountry()
 { return country; 
 }
@@ -291,8 +263,6 @@ public void setCategory(short pCategory)
 { category = pCategory;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getCategory()
 { return category; 
 }
@@ -301,8 +271,6 @@ public void setSubcategory(short pSubcategory)
 { subcategory = pSubcategory;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSubcategory()
 { return subcategory; 
 }
@@ -311,8 +279,6 @@ public void setSpecif(short pSpecif)
 { specif = pSpecif;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSpecif()
 { return specif; 
 }
@@ -321,8 +287,6 @@ public void setExtra(short pExtra)
 { extra = pExtra;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getExtra()
 { return extra; 
 }
@@ -331,8 +295,6 @@ public void setAltEntityKind(short pAltEntityKind)
 { altEntityKind = pAltEntityKind;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getAltEntityKind()
 { return altEntityKind; 
 }
@@ -341,8 +303,6 @@ public void setAltDomain(short pAltDomain)
 { altDomain = pAltDomain;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getAltDomain()
 { return altDomain; 
 }
@@ -351,8 +311,6 @@ public void setAltCountry(int pAltCountry)
 { altCountry = pAltCountry;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getAltCountry()
 { return altCountry; 
 }
@@ -361,8 +319,6 @@ public void setAltCategory(short pAltCategory)
 { altCategory = pAltCategory;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getAltCategory()
 { return altCategory; 
 }
@@ -371,8 +327,6 @@ public void setAltSubcategory(short pAltSubcategory)
 { altSubcategory = pAltSubcategory;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getAltSubcategory()
 { return altSubcategory; 
 }
@@ -381,8 +335,6 @@ public void setAltSpecific(short pAltSpecific)
 { altSpecific = pAltSpecific;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getAltSpecific()
 { return altSpecific; 
 }
@@ -391,8 +343,6 @@ public void setAltExtra(short pAltExtra)
 { altExtra = pAltExtra;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getAltExtra()
 { return altExtra; 
 }
@@ -401,8 +351,6 @@ public void setXVelocity(float pXVelocity)
 { xVelocity = pXVelocity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getXVelocity()
 { return xVelocity; 
 }
@@ -411,8 +359,6 @@ public void setYVelocity(float pYVelocity)
 { yVelocity = pYVelocity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getYVelocity()
 { return yVelocity; 
 }
@@ -421,8 +367,6 @@ public void setZVelocity(float pZVelocity)
 { zVelocity = pZVelocity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getZVelocity()
 { return zVelocity; 
 }
@@ -431,8 +375,6 @@ public void setXLocation(double pXLocation)
 { xLocation = pXLocation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public double getXLocation()
 { return xLocation; 
 }
@@ -441,8 +383,6 @@ public void setYLocation(double pYLocation)
 { yLocation = pYLocation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public double getYLocation()
 { return yLocation; 
 }
@@ -451,8 +391,6 @@ public void setZLocation(double pZLocation)
 { zLocation = pZLocation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public double getZLocation()
 { return zLocation; 
 }
@@ -461,8 +399,6 @@ public void setPsi(float pPsi)
 { psi = pPsi;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getPsi()
 { return psi; 
 }
@@ -471,8 +407,6 @@ public void setTheta(float pTheta)
 { theta = pTheta;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getTheta()
 { return theta; 
 }
@@ -481,8 +415,6 @@ public void setPhi(float pPhi)
 { phi = pPhi;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getPhi()
 { return phi; 
 }
@@ -491,8 +423,6 @@ public void setEntityAppearance(int pEntityAppearance)
 { entityAppearance = pEntityAppearance;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getEntityAppearance()
 { return entityAppearance; 
 }
@@ -501,8 +431,6 @@ public void setDeadReckoningAlgorithm(short pDeadReckoningAlgorithm)
 { deadReckoningAlgorithm = pDeadReckoningAlgorithm;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getDeadReckoningAlgorithm()
 { return deadReckoningAlgorithm; 
 }
@@ -511,8 +439,6 @@ public void setOtherParameters(byte[] pOtherParameters)
 { otherParameters = pOtherParameters;
 }
 
-@XmlElement(name="otherParameters" )
-@Basic
 public byte[] getOtherParameters()
 { return otherParameters; }
 
@@ -520,8 +446,6 @@ public void setXAcceleration(float pXAcceleration)
 { xAcceleration = pXAcceleration;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getXAcceleration()
 { return xAcceleration; 
 }
@@ -530,8 +454,6 @@ public void setYAcceleration(float pYAcceleration)
 { yAcceleration = pYAcceleration;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getYAcceleration()
 { return yAcceleration; 
 }
@@ -540,8 +462,6 @@ public void setZAcceleration(float pZAcceleration)
 { zAcceleration = pZAcceleration;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getZAcceleration()
 { return zAcceleration; 
 }
@@ -550,8 +470,6 @@ public void setXAngularVelocity(float pXAngularVelocity)
 { xAngularVelocity = pXAngularVelocity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getXAngularVelocity()
 { return xAngularVelocity; 
 }
@@ -560,8 +478,6 @@ public void setYAngularVelocity(float pYAngularVelocity)
 { yAngularVelocity = pYAngularVelocity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getYAngularVelocity()
 { return yAngularVelocity; 
 }
@@ -570,8 +486,6 @@ public void setZAngularVelocity(float pZAngularVelocity)
 { zAngularVelocity = pZAngularVelocity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getZAngularVelocity()
 { return zAngularVelocity; 
 }
@@ -580,8 +494,6 @@ public void setMarking(byte[] pMarking)
 { marking = pMarking;
 }
 
-@XmlElement(name="marking" )
-@Basic
 public byte[] getMarking()
 { return marking; }
 
@@ -589,8 +501,6 @@ public void setCapabilities(int pCapabilities)
 { capabilities = pCapabilities;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getCapabilities()
 { return capabilities; 
 }
@@ -599,8 +509,6 @@ public void setArticulationParameters(List<ArticulationParameter> pArticulationP
 { articulationParameters = pArticulationParameters;
 }
 
-@XmlElementWrapper(name="articulationParametersList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<ArticulationParameter> getArticulationParameters()
 { return articulationParameters; }
 

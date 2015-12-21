@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Information about an entity's engine fuel. Section 6.2.24.
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class EngineFuel extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_EngineFuel;
-
    /** Fuel quantity, units specified by next field */
    protected long  fuelQuantity;
 
@@ -51,7 +37,6 @@ public class EngineFuel extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -66,26 +51,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_EngineFuel()
-{
-   return pk_EngineFuel;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_EngineFuel(long pKeyName)
-{
-   this.pk_EngineFuel = pKeyName;
-}
-
 public void setFuelQuantity(long pFuelQuantity)
 { fuelQuantity = pFuelQuantity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getFuelQuantity()
 { return fuelQuantity; 
 }
@@ -94,8 +63,6 @@ public void setFuelMeasurementUnits(short pFuelMeasurementUnits)
 { fuelMeasurementUnits = pFuelMeasurementUnits;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getFuelMeasurementUnits()
 { return fuelMeasurementUnits; 
 }
@@ -104,8 +71,6 @@ public void setFuelType(short pFuelType)
 { fuelType = pFuelType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getFuelType()
 { return fuelType; 
 }
@@ -114,8 +79,6 @@ public void setFuelLocation(short pFuelLocation)
 { fuelLocation = pFuelLocation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getFuelLocation()
 { return fuelLocation; 
 }
@@ -124,8 +87,6 @@ public void setPadding(short pPadding)
 { padding = pPadding;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding()
 { return padding; 
 }

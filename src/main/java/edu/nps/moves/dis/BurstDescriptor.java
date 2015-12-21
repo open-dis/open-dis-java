@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.2.7. Specifies the type of muntion fired, the type of warhead, the         type of fuse, the number of rounds fired, and the rate at which the roudns are fired in         rounds per minute.
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class BurstDescriptor extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_BurstDescriptor;
-
    /** What munition was used in the burst */
    protected EntityType  munition = new EntityType(); 
 
@@ -51,7 +37,6 @@ public class BurstDescriptor extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -66,31 +51,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_BurstDescriptor()
-{
-   return pk_BurstDescriptor;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_BurstDescriptor(long pKeyName)
-{
-   this.pk_BurstDescriptor = pKeyName;
-}
-
 public void setMunition(EntityType pMunition)
 { munition = pMunition;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_munition;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_munition")
 public EntityType getMunition()
 { return munition; 
 }
@@ -99,8 +63,6 @@ public void setWarhead(int pWarhead)
 { warhead = pWarhead;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getWarhead()
 { return warhead; 
 }
@@ -109,8 +71,6 @@ public void setFuse(int pFuse)
 { fuse = pFuse;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getFuse()
 { return fuse; 
 }
@@ -119,8 +79,6 @@ public void setQuantity(int pQuantity)
 { quantity = pQuantity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getQuantity()
 { return quantity; 
 }
@@ -129,8 +87,6 @@ public void setRate(int pRate)
 { rate = pRate;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getRate()
 { return rate; 
 }

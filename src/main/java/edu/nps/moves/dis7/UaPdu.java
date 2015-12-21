@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  *  Information about underwater acoustic emmissions. This requires manual cleanup.  The beam data records should ALL be a the finish, rather than attached to each emitter system. Section 7.6.4. UNFINISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class UaPdu extends DistributedEmissionsFamilyPdu implements Serializable
 {
    /** ID of the entity that is the source of the emission */
@@ -67,7 +56,6 @@ public class UaPdu extends DistributedEmissionsFamilyPdu implements Serializable
     setPduType( (short)29 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -106,13 +94,6 @@ public void setEmittingEntityID(EntityID pEmittingEntityID)
 { emittingEntityID = pEmittingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_emittingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_emittingEntityID")
 public EntityID getEmittingEntityID()
 { return emittingEntityID; 
 }
@@ -121,13 +102,6 @@ public void setEventID(EventIdentifier pEventID)
 { eventID = pEventID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_eventID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_eventID")
 public EventIdentifier getEventID()
 { return eventID; 
 }
@@ -136,8 +110,6 @@ public void setStateChangeIndicator(byte pStateChangeIndicator)
 { stateChangeIndicator = pStateChangeIndicator;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public byte getStateChangeIndicator()
 { return stateChangeIndicator; 
 }
@@ -146,8 +118,6 @@ public void setPad(byte pPad)
 { pad = pPad;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public byte getPad()
 { return pad; 
 }
@@ -156,8 +126,6 @@ public void setPassiveParameterIndex(int pPassiveParameterIndex)
 { passiveParameterIndex = pPassiveParameterIndex;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPassiveParameterIndex()
 { return passiveParameterIndex; 
 }
@@ -166,14 +134,10 @@ public void setPropulsionPlantConfiguration(short pPropulsionPlantConfiguration)
 { propulsionPlantConfiguration = pPropulsionPlantConfiguration;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPropulsionPlantConfiguration()
 { return propulsionPlantConfiguration; 
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfShafts()
 { return (short)shaftRPMs.size();
 }
@@ -186,8 +150,6 @@ public void setNumberOfShafts(short pNumberOfShafts)
 { numberOfShafts = pNumberOfShafts;
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfAPAs()
 { return (short)apaData.size();
 }
@@ -200,8 +162,6 @@ public void setNumberOfAPAs(short pNumberOfAPAs)
 { numberOfAPAs = pNumberOfAPAs;
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfUAEmitterSystems()
 { return (short)emitterSystems.size();
 }
@@ -218,8 +178,6 @@ public void setShaftRPMs(List<Vector3Float> pShaftRPMs)
 { shaftRPMs = pShaftRPMs;
 }
 
-@XmlElementWrapper(name="shaftRPMsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<Vector3Float> getShaftRPMs()
 { return shaftRPMs; }
 
@@ -227,8 +185,6 @@ public void setApaData(List<Vector3Float> pApaData)
 { apaData = pApaData;
 }
 
-@XmlElementWrapper(name="apaDataList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<Vector3Float> getApaData()
 { return apaData; }
 
@@ -236,8 +192,6 @@ public void setEmitterSystems(List<Vector3Float> pEmitterSystems)
 { emitterSystems = pEmitterSystems;
 }
 
-@XmlElementWrapper(name="emitterSystemsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<Vector3Float> getEmitterSystems()
 { return emitterSystems; }
 

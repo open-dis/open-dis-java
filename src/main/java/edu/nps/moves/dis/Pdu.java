@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * The superclass for all PDUs. This incorporates the PduHeader record, section 5.2.29.
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class Pdu extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_Pdu;
-
    /** The version of the protocol. 5=DIS-1995, 6=DIS-1998. */
    protected short  protocolVersion = (short)6;
 
@@ -56,14 +42,7 @@ public class Pdu extends Object implements Serializable
  public Pdu()
  {
  }
-   
-@Transient 
-public int getLength()
-{
-    return this.getMarshalledSize();    
-}
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -80,26 +59,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_Pdu()
-{
-   return pk_Pdu;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_Pdu(long pKeyName)
-{
-   this.pk_Pdu = pKeyName;
-}
-
 public void setProtocolVersion(short pProtocolVersion)
 { protocolVersion = pProtocolVersion;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getProtocolVersion()
 { return protocolVersion; 
 }
@@ -108,8 +71,6 @@ public void setExerciseID(short pExerciseID)
 { exerciseID = pExerciseID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getExerciseID()
 { return exerciseID; 
 }
@@ -118,29 +79,14 @@ public void setPduType(short pPduType)
 { pduType = pPduType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPduType()
 { return pduType; 
-}
-
-/**
-* Returns the PduType, an enumeration from the disenum jar file. This is an enumerated
-* java type, rather than a simple short integer. This should NOT be marshalled to DIS
-* or XML.
-* @return this Pdu's type enumeration
-*/
-@Transient
-public PduType getPduTypeEnum() {
-   return PduType.lookup[pduType];
 }
 
 public void setProtocolFamily(short pProtocolFamily)
 { protocolFamily = pProtocolFamily;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getProtocolFamily()
 { return protocolFamily; 
 }
@@ -149,8 +95,6 @@ public void setTimestamp(long pTimestamp)
 { timestamp = pTimestamp;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getTimestamp()
 { return timestamp; 
 }
@@ -159,8 +103,6 @@ public void setPduLength(int pPduLength)
 { pduLength = pPduLength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPduLength()
 { return pduLength; 
 }
@@ -169,8 +111,6 @@ public void setPadding(short pPadding)
 { padding = pPadding;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding()
 { return padding; 
 }

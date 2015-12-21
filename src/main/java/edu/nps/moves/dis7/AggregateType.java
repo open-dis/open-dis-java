@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Identifies the type and organization of an aggregate. Section 6.2.5
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class AggregateType extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_AggregateType;
-
    /** Grouping criterion used to group the aggregate. Enumeration from EBV document */
    protected short  aggregateKind;
 
@@ -56,7 +42,6 @@ public class AggregateType extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -73,26 +58,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_AggregateType()
-{
-   return pk_AggregateType;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_AggregateType(long pKeyName)
-{
-   this.pk_AggregateType = pKeyName;
-}
-
 public void setAggregateKind(short pAggregateKind)
 { aggregateKind = pAggregateKind;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getAggregateKind()
 { return aggregateKind; 
 }
@@ -101,8 +70,6 @@ public void setDomain(short pDomain)
 { domain = pDomain;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getDomain()
 { return domain; 
 }
@@ -111,8 +78,6 @@ public void setCountry(int pCountry)
 { country = pCountry;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getCountry()
 { return country; 
 }
@@ -121,8 +86,6 @@ public void setCategory(short pCategory)
 { category = pCategory;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getCategory()
 { return category; 
 }
@@ -131,8 +94,6 @@ public void setSubcategory(short pSubcategory)
 { subcategory = pSubcategory;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSubcategory()
 { return subcategory; 
 }
@@ -141,8 +102,6 @@ public void setSpecificInfo(short pSpecificInfo)
 { specificInfo = pSpecificInfo;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSpecificInfo()
 { return specificInfo; 
 }
@@ -151,8 +110,6 @@ public void setExtra(short pExtra)
 { extra = pExtra;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getExtra()
 { return extra; 
 }

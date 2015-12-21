@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.11.2: Information about globat, spatially varying enviornmental effects. This requires manual cleanup; the grid axis        records are variable sized. UNFINISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class GriddedDataPdu extends SyntheticEnvironmentFamilyPdu implements Serializable
 {
    /** environmental simulation application ID */
@@ -78,7 +67,6 @@ public class GriddedDataPdu extends SyntheticEnvironmentFamilyPdu implements Ser
     setPduType( (short)42 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -112,13 +100,6 @@ public void setEnvironmentalSimulationApplicationID(EntityID pEnvironmentalSimul
 { environmentalSimulationApplicationID = pEnvironmentalSimulationApplicationID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_environmentalSimulationApplicationID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_environmentalSimulationApplicationID")
 public EntityID getEnvironmentalSimulationApplicationID()
 { return environmentalSimulationApplicationID; 
 }
@@ -127,8 +108,6 @@ public void setFieldNumber(int pFieldNumber)
 { fieldNumber = pFieldNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getFieldNumber()
 { return fieldNumber; 
 }
@@ -137,8 +116,6 @@ public void setPduNumber(int pPduNumber)
 { pduNumber = pPduNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPduNumber()
 { return pduNumber; 
 }
@@ -147,8 +124,6 @@ public void setPduTotal(int pPduTotal)
 { pduTotal = pPduTotal;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPduTotal()
 { return pduTotal; 
 }
@@ -157,14 +132,10 @@ public void setCoordinateSystem(int pCoordinateSystem)
 { coordinateSystem = pCoordinateSystem;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getCoordinateSystem()
 { return coordinateSystem; 
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfGridAxes()
 { return (short)gridDataList.size();
 }
@@ -181,8 +152,6 @@ public void setConstantGrid(short pConstantGrid)
 { constantGrid = pConstantGrid;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getConstantGrid()
 { return constantGrid; 
 }
@@ -191,13 +160,6 @@ public void setEnvironmentType(EntityType pEnvironmentType)
 { environmentType = pEnvironmentType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_environmentType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_environmentType")
 public EntityType getEnvironmentType()
 { return environmentType; 
 }
@@ -206,13 +168,6 @@ public void setOrientation(Orientation pOrientation)
 { orientation = pOrientation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_orientation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_orientation")
 public Orientation getOrientation()
 { return orientation; 
 }
@@ -221,8 +176,6 @@ public void setSampleTime(long pSampleTime)
 { sampleTime = pSampleTime;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getSampleTime()
 { return sampleTime; 
 }
@@ -231,8 +184,6 @@ public void setTotalValues(long pTotalValues)
 { totalValues = pTotalValues;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getTotalValues()
 { return totalValues; 
 }
@@ -241,8 +192,6 @@ public void setVectorDimension(short pVectorDimension)
 { vectorDimension = pVectorDimension;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getVectorDimension()
 { return vectorDimension; 
 }
@@ -251,8 +200,6 @@ public void setPadding1(int pPadding1)
 { padding1 = pPadding1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding1()
 { return padding1; 
 }
@@ -261,8 +208,6 @@ public void setPadding2(short pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding2()
 { return padding2; 
 }
@@ -271,8 +216,6 @@ public void setGridDataList(List<GridAxisRecord> pGridDataList)
 { gridDataList = pGridDataList;
 }
 
-@XmlElementWrapper(name="gridDataListList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<GridAxisRecord> getGridDataList()
 { return gridDataList; }
 

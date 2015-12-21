@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.3.2. Information about a collision. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class CollisionPdu extends EntityInformationFamilyPdu implements Serializable
 {
    /** ID of the entity that issued the collision PDU */
@@ -59,7 +48,6 @@ public class CollisionPdu extends EntityInformationFamilyPdu implements Serializ
     setProtocolFamily( (short)1 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -82,13 +70,6 @@ public void setIssuingEntityID(EntityID pIssuingEntityID)
 { issuingEntityID = pIssuingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_issuingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_issuingEntityID")
 public EntityID getIssuingEntityID()
 { return issuingEntityID; 
 }
@@ -97,13 +78,6 @@ public void setCollidingEntityID(EntityID pCollidingEntityID)
 { collidingEntityID = pCollidingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_collidingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_collidingEntityID")
 public EntityID getCollidingEntityID()
 { return collidingEntityID; 
 }
@@ -112,13 +86,6 @@ public void setEventID(EventID pEventID)
 { eventID = pEventID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_eventID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_eventID")
 public EventID getEventID()
 { return eventID; 
 }
@@ -127,8 +94,6 @@ public void setCollisionType(short pCollisionType)
 { collisionType = pCollisionType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getCollisionType()
 { return collisionType; 
 }
@@ -137,8 +102,6 @@ public void setPad(byte pPad)
 { pad = pPad;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public byte getPad()
 { return pad; 
 }
@@ -147,13 +110,6 @@ public void setVelocity(Vector3Float pVelocity)
 { velocity = pVelocity;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_velocity;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_velocity")
 public Vector3Float getVelocity()
 { return velocity; 
 }
@@ -162,8 +118,6 @@ public void setMass(float pMass)
 { mass = pMass;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getMass()
 { return mass; 
 }
@@ -172,13 +126,6 @@ public void setLocation(Vector3Float pLocation)
 { location = pLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_location;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_location")
 public Vector3Float getLocation()
 { return location; 
 }

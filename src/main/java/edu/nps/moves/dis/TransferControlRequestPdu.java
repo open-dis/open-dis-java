@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.9.3 Information initiating the dyanic allocation and control of simulation entities         between two simulation applications. Requires manual cleanup. The padding between record sets is variable. UNFINISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class TransferControlRequestPdu extends EntityManagementFamilyPdu implements Serializable
 {
    /** ID of entity originating request */
@@ -57,7 +46,6 @@ public class TransferControlRequestPdu extends EntityManagementFamilyPdu impleme
     setPduType( (short)35 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -84,13 +72,6 @@ public void setOrginatingEntityID(EntityID pOrginatingEntityID)
 { orginatingEntityID = pOrginatingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_orginatingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_orginatingEntityID")
 public EntityID getOrginatingEntityID()
 { return orginatingEntityID; 
 }
@@ -99,13 +80,6 @@ public void setRecevingEntityID(EntityID pRecevingEntityID)
 { recevingEntityID = pRecevingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_recevingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_recevingEntityID")
 public EntityID getRecevingEntityID()
 { return recevingEntityID; 
 }
@@ -114,8 +88,6 @@ public void setRequestID(long pRequestID)
 { requestID = pRequestID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getRequestID()
 { return requestID; 
 }
@@ -124,8 +96,6 @@ public void setRequiredReliabilityService(short pRequiredReliabilityService)
 { requiredReliabilityService = pRequiredReliabilityService;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getRequiredReliabilityService()
 { return requiredReliabilityService; 
 }
@@ -134,8 +104,6 @@ public void setTranferType(short pTranferType)
 { tranferType = pTranferType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getTranferType()
 { return tranferType; 
 }
@@ -144,19 +112,10 @@ public void setTransferEntityID(EntityID pTransferEntityID)
 { transferEntityID = pTransferEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_transferEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_transferEntityID")
 public EntityID getTransferEntityID()
 { return transferEntityID; 
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfRecordSets()
 { return (short)recordSets.size();
 }
@@ -173,8 +132,6 @@ public void setRecordSets(List<RecordSet> pRecordSets)
 { recordSets = pRecordSets;
 }
 
-@XmlElementWrapper(name="recordSetsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<RecordSet> getRecordSets()
 { return recordSets; }
 

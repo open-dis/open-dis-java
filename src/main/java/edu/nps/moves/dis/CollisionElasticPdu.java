@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * 5.3.3.3. Information about elastic collisions in a DIS exercise shall be communicated using a Collision-Elastic PDU. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class CollisionElasticPdu extends EntityInformationFamilyPdu implements Serializable
 {
    /** ID of the entity that issued the collision PDU */
@@ -80,7 +69,6 @@ public class CollisionElasticPdu extends EntityInformationFamilyPdu implements S
     setProtocolFamily( (short)1 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -110,13 +98,6 @@ public void setIssuingEntityID(EntityID pIssuingEntityID)
 { issuingEntityID = pIssuingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_issuingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_issuingEntityID")
 public EntityID getIssuingEntityID()
 { return issuingEntityID; 
 }
@@ -125,13 +106,6 @@ public void setCollidingEntityID(EntityID pCollidingEntityID)
 { collidingEntityID = pCollidingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_collidingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_collidingEntityID")
 public EntityID getCollidingEntityID()
 { return collidingEntityID; 
 }
@@ -140,13 +114,6 @@ public void setCollisionEventID(EventID pCollisionEventID)
 { collisionEventID = pCollisionEventID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_collisionEventID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_collisionEventID")
 public EventID getCollisionEventID()
 { return collisionEventID; 
 }
@@ -155,8 +122,6 @@ public void setPad(short pPad)
 { pad = pPad;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPad()
 { return pad; 
 }
@@ -165,13 +130,6 @@ public void setContactVelocity(Vector3Float pContactVelocity)
 { contactVelocity = pContactVelocity;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_contactVelocity;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_contactVelocity")
 public Vector3Float getContactVelocity()
 { return contactVelocity; 
 }
@@ -180,8 +138,6 @@ public void setMass(float pMass)
 { mass = pMass;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getMass()
 { return mass; 
 }
@@ -190,13 +146,6 @@ public void setLocation(Vector3Float pLocation)
 { location = pLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_location;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_location")
 public Vector3Float getLocation()
 { return location; 
 }
@@ -205,8 +154,6 @@ public void setCollisionResultXX(float pCollisionResultXX)
 { collisionResultXX = pCollisionResultXX;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getCollisionResultXX()
 { return collisionResultXX; 
 }
@@ -215,8 +162,6 @@ public void setCollisionResultXY(float pCollisionResultXY)
 { collisionResultXY = pCollisionResultXY;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getCollisionResultXY()
 { return collisionResultXY; 
 }
@@ -225,8 +170,6 @@ public void setCollisionResultXZ(float pCollisionResultXZ)
 { collisionResultXZ = pCollisionResultXZ;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getCollisionResultXZ()
 { return collisionResultXZ; 
 }
@@ -235,8 +178,6 @@ public void setCollisionResultYY(float pCollisionResultYY)
 { collisionResultYY = pCollisionResultYY;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getCollisionResultYY()
 { return collisionResultYY; 
 }
@@ -245,8 +186,6 @@ public void setCollisionResultYZ(float pCollisionResultYZ)
 { collisionResultYZ = pCollisionResultYZ;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getCollisionResultYZ()
 { return collisionResultYZ; 
 }
@@ -255,8 +194,6 @@ public void setCollisionResultZZ(float pCollisionResultZZ)
 { collisionResultZZ = pCollisionResultZZ;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getCollisionResultZZ()
 { return collisionResultZZ; 
 }
@@ -265,13 +202,6 @@ public void setUnitSurfaceNormal(Vector3Float pUnitSurfaceNormal)
 { unitSurfaceNormal = pUnitSurfaceNormal;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_unitSurfaceNormal;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_unitSurfaceNormal")
 public Vector3Float getUnitSurfaceNormal()
 { return unitSurfaceNormal; 
 }
@@ -280,8 +210,6 @@ public void setCoefficientOfRestitution(float pCoefficientOfRestitution)
 { coefficientOfRestitution = pCoefficientOfRestitution;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getCoefficientOfRestitution()
 { return coefficientOfRestitution; 
 }

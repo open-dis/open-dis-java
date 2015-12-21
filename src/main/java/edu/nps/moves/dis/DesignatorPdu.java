@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.7.2. Handles designating operations. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class DesignatorPdu extends DistributedEmissionsFamilyPdu implements Serializable
 {
    /** ID of the entity designating */
@@ -70,7 +59,6 @@ public class DesignatorPdu extends DistributedEmissionsFamilyPdu implements Seri
     setPduType( (short)24 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -97,13 +85,6 @@ public void setDesignatingEntityID(EntityID pDesignatingEntityID)
 { designatingEntityID = pDesignatingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_designatingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_designatingEntityID")
 public EntityID getDesignatingEntityID()
 { return designatingEntityID; 
 }
@@ -112,8 +93,6 @@ public void setCodeName(int pCodeName)
 { codeName = pCodeName;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getCodeName()
 { return codeName; 
 }
@@ -122,13 +101,6 @@ public void setDesignatedEntityID(EntityID pDesignatedEntityID)
 { designatedEntityID = pDesignatedEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_designatedEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_designatedEntityID")
 public EntityID getDesignatedEntityID()
 { return designatedEntityID; 
 }
@@ -137,8 +109,6 @@ public void setDesignatorCode(int pDesignatorCode)
 { designatorCode = pDesignatorCode;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getDesignatorCode()
 { return designatorCode; 
 }
@@ -147,8 +117,6 @@ public void setDesignatorPower(float pDesignatorPower)
 { designatorPower = pDesignatorPower;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getDesignatorPower()
 { return designatorPower; 
 }
@@ -157,8 +125,6 @@ public void setDesignatorWavelength(float pDesignatorWavelength)
 { designatorWavelength = pDesignatorWavelength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getDesignatorWavelength()
 { return designatorWavelength; 
 }
@@ -167,13 +133,6 @@ public void setDesignatorSpotWrtDesignated(Vector3Float pDesignatorSpotWrtDesign
 { designatorSpotWrtDesignated = pDesignatorSpotWrtDesignated;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_designatorSpotWrtDesignated;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_designatorSpotWrtDesignated")
 public Vector3Float getDesignatorSpotWrtDesignated()
 { return designatorSpotWrtDesignated; 
 }
@@ -182,13 +141,6 @@ public void setDesignatorSpotLocation(Vector3Double pDesignatorSpotLocation)
 { designatorSpotLocation = pDesignatorSpotLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_designatorSpotLocation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_designatorSpotLocation")
 public Vector3Double getDesignatorSpotLocation()
 { return designatorSpotLocation; 
 }
@@ -197,8 +149,6 @@ public void setDeadReckoningAlgorithm(byte pDeadReckoningAlgorithm)
 { deadReckoningAlgorithm = pDeadReckoningAlgorithm;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public byte getDeadReckoningAlgorithm()
 { return deadReckoningAlgorithm; 
 }
@@ -207,8 +157,6 @@ public void setPadding1(int pPadding1)
 { padding1 = pPadding1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding1()
 { return padding1; 
 }
@@ -217,8 +165,6 @@ public void setPadding2(byte pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public byte getPadding2()
 { return padding2; 
 }
@@ -227,13 +173,6 @@ public void setEntityLinearAcceleration(Vector3Float pEntityLinearAcceleration)
 { entityLinearAcceleration = pEntityLinearAcceleration;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_entityLinearAcceleration;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_entityLinearAcceleration")
 public Vector3Float getEntityLinearAcceleration()
 { return entityLinearAcceleration; 
 }

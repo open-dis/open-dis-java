@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Used when the antenna pattern type field has a value of 1. Specifies the direction, pattern, and polarization of radiation from an antenna. Section 6.2.9.2
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class BeamAntennaPattern extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_BeamAntennaPattern;
-
    /** The rotation that transforms the reference coordinate sytem into the beam coordinate system. Either world coordinates or entity coordinates may be used as the reference coordinate system, as specified by the reference system field of the antenna pattern record. */
    protected EulerAngles  beamDirection = new EulerAngles(); 
 
@@ -61,7 +47,6 @@ public class BeamAntennaPattern extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -81,31 +66,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_BeamAntennaPattern()
-{
-   return pk_BeamAntennaPattern;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_BeamAntennaPattern(long pKeyName)
-{
-   this.pk_BeamAntennaPattern = pKeyName;
-}
-
 public void setBeamDirection(EulerAngles pBeamDirection)
 { beamDirection = pBeamDirection;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_beamDirection;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_beamDirection")
 public EulerAngles getBeamDirection()
 { return beamDirection; 
 }
@@ -114,8 +78,6 @@ public void setAzimuthBeamwidth(float pAzimuthBeamwidth)
 { azimuthBeamwidth = pAzimuthBeamwidth;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getAzimuthBeamwidth()
 { return azimuthBeamwidth; 
 }
@@ -124,8 +86,6 @@ public void setElevationBeamwidth(float pElevationBeamwidth)
 { elevationBeamwidth = pElevationBeamwidth;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getElevationBeamwidth()
 { return elevationBeamwidth; 
 }
@@ -134,8 +94,6 @@ public void setReferenceSystem(short pReferenceSystem)
 { referenceSystem = pReferenceSystem;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getReferenceSystem()
 { return referenceSystem; 
 }
@@ -144,8 +102,6 @@ public void setPadding1(short pPadding1)
 { padding1 = pPadding1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding1()
 { return padding1; 
 }
@@ -154,8 +110,6 @@ public void setPadding2(int pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding2()
 { return padding2; 
 }
@@ -164,8 +118,6 @@ public void setEz(float pEz)
 { ez = pEz;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getEz()
 { return ez; 
 }
@@ -174,8 +126,6 @@ public void setEx(float pEx)
 { ex = pEx;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getEx()
 { return ex; 
 }
@@ -184,8 +134,6 @@ public void setPhase(float pPhase)
 { phase = pPhase;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getPhase()
 { return phase; 
 }
@@ -194,8 +142,6 @@ public void setPadding3(long pPadding3)
 { padding3 = pPadding3;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getPadding3()
 { return padding3; 
 }

@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.9.1 informationa bout aggregating entities anc communicating information about the aggregated entities.        requires manual intervention to fix the padding between entityID lists and silent aggregate sysem lists--this padding        is dependent on how many entityIDs there are, and needs to be on a 32 bit word boundary. UNFINISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class AggregateStatePdu extends EntityManagementFamilyPdu implements Serializable
 {
    /** ID of aggregated entities */
@@ -92,7 +81,6 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
     setPduType( (short)33 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -148,13 +136,6 @@ public void setAggregateID(EntityID pAggregateID)
 { aggregateID = pAggregateID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_aggregateID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_aggregateID")
 public EntityID getAggregateID()
 { return aggregateID; 
 }
@@ -163,8 +144,6 @@ public void setForceID(short pForceID)
 { forceID = pForceID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getForceID()
 { return forceID; 
 }
@@ -173,8 +152,6 @@ public void setAggregateState(short pAggregateState)
 { aggregateState = pAggregateState;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getAggregateState()
 { return aggregateState; 
 }
@@ -183,13 +160,6 @@ public void setAggregateType(EntityType pAggregateType)
 { aggregateType = pAggregateType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_aggregateType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_aggregateType")
 public EntityType getAggregateType()
 { return aggregateType; 
 }
@@ -198,8 +168,6 @@ public void setFormation(long pFormation)
 { formation = pFormation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getFormation()
 { return formation; 
 }
@@ -208,13 +176,6 @@ public void setAggregateMarking(AggregateMarking pAggregateMarking)
 { aggregateMarking = pAggregateMarking;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_aggregateMarking;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_aggregateMarking")
 public AggregateMarking getAggregateMarking()
 { return aggregateMarking; 
 }
@@ -223,13 +184,6 @@ public void setDimensions(Vector3Float pDimensions)
 { dimensions = pDimensions;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_dimensions;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_dimensions")
 public Vector3Float getDimensions()
 { return dimensions; 
 }
@@ -238,13 +192,6 @@ public void setOrientation(Orientation pOrientation)
 { orientation = pOrientation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_orientation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_orientation")
 public Orientation getOrientation()
 { return orientation; 
 }
@@ -253,13 +200,6 @@ public void setCenterOfMass(Vector3Double pCenterOfMass)
 { centerOfMass = pCenterOfMass;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_centerOfMass;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_centerOfMass")
 public Vector3Double getCenterOfMass()
 { return centerOfMass; 
 }
@@ -268,19 +208,10 @@ public void setVelocity(Vector3Float pVelocity)
 { velocity = pVelocity;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_velocity;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_velocity")
 public Vector3Float getVelocity()
 { return velocity; 
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfDisAggregates()
 { return (int)aggregateIDList.size();
 }
@@ -293,8 +224,6 @@ public void setNumberOfDisAggregates(int pNumberOfDisAggregates)
 { numberOfDisAggregates = pNumberOfDisAggregates;
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfDisEntities()
 { return (int)entityIDList.size();
 }
@@ -307,8 +236,6 @@ public void setNumberOfDisEntities(int pNumberOfDisEntities)
 { numberOfDisEntities = pNumberOfDisEntities;
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfSilentAggregateTypes()
 { return (int)silentAggregateSystemList.size();
 }
@@ -321,8 +248,6 @@ public void setNumberOfSilentAggregateTypes(int pNumberOfSilentAggregateTypes)
 { numberOfSilentAggregateTypes = pNumberOfSilentAggregateTypes;
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfSilentEntityTypes()
 { return (int)silentEntitySystemList.size();
 }
@@ -339,8 +264,6 @@ public void setAggregateIDList(List<AggregateID> pAggregateIDList)
 { aggregateIDList = pAggregateIDList;
 }
 
-@XmlElementWrapper(name="aggregateIDListList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<AggregateID> getAggregateIDList()
 { return aggregateIDList; }
 
@@ -348,8 +271,6 @@ public void setEntityIDList(List<EntityID> pEntityIDList)
 { entityIDList = pEntityIDList;
 }
 
-@XmlElementWrapper(name="entityIDListList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<EntityID> getEntityIDList()
 { return entityIDList; }
 
@@ -357,8 +278,6 @@ public void setPad2(short pPad2)
 { pad2 = pPad2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPad2()
 { return pad2; 
 }
@@ -367,8 +286,6 @@ public void setSilentAggregateSystemList(List<EntityType> pSilentAggregateSystem
 { silentAggregateSystemList = pSilentAggregateSystemList;
 }
 
-@XmlElementWrapper(name="silentAggregateSystemListList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<EntityType> getSilentAggregateSystemList()
 { return silentAggregateSystemList; }
 
@@ -376,13 +293,9 @@ public void setSilentEntitySystemList(List<EntityType> pSilentEntitySystemList)
 { silentEntitySystemList = pSilentEntitySystemList;
 }
 
-@XmlElementWrapper(name="silentEntitySystemListList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<EntityType> getSilentEntitySystemList()
 { return silentEntitySystemList; }
 
-@XmlAttribute
-@Basic
 public long getNumberOfVariableDatumRecords()
 { return (long)variableDatumList.size();
 }
@@ -399,8 +312,6 @@ public void setVariableDatumList(List<VariableDatum> pVariableDatumList)
 { variableDatumList = pVariableDatumList;
 }
 
-@XmlElementWrapper(name="variableDatumListList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<VariableDatum> getVariableDatumList()
 { return variableDatumList; }
 

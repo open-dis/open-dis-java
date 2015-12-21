@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * shall be used to communicate detailed damage information sustained by an entity regardless of the source of the damage Section 7.3.5  COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class EntityDamageStatusPdu extends WarfareFamilyPdu implements Serializable
 {
    /** Field shall identify the damaged entity (see 6.2.28), Section 7.3.4 COMPLETE */
@@ -48,7 +37,6 @@ public class EntityDamageStatusPdu extends WarfareFamilyPdu implements Serializa
     setPduType( (short)69 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -72,13 +60,6 @@ public void setDamagedEntityID(EntityID pDamagedEntityID)
 { damagedEntityID = pDamagedEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_damagedEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_damagedEntityID")
 public EntityID getDamagedEntityID()
 { return damagedEntityID; 
 }
@@ -87,8 +68,6 @@ public void setPadding1(int pPadding1)
 { padding1 = pPadding1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding1()
 { return padding1; 
 }
@@ -97,14 +76,10 @@ public void setPadding2(int pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding2()
 { return padding2; 
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfDamageDescription()
 { return (int)damageDescriptionRecords.size();
 }
@@ -121,8 +96,6 @@ public void setDamageDescriptionRecords(List<DirectedEnergyDamage> pDamageDescri
 { damageDescriptionRecords = pDamageDescriptionRecords;
 }
 
-@XmlElementWrapper(name="damageDescriptionRecordsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<DirectedEnergyDamage> getDamageDescriptionRecords()
 { return damageDescriptionRecords; }
 

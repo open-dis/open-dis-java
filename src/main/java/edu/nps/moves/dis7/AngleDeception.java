@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * The Angle Deception attribute record may be used to communicate discrete values that are associated with angle deception jamming that cannot be referenced to an emitter mode. The values provided in the record records (provided in the associated Electromagnetic Emission PDU). (The victim radar beams are those that are targeted by the jammer.) Section 6.2.21.2.2
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class AngleDeception extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_AngleDeception;
-
    protected long  recordType = (long)3501;
 
    protected int  recordLength = (int)48;
@@ -68,7 +54,6 @@ public class AngleDeception extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -94,26 +79,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_AngleDeception()
-{
-   return pk_AngleDeception;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_AngleDeception(long pKeyName)
-{
-   this.pk_AngleDeception = pKeyName;
-}
-
 public void setRecordType(long pRecordType)
 { recordType = pRecordType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getRecordType()
 { return recordType; 
 }
@@ -122,8 +91,6 @@ public void setRecordLength(int pRecordLength)
 { recordLength = pRecordLength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getRecordLength()
 { return recordLength; 
 }
@@ -132,8 +99,6 @@ public void setPadding(int pPadding)
 { padding = pPadding;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding()
 { return padding; 
 }
@@ -142,8 +107,6 @@ public void setEmitterNumber(short pEmitterNumber)
 { emitterNumber = pEmitterNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getEmitterNumber()
 { return emitterNumber; 
 }
@@ -152,8 +115,6 @@ public void setBeamNumber(short pBeamNumber)
 { beamNumber = pBeamNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getBeamNumber()
 { return beamNumber; 
 }
@@ -162,8 +123,6 @@ public void setStateIndicator(short pStateIndicator)
 { stateIndicator = pStateIndicator;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getStateIndicator()
 { return stateIndicator; 
 }
@@ -172,8 +131,6 @@ public void setPadding2(short pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding2()
 { return padding2; 
 }
@@ -182,8 +139,6 @@ public void setAzimuthOffset(float pAzimuthOffset)
 { azimuthOffset = pAzimuthOffset;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getAzimuthOffset()
 { return azimuthOffset; 
 }
@@ -192,8 +147,6 @@ public void setAzimuthWidth(float pAzimuthWidth)
 { azimuthWidth = pAzimuthWidth;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getAzimuthWidth()
 { return azimuthWidth; 
 }
@@ -202,8 +155,6 @@ public void setAzimuthPullRate(float pAzimuthPullRate)
 { azimuthPullRate = pAzimuthPullRate;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getAzimuthPullRate()
 { return azimuthPullRate; 
 }
@@ -212,8 +163,6 @@ public void setAzimuthPullAcceleration(float pAzimuthPullAcceleration)
 { azimuthPullAcceleration = pAzimuthPullAcceleration;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getAzimuthPullAcceleration()
 { return azimuthPullAcceleration; 
 }
@@ -222,8 +171,6 @@ public void setElevationOffset(float pElevationOffset)
 { elevationOffset = pElevationOffset;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getElevationOffset()
 { return elevationOffset; 
 }
@@ -232,8 +179,6 @@ public void setElevationWidth(float pElevationWidth)
 { elevationWidth = pElevationWidth;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getElevationWidth()
 { return elevationWidth; 
 }
@@ -242,8 +187,6 @@ public void setElevationPullRate(float pElevationPullRate)
 { elevationPullRate = pElevationPullRate;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getElevationPullRate()
 { return elevationPullRate; 
 }
@@ -252,8 +195,6 @@ public void setElevationPullAcceleration(float pElevationPullAcceleration)
 { elevationPullAcceleration = pElevationPullAcceleration;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getElevationPullAcceleration()
 { return elevationPullAcceleration; 
 }
@@ -262,8 +203,6 @@ public void setPadding3(long pPadding3)
 { padding3 = pPadding3;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getPadding3()
 { return padding3; 
 }

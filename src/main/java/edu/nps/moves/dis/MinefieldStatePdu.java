@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.10.1 Abstract superclass for PDUs relating to minefields. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class MinefieldStatePdu extends MinefieldFamilyPdu implements Serializable
 {
    /** Minefield ID */
@@ -68,7 +57,6 @@ public class MinefieldStatePdu extends MinefieldFamilyPdu implements Serializabl
     setPduType( (short)37 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -103,13 +91,6 @@ public void setMinefieldID(EntityID pMinefieldID)
 { minefieldID = pMinefieldID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_minefieldID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_minefieldID")
 public EntityID getMinefieldID()
 { return minefieldID; 
 }
@@ -118,8 +99,6 @@ public void setMinefieldSequence(int pMinefieldSequence)
 { minefieldSequence = pMinefieldSequence;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getMinefieldSequence()
 { return minefieldSequence; 
 }
@@ -128,14 +107,10 @@ public void setForceID(short pForceID)
 { forceID = pForceID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getForceID()
 { return forceID; 
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfPerimeterPoints()
 { return (short)perimeterPoints.size();
 }
@@ -152,19 +127,10 @@ public void setMinefieldType(EntityType pMinefieldType)
 { minefieldType = pMinefieldType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_minefieldType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_minefieldType")
 public EntityType getMinefieldType()
 { return minefieldType; 
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfMineTypes()
 { return (int)mineType.size();
 }
@@ -181,13 +147,6 @@ public void setMinefieldLocation(Vector3Double pMinefieldLocation)
 { minefieldLocation = pMinefieldLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_minefieldLocation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_minefieldLocation")
 public Vector3Double getMinefieldLocation()
 { return minefieldLocation; 
 }
@@ -196,13 +155,6 @@ public void setMinefieldOrientation(Orientation pMinefieldOrientation)
 { minefieldOrientation = pMinefieldOrientation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_minefieldOrientation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_minefieldOrientation")
 public Orientation getMinefieldOrientation()
 { return minefieldOrientation; 
 }
@@ -211,8 +163,6 @@ public void setAppearance(int pAppearance)
 { appearance = pAppearance;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getAppearance()
 { return appearance; 
 }
@@ -221,8 +171,6 @@ public void setProtocolMode(int pProtocolMode)
 { protocolMode = pProtocolMode;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getProtocolMode()
 { return protocolMode; 
 }
@@ -231,8 +179,6 @@ public void setPerimeterPoints(List<Point> pPerimeterPoints)
 { perimeterPoints = pPerimeterPoints;
 }
 
-@XmlElementWrapper(name="perimeterPointsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<Point> getPerimeterPoints()
 { return perimeterPoints; }
 
@@ -240,8 +186,6 @@ public void setMineType(List<EntityType> pMineType)
 { mineType = pMineType;
 }
 
-@XmlElementWrapper(name="mineTypeList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<EntityType> getMineType()
 { return mineType; }
 

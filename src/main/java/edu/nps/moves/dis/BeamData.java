@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.2.39. Specification of the data necessary to  describe the scan volume of an emitter.
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class BeamData extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_BeamData;
-
    /** Specifies the beam azimuth an elevation centers and corresponding half-angles     to describe the scan volume */
    protected float  beamAzimuthCenter;
 
@@ -51,7 +37,6 @@ public class BeamData extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -66,26 +51,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_BeamData()
-{
-   return pk_BeamData;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_BeamData(long pKeyName)
-{
-   this.pk_BeamData = pKeyName;
-}
-
 public void setBeamAzimuthCenter(float pBeamAzimuthCenter)
 { beamAzimuthCenter = pBeamAzimuthCenter;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamAzimuthCenter()
 { return beamAzimuthCenter; 
 }
@@ -94,8 +63,6 @@ public void setBeamAzimuthSweep(float pBeamAzimuthSweep)
 { beamAzimuthSweep = pBeamAzimuthSweep;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamAzimuthSweep()
 { return beamAzimuthSweep; 
 }
@@ -104,8 +71,6 @@ public void setBeamElevationCenter(float pBeamElevationCenter)
 { beamElevationCenter = pBeamElevationCenter;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamElevationCenter()
 { return beamElevationCenter; 
 }
@@ -114,8 +79,6 @@ public void setBeamElevationSweep(float pBeamElevationSweep)
 { beamElevationSweep = pBeamElevationSweep;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamElevationSweep()
 { return beamElevationSweep; 
 }
@@ -124,8 +87,6 @@ public void setBeamSweepSync(float pBeamSweepSync)
 { beamSweepSync = pBeamSweepSync;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamSweepSync()
 { return beamSweepSync; 
 }

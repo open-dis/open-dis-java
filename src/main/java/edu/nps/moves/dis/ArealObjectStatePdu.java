@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.11.5: Information about the addition/modification of an oobject that is geometrically      achored to the terrain with a set of three or more points that come to a closure. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class ArealObjectStatePdu extends SyntheticEnvironmentFamilyPdu implements Serializable
 {
    /** Object in synthetic environment */
@@ -66,7 +55,6 @@ public class ArealObjectStatePdu extends SyntheticEnvironmentFamilyPdu implement
     setPduType( (short)45 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -96,13 +84,6 @@ public void setObjectID(EntityID pObjectID)
 { objectID = pObjectID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_objectID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_objectID")
 public EntityID getObjectID()
 { return objectID; 
 }
@@ -111,13 +92,6 @@ public void setReferencedObjectID(EntityID pReferencedObjectID)
 { referencedObjectID = pReferencedObjectID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_referencedObjectID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_referencedObjectID")
 public EntityID getReferencedObjectID()
 { return referencedObjectID; 
 }
@@ -126,8 +100,6 @@ public void setUpdateNumber(int pUpdateNumber)
 { updateNumber = pUpdateNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getUpdateNumber()
 { return updateNumber; 
 }
@@ -136,8 +108,6 @@ public void setForceID(short pForceID)
 { forceID = pForceID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getForceID()
 { return forceID; 
 }
@@ -146,8 +116,6 @@ public void setModifications(short pModifications)
 { modifications = pModifications;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getModifications()
 { return modifications; 
 }
@@ -156,13 +124,6 @@ public void setObjectType(EntityType pObjectType)
 { objectType = pObjectType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_objectType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_objectType")
 public EntityType getObjectType()
 { return objectType; 
 }
@@ -171,19 +132,10 @@ public void setObjectAppearance(SixByteChunk pObjectAppearance)
 { objectAppearance = pObjectAppearance;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_objectAppearance;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_objectAppearance")
 public SixByteChunk getObjectAppearance()
 { return objectAppearance; 
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfPoints()
 { return (int)objectLocation.size();
 }
@@ -200,13 +152,6 @@ public void setRequesterID(SimulationAddress pRequesterID)
 { requesterID = pRequesterID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_requesterID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_requesterID")
 public SimulationAddress getRequesterID()
 { return requesterID; 
 }
@@ -215,13 +160,6 @@ public void setReceivingID(SimulationAddress pReceivingID)
 { receivingID = pReceivingID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_receivingID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_receivingID")
 public SimulationAddress getReceivingID()
 { return receivingID; 
 }
@@ -230,8 +168,6 @@ public void setObjectLocation(List<Vector3Double> pObjectLocation)
 { objectLocation = pObjectLocation;
 }
 
-@XmlElementWrapper(name="objectLocationList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<Vector3Double> getObjectLocation()
 { return objectLocation; }
 

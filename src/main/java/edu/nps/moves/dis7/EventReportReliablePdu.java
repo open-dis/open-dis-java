@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.12.11: reports the occurance of a significatnt event to the simulation manager. Needs manual     intervention to fix padding in variable datums. UNFINISHED.
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class EventReportReliablePdu extends SimulationManagementWithReliabilityFamilyPdu implements Serializable
 {
    /** Event type */
@@ -50,7 +39,6 @@ public class EventReportReliablePdu extends SimulationManagementWithReliabilityF
     setPduType( (short)61 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -79,8 +67,6 @@ public void setEventType(int pEventType)
 { eventType = pEventType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getEventType()
 { return eventType; 
 }
@@ -89,14 +75,10 @@ public void setPad1(long pPad1)
 { pad1 = pPad1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getPad1()
 { return pad1; 
 }
 
-@XmlAttribute
-@Basic
 public long getNumberOfFixedDatumRecords()
 { return (long)fixedDatumRecords.size();
 }
@@ -109,8 +91,6 @@ public void setNumberOfFixedDatumRecords(long pNumberOfFixedDatumRecords)
 { numberOfFixedDatumRecords = pNumberOfFixedDatumRecords;
 }
 
-@XmlAttribute
-@Basic
 public long getNumberOfVariableDatumRecords()
 { return (long)variableDatumRecords.size();
 }
@@ -127,8 +107,6 @@ public void setFixedDatumRecords(List<FixedDatum> pFixedDatumRecords)
 { fixedDatumRecords = pFixedDatumRecords;
 }
 
-@XmlElementWrapper(name="fixedDatumRecordsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<FixedDatum> getFixedDatumRecords()
 { return fixedDatumRecords; }
 
@@ -136,8 +114,6 @@ public void setVariableDatumRecords(List<VariableDatum> pVariableDatumRecords)
 { variableDatumRecords = pVariableDatumRecords;
 }
 
-@XmlElementWrapper(name="variableDatumRecordsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<VariableDatum> getVariableDatumRecords()
 { return variableDatumRecords; }
 

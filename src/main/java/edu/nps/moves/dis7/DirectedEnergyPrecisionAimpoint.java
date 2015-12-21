@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * DE Precision Aimpoint Record. Section 6.2.20.3
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class DirectedEnergyPrecisionAimpoint extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_DirectedEnergyPrecisionAimpoint;
-
    /** Type of Record */
    protected long  recordType = (long)4000;
 
@@ -81,7 +67,6 @@ public class DirectedEnergyPrecisionAimpoint extends Object implements Serializa
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -106,26 +91,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_DirectedEnergyPrecisionAimpoint()
-{
-   return pk_DirectedEnergyPrecisionAimpoint;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_DirectedEnergyPrecisionAimpoint(long pKeyName)
-{
-   this.pk_DirectedEnergyPrecisionAimpoint = pKeyName;
-}
-
 public void setRecordType(long pRecordType)
 { recordType = pRecordType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getRecordType()
 { return recordType; 
 }
@@ -134,8 +103,6 @@ public void setRecordLength(int pRecordLength)
 { recordLength = pRecordLength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getRecordLength()
 { return recordLength; 
 }
@@ -144,8 +111,6 @@ public void setPadding(int pPadding)
 { padding = pPadding;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding()
 { return padding; 
 }
@@ -154,13 +119,6 @@ public void setTargetSpotLocation(Vector3Double pTargetSpotLocation)
 { targetSpotLocation = pTargetSpotLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_targetSpotLocation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_targetSpotLocation")
 public Vector3Double getTargetSpotLocation()
 { return targetSpotLocation; 
 }
@@ -169,13 +127,6 @@ public void setTargetSpotEntityLocation(Vector3Float pTargetSpotEntityLocation)
 { targetSpotEntityLocation = pTargetSpotEntityLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_targetSpotEntityLocation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_targetSpotEntityLocation")
 public Vector3Float getTargetSpotEntityLocation()
 { return targetSpotEntityLocation; 
 }
@@ -184,13 +135,6 @@ public void setTargetSpotVelocity(Vector3Float pTargetSpotVelocity)
 { targetSpotVelocity = pTargetSpotVelocity;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_targetSpotVelocity;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_targetSpotVelocity")
 public Vector3Float getTargetSpotVelocity()
 { return targetSpotVelocity; 
 }
@@ -199,13 +143,6 @@ public void setTargetSpotAcceleration(Vector3Float pTargetSpotAcceleration)
 { targetSpotAcceleration = pTargetSpotAcceleration;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_targetSpotAcceleration;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_targetSpotAcceleration")
 public Vector3Float getTargetSpotAcceleration()
 { return targetSpotAcceleration; 
 }
@@ -214,13 +151,6 @@ public void setTargetEntityID(EntityID pTargetEntityID)
 { targetEntityID = pTargetEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_targetEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_targetEntityID")
 public EntityID getTargetEntityID()
 { return targetEntityID; 
 }
@@ -229,8 +159,6 @@ public void setTargetComponentID(short pTargetComponentID)
 { targetComponentID = pTargetComponentID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getTargetComponentID()
 { return targetComponentID; 
 }
@@ -239,8 +167,6 @@ public void setBeamSpotType(short pBeamSpotType)
 { beamSpotType = pBeamSpotType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getBeamSpotType()
 { return beamSpotType; 
 }
@@ -249,8 +175,6 @@ public void setBeamSpotCrossSectionSemiMajorAxis(float pBeamSpotCrossSectionSemi
 { beamSpotCrossSectionSemiMajorAxis = pBeamSpotCrossSectionSemiMajorAxis;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamSpotCrossSectionSemiMajorAxis()
 { return beamSpotCrossSectionSemiMajorAxis; 
 }
@@ -259,8 +183,6 @@ public void setBeamSpotCrossSectionSemiMinorAxis(float pBeamSpotCrossSectionSemi
 { beamSpotCrossSectionSemiMinorAxis = pBeamSpotCrossSectionSemiMinorAxis;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamSpotCrossSectionSemiMinorAxis()
 { return beamSpotCrossSectionSemiMinorAxis; 
 }
@@ -269,8 +191,6 @@ public void setBeamSpotCrossSectionOrientationAngle(float pBeamSpotCrossSectionO
 { beamSpotCrossSectionOrientationAngle = pBeamSpotCrossSectionOrientationAngle;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamSpotCrossSectionOrientationAngle()
 { return beamSpotCrossSectionOrientationAngle; 
 }
@@ -279,8 +199,6 @@ public void setPeakIrradiance(float pPeakIrradiance)
 { peakIrradiance = pPeakIrradiance;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getPeakIrradiance()
 { return peakIrradiance; 
 }
@@ -289,8 +207,6 @@ public void setPadding2(long pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getPadding2()
 { return padding2; 
 }

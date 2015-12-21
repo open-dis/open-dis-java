@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.2.4.3. Used when the antenna pattern type in the transmitter pdu is of value 2.         Specified the direction and radiation pattern from a radio transmitter's antenna.        NOTE: this class must be hand-coded to clean up some implementation details.
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class SphericalHarmonicAntennaPattern extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_SphericalHarmonicAntennaPattern;
-
    protected byte  harmonicOrder;
 
 
@@ -38,7 +24,6 @@ public class SphericalHarmonicAntennaPattern extends Object implements Serializa
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -49,26 +34,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_SphericalHarmonicAntennaPattern()
-{
-   return pk_SphericalHarmonicAntennaPattern;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_SphericalHarmonicAntennaPattern(long pKeyName)
-{
-   this.pk_SphericalHarmonicAntennaPattern = pKeyName;
-}
-
 public void setHarmonicOrder(byte pHarmonicOrder)
 { harmonicOrder = pHarmonicOrder;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public byte getHarmonicOrder()
 { return harmonicOrder; 
 }

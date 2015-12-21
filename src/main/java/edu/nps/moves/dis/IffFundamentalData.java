@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * 5.2.42. Basic operational data ofr IFF ATC NAVAIDS
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class IffFundamentalData extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_IffFundamentalData;
-
    /** system status */
    protected short  systemStatus;
 
@@ -66,7 +52,6 @@ public class IffFundamentalData extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -86,26 +71,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_IffFundamentalData()
-{
-   return pk_IffFundamentalData;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_IffFundamentalData(long pKeyName)
-{
-   this.pk_IffFundamentalData = pKeyName;
-}
-
 public void setSystemStatus(short pSystemStatus)
 { systemStatus = pSystemStatus;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSystemStatus()
 { return systemStatus; 
 }
@@ -114,8 +83,6 @@ public void setAlternateParameter4(short pAlternateParameter4)
 { alternateParameter4 = pAlternateParameter4;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getAlternateParameter4()
 { return alternateParameter4; 
 }
@@ -124,8 +91,6 @@ public void setInformationLayers(short pInformationLayers)
 { informationLayers = pInformationLayers;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getInformationLayers()
 { return informationLayers; 
 }
@@ -134,8 +99,6 @@ public void setModifier(short pModifier)
 { modifier = pModifier;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getModifier()
 { return modifier; 
 }
@@ -144,8 +107,6 @@ public void setParameter1(int pParameter1)
 { parameter1 = pParameter1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getParameter1()
 { return parameter1; 
 }
@@ -154,8 +115,6 @@ public void setParameter2(int pParameter2)
 { parameter2 = pParameter2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getParameter2()
 { return parameter2; 
 }
@@ -164,8 +123,6 @@ public void setParameter3(int pParameter3)
 { parameter3 = pParameter3;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getParameter3()
 { return parameter3; 
 }
@@ -174,8 +131,6 @@ public void setParameter4(int pParameter4)
 { parameter4 = pParameter4;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getParameter4()
 { return parameter4; 
 }
@@ -184,8 +139,6 @@ public void setParameter5(int pParameter5)
 { parameter5 = pParameter5;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getParameter5()
 { return parameter5; 
 }
@@ -194,8 +147,6 @@ public void setParameter6(int pParameter6)
 { parameter6 = pParameter6;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getParameter6()
 { return parameter6; 
 }

@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  *  Detailed information about a radio transmitter. This PDU requires manually written code to complete. The encodingScheme field can be used in multiple        ways, which requires hand-written code to finish. Section 7.7.3. UNFINISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializable
 {
    /** encoding scheme used, and enumeration */
@@ -51,7 +40,6 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     setPduType( (short)26 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -76,8 +64,6 @@ public void setEncodingScheme(int pEncodingScheme)
 { encodingScheme = pEncodingScheme;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getEncodingScheme()
 { return encodingScheme; 
 }
@@ -86,8 +72,6 @@ public void setTdlType(int pTdlType)
 { tdlType = pTdlType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getTdlType()
 { return tdlType; 
 }
@@ -96,14 +80,10 @@ public void setSampleRate(long pSampleRate)
 { sampleRate = pSampleRate;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getSampleRate()
 { return sampleRate; 
 }
 
-@XmlAttribute
-@Basic
 public short getDataLength()
 { return (short)data.size();
 }
@@ -120,8 +100,6 @@ public void setSamples(short pSamples)
 { samples = pSamples;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSamples()
 { return samples; 
 }
@@ -130,8 +108,6 @@ public void setData(List<OneByteChunk> pData)
 { data = pData;
 }
 
-@XmlElementWrapper(name="dataList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<OneByteChunk> getData()
 { return data; }
 

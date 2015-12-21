@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.2.8. Time measurements that exceed one hour. Hours is the number of           hours since January 1, 1970, UTC
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class ClockTime extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_ClockTime;
-
    /** Hours in UTC */
    protected int  hour;
 
@@ -42,7 +28,6 @@ public class ClockTime extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -54,26 +39,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_ClockTime()
-{
-   return pk_ClockTime;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_ClockTime(long pKeyName)
-{
-   this.pk_ClockTime = pKeyName;
-}
-
 public void setHour(int pHour)
 { hour = pHour;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getHour()
 { return hour; 
 }
@@ -82,8 +51,6 @@ public void setTimePastHour(long pTimePastHour)
 { timePastHour = pTimePastHour;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getTimePastHour()
 { return timePastHour; 
 }

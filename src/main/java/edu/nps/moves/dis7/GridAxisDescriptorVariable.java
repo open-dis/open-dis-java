@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Grid axis descriptor fo variable spacing axis data. NOT COMPLETE. Need padding to 64 bit boundary.
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class GridAxisDescriptorVariable extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_GridAxisDescriptorVariable;
-
    /** coordinate of the grid origin or initial value */
    protected double  domainInitialXi;
 
@@ -65,7 +51,6 @@ public class GridAxisDescriptorVariable extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -89,26 +74,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_GridAxisDescriptorVariable()
-{
-   return pk_GridAxisDescriptorVariable;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_GridAxisDescriptorVariable(long pKeyName)
-{
-   this.pk_GridAxisDescriptorVariable = pKeyName;
-}
-
 public void setDomainInitialXi(double pDomainInitialXi)
 { domainInitialXi = pDomainInitialXi;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public double getDomainInitialXi()
 { return domainInitialXi; 
 }
@@ -117,8 +86,6 @@ public void setDomainFinalXi(double pDomainFinalXi)
 { domainFinalXi = pDomainFinalXi;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public double getDomainFinalXi()
 { return domainFinalXi; 
 }
@@ -127,8 +94,6 @@ public void setDomainPointsXi(int pDomainPointsXi)
 { domainPointsXi = pDomainPointsXi;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getDomainPointsXi()
 { return domainPointsXi; 
 }
@@ -137,8 +102,6 @@ public void setInterleafFactor(short pInterleafFactor)
 { interleafFactor = pInterleafFactor;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getInterleafFactor()
 { return interleafFactor; 
 }
@@ -147,14 +110,10 @@ public void setAxisType(short pAxisType)
 { axisType = pAxisType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getAxisType()
 { return axisType; 
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfPointsOnXiAxis()
 { return (int)xiValues.size();
 }
@@ -171,8 +130,6 @@ public void setInitialIndex(int pInitialIndex)
 { initialIndex = pInitialIndex;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getInitialIndex()
 { return initialIndex; 
 }
@@ -181,8 +138,6 @@ public void setCoordinateScaleXi(double pCoordinateScaleXi)
 { coordinateScaleXi = pCoordinateScaleXi;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public double getCoordinateScaleXi()
 { return coordinateScaleXi; 
 }
@@ -191,8 +146,6 @@ public void setCoordinateOffsetXi(double pCoordinateOffsetXi)
 { coordinateOffsetXi = pCoordinateOffsetXi;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public double getCoordinateOffsetXi()
 { return coordinateOffsetXi; 
 }
@@ -201,8 +154,6 @@ public void setXiValues(List<TwoByteChunk> pXiValues)
 { xiValues = pXiValues;
 }
 
-@XmlElementWrapper(name="xiValuesList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<TwoByteChunk> getXiValues()
 { return xiValues; }
 

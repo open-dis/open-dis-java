@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Each entity in a given DIS simulation application shall be given an entity identifier number unique to all  other entities in that application. This identifier number is valid for the duration of the exercise; however,  entity identifier numbers may be reused when all possible numbers have been exhausted. No entity shall  have an entity identifier number of NO_ENTITY, ALL_ENTITIES, or RQST_ASSIGN_ID. The entity iden-  tifier number need not be registered or retained for future exercises. The entity identifier number shall be  specified by a 16-bit unsigned integer.  An entity identifier number equal to zero with valid site and application identification shall address a  simulation application. An entity identifier number equal to ALL_ENTITIES shall mean all entities within  the specified site and application. An entity identifier number equal to RQST_ASSIGN_ID allows the  receiver of the create entity to define the entity identifier number of the new entity.
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class EntityID extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_EntityID;
-
    /** The site ID */
    protected int  site;
 
@@ -45,7 +31,6 @@ public class EntityID extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -58,26 +43,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_EntityID()
-{
-   return pk_EntityID;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_EntityID(long pKeyName)
-{
-   this.pk_EntityID = pKeyName;
-}
-
 public void setSite(int pSite)
 { site = pSite;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSite()
 { return site; 
 }
@@ -86,8 +55,6 @@ public void setApplication(int pApplication)
 { application = pApplication;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getApplication()
 { return application; 
 }
@@ -96,8 +63,6 @@ public void setEntity(int pEntity)
 { entity = pEntity;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getEntity()
 { return entity; 
 }

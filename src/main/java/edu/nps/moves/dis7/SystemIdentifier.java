@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * The ID of the IFF emitting system. NOT COMPLETE. Section 6.2.87
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class SystemIdentifier extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_SystemIdentifier;
-
    /** general type of emitting system, an enumeration */
    protected int  systemType;
 
@@ -48,7 +34,6 @@ public class SystemIdentifier extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -62,26 +47,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_SystemIdentifier()
-{
-   return pk_SystemIdentifier;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_SystemIdentifier(long pKeyName)
-{
-   this.pk_SystemIdentifier = pKeyName;
-}
-
 public void setSystemType(int pSystemType)
 { systemType = pSystemType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSystemType()
 { return systemType; 
 }
@@ -90,8 +59,6 @@ public void setSystemName(int pSystemName)
 { systemName = pSystemName;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSystemName()
 { return systemName; 
 }
@@ -100,8 +67,6 @@ public void setSystemMode(int pSystemMode)
 { systemMode = pSystemMode;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSystemMode()
 { return systemMode; 
 }
@@ -110,13 +75,6 @@ public void setChangeOptions(ChangeOptions pChangeOptions)
 { changeOptions = pChangeOptions;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_changeOptions;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_changeOptions")
 public ChangeOptions getChangeOptions()
 { return changeOptions; 
 }

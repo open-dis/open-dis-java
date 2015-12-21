@@ -3,15 +3,6 @@ package edu.nps.moves.dis;
 import java.util.*;
 import java.io.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.2.15. Specifies the character set used inthe first byte, followed by 11 characters of text data.
@@ -21,13 +12,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class Marking extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_Marking;
-
    /** The character set */
    protected short  characterSet;
 
@@ -40,7 +26,6 @@ public class Marking extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -52,68 +37,21 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_Marking()
-{
-   return pk_Marking;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_Marking(long pKeyName)
-{
-   this.pk_Marking = pKeyName;
-}
-
 public void setCharacterSet(short pCharacterSet)
 { characterSet = pCharacterSet;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getCharacterSet()
 { return characterSet; 
 }
 
-@XmlElement(name="characters" )
-@Basic
+public void setCharacters(byte[] pCharacters)
+{ characters = pCharacters;
+}
+
 public byte[] getCharacters()
 { return characters; }
 
-    /**
-     * Ensure what is set does not go over 11 characters -- post-processing patch
-     * @param pCharacters an array of characters to set
-     */
-    public void setCharacters(byte[] pCharacters) 
-    {
-        if (pCharacters.length >= characters.length) 
-        {
-            System.arraycopy(pCharacters, 0, characters, 0, characters.length);
-        } 
-        else 
-        {
-            int pCharactersLength = pCharacters.length;
-            System.arraycopy(pCharacters, 0, characters, 0, pCharactersLength);
-            for (int ix = pCharactersLength; ix < characters.length; ix++) 
-            {
-                // Ensure all zeros in unfilled fields
-                characters[ix] = 0;
-            }
-        }
-    }
-    
-    /**
-     * An added convieniece method (added by patch): accepts a string, and either
-     * truncates or zero-fills it to fit into the 11-byte character marking field.
-     * @param marking the marking string, converted internally into a character array that
-     * is exactly 11 bytes long
-     */
-    public void setCharacters(String marking)
-    {
-        byte[] buff = marking.getBytes();
-        this.setCharacters(buff);
-    }
 
 public void marshal(DataOutputStream dos)
 {

@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Physical separation of an entity from another entity.  Section 6.2.94.6
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class SeparationVP extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_SeparationVP;
-
    /** the identification of the Variable Parameter record. Enumeration from EBV */
    protected short  recordType = (short)2;
 
@@ -57,7 +43,6 @@ public class SeparationVP extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -74,26 +59,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_SeparationVP()
-{
-   return pk_SeparationVP;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_SeparationVP(long pKeyName)
-{
-   this.pk_SeparationVP = pKeyName;
-}
-
 public void setRecordType(short pRecordType)
 { recordType = pRecordType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getRecordType()
 { return recordType; 
 }
@@ -102,8 +71,6 @@ public void setReasonForSeparation(short pReasonForSeparation)
 { reasonForSeparation = pReasonForSeparation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getReasonForSeparation()
 { return reasonForSeparation; 
 }
@@ -112,8 +79,6 @@ public void setPreEntityIndicator(short pPreEntityIndicator)
 { preEntityIndicator = pPreEntityIndicator;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPreEntityIndicator()
 { return preEntityIndicator; 
 }
@@ -122,8 +87,6 @@ public void setPadding1(short pPadding1)
 { padding1 = pPadding1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding1()
 { return padding1; 
 }
@@ -132,13 +95,6 @@ public void setParentEntityID(EntityID pParentEntityID)
 { parentEntityID = pParentEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_parentEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_parentEntityID")
 public EntityID getParentEntityID()
 { return parentEntityID; 
 }
@@ -147,8 +103,6 @@ public void setPadding2(int pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding2()
 { return padding2; 
 }
@@ -157,8 +111,6 @@ public void setStationLocation(long pStationLocation)
 { stationLocation = pStationLocation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getStationLocation()
 { return stationLocation; 
 }

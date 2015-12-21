@@ -1,21 +1,5 @@
 --- Pdu.java	2012-06-12 13:11:10.000000000 -0700
 +++ PduFixed.java	2012-06-12 13:09:08.000000000 -0700
-@@ -56,6 +56,12 @@
-  public Pdu()
-  {
-  }
-+   
-+@Transient 
-+public int getLength()
-+{
-+    return this.getMarshalledSize();    
-+}
- 
- @Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
- public int getMarshalledSize()
-@@ -118,6 +124,17 @@
- { return pduType; 
- }
  
 +/**
 +* Returns the PduType, an enumeration from the disenum jar file. This is an enumerated

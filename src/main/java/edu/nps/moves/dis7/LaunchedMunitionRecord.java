@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Identity of a communications node. Section 6.2.50
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class LaunchedMunitionRecord extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_LaunchedMunitionRecord;
-
    protected EventIdentifier  fireEventID = new EventIdentifier(); 
 
    protected int  padding;
@@ -50,7 +36,6 @@ public class LaunchedMunitionRecord extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -67,31 +52,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_LaunchedMunitionRecord()
-{
-   return pk_LaunchedMunitionRecord;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_LaunchedMunitionRecord(long pKeyName)
-{
-   this.pk_LaunchedMunitionRecord = pKeyName;
-}
-
 public void setFireEventID(EventIdentifier pFireEventID)
 { fireEventID = pFireEventID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_fireEventID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_fireEventID")
 public EventIdentifier getFireEventID()
 { return fireEventID; 
 }
@@ -100,8 +64,6 @@ public void setPadding(int pPadding)
 { padding = pPadding;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding()
 { return padding; 
 }
@@ -110,13 +72,6 @@ public void setFiringEntityID(EventIdentifier pFiringEntityID)
 { firingEntityID = pFiringEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_firingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_firingEntityID")
 public EventIdentifier getFiringEntityID()
 { return firingEntityID; 
 }
@@ -125,8 +80,6 @@ public void setPadding2(int pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding2()
 { return padding2; 
 }
@@ -135,13 +88,6 @@ public void setTargetEntityID(EventIdentifier pTargetEntityID)
 { targetEntityID = pTargetEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_targetEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_targetEntityID")
 public EventIdentifier getTargetEntityID()
 { return targetEntityID; 
 }
@@ -150,8 +96,6 @@ public void setPadding3(int pPadding3)
 { padding3 = pPadding3;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding3()
 { return padding3; 
 }
@@ -160,13 +104,6 @@ public void setTargetLocation(Vector3Double pTargetLocation)
 { targetLocation = pTargetLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_targetLocation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_targetLocation")
 public Vector3Double getTargetLocation()
 { return targetLocation; 
 }

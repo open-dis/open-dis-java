@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.2.18. Identifies a unique event in a simulation via the combination of three values
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class EventID extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_EventID;
-
    /** The site ID */
    protected int  site;
 
@@ -45,7 +31,6 @@ public class EventID extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -58,26 +43,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_EventID()
-{
-   return pk_EventID;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_EventID(long pKeyName)
-{
-   this.pk_EventID = pKeyName;
-}
-
 public void setSite(int pSite)
 { site = pSite;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSite()
 { return site; 
 }
@@ -86,8 +55,6 @@ public void setApplication(int pApplication)
 { application = pApplication;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getApplication()
 { return application; 
 }
@@ -96,8 +63,6 @@ public void setEventNumber(int pEventNumber)
 { eventNumber = pEventNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getEventNumber()
 { return eventNumber; 
 }

@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Explosion of a non-munition. Section 6.2.19.3
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class ExplosionDescriptor extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_ExplosionDescriptor;
-
    /** Type of the object that exploded. See 6.2.30 */
    protected EntityType  explodingObject = new EntityType(); 
 
@@ -48,7 +34,6 @@ public class ExplosionDescriptor extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -62,31 +47,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_ExplosionDescriptor()
-{
-   return pk_ExplosionDescriptor;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_ExplosionDescriptor(long pKeyName)
-{
-   this.pk_ExplosionDescriptor = pKeyName;
-}
-
 public void setExplodingObject(EntityType pExplodingObject)
 { explodingObject = pExplodingObject;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_explodingObject;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_explodingObject")
 public EntityType getExplodingObject()
 { return explodingObject; 
 }
@@ -95,8 +59,6 @@ public void setExplosiveMaterial(int pExplosiveMaterial)
 { explosiveMaterial = pExplosiveMaterial;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getExplosiveMaterial()
 { return explosiveMaterial; 
 }
@@ -105,8 +67,6 @@ public void setPadding(int pPadding)
 { padding = pPadding;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding()
 { return padding; 
 }
@@ -115,8 +75,6 @@ public void setExplosiveForce(float pExplosiveForce)
 { explosiveForce = pExplosiveForce;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getExplosiveForce()
 { return explosiveForce; 
 }

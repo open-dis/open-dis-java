@@ -51,9 +51,9 @@
 
     <target name="generateAllSource">
       <antcall target="generateJavaDisSourceCode"/>
-      <antcall target="generateJavaMobileSourceCode"/>
+      <!--<antcall target="generateJavaMobileSourceCode"/> -->
       <antcall target="generateJavaDis7SourceCode"/>
-      <antcall target="generateJavaDis7MobileCode"/>
+      <!--<antcall target="generateJavaDis7MobileCode"/> -->
     </target>    
 
     <!-- Generate the desktop Java code. This relies on the jar file xmlpg.jar, from 
@@ -68,10 +68,10 @@
          the -D option.
     --> 
     <target name="generateJavaDisSourceCode" depends="init" description = "run program to generate desktop java">
-        <property name="xmlSourceFile" value="DIS1998.xml"/>
+        <property name="xmlSourceFile" value="DIS6.xml"/>
         <property name="xmlpg.generatedSourceDir" value="${src}"/>
-        <property name="xmlpg.useHibernate" value="true"/>
-        <property name="xmlpg.useJaxb" value="true"/>
+        <property name="xmlpg.useHibernate" value="false"/>
+        <property name="xmlpg.useJaxb" value="false"/>
         <property name="xmlpg.package" value="edu.nps.moves.dis"/>
         <property name="product" value="dis"/>
         <echo message="Generating DIS source code for java desktop"/>
@@ -95,10 +95,10 @@
 
      <target name="generateJavaDis7SourceCode" depends="init" description = "run program to generate java for DIS 2009, desktop version">
         <echo message="Generating DIS 7 desktop version"/>
-        <property name="xmlSourceFile" value="DIS2012.xml"/>
+        <property name="xmlSourceFile" value="DIS7.xml"/>
         <property name="javadir" value="${src}"/>
-        <property name="xmlpg.useHibernate" value="true"/>
-        <property name="xmlpg.useJaxb" value="true"/>
+        <property name="xmlpg.useHibernate" value="false"/>
+        <property name="xmlpg.useJaxb" value="false"/>
         <property name="xmlpg.package" value="edu.nps.moves.dis7"/>
         <property name="product" value="dis7"/>
         <property name="xmlpg.generatedSourceDir" value="${src}"/>

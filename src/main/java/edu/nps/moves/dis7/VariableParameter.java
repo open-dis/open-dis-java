@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * specification of additional information associated with an entity or detonation, not otherwise accounted for in a PDU 6.2.94.1
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class VariableParameter extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_VariableParameter;
-
    /** the identification of the Variable Parameter record. Enumeration from EBV */
    protected short  recordType;
 
@@ -51,7 +37,6 @@ public class VariableParameter extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -66,26 +51,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_VariableParameter()
-{
-   return pk_VariableParameter;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_VariableParameter(long pKeyName)
-{
-   this.pk_VariableParameter = pKeyName;
-}
-
 public void setRecordType(short pRecordType)
 { recordType = pRecordType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getRecordType()
 { return recordType; 
 }
@@ -94,8 +63,6 @@ public void setVariableParameterFields1(double pVariableParameterFields1)
 { variableParameterFields1 = pVariableParameterFields1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public double getVariableParameterFields1()
 { return variableParameterFields1; 
 }
@@ -104,8 +71,6 @@ public void setVariableParameterFields2(long pVariableParameterFields2)
 { variableParameterFields2 = pVariableParameterFields2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getVariableParameterFields2()
 { return variableParameterFields2; 
 }
@@ -114,8 +79,6 @@ public void setVariableParameterFields3(int pVariableParameterFields3)
 { variableParameterFields3 = pVariableParameterFields3;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getVariableParameterFields3()
 { return variableParameterFields3; 
 }
@@ -124,8 +87,6 @@ public void setVariableParameterFields4(short pVariableParameterFields4)
 { variableParameterFields4 = pVariableParameterFields4;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getVariableParameterFields4()
 { return variableParameterFields4; 
 }

@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.10.4 proivde the means to request a retransmit of a minefield data pdu. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class MinefieldResponseNackPdu extends MinefieldFamilyPdu implements Serializable
 {
    /** Minefield ID */
@@ -48,7 +37,6 @@ public class MinefieldResponseNackPdu extends MinefieldFamilyPdu implements Seri
     setPduType( (short)40 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -72,13 +60,6 @@ public void setMinefieldID(EntityID pMinefieldID)
 { minefieldID = pMinefieldID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_minefieldID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_minefieldID")
 public EntityID getMinefieldID()
 { return minefieldID; 
 }
@@ -87,13 +68,6 @@ public void setRequestingEntityID(EntityID pRequestingEntityID)
 { requestingEntityID = pRequestingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_requestingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_requestingEntityID")
 public EntityID getRequestingEntityID()
 { return requestingEntityID; 
 }
@@ -102,14 +76,10 @@ public void setRequestID(short pRequestID)
 { requestID = pRequestID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getRequestID()
 { return requestID; 
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfMissingPdus()
 { return (short)missingPduSequenceNumbers.size();
 }
@@ -126,8 +96,6 @@ public void setMissingPduSequenceNumbers(List<EightByteChunk> pMissingPduSequenc
 { missingPduSequenceNumbers = pMissingPduSequenceNumbers;
 }
 
-@XmlElementWrapper(name="missingPduSequenceNumbersList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<EightByteChunk> getMissingPduSequenceNumbers()
 { return missingPduSequenceNumbers; }
 

@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  *  The firing of a weapon or expendable shall be communicated by issuing a Fire PDU. Sectioin 7.3.2. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class FirePdu extends WarfareFamilyPdu implements Serializable
 {
    /** This field shall specify the entity identification of the fired munition or expendable. This field shall be represented by an Entity Identifier record (see 6.2.28). */
@@ -55,7 +44,6 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable
     setPduType( (short)2 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -77,13 +65,6 @@ public void setMunitionExpendibleID(EntityID pMunitionExpendibleID)
 { munitionExpendibleID = pMunitionExpendibleID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_munitionExpendibleID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_munitionExpendibleID")
 public EntityID getMunitionExpendibleID()
 { return munitionExpendibleID; 
 }
@@ -92,13 +73,6 @@ public void setEventID(EventIdentifier pEventID)
 { eventID = pEventID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_eventID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_eventID")
 public EventIdentifier getEventID()
 { return eventID; 
 }
@@ -107,8 +81,6 @@ public void setFireMissionIndex(long pFireMissionIndex)
 { fireMissionIndex = pFireMissionIndex;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getFireMissionIndex()
 { return fireMissionIndex; 
 }
@@ -117,13 +89,6 @@ public void setLocationInWorldCoordinates(Vector3Double pLocationInWorldCoordina
 { locationInWorldCoordinates = pLocationInWorldCoordinates;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_locationInWorldCoordinates;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_locationInWorldCoordinates")
 public Vector3Double getLocationInWorldCoordinates()
 { return locationInWorldCoordinates; 
 }
@@ -132,13 +97,6 @@ public void setDescriptor(MunitionDescriptor pDescriptor)
 { descriptor = pDescriptor;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_descriptor;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_descriptor")
 public MunitionDescriptor getDescriptor()
 { return descriptor; 
 }
@@ -147,13 +105,6 @@ public void setVelocity(Vector3Float pVelocity)
 { velocity = pVelocity;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_velocity;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_velocity")
 public Vector3Float getVelocity()
 { return velocity; 
 }
@@ -162,8 +113,6 @@ public void setRange(float pRange)
 { range = pRange;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getRange()
 { return range; 
 }

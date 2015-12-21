@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Regeneration parameters for active emission systems that are variable throughout a scenario. Section 6.2.91
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class UAFundamentalParameter extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_UAFundamentalParameter;
-
    /** Which database record shall be used. An enumeration from EBV document */
    protected int  activeEmissionParameterIndex;
 
@@ -54,7 +40,6 @@ public class UAFundamentalParameter extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -70,26 +55,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_UAFundamentalParameter()
-{
-   return pk_UAFundamentalParameter;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_UAFundamentalParameter(long pKeyName)
-{
-   this.pk_UAFundamentalParameter = pKeyName;
-}
-
 public void setActiveEmissionParameterIndex(int pActiveEmissionParameterIndex)
 { activeEmissionParameterIndex = pActiveEmissionParameterIndex;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getActiveEmissionParameterIndex()
 { return activeEmissionParameterIndex; 
 }
@@ -98,8 +67,6 @@ public void setScanPattern(int pScanPattern)
 { scanPattern = pScanPattern;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getScanPattern()
 { return scanPattern; 
 }
@@ -108,8 +75,6 @@ public void setBeamCenterAzimuthHorizontal(float pBeamCenterAzimuthHorizontal)
 { beamCenterAzimuthHorizontal = pBeamCenterAzimuthHorizontal;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamCenterAzimuthHorizontal()
 { return beamCenterAzimuthHorizontal; 
 }
@@ -118,8 +83,6 @@ public void setAzimuthalBeamwidthHorizontal(float pAzimuthalBeamwidthHorizontal)
 { azimuthalBeamwidthHorizontal = pAzimuthalBeamwidthHorizontal;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getAzimuthalBeamwidthHorizontal()
 { return azimuthalBeamwidthHorizontal; 
 }
@@ -128,8 +91,6 @@ public void setBeamCenterDepressionElevation(float pBeamCenterDepressionElevatio
 { beamCenterDepressionElevation = pBeamCenterDepressionElevation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamCenterDepressionElevation()
 { return beamCenterDepressionElevation; 
 }
@@ -138,8 +99,6 @@ public void setBeamwidthDownElevation(float pBeamwidthDownElevation)
 { beamwidthDownElevation = pBeamwidthDownElevation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getBeamwidthDownElevation()
 { return beamwidthDownElevation; 
 }

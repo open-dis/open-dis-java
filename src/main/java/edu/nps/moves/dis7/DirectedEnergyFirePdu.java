@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Firing of a directed energy weapon shall be communicated by issuing a Directed Energy Fire PDU Section 7.3.4  COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class DirectedEnergyFirePdu extends WarfareFamilyPdu implements Serializable
 {
    /** Field shall identify the munition type enumeration for the DE weapon beam, Section 7.3.4  */
@@ -81,7 +70,6 @@ public class DirectedEnergyFirePdu extends WarfareFamilyPdu implements Serializa
     setPduType( (short)68 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -116,13 +104,6 @@ public void setMunitionType(EntityType pMunitionType)
 { munitionType = pMunitionType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_munitionType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_munitionType")
 public EntityType getMunitionType()
 { return munitionType; 
 }
@@ -131,13 +112,6 @@ public void setShotStartTime(ClockTime pShotStartTime)
 { shotStartTime = pShotStartTime;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_shotStartTime;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_shotStartTime")
 public ClockTime getShotStartTime()
 { return shotStartTime; 
 }
@@ -146,8 +120,6 @@ public void setCommulativeShotTime(float pCommulativeShotTime)
 { commulativeShotTime = pCommulativeShotTime;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getCommulativeShotTime()
 { return commulativeShotTime; 
 }
@@ -156,13 +128,6 @@ public void setApertureEmitterLocation(Vector3Float pApertureEmitterLocation)
 { ApertureEmitterLocation = pApertureEmitterLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_ApertureEmitterLocation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_ApertureEmitterLocation")
 public Vector3Float getApertureEmitterLocation()
 { return ApertureEmitterLocation; 
 }
@@ -171,8 +136,6 @@ public void setApertureDiameter(float pApertureDiameter)
 { apertureDiameter = pApertureDiameter;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getApertureDiameter()
 { return apertureDiameter; 
 }
@@ -181,8 +144,6 @@ public void setWavelength(float pWavelength)
 { wavelength = pWavelength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getWavelength()
 { return wavelength; 
 }
@@ -191,8 +152,6 @@ public void setPeakIrradiance(float pPeakIrradiance)
 { peakIrradiance = pPeakIrradiance;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getPeakIrradiance()
 { return peakIrradiance; 
 }
@@ -201,8 +160,6 @@ public void setPulseRepetitionFrequency(float pPulseRepetitionFrequency)
 { pulseRepetitionFrequency = pPulseRepetitionFrequency;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getPulseRepetitionFrequency()
 { return pulseRepetitionFrequency; 
 }
@@ -211,8 +168,6 @@ public void setPulseWidth(int pPulseWidth)
 { pulseWidth = pPulseWidth;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPulseWidth()
 { return pulseWidth; 
 }
@@ -221,8 +176,6 @@ public void setFlags(int pFlags)
 { flags = pFlags;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getFlags()
 { return flags; 
 }
@@ -231,8 +184,6 @@ public void setPulseShape(byte pPulseShape)
 { pulseShape = pPulseShape;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public byte getPulseShape()
 { return pulseShape; 
 }
@@ -241,8 +192,6 @@ public void setPadding1(short pPadding1)
 { padding1 = pPadding1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding1()
 { return padding1; 
 }
@@ -251,8 +200,6 @@ public void setPadding2(long pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getPadding2()
 { return padding2; 
 }
@@ -261,14 +208,10 @@ public void setPadding3(int pPadding3)
 { padding3 = pPadding3;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding3()
 { return padding3; 
 }
 
-@XmlAttribute
-@Basic
 public int getNumberOfDERecords()
 { return (int)dERecords.size();
 }
@@ -285,8 +228,6 @@ public void setDERecords(List<StandardVariableSpecification> pDERecords)
 { dERecords = pDERecords;
 }
 
-@XmlElementWrapper(name="dERecordsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<StandardVariableSpecification> getDERecords()
 { return dERecords; }
 

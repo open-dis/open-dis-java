@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Detailed information about a radio transmitter. This PDU requires manually written code to complete, since the modulation parameters are of variable length. Section 7.7.2 UNFINISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Serializable
 {
    /** ID of the entitythat is the source of the communication */
@@ -95,7 +84,6 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
     setPduType( (short)25 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -139,13 +127,6 @@ public void setRadioReferenceID(EntityID pRadioReferenceID)
 { radioReferenceID = pRadioReferenceID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_radioReferenceID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_radioReferenceID")
 public EntityID getRadioReferenceID()
 { return radioReferenceID; 
 }
@@ -154,8 +135,6 @@ public void setRadioNumber(int pRadioNumber)
 { radioNumber = pRadioNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getRadioNumber()
 { return radioNumber; 
 }
@@ -164,13 +143,6 @@ public void setRadioEntityType(EntityType pRadioEntityType)
 { radioEntityType = pRadioEntityType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_radioEntityType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_radioEntityType")
 public EntityType getRadioEntityType()
 { return radioEntityType; 
 }
@@ -179,8 +151,6 @@ public void setTransmitState(short pTransmitState)
 { transmitState = pTransmitState;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getTransmitState()
 { return transmitState; 
 }
@@ -189,8 +159,6 @@ public void setInputSource(short pInputSource)
 { inputSource = pInputSource;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getInputSource()
 { return inputSource; 
 }
@@ -199,8 +167,6 @@ public void setVariableTransmitterParameterCount(int pVariableTransmitterParamet
 { variableTransmitterParameterCount = pVariableTransmitterParameterCount;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getVariableTransmitterParameterCount()
 { return variableTransmitterParameterCount; 
 }
@@ -209,13 +175,6 @@ public void setAntennaLocation(Vector3Double pAntennaLocation)
 { antennaLocation = pAntennaLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_antennaLocation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_antennaLocation")
 public Vector3Double getAntennaLocation()
 { return antennaLocation; 
 }
@@ -224,13 +183,6 @@ public void setRelativeAntennaLocation(Vector3Float pRelativeAntennaLocation)
 { relativeAntennaLocation = pRelativeAntennaLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_relativeAntennaLocation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_relativeAntennaLocation")
 public Vector3Float getRelativeAntennaLocation()
 { return relativeAntennaLocation; 
 }
@@ -239,14 +191,10 @@ public void setAntennaPatternType(int pAntennaPatternType)
 { antennaPatternType = pAntennaPatternType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getAntennaPatternType()
 { return antennaPatternType; 
 }
 
-@XmlAttribute
-@Basic
 public int getAntennaPatternCount()
 { return (int)antennaPatternList.size();
 }
@@ -263,8 +211,6 @@ public void setFrequency(long pFrequency)
 { frequency = pFrequency;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getFrequency()
 { return frequency; 
 }
@@ -273,8 +219,6 @@ public void setTransmitFrequencyBandwidth(float pTransmitFrequencyBandwidth)
 { transmitFrequencyBandwidth = pTransmitFrequencyBandwidth;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getTransmitFrequencyBandwidth()
 { return transmitFrequencyBandwidth; 
 }
@@ -283,8 +227,6 @@ public void setPower(float pPower)
 { power = pPower;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getPower()
 { return power; 
 }
@@ -293,13 +235,6 @@ public void setModulationType(ModulationType pModulationType)
 { modulationType = pModulationType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_modulationType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_modulationType")
 public ModulationType getModulationType()
 { return modulationType; 
 }
@@ -308,8 +243,6 @@ public void setCryptoSystem(int pCryptoSystem)
 { cryptoSystem = pCryptoSystem;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getCryptoSystem()
 { return cryptoSystem; 
 }
@@ -318,14 +251,10 @@ public void setCryptoKeyId(int pCryptoKeyId)
 { cryptoKeyId = pCryptoKeyId;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getCryptoKeyId()
 { return cryptoKeyId; 
 }
 
-@XmlAttribute
-@Basic
 public short getModulationParameterCount()
 { return (short)modulationParametersList.size();
 }
@@ -342,8 +271,6 @@ public void setPadding2(int pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding2()
 { return padding2; 
 }
@@ -352,8 +279,6 @@ public void setPadding3(short pPadding3)
 { padding3 = pPadding3;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding3()
 { return padding3; 
 }
@@ -362,8 +287,6 @@ public void setModulationParametersList(List<Vector3Float> pModulationParameters
 { modulationParametersList = pModulationParametersList;
 }
 
-@XmlElementWrapper(name="modulationParametersListList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<Vector3Float> getModulationParametersList()
 { return modulationParametersList; }
 
@@ -371,8 +294,6 @@ public void setAntennaPatternList(List<Vector3Float> pAntennaPatternList)
 { antennaPatternList = pAntennaPatternList;
 }
 
-@XmlElementWrapper(name="antennaPatternListList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<Vector3Float> getAntennaPatternList()
 { return antennaPatternList; }
 

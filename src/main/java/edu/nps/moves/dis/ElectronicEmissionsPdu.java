@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.7.1. Information about active electronic warfare (EW) emissions and active EW countermeasures shall be communicated using an Electromagnetic Emission PDU. COMPLETE (I think)
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implements Serializable
 {
    /** ID of the entity emitting */
@@ -52,7 +41,6 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
     setPaddingForEmissionsPdu( (int)0 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -77,13 +65,6 @@ public void setEmittingEntityID(EntityID pEmittingEntityID)
 { emittingEntityID = pEmittingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_emittingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_emittingEntityID")
 public EntityID getEmittingEntityID()
 { return emittingEntityID; 
 }
@@ -92,13 +73,6 @@ public void setEventID(EventID pEventID)
 { eventID = pEventID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_eventID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_eventID")
 public EventID getEventID()
 { return eventID; 
 }
@@ -107,14 +81,10 @@ public void setStateUpdateIndicator(short pStateUpdateIndicator)
 { stateUpdateIndicator = pStateUpdateIndicator;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getStateUpdateIndicator()
 { return stateUpdateIndicator; 
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfSystems()
 { return (short)systems.size();
 }
@@ -131,8 +101,6 @@ public void setPaddingForEmissionsPdu(int pPaddingForEmissionsPdu)
 { paddingForEmissionsPdu = pPaddingForEmissionsPdu;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPaddingForEmissionsPdu()
 { return paddingForEmissionsPdu; 
 }
@@ -141,8 +109,6 @@ public void setSystems(List<ElectronicEmissionSystemData> pSystems)
 { systems = pSystems;
 }
 
-@XmlElementWrapper(name="systemsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<ElectronicEmissionSystemData> getSystems()
 { return systems; }
 

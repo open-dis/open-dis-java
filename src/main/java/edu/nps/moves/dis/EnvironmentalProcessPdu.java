@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.11.1: Information about environmental effects and processes. This requires manual cleanup. the environmental        record is variable, as is the padding. UNFINISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class EnvironmentalProcessPdu extends SyntheticEnvironmentFamilyPdu implements Serializable
 {
    /** Environmental process ID */
@@ -54,7 +43,6 @@ public class EnvironmentalProcessPdu extends SyntheticEnvironmentFamilyPdu imple
     setPduType( (short)41 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -80,13 +68,6 @@ public void setEnvironementalProcessID(EntityID pEnvironementalProcessID)
 { environementalProcessID = pEnvironementalProcessID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_environementalProcessID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_environementalProcessID")
 public EntityID getEnvironementalProcessID()
 { return environementalProcessID; 
 }
@@ -95,13 +76,6 @@ public void setEnvironmentType(EntityType pEnvironmentType)
 { environmentType = pEnvironmentType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_environmentType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_environmentType")
 public EntityType getEnvironmentType()
 { return environmentType; 
 }
@@ -110,8 +84,6 @@ public void setModelType(short pModelType)
 { modelType = pModelType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getModelType()
 { return modelType; 
 }
@@ -120,14 +92,10 @@ public void setEnvironmentStatus(short pEnvironmentStatus)
 { environmentStatus = pEnvironmentStatus;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getEnvironmentStatus()
 { return environmentStatus; 
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfEnvironmentRecords()
 { return (short)environmentRecords.size();
 }
@@ -144,8 +112,6 @@ public void setSequenceNumber(int pSequenceNumber)
 { sequenceNumber = pSequenceNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSequenceNumber()
 { return sequenceNumber; 
 }
@@ -154,8 +120,6 @@ public void setEnvironmentRecords(List<Environment> pEnvironmentRecords)
 { environmentRecords = pEnvironmentRecords;
 }
 
-@XmlElementWrapper(name="environmentRecordsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<Environment> getEnvironmentRecords()
 { return environmentRecords; }
 

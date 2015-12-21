@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.7.4.2 When present, layer 2 should follow layer 1 and have the following fields. This requires manual cleanup.        the beamData attribute semantics are used in multiple ways. UNFINSISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class IffAtcNavAidsLayer2Pdu extends IffAtcNavAidsLayer1Pdu implements Serializable
 {
    /** layer header */
@@ -44,7 +33,6 @@ public class IffAtcNavAidsLayer2Pdu extends IffAtcNavAidsLayer1Pdu implements Se
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -67,13 +55,6 @@ public void setLayerHeader(LayerHeader pLayerHeader)
 { layerHeader = pLayerHeader;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_layerHeader;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_layerHeader")
 public LayerHeader getLayerHeader()
 { return layerHeader; 
 }
@@ -82,13 +63,6 @@ public void setBeamData(BeamData pBeamData)
 { beamData = pBeamData;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_beamData;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_beamData")
 public BeamData getBeamData()
 { return beamData; 
 }
@@ -97,13 +71,6 @@ public void setSecondaryOperationalData(BeamData pSecondaryOperationalData)
 { secondaryOperationalData = pSecondaryOperationalData;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_secondaryOperationalData;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_secondaryOperationalData")
 public BeamData getSecondaryOperationalData()
 { return secondaryOperationalData; 
 }
@@ -112,8 +79,6 @@ public void setFundamentalIffParameters(List<FundamentalParameterDataIff> pFunda
 { fundamentalIffParameters = pFundamentalIffParameters;
 }
 
-@XmlElementWrapper(name="fundamentalIffParametersList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<FundamentalParameterDataIff> getFundamentalIffParameters()
 { return fundamentalIffParameters; }
 

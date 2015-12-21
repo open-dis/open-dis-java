@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * The Blanking Sector attribute record may be used to convey persistent areas within a scan volume where emitter power for a specific active emitter beam is reduced to an insignificant value. Section 6.2.21.2
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class BlankingSector extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_BlankingSector;
-
    protected int  recordType = (int)3500;
 
    protected int  recordLength = (int)40;
@@ -64,7 +50,6 @@ public class BlankingSector extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -88,26 +73,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_BlankingSector()
-{
-   return pk_BlankingSector;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_BlankingSector(long pKeyName)
-{
-   this.pk_BlankingSector = pKeyName;
-}
-
 public void setRecordType(int pRecordType)
 { recordType = pRecordType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getRecordType()
 { return recordType; 
 }
@@ -116,8 +85,6 @@ public void setRecordLength(int pRecordLength)
 { recordLength = pRecordLength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getRecordLength()
 { return recordLength; 
 }
@@ -126,8 +93,6 @@ public void setPadding(int pPadding)
 { padding = pPadding;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding()
 { return padding; 
 }
@@ -136,8 +101,6 @@ public void setEmitterNumber(short pEmitterNumber)
 { emitterNumber = pEmitterNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getEmitterNumber()
 { return emitterNumber; 
 }
@@ -146,8 +109,6 @@ public void setBeamNumber(short pBeamNumber)
 { beamNumber = pBeamNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getBeamNumber()
 { return beamNumber; 
 }
@@ -156,8 +117,6 @@ public void setStateIndicator(short pStateIndicator)
 { stateIndicator = pStateIndicator;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getStateIndicator()
 { return stateIndicator; 
 }
@@ -166,8 +125,6 @@ public void setPadding2(short pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding2()
 { return padding2; 
 }
@@ -176,8 +133,6 @@ public void setLeftAzimuth(float pLeftAzimuth)
 { leftAzimuth = pLeftAzimuth;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getLeftAzimuth()
 { return leftAzimuth; 
 }
@@ -186,8 +141,6 @@ public void setRightAzimuth(float pRightAzimuth)
 { rightAzimuth = pRightAzimuth;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getRightAzimuth()
 { return rightAzimuth; 
 }
@@ -196,8 +149,6 @@ public void setLowerElevation(float pLowerElevation)
 { lowerElevation = pLowerElevation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getLowerElevation()
 { return lowerElevation; 
 }
@@ -206,8 +157,6 @@ public void setUpperElevation(float pUpperElevation)
 { upperElevation = pUpperElevation;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getUpperElevation()
 { return upperElevation; 
 }
@@ -216,8 +165,6 @@ public void setResidualPower(float pResidualPower)
 { residualPower = pResidualPower;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getResidualPower()
 { return residualPower; 
 }
@@ -226,8 +173,6 @@ public void setPadding3(int pPadding3)
 { padding3 = pPadding3;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding3()
 { return padding3; 
 }
@@ -236,8 +181,6 @@ public void setPadding4(int pPadding4)
 { padding4 = pPadding4;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding4()
 { return padding4; 
 }

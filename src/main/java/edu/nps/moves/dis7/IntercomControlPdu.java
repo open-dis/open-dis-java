@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  *  Detailed inofrmation about the state of an intercom device and the actions it is requestion         of another intercom device, or the response to a requested action. Required manual intervention to fix the intercom parameters,        which can be of varialbe length. Section 7.7.5 UNFINSISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class IntercomControlPdu extends RadioCommunicationsFamilyPdu implements Serializable
 {
    /** control type */
@@ -69,7 +58,6 @@ public class IntercomControlPdu extends RadioCommunicationsFamilyPdu implements 
     setPduType( (short)32 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -100,8 +88,6 @@ public void setControlType(short pControlType)
 { controlType = pControlType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getControlType()
 { return controlType; 
 }
@@ -110,8 +96,6 @@ public void setCommunicationsChannelType(short pCommunicationsChannelType)
 { communicationsChannelType = pCommunicationsChannelType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getCommunicationsChannelType()
 { return communicationsChannelType; 
 }
@@ -120,13 +104,6 @@ public void setSourceEntityID(EntityID pSourceEntityID)
 { sourceEntityID = pSourceEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_sourceEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_sourceEntityID")
 public EntityID getSourceEntityID()
 { return sourceEntityID; 
 }
@@ -135,8 +112,6 @@ public void setSourceCommunicationsDeviceID(short pSourceCommunicationsDeviceID)
 { sourceCommunicationsDeviceID = pSourceCommunicationsDeviceID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSourceCommunicationsDeviceID()
 { return sourceCommunicationsDeviceID; 
 }
@@ -145,8 +120,6 @@ public void setSourceLineID(short pSourceLineID)
 { sourceLineID = pSourceLineID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSourceLineID()
 { return sourceLineID; 
 }
@@ -155,8 +128,6 @@ public void setTransmitPriority(short pTransmitPriority)
 { transmitPriority = pTransmitPriority;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getTransmitPriority()
 { return transmitPriority; 
 }
@@ -165,8 +136,6 @@ public void setTransmitLineState(short pTransmitLineState)
 { transmitLineState = pTransmitLineState;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getTransmitLineState()
 { return transmitLineState; 
 }
@@ -175,8 +144,6 @@ public void setCommand(short pCommand)
 { command = pCommand;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getCommand()
 { return command; 
 }
@@ -185,13 +152,6 @@ public void setMasterEntityID(EntityID pMasterEntityID)
 { masterEntityID = pMasterEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_masterEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_masterEntityID")
 public EntityID getMasterEntityID()
 { return masterEntityID; 
 }
@@ -200,14 +160,10 @@ public void setMasterCommunicationsDeviceID(int pMasterCommunicationsDeviceID)
 { masterCommunicationsDeviceID = pMasterCommunicationsDeviceID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getMasterCommunicationsDeviceID()
 { return masterCommunicationsDeviceID; 
 }
 
-@XmlAttribute
-@Basic
 public long getIntercomParametersLength()
 { return (long)intercomParameters.size();
 }
@@ -224,8 +180,6 @@ public void setIntercomParameters(List<IntercomCommunicationsParameters> pInterc
 { intercomParameters = pIntercomParameters;
 }
 
-@XmlElementWrapper(name="intercomParametersList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<IntercomCommunicationsParameters> getIntercomParameters()
 { return intercomParameters; }
 

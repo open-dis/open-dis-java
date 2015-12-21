@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.9.2 Information about a particular group of entities grouped together for the purposes of netowrk bandwidth         reduction or aggregation. Needs manual cleanup. The GED size requires a database lookup. UNFINISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class IsGroupOfPdu extends EntityManagementFamilyPdu implements Serializable
 {
    /** ID of aggregated entities */
@@ -54,7 +43,6 @@ public class IsGroupOfPdu extends EntityManagementFamilyPdu implements Serializa
     setPduType( (short)34 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -80,13 +68,6 @@ public void setGroupEntityID(EntityID pGroupEntityID)
 { groupEntityID = pGroupEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_groupEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_groupEntityID")
 public EntityID getGroupEntityID()
 { return groupEntityID; 
 }
@@ -95,14 +76,10 @@ public void setGroupedEntityCategory(short pGroupedEntityCategory)
 { groupedEntityCategory = pGroupedEntityCategory;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getGroupedEntityCategory()
 { return groupedEntityCategory; 
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfGroupedEntities()
 { return (short)groupedEntityDescriptions.size();
 }
@@ -119,8 +96,6 @@ public void setPad2(long pPad2)
 { pad2 = pPad2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getPad2()
 { return pad2; 
 }
@@ -129,8 +104,6 @@ public void setLatitude(double pLatitude)
 { latitude = pLatitude;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public double getLatitude()
 { return latitude; 
 }
@@ -139,8 +112,6 @@ public void setLongitude(double pLongitude)
 { longitude = pLongitude;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public double getLongitude()
 { return longitude; 
 }
@@ -149,8 +120,6 @@ public void setGroupedEntityDescriptions(List<VariableDatum> pGroupedEntityDescr
 { groupedEntityDescriptions = pGroupedEntityDescriptions;
 }
 
-@XmlElementWrapper(name="groupedEntityDescriptionsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<VariableDatum> getGroupedEntityDescriptions()
 { return groupedEntityDescriptions; }
 

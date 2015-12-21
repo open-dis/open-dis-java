@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 7.5.4. Start or resume an exercise. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class StartResumePdu extends SimulationManagementFamilyPdu implements Serializable
 {
    /** Identifier for originating entity(or simulation) */
@@ -49,7 +38,6 @@ public class StartResumePdu extends SimulationManagementFamilyPdu implements Ser
     setPduType( (short)13 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -69,13 +57,6 @@ public void setOriginatingID(EntityID pOriginatingID)
 { originatingID = pOriginatingID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_originatingID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_originatingID")
 public EntityID getOriginatingID()
 { return originatingID; 
 }
@@ -84,13 +65,6 @@ public void setReceivingID(EntityID pReceivingID)
 { receivingID = pReceivingID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_receivingID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_receivingID")
 public EntityID getReceivingID()
 { return receivingID; 
 }
@@ -99,13 +73,6 @@ public void setRealWorldTime(ClockTime pRealWorldTime)
 { realWorldTime = pRealWorldTime;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_realWorldTime;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_realWorldTime")
 public ClockTime getRealWorldTime()
 { return realWorldTime; 
 }
@@ -114,13 +81,6 @@ public void setSimulationTime(ClockTime pSimulationTime)
 { simulationTime = pSimulationTime;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_simulationTime;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_simulationTime")
 public ClockTime getSimulationTime()
 { return simulationTime; 
 }
@@ -129,8 +89,6 @@ public void setRequestID(long pRequestID)
 { requestID = pRequestID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getRequestID()
 { return requestID; 
 }

@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  *  Information about a geometry, a state associated with a geometry, a bounding volume, or an associated entity ID. NOTE: this class requires hand coding. 6.2.31
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class EnvironmentGeneral extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_EnvironmentGeneral;
-
    /** Record type */
    protected long  environmentType;
 
@@ -54,7 +40,6 @@ public class EnvironmentGeneral extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -70,26 +55,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_EnvironmentGeneral()
-{
-   return pk_EnvironmentGeneral;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_EnvironmentGeneral(long pKeyName)
-{
-   this.pk_EnvironmentGeneral = pKeyName;
-}
-
 public void setEnvironmentType(long pEnvironmentType)
 { environmentType = pEnvironmentType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getEnvironmentType()
 { return environmentType; 
 }
@@ -98,8 +67,6 @@ public void setLength(short pLength)
 { length = pLength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getLength()
 { return length; 
 }
@@ -108,8 +75,6 @@ public void setIndex(short pIndex)
 { index = pIndex;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getIndex()
 { return index; 
 }
@@ -118,8 +83,6 @@ public void setPadding1(short pPadding1)
 { padding1 = pPadding1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding1()
 { return padding1; 
 }
@@ -128,8 +91,6 @@ public void setGeometry(short pGeometry)
 { geometry = pGeometry;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getGeometry()
 { return geometry; 
 }
@@ -138,8 +99,6 @@ public void setPadding2(short pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding2()
 { return padding2; 
 }

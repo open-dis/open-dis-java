@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * The live entity PDUs have a header with some different field names, but the same length. Section 9.3.2
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class LiveEntityPdu extends PduSuperclass implements Serializable
 {
    /** Subprotocol used to decode the PDU. Section 13 of EBV. */
@@ -39,7 +28,6 @@ public class LiveEntityPdu extends PduSuperclass implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -56,8 +44,6 @@ public void setSubprotocolNumber(int pSubprotocolNumber)
 { subprotocolNumber = pSubprotocolNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSubprotocolNumber()
 { return subprotocolNumber; 
 }
@@ -66,8 +52,6 @@ public void setPadding(short pPadding)
 { padding = pPadding;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding()
 { return padding; 
 }

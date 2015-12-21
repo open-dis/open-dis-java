@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 7.5.7. Request from simulation manager to a managed entity to perform a specified action. COMPLETE
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class ActionRequestPdu extends SimulationManagementFamilyPdu implements Serializable
 {
    /** Identifier for originating entity(or simulation) */
@@ -56,7 +45,6 @@ public class ActionRequestPdu extends SimulationManagementFamilyPdu implements S
     setPduType( (short)16 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -87,13 +75,6 @@ public void setOriginatingID(EntityID pOriginatingID)
 { originatingID = pOriginatingID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_originatingID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_originatingID")
 public EntityID getOriginatingID()
 { return originatingID; 
 }
@@ -102,13 +83,6 @@ public void setReceivingID(EntityID pReceivingID)
 { receivingID = pReceivingID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_receivingID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_receivingID")
 public EntityID getReceivingID()
 { return receivingID; 
 }
@@ -117,8 +91,6 @@ public void setRequestID(long pRequestID)
 { requestID = pRequestID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getRequestID()
 { return requestID; 
 }
@@ -127,14 +99,10 @@ public void setActionID(long pActionID)
 { actionID = pActionID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getActionID()
 { return actionID; 
 }
 
-@XmlAttribute
-@Basic
 public long getNumberOfFixedDatumRecords()
 { return (long)fixedDatums.size();
 }
@@ -147,8 +115,6 @@ public void setNumberOfFixedDatumRecords(long pNumberOfFixedDatumRecords)
 { numberOfFixedDatumRecords = pNumberOfFixedDatumRecords;
 }
 
-@XmlAttribute
-@Basic
 public long getNumberOfVariableDatumRecords()
 { return (long)variableDatums.size();
 }
@@ -165,8 +131,6 @@ public void setFixedDatums(List<FixedDatum> pFixedDatums)
 { fixedDatums = pFixedDatums;
 }
 
-@XmlElementWrapper(name="fixedDatumsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<FixedDatum> getFixedDatums()
 { return fixedDatums; }
 
@@ -174,8 +138,6 @@ public void setVariableDatums(List<VariableDatum> pVariableDatums)
 { variableDatums = pVariableDatums;
 }
 
-@XmlElementWrapper(name="variableDatumsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<VariableDatum> getVariableDatums()
 { return variableDatums; }
 

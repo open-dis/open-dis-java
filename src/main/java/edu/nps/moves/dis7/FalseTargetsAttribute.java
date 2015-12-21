@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * The False Targets attribute record shall be used to communicate discrete values that are associated with false targets jamming that cannot be referenced to an emitter mode. The values provided in the False Targets attri- bute record shall be considered valid only for the victim radar beams listed in the jamming beam's Track/Jam Data records (provided in the associated Electromagnetic Emission PDU). Section 6.2.21.3
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class FalseTargetsAttribute extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_FalseTargetsAttribute;
-
    protected long  recordType = (long)3502;
 
    protected int  recordLength = (int)40;
@@ -62,7 +48,6 @@ public class FalseTargetsAttribute extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -85,26 +70,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_FalseTargetsAttribute()
-{
-   return pk_FalseTargetsAttribute;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_FalseTargetsAttribute(long pKeyName)
-{
-   this.pk_FalseTargetsAttribute = pKeyName;
-}
-
 public void setRecordType(long pRecordType)
 { recordType = pRecordType;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getRecordType()
 { return recordType; 
 }
@@ -113,8 +82,6 @@ public void setRecordLength(int pRecordLength)
 { recordLength = pRecordLength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getRecordLength()
 { return recordLength; 
 }
@@ -123,8 +90,6 @@ public void setPadding(int pPadding)
 { padding = pPadding;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getPadding()
 { return padding; 
 }
@@ -133,8 +98,6 @@ public void setEmitterNumber(short pEmitterNumber)
 { emitterNumber = pEmitterNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getEmitterNumber()
 { return emitterNumber; 
 }
@@ -143,8 +106,6 @@ public void setBeamNumber(short pBeamNumber)
 { beamNumber = pBeamNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getBeamNumber()
 { return beamNumber; 
 }
@@ -153,8 +114,6 @@ public void setStateIndicator(short pStateIndicator)
 { stateIndicator = pStateIndicator;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getStateIndicator()
 { return stateIndicator; 
 }
@@ -163,8 +122,6 @@ public void setPadding2(short pPadding2)
 { padding2 = pPadding2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPadding2()
 { return padding2; 
 }
@@ -173,8 +130,6 @@ public void setFalseTargetCount(int pFalseTargetCount)
 { falseTargetCount = pFalseTargetCount;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getFalseTargetCount()
 { return falseTargetCount; 
 }
@@ -183,8 +138,6 @@ public void setWalkSpeed(float pWalkSpeed)
 { walkSpeed = pWalkSpeed;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getWalkSpeed()
 { return walkSpeed; 
 }
@@ -193,8 +146,6 @@ public void setWalkAcceleration(float pWalkAcceleration)
 { walkAcceleration = pWalkAcceleration;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getWalkAcceleration()
 { return walkAcceleration; 
 }
@@ -203,8 +154,6 @@ public void setMaximumWalkDistance(float pMaximumWalkDistance)
 { maximumWalkDistance = pMaximumWalkDistance;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getMaximumWalkDistance()
 { return maximumWalkDistance; 
 }
@@ -213,8 +162,6 @@ public void setKeepTime(float pKeepTime)
 { keepTime = pKeepTime;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getKeepTime()
 { return keepTime; 
 }
@@ -223,8 +170,6 @@ public void setEchoSpacing(float pEchoSpacing)
 { echoSpacing = pEchoSpacing;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public float getEchoSpacing()
 { return echoSpacing; 
 }

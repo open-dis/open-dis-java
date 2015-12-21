@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Section 5.3.10.3 Information about individual mines within a minefield. This is very, very wrong. UNFINISHED
@@ -23,8 +14,6 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class MinefieldDataPdu extends MinefieldFamilyPdu implements Serializable
 {
    /** Minefield ID */
@@ -74,7 +63,6 @@ public class MinefieldDataPdu extends MinefieldFamilyPdu implements Serializable
     setPduType( (short)39 );
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -111,13 +99,6 @@ public void setMinefieldID(EntityID pMinefieldID)
 { minefieldID = pMinefieldID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_minefieldID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_minefieldID")
 public EntityID getMinefieldID()
 { return minefieldID; 
 }
@@ -126,13 +107,6 @@ public void setRequestingEntityID(EntityID pRequestingEntityID)
 { requestingEntityID = pRequestingEntityID;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_requestingEntityID;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_requestingEntityID")
 public EntityID getRequestingEntityID()
 { return requestingEntityID; 
 }
@@ -141,8 +115,6 @@ public void setMinefieldSequenceNumbeer(int pMinefieldSequenceNumbeer)
 { minefieldSequenceNumbeer = pMinefieldSequenceNumbeer;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getMinefieldSequenceNumbeer()
 { return minefieldSequenceNumbeer; 
 }
@@ -151,8 +123,6 @@ public void setRequestID(short pRequestID)
 { requestID = pRequestID;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getRequestID()
 { return requestID; 
 }
@@ -161,8 +131,6 @@ public void setPduSequenceNumber(short pPduSequenceNumber)
 { pduSequenceNumber = pPduSequenceNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPduSequenceNumber()
 { return pduSequenceNumber; 
 }
@@ -171,14 +139,10 @@ public void setNumberOfPdus(short pNumberOfPdus)
 { numberOfPdus = pNumberOfPdus;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getNumberOfPdus()
 { return numberOfPdus; 
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfMinesInThisPdu()
 { return (short)mineLocation.size();
 }
@@ -191,8 +155,6 @@ public void setNumberOfMinesInThisPdu(short pNumberOfMinesInThisPdu)
 { numberOfMinesInThisPdu = pNumberOfMinesInThisPdu;
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfSensorTypes()
 { return (short)sensorTypes.size();
 }
@@ -209,8 +171,6 @@ public void setPad2(short pPad2)
 { pad2 = pPad2;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPad2()
 { return pad2; 
 }
@@ -219,8 +179,6 @@ public void setDataFilter(long pDataFilter)
 { dataFilter = pDataFilter;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getDataFilter()
 { return dataFilter; 
 }
@@ -229,13 +187,6 @@ public void setMineType(EntityType pMineType)
 { mineType = pMineType;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_mineType;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_mineType")
 public EntityType getMineType()
 { return mineType; 
 }
@@ -244,8 +195,6 @@ public void setSensorTypes(List<TwoByteChunk> pSensorTypes)
 { sensorTypes = pSensorTypes;
 }
 
-@XmlElementWrapper(name="sensorTypesList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<TwoByteChunk> getSensorTypes()
 { return sensorTypes; }
 
@@ -253,8 +202,6 @@ public void setPad3(short pPad3)
 { pad3 = pPad3;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPad3()
 { return pad3; 
 }
@@ -263,8 +210,6 @@ public void setMineLocation(List<Vector3Float> pMineLocation)
 { mineLocation = pMineLocation;
 }
 
-@XmlElementWrapper(name="mineLocationList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<Vector3Float> getMineLocation()
 { return mineLocation; }
 

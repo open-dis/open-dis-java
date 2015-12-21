@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Description of one electronic emission beam
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class ElectronicEmissionBeamData extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_ElectronicEmissionBeamData;
-
    /** This field shall specify the length of this beams data in 32 bit words */
    protected short  beamDataLength;
 
@@ -65,7 +51,6 @@ public class ElectronicEmissionBeamData extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -89,26 +74,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_ElectronicEmissionBeamData()
-{
-   return pk_ElectronicEmissionBeamData;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_ElectronicEmissionBeamData(long pKeyName)
-{
-   this.pk_ElectronicEmissionBeamData = pKeyName;
-}
-
 public void setBeamDataLength(short pBeamDataLength)
 { beamDataLength = pBeamDataLength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getBeamDataLength()
 { return beamDataLength; 
 }
@@ -117,8 +86,6 @@ public void setBeamIDNumber(short pBeamIDNumber)
 { beamIDNumber = pBeamIDNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getBeamIDNumber()
 { return beamIDNumber; 
 }
@@ -127,8 +94,6 @@ public void setBeamParameterIndex(int pBeamParameterIndex)
 { beamParameterIndex = pBeamParameterIndex;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getBeamParameterIndex()
 { return beamParameterIndex; 
 }
@@ -137,13 +102,6 @@ public void setFundamentalParameterData(FundamentalParameterData pFundamentalPar
 { fundamentalParameterData = pFundamentalParameterData;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_fundamentalParameterData;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_fundamentalParameterData")
 public FundamentalParameterData getFundamentalParameterData()
 { return fundamentalParameterData; 
 }
@@ -152,14 +110,10 @@ public void setBeamFunction(short pBeamFunction)
 { beamFunction = pBeamFunction;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getBeamFunction()
 { return beamFunction; 
 }
 
-@XmlAttribute
-@Basic
 public short getNumberOfTrackJamTargets()
 { return (short)trackJamTargets.size();
 }
@@ -176,8 +130,6 @@ public void setHighDensityTrackJam(short pHighDensityTrackJam)
 { highDensityTrackJam = pHighDensityTrackJam;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getHighDensityTrackJam()
 { return highDensityTrackJam; 
 }
@@ -186,8 +138,6 @@ public void setPad4(short pPad4)
 { pad4 = pPad4;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getPad4()
 { return pad4; 
 }
@@ -196,8 +146,6 @@ public void setJammingModeSequence(long pJammingModeSequence)
 { jammingModeSequence = pJammingModeSequence;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getJammingModeSequence()
 { return jammingModeSequence; 
 }
@@ -206,8 +154,6 @@ public void setTrackJamTargets(List<TrackJamTarget> pTrackJamTargets)
 { trackJamTargets = pTrackJamTargets;
 }
 
-@XmlElementWrapper(name="trackJamTargetsList" ) //  Jaxb
-@OneToMany    // Hibernate
 public List<TrackJamTarget> getTrackJamTargets()
 { return trackJamTargets; }
 

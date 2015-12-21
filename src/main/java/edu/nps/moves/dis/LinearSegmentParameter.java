@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * 5.2.48: Linear segment parameters
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class LinearSegmentParameter extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_LinearSegmentParameter;
-
    /** number of segments */
    protected short  segmentNumber;
 
@@ -63,7 +49,6 @@ public class LinearSegmentParameter extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -82,26 +67,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_LinearSegmentParameter()
-{
-   return pk_LinearSegmentParameter;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_LinearSegmentParameter(long pKeyName)
-{
-   this.pk_LinearSegmentParameter = pKeyName;
-}
-
 public void setSegmentNumber(short pSegmentNumber)
 { segmentNumber = pSegmentNumber;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSegmentNumber()
 { return segmentNumber; 
 }
@@ -110,13 +79,6 @@ public void setSegmentAppearance(SixByteChunk pSegmentAppearance)
 { segmentAppearance = pSegmentAppearance;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_segmentAppearance;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_segmentAppearance")
 public SixByteChunk getSegmentAppearance()
 { return segmentAppearance; 
 }
@@ -125,13 +87,6 @@ public void setLocation(Vector3Double pLocation)
 { location = pLocation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_location;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_location")
 public Vector3Double getLocation()
 { return location; 
 }
@@ -140,13 +95,6 @@ public void setOrientation(Orientation pOrientation)
 { orientation = pOrientation;
 }
 
-// HIBERNATE: this ivar is a foreign key, linked to the below class table. 
-// It is not a DIS-standard variable and is not marshalled to IEEE-1278.1
-public long fk_orientation;
-
-@XmlElement
-@OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name="fk_orientation")
 public Orientation getOrientation()
 { return orientation; 
 }
@@ -155,8 +103,6 @@ public void setSegmentLength(int pSegmentLength)
 { segmentLength = pSegmentLength;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSegmentLength()
 { return segmentLength; 
 }
@@ -165,8 +111,6 @@ public void setSegmentWidth(int pSegmentWidth)
 { segmentWidth = pSegmentWidth;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSegmentWidth()
 { return segmentWidth; 
 }
@@ -175,8 +119,6 @@ public void setSegmentHeight(int pSegmentHeight)
 { segmentHeight = pSegmentHeight;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSegmentHeight()
 { return segmentHeight; 
 }
@@ -185,8 +127,6 @@ public void setSegmentDepth(int pSegmentDepth)
 { segmentDepth = pSegmentDepth;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public int getSegmentDepth()
 { return segmentDepth; 
 }
@@ -195,8 +135,6 @@ public void setPad1(long pPad1)
 { pad1 = pPad1;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public long getPad1()
 { return pad1; 
 }

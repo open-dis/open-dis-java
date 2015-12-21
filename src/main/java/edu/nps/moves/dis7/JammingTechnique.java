@@ -5,15 +5,6 @@ import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
-// Jaxb and Hibernate annotations generally won't work on mobile devices. XML serialization uses jaxb, and
-// javax.persistence uses the JPA JSR, aka hibernate. See the Hibernate site for details.
-// To generate Java code without these, and without the annotations scattered through the
-// see the XMLPG java code generator, and set the boolean useHibernateAnnotations and useJaxbAnnotions 
-// to false, and then regenerate the code
-
-import javax.xml.bind.*;            // Used for JAXB XML serialization
-import javax.xml.bind.annotation.*; // Used for XML serialization annotations (the @ stuff)
-import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
 
 /**
  * Jamming technique. Section 6.2.49
@@ -23,13 +14,8 @@ import javax.persistence.*;         // Used for JPA/Hibernate SQL persistence
  *
  * @author DMcG
  */
-@Entity  // Hibernate
-@Inheritance(strategy=InheritanceType.JOINED)  // Hibernate
 public class JammingTechnique extends Object implements Serializable
 {
-   /** Primary key for hibernate, not part of the DIS standard */
-   private long pk_JammingTechnique;
-
    protected short  kind;
 
    protected short  category;
@@ -44,7 +30,6 @@ public class JammingTechnique extends Object implements Serializable
  {
  }
 
-@Transient  // Marked as transient to prevent hibernate from thinking this is a persistent property
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
@@ -58,26 +43,10 @@ public int getMarshalledSize()
 }
 
 
-/** Primary key for hibernate, not part of the DIS standard */
-@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
-public long getPk_JammingTechnique()
-{
-   return pk_JammingTechnique;
-}
-
-/** Hibernate primary key, not part of the DIS standard */
-public void setPk_JammingTechnique(long pKeyName)
-{
-   this.pk_JammingTechnique = pKeyName;
-}
-
 public void setKind(short pKind)
 { kind = pKind;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getKind()
 { return kind; 
 }
@@ -86,8 +55,6 @@ public void setCategory(short pCategory)
 { category = pCategory;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getCategory()
 { return category; 
 }
@@ -96,8 +63,6 @@ public void setSubcategory(short pSubcategory)
 { subcategory = pSubcategory;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSubcategory()
 { return subcategory; 
 }
@@ -106,8 +71,6 @@ public void setSpecific(short pSpecific)
 { specific = pSpecific;
 }
 
-@XmlAttribute // Jaxb
-@Basic       // Hibernate
 public short getSpecific()
 { return specific; 
 }
