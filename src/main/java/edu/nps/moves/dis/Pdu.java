@@ -42,6 +42,11 @@ public class Pdu extends Object implements Serializable
  public Pdu()
  {
  }
+   
+public int getLength()
+{
+    return this.getMarshalledSize();    
+}
 
 public int getMarshalledSize()
 {
@@ -81,6 +86,16 @@ public void setPduType(short pPduType)
 
 public short getPduType()
 { return pduType; 
+}
+
+/**
+* Returns the PduType, an enumeration from the disenum jar file. This is an enumerated
+* java type, rather than a simple short integer. This should NOT be marshalled to DIS
+* or XML.
+* @return this Pdu's type enumeration
+*/
+public PduType getPduTypeEnum() {
+   return PduType.lookup[pduType];
 }
 
 public void setProtocolFamily(short pProtocolFamily)
@@ -333,7 +348,7 @@ public byte[] marshal()
         this.setTimestamp(disTime.getUnixTimestamp());
         this.marshal(buff);
     }
-    
+
 
  /*
   * The equals method doesn't always work--mostly it works only on classes that consist only of primitives. Be careful.

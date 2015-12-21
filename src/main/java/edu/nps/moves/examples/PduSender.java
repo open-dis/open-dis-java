@@ -145,9 +145,9 @@ public class PduSender {
             }
 
             // write the PDUs out to an XML file.
-            PduContainer container = new PduContainer();
-            container.setPdus(generatedPdus);
-            container.marshallToXml("examplePdus.xml");
+            //PduContainer container = new PduContainer();
+            //container.setPdus(generatedPdus);
+            //container.marshallToXml("examplePdus.xml");
         } catch (Exception e) {
             System.out.println(e);
         }
