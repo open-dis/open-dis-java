@@ -439,9 +439,9 @@ Also provides basic parametric data that may be used to support low-fidelity sim
     </attribute>
     
     <attribute name="variableData" comment="data can be any length, but must increase in 8 byte quanta. This requires some postprocessing patches. Note that setting the data allocates a new internal array to account for the possibly increased size. The default initial size is 64 bits.">
-     <list type="fixed" length="8">
+     <fixedlist  length="8">
        <primitive type="byte"/>
-    </list> 
+    </fixedlist> 
     </attribute>
      
 </class>
@@ -515,10 +515,10 @@ Also provides basic parametric data that may be used to support low-fidelity sim
       <primitive type="unsigned int"/>
   </attribute>
   
-  <attribute name="trackJamTargets" comment="variable length list of track/jam targets">
-   <list type="variable" countFieldName="numberOfTrackJamTargets">
+  <attribute name="trackJamTargets" comment="variable length variablelist of track/jam targets">
+   <variablelist  countFieldName="numberOfTrackJamTargets">
      <classRef name="TrackJamTarget"/>
-   </list> 
+   </variablelist> 
   </attribute>
 </class>
 
@@ -544,10 +544,10 @@ Also provides basic parametric data that may be used to support low-fidelity sim
     <classRef name="Vector3Float"/>
   </attribute>
   
-    <attribute name="beamDataRecords" comment="variable length list of beam data records">
-   <list type="variable" countFieldName="numberOfBeams">
+    <attribute name="beamDataRecords" comment="variable length variablelist of beam data records">
+   <variablelist  countFieldName="numberOfBeams">
      <classRef name="ElectronicEmissionBeamData"/>
-   </list> 
+   </variablelist> 
   </attribute>
 </class>
 
@@ -576,9 +576,9 @@ Also provides basic parametric data that may be used to support low-fidelity sim
  </attribute>
  
  <attribute name="characters" comment="The characters">
-     <list type="fixed" length="11" couldBeString="true">
+     <fixedlist  length="11" couldBeString="true">
          <primitive type="byte"/>
-     </list>
+     </fixedlist>
  </attribute>
             
 </class>
@@ -592,9 +592,9 @@ Also provides basic parametric data that may be used to support low-fidelity sim
  </attribute>
  
  <attribute name="characters" comment="The characters">
-     <list type="fixed" length="31">
+     <fixedlist  length="31">
          <primitive type="byte"/>
-     </list>
+     </fixedlist>
  </attribute>
             
 </class>
@@ -826,9 +826,9 @@ receiver of the create entity to define the entity identifier number of the new 
    </attribute>
    
     <attribute name="beamRecords" comment="For each beam in numberOfBeams, an emitter system. This is not right--the beam records need to be at the end of the PDU, rather than attached to each system.">
-        <list type="variable" countFieldName="numberOfBeams">
+        <variablelist  countFieldName="numberOfBeams">
             <classRef name="AcousticBeamData"/>
-        </list>
+        </variablelist>
     </attribute>
     
 </class>
@@ -949,10 +949,10 @@ receiver of the create entity to define the entity identifier number of the new 
      </attribute>
      
      
-   <attribute name="parameterValues" comment="variable length list of data parameters ">
-   <list type="variable" countFieldName="recordLength">
+   <attribute name="parameterValues" comment="variable length variablelist of data parameters ">
+   <variablelist  countFieldName="recordLength">
      <classRef name="OneByteChunk"/>
-   </list> 
+   </variablelist> 
   </attribute>
      
 </class>
@@ -1078,10 +1078,10 @@ receiver of the create entity to define the entity identifier number of the new 
         <primitive type="unsigned short"/>
   </attribute>
   
-  <attribute name="dataValues" comment="variable length list of data parameters ^^^this is wrong--need padding as well">
-   <list type="variable" countFieldName="numberOfBytes">
+  <attribute name="dataValues" comment="variable length variablelist of data parameters ^^^this is wrong--need padding as well">
+   <variablelist  countFieldName="numberOfBytes">
      <classRef name="OneByteChunk"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <!-- Need some padding here to put it on a 32 bit boundary-->
@@ -1104,9 +1104,9 @@ receiver of the create entity to define the entity identifier number of the new 
 
   
   <attribute name="dataValues" comment="variable length list of data parameters ^^^this is wrong--need padding as well">
-   <list type="variable" countFieldName="numberOfValues">
+   <variablelist  countFieldName="numberOfValues">
      <classRef name="TwoByteChunk"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <!-- Need some padding here to put it on a 32 bit boundary-->
@@ -1120,9 +1120,9 @@ receiver of the create entity to define the entity identifier number of the new 
   </attribute>
   
    <attribute name="dataValues" comment="variable length list of data parameters ^^^this is wrong--need padding as well">
-   <list type="variable" countFieldName="numberOfValues">
+   <variablelist  countFieldName="numberOfValues">
      <classRef name="FourByteChunk"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <!-- Need some padding here to put it on a 32 bit boundary-->
@@ -1131,9 +1131,9 @@ receiver of the create entity to define the entity identifier number of the new 
 
   <class name="SixByteChunk" inheritsFrom="root" comment="48 bit piece of data">
      <attribute name="otherParameters" comment="six bytes of arbitrary data">
-       <list type="fixed" length="6">
+       <fixedlist  length="6">
         <primitive type="byte"/>
-       </list>
+       </fixedlist>
      </attribute>
    </class>
 
@@ -1179,33 +1179,33 @@ receiver of the create entity to define the entity identifier number of the new 
    
   <class name="EightByteChunk" inheritsFrom="root" comment="64 bit piece of data">
      <attribute name="otherParameters" comment="Eight bytes of arbitrary data">
-       <list type="fixed" length="8">
+       <fixedlist  length="8">
         <primitive type="byte"/>
-       </list>
+       </fixedlist>
      </attribute>
    </class>
    
    <class name="OneByteChunk" inheritsFrom="root" comment="8 bit piece of data">
      <attribute name="otherParameters" comment="one byte of arbitrary data">
-       <list type="fixed" length="1">
+       <fixedlist  length="1">
         <primitive type="byte"/>
-       </list>
+       </fixedlist>
      </attribute>
    </class>
    
     <class name="TwoByteChunk" inheritsFrom="root" comment="16 bit piece of data">
      <attribute name="otherParameters" comment="two bytes of arbitrary data">
-       <list type="fixed" length="2">
+       <fixedlist  length="2">
         <primitive type="byte"/>
-       </list>
+       </fixedlist>
      </attribute>
    </class>
    
     <class name="FourByteChunk" inheritsFrom="root" comment="32 bit piece of data">
      <attribute name="otherParameters" comment="four bytes of arbitrary data">
-       <list type="fixed" length="4">
+       <fixedlist  length="4">
         <primitive type="byte"/>
-       </list>
+       </fixedlist>
      </attribute>
    </class>
    
@@ -1274,9 +1274,9 @@ receiver of the create entity to define the entity identifier number of the new 
 </attribute>
   
 <attribute name="otherParameters" comment="other parameters to use in the dead reckoning algorithm">
-   <list type="fixed" length="15">
+   <fixedlist  length="15">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
 </attribute>
 
 <attribute name="entityLinearAcceleration" comment="Linear acceleration of the entity">
@@ -1319,27 +1319,27 @@ receiver of the create entity to define the entity identifier number of the new 
 <class name="PduStream" inheritsFrom="root" comment="Non-DIS class, used to describe streams of PDUs when logging to SQL databases">
 
     <attribute name="shortDescription" comment="short description of this PDU stream">
-   <list type="fixed" length="256" couldBeString="true">
+   <fixedlist  length="256" couldBeString="true">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
  </attribute>
  
  <attribute name="longDescription" comment="Longish description of this PDU stream">
-   <list type="fixed" length="512" couldBeString="true">
+   <fixedlist  length="512" couldBeString="true">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
  </attribute>
  
  <attribute name="personRecording" comment="Name of person performing recording">
-   <list type="fixed" length="128" couldBeString="true">
+   <fixedlist  length="128" couldBeString="true">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
  </attribute>
  
  <attribute name="authorEmail" comment="Email of person performing recording">
-   <list type="fixed" length="128" couldBeString="true">
+   <fixedlist  length="128" couldBeString="true">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
  </attribute>
   
   <attribute name="startTime" comment="Start time of recording, in Unix time">
@@ -1355,9 +1355,9 @@ receiver of the create entity to define the entity identifier number of the new 
   </attribute>
   
   <attribute name="pdusInStream" comment="variable length list of PDUs">
-    <list type="variable" countFieldName="pduCount">
+    <variablelist  countFieldName="pduCount">
       <classRef name="Pdu"/>
-    </list> 
+    </variablelist> 
    </attribute>
   
  </class>
@@ -1471,9 +1471,9 @@ PduHeader record, section 5.2.29.">
 </attribute>
 
   <attribute name="articulationParameters" comment="variable length list of articulation parameters">
-   <list type="variable" countFieldName="numberOfArticulationParameters">
+   <variablelist  countFieldName="numberOfArticulationParameters">
      <classRef name="ArticulationParameter"/>
-   </list> 
+   </variablelist> 
 </attribute>
 
 </class>
@@ -1622,9 +1622,9 @@ PduHeader record, section 5.2.29.">
 </attribute>
   
 <attribute name="otherParameters" comment="other parameters to use in the dead reckoning algorithm">
-   <list type="fixed" length="15">
+   <fixedlist  length="15">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
 </attribute>
 
 <attribute name="xAcceleration" comment = "X value">
@@ -1653,9 +1653,9 @@ PduHeader record, section 5.2.29.">
   </attribute>
 
  <attribute name="marking" comment="characters that can be used for debugging, or to draw unique strings on the side of entities in the world">
-   <list type="fixed" length="12" couldBeString="true">
+   <fixedlist  length="12" couldBeString="true">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
  </attribute>
  
  <attribute name="capabilities" comment="a series of bit flags">
@@ -1663,9 +1663,9 @@ PduHeader record, section 5.2.29.">
 </attribute>
 
   <attribute name="articulationParameters" comment="variable length list of articulation parameters">
-   <list type="variable" countFieldName="numberOfArticulationParameters">
+   <variablelist  countFieldName="numberOfArticulationParameters">
      <classRef name="ArticulationParameter"/>
-   </list> 
+   </variablelist> 
 </attribute>
 
 </class>
@@ -1825,9 +1825,9 @@ PduHeader record, section 5.2.29.">
    </attribute>
    
     <attribute name="articulationParameters">
-     <list type="variable" countFieldName="numberOfArticulationParameters">
+     <variablelist  countFieldName="numberOfArticulationParameters">
        <classRef name="ArticulationParameter"/>
-     </list> 
+     </variablelist> 
    </attribute>
    
 </class>
@@ -1923,9 +1923,9 @@ PduHeader record, section 5.2.29.">
   </attribute>
 
  <attribute name="articulationParameters">
-   <list type="variable" countFieldName="numberOfArticulationParameters">
+   <variablelist  countFieldName="numberOfArticulationParameters">
      <classRef name="ArticulationParameter"/>
-   </list> 
+   </variablelist> 
 </attribute>
   </class>
  
@@ -1958,9 +1958,9 @@ PduHeader record, section 5.2.29.">
   </attribute>
 
   <attribute name="supplies">
-     <list type="variable" countFieldName="numberOfSupplyTypes">
+     <variablelist  countFieldName="numberOfSupplyTypes">
        <classRef name="SupplyQuantity"/>
-     </list> 
+     </variablelist> 
   </attribute>
 
 </class>
@@ -1991,9 +1991,9 @@ PduHeader record, section 5.2.29.">
  </attribute>
 
 <attribute name="supplies">
-   <list type="variable" countFieldName="numberOfSupplyTypes">
+   <variablelist  countFieldName="numberOfSupplyTypes">
      <classRef name="SupplyQuantity"/>
-   </list> 
+   </variablelist> 
 </attribute>
 
 </class>
@@ -2023,9 +2023,9 @@ PduHeader record, section 5.2.29.">
  </attribute>
  
  <attribute name="supplies">
-   <list type="variable" countFieldName="numberOfSupplyTypes">
+   <variablelist  countFieldName="numberOfSupplyTypes">
      <classRef name="SupplyQuantity"/>
-   </list> 
+   </variablelist> 
 </attribute>
 </class>
 
@@ -2210,15 +2210,15 @@ PduHeader record, section 5.2.29.">
   </attribute>
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist  countFieldName="numberOfFixedDatumRecords">
      <classRef name="FixedDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist  countFieldName="numberOfVariableDatumRecords">
      <classRef name="VariableDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
 
 </class>
@@ -2244,15 +2244,15 @@ PduHeader record, section 5.2.29.">
   </attribute>
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist  countFieldName="numberOfFixedDatumRecords">
      <classRef name="FixedDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist  countFieldName="numberOfVariableDatumRecords">
      <classRef name="VariableDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   </class>
@@ -2278,15 +2278,15 @@ PduHeader record, section 5.2.29.">
   </attribute>
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist  countFieldName="numberOfFixedDatumRecords">
      <classRef name="UnsignedIntegerWrapper"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist  countFieldName="numberOfVariableDatumRecords">
      <classRef name="UnsignedIntegerWrapper"/>
-   </list> 
+   </variablelist> 
   </attribute>
 
 </class>
@@ -2312,15 +2312,15 @@ PduHeader record, section 5.2.29.">
   </attribute>
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist  countFieldName="numberOfFixedDatumRecords">
      <classRef name="UnsignedIntegerWrapper"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist  countFieldName="numberOfVariableDatumRecords">
      <classRef name="UnsignedIntegerWrapper"/>
-   </list> 
+   </variablelist> 
   </attribute>
 
 </class>
@@ -2346,15 +2346,15 @@ PduHeader record, section 5.2.29.">
   </attribute>
   
    <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist  countFieldName="numberOfFixedDatumRecords">
      <classRef name="FixedDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist  countFieldName="numberOfVariableDatumRecords">
      <classRef name="VariableDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
 </class>
@@ -2380,15 +2380,15 @@ PduHeader record, section 5.2.29.">
   </attribute>
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist  countFieldName="numberOfFixedDatumRecords">
      <classRef name="FixedDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist  countFieldName="numberOfVariableDatumRecords">
      <classRef name="VariableDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
 
 </class>
@@ -2406,15 +2406,15 @@ PduHeader record, section 5.2.29.">
   </attribute>
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist  countFieldName="numberOfFixedDatumRecords">
      <classRef name="FixedDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist  countFieldName="numberOfVariableDatumRecords">
      <classRef name="VariableDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
 
 </class>
@@ -2450,9 +2450,9 @@ PduHeader record, section 5.2.29.">
   </attribute>
  
    <attribute name="systems" comment="Electronic emmissions systems">
-      <list type="variable" countFieldName="numberOfSystems">
+      <variablelist  countFieldName="numberOfSystems">
           <classRef name="ElectronicEmissionSystemData"/>
-      </list>
+      </variablelist>
   </attribute>
   
  </class>
@@ -2556,21 +2556,21 @@ The beam data records should ALL be a the finish, rather than attached to each e
     </attribute>
   
   <attribute name="shaftRPMs" comment="shaft RPM values">
-      <list type="variable" countFieldName="numberOfShafts">
+      <variablelist  countFieldName="numberOfShafts">
           <classref name="ShaftRPMs"/>
-      </list>
+      </variablelist>
   </attribute>
   
   <attribute name="apaData" comment="apaData">
-      <list type="variable" countFieldName="numberOfAPAs">
+      <variablelist  countFieldName="numberOfAPAs">
           <classRef name="ApaData"/>
-      </list>
+      </variablelist>
   </attribute>
   
     <attribute name="emitterSystems">
-        <list type="variable" countFieldName="numberOfUAEmitterSystems">
+        <variablelist  countFieldName="numberOfUAEmitterSystems">
             <classRef name="AcousticEmitterSystemData"/>
-        </list>
+        </variablelist>
     </attribute>
     
 </class>
@@ -2622,9 +2622,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute> 
   
    <attribute name="fundamentalIffParameters" comment="variable length list of fundamental parameters. ^^^This is wrong">
-   <list type="variable" countFieldName="pad2">
+   <variablelist  countFieldName="pad2">
      <classRef name="FundamentalParameterDataIff"/>
-   </list> 
+   </variablelist> 
   </attribute>
 
 </class>
@@ -2659,15 +2659,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute>   
   
   <attribute name="propulsionSystemData" comment="variable length list of propulsion system data">
-   <list type="variable" countFieldName="numberOfPropulsionSystems">
+   <variablelist  countFieldName="numberOfPropulsionSystems">
      <classRef name="PropulsionSystemData"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="vectoringSystemData" comment="variable length list of vectoring system data">
-   <list type="variable" countFieldName="numberOfVectoringNozzleSystems">
+   <variablelist  countFieldName="numberOfVectoringNozzleSystems">
      <classRef name="VectoringNozzleSystemData"/>
-   </list> 
+   </variablelist> 
   </attribute>
        
 </class>
@@ -2714,9 +2714,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute>
  
   <attribute name="data" comment="data bytes">
-     <list type="variable" countFieldName="dataLength">
+     <variablelist  countFieldName="dataLength">
        <classRef name="OneByteChunk"/>
-    </list> 
+    </variablelist> 
     </attribute>
 </class>
 
@@ -2803,15 +2803,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute>
   
   <attribute name="modulationParametersList" comment="variable length list of modulation parameters">
-   <list type="variable" countFieldName="modulationParameterCount">
+   <variablelist  countFieldName="modulationParameterCount">
      <classRef name="ModulationType"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="antennaPatternList" comment="variable length list of antenna pattern records">
-   <list type="variable" countFieldName="antennaPatternCount">
+   <variablelist  countFieldName="antennaPatternCount">
      <classRef name="BeamAntennaPattern"/>
-   </list> 
+   </variablelist> 
   </attribute>       
 </class>
 
@@ -2849,9 +2849,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute>
   
   <attribute name="data" comment="list of eight bit values. Must be padded to fall on a 32 bit boundary.">
-    <list type="variable" countFieldName="dataLength">
+    <variablelist  countFieldName="dataLength">
        <classRef name="OneByteChunk"/>
-    </list>
+    </variablelist>
   </attribute>
  
 </class>
@@ -2945,9 +2945,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute>
   
    <attribute name="intercomParameters" comment="Must be ">
-     <list type="variable" countFieldName="intercomParametersLength">
+     <variablelist  countFieldName="intercomParametersLength">
        <classRef name="IntercomCommunicationsParameters"/>
-    </list> 
+    </variablelist> 
     </attribute>
     </class>
     
@@ -3021,15 +3021,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute>
   
   <attribute name="aggregateIDList" comment="aggregates  list">
-     <list type="variable" countFieldName="numberOfDisAggregates">
+     <variablelist  countFieldName="numberOfDisAggregates">
        <classRef name="AggregateID"/>
-    </list> 
+    </variablelist> 
     </attribute>
   
    <attribute name="entityIDList" comment="entity ID list">
-     <list type="variable" countFieldName="numberOfDisEntities">
+     <variablelist  countFieldName="numberOfDisEntities">
        <classRef name="EntityID"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="pad2" comment="^^^padding to put the start of the next list on a 32 bit boundary. This needs to be fixed">
@@ -3037,15 +3037,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute>
   
   <attribute name="silentAggregateSystemList" comment="silent entity types">
-     <list type="variable" countFieldName="numberOfSilentAggregateTypes">
+     <variablelist  countFieldName="numberOfSilentAggregateTypes">
        <classRef name="EntityType"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="silentEntitySystemList" comment="silent entity types">
-     <list type="variable" countFieldName="numberOfSilentEntityTypes">
+     <variablelist  countFieldName="numberOfSilentEntityTypes">
        <classRef name="EntityType"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
    <attribute name="numberOfVariableDatumRecords" comment="number of variable datum records">
@@ -3053,9 +3053,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute>
   
   <attribute name="variableDatumList" comment="variableDatums">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist  countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
   
  </class>
@@ -3091,9 +3091,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute>
   
    <attribute name="groupedEntityDescriptions" comment="GED records about each individual entity in the group. ^^^this is wrong--need a database lookup to find the actual size of the list elements">
-     <list type="variable" countFieldName="numberOfGroupedEntities">
+     <variablelist  countFieldName="numberOfGroupedEntities">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -3133,9 +3133,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
   </attribute>
 
    <attribute name="recordSets" comment="^^^This is wrong--the RecordSet class needs more work">
-     <list type="variable" countFieldName="numberOfRecordSets">
+     <variablelist  countFieldName="numberOfRecordSets">
        <classRef name="RecordSet"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -3225,15 +3225,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
     <attribute name="perimeterPoints" comment="perimeter points for the minefield">
-     <list type="variable" countFieldName="numberOfPerimeterPoints">
+     <variablelist  countFieldName="numberOfPerimeterPoints">
        <classRef name="Point"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
      <attribute name="mineType" comment="Type of mines">
-     <list type="variable" countFieldName="numberOfMineTypes">
+     <variablelist  countFieldName="numberOfMineTypes">
        <classRef name="EntityType"/>
-    </list> 
+    </variablelist> 
     </attribute>
    
    </class>
@@ -3276,15 +3276,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
 
  <attribute name="requestedPerimeterPoints" comment="perimeter points of request">
-     <list type="variable" countFieldName="numberOfPerimeterPoints">
+     <variablelist  countFieldName="numberOfPerimeterPoints">
        <classRef name="Point"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="sensorTypes" comment="Sensor types, each 16 bits long">
-     <list type="variable" countFieldName="numberOfSensorTypes">
+     <variablelist  countFieldName="numberOfSensorTypes">
        <classRef name="TwoByteChunk"/>
-    </list> 
+    </variablelist> 
     </attribute>
 </class>
 
@@ -3338,9 +3338,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
     <attribute name="sensorTypes" comment="Sensor types, each 16 bits long">
-     <list type="variable" countFieldName="numberOfSensorTypes">
+     <variablelist  countFieldName="numberOfSensorTypes">
        <classRef name="TwoByteChunk"/>
-    </list> 
+    </variablelist> 
     </attribute>
    
     <attribute name="pad3" comment="Padding to get things 32-bit aligned. ^^^this is wrong--dyanmically sized padding needed">
@@ -3348,9 +3348,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
    <attribute name="mineLocation" comment="Mine locations">
-     <list type="variable" countFieldName="numberOfMinesInThisPdu">
+     <variablelist  countFieldName="numberOfMinesInThisPdu">
        <classRef name="Vector3Float"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     </class>
@@ -3377,9 +3377,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
     <attribute name="missingPduSequenceNumbers" comment="PDU sequence numbers that were missing">
-     <list type="variable" countFieldName="numberOfMissingPdus">
+     <variablelist  countFieldName="numberOfMissingPdus">
        <classRef name="EightByteChunk"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     </class>
@@ -3423,9 +3423,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
    <attribute name="environmentRecords" comment="environemt records">
-     <list type="variable" countFieldName="numberOfEnvironmentRecords">
+     <variablelist  countFieldName="numberOfEnvironmentRecords">
        <classRef name="Environment"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
     </class>
@@ -3494,9 +3494,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
      <attribute name="gridDataList" comment="Grid data ^^^This is wrong">
-     <list type="variable" countFieldName="numberOfGridAxes">
+     <variablelist  countFieldName="numberOfGridAxes">
        <classRef name="GridAxisRecord"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -3596,9 +3596,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
 
      <attribute name="linearSegmentParameters" comment="Linear segment parameters">
-     <list type="variable" countFieldName="numberOfSegments">
+     <variablelist  countFieldName="numberOfSegments">
        <classRef name="LinearSegmentParameter"/>
-    </list> 
+    </variablelist> 
     </attribute>
   
     </class>
@@ -3650,9 +3650,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
     <attribute name="objectLocation" comment="location of object">
-     <list type="variable" countFieldName="numberOfPoints">
+     <variablelist  countFieldName="numberOfPoints">
        <classRef name="Vector3Double"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
 </class>
@@ -3834,15 +3834,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
    
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist  countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist  countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     </class>
@@ -3870,15 +3870,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
    
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist  countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist  countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -3917,15 +3917,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist  countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist  countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -3961,15 +3961,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist  countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist  countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
 </class>
 
@@ -4004,15 +4004,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist  countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist  countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
   
 </class>
@@ -4040,15 +4040,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist  countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist  countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     </class>
@@ -4068,15 +4068,15 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist  countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist  countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
 </class>
 
@@ -4114,9 +4114,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
    
     <attribute name="recordIDs" comment="record IDs">
-     <list type="variable" countFieldName="numberOfRecords">
+     <variablelist  countFieldName="numberOfRecords">
        <classRef name="FourByteChunk"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -4148,9 +4148,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
 
      <attribute name="recordSets" comment="record sets">
-     <list type="variable" countFieldName="numberOfRecordSets">
+     <variablelist  countFieldName="numberOfRecordSets">
        <classRef name="RecordSet"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     </class>
@@ -4166,9 +4166,9 @@ The beam data records should ALL be a the finish, rather than attached to each e
    </attribute>
         
      <attribute name="pdus" comment="record sets">
-     <list type="variable" countFieldName="numberOfPdus">
+     <variablelist  countFieldName="numberOfPdus">
        <classRef name="Pdu"/>
-    </list> 
+    </variablelist> 
     </attribute>
         
     </class>
