@@ -27,7 +27,7 @@
 
 <java imports="java.util.*, java.io.*, edu.nps.moves.disenum.*, edu.nps.moves.disutil.*"
       package="edu.nps.moves.dis"
-      directory="src/main/java/edu/nps/moves/dis"
+      directory="main/java/edu/nps/moves/dis"
       usesJaxb="true"
       usesHibernate="true"/>
 
@@ -40,15 +40,6 @@
  <!-- C++ specific information, used by xmlpg -->     
 <cpp namespace="DIS"
      directory="cpp/DIS"/>
-
-<class name="UnsignedIntegerWrapper" inheritsFrom="root"
-     comment="Wrapper for an unsigned 32 bit integer">
-
-    <attribute name="wrapper" comment="name can't be too accurate or the generated source code will have reserved word problems">
-       <primitive type="unsigned int" defaultValue="0"/>
-    </attribute>
-
-  </class>
 
 <class name="AcousticEmitter" inheritsFrom="root" comment=" information about a specific UA emmtter. Section 6.2.2.">
     
@@ -72,7 +63,7 @@
     <classRef name="SimulationAddress"/>
   </attribute>
   
- <attribute name="aggregateID" comment="the aggregate ID">
+ <attribute name="aggregateID" comment="the aggregate ID, an object identifier">
    <primitive type="unsigned short"/>
  </attribute>
  
@@ -119,7 +110,7 @@
         <primitive type="unsigned byte"/>
     </attribute>
     
-    <attribute name="extra">
+    <attribute name="extra" comment="extra information needed to describe the aggregate">
         <primitive type="unsigned byte"/>
     </attribute>
     
@@ -232,7 +223,7 @@
       <primitive type="unsigned int"/>
     </attribute>
 
-    <attribute name="recordLength" commment="Total length of the record in octets. The record shall end on a 64-bit boundary after any padding. = 6 + K + P">
+    <attribute name="recordLength" commment="Total length of the record in octets. The record shall end on a 64-bit boundary after any padding. = 6 + K + P, where K is the total length of records and P is padding, and 6 is the integer + short">
       <primitive type="unsigned short"/>
     </attribute>
 
@@ -241,7 +232,7 @@
     </attribute>
 
 <!--
-     <attribute name="paddingTo64Bits" commment="Padding necessary to put the end of the record on a 64 bit boundary">
+     <attribute name="paddingTo64Bits" commment="Variable length padding necessary to put the end of the record on a 64 bit boundary">
       <primitive type="unsigned long"/>
     </attribute>
     -->
@@ -283,20 +274,25 @@
 <class name="BeamStatus" inheritsFrom="root" comment="Information related to the status of a beam. This is contained in the beam status field of the electromagnitec emission PDU. The first bit determines whether the beam is active (0) or deactivated (1). Section 6.2.12.">
 
  <attribute name="beamState" comment="First bit zero means beam is active, first bit = 1 means deactivated. The rest is padding.">
-      <primitive type="unsigned byte"/>
-    </attribute>
+      <primitive type="unsigned byte">
+      <flags>
+        <flag mask="0x1" name="beamState" comment="0 active, 1 deactivated"/>
+        <flag mask="0xFE" name="padding" comment="padding"/>
+      </flags>
+      </primitive>
+ </attribute>
     
 </class>
 
 <class name="ClockTime" inheritsFrom="root" 
           comment="Time measurements that exceed one hour are represented by this record. The first field is the hours since the unix epoch (Jan 1 1970, used by most Unix systems and java) and the second field the timestamp units since the top of the hour. Section 6.2.14">
  
- <attribute name="hour" comment="Hours in UTC">
+ <attribute name="hour" comment="Hours since midnight, 1970, UTC">
    <primitive type="unsigned int"/>
  </attribute>
  
- <attribute name="timePastHour" comment="Time past the hour">
-   <primitive type="unsigned int"/>
+ <attribute name="timePastHour" comment="Time past the hour, in timestamp form">
+   <classRef name="Timestamp"/>
  </attribute>
  
  </class>
@@ -360,10 +356,26 @@
  <class name="DataFilterRecord" comment="identify which of the optional data fields are contained in the Minefield Data PDU or requested in the Minefield Query PDU. This is a 32-bit record. For each field, true denotes that the data is requested or present and false denotes that the data is neither requested nor present. Section 6.2.16">
      
      <attribute name="bitFlags" comment="Bitflags field">
-         <primitive type="unsigned int" comment="Bit flags for fields"/>
+         <primitive type="unsigned int" comment="Bit flags for fields">
+             <flags>
+                 <flag mask="0x1" name="groundBurialDepthOffset" comment="boolean"/>
+                 <flag mask="0x2" name="waterBurialDepthOffset" comment="boolean"/>
+                 <flag mask="0x4" name="snowBurialDepthOffset" comment="boolean"/>
+                 <flag mask="0x8" name="mineOrientation" comment="boolean"/>
+                 <flag mask="0x10" name="thermalContrast" comment="boolean"/>
+                 <flag mask="0x20" name="reflectance" comment="boolean"/>
+                 <flag mask="0x40" name="mineEmplacementTime" comment="boolean"/>
+                 <flag mask="0x80" name="tripDetonationWire" comment="boolean"/>
+                 <flag mask="0x100" name="fusing" comment="boolean"/>
+                 <flag mask="0x200" name="scalarDetectionCoefficient" comment="boolean"/>
+                 <flag mask="0x400" name="paintScheme" comment="boolean"/>
+                 <flag mask="0xff800" name="padding" comment="padding"/>
+             </flags>
+         </primitive>
      </attribute>
      
  </class>
+ 
 <class name="UnsignedDISInteger" comment="container class not in specification" inheritsFrom="root">
     
     <attribute name="val" comment="unsigned integer">
@@ -374,13 +386,13 @@
 
 <class name="DataQueryDatumSpecification" 
        inheritsFrom="root" 
-       comment="List of fixed and variable datum records. Section 6.2.17 ">
+       comment="List of fixed and variable datum ID records. Section 6.2.17 ">
        
-  <attribute name="numberOfFixedDatums" comment="Number of fixed datums">
+  <attribute name="numberOfFixedDatums" comment="Number of fixed datum IDs">
       <primitive type="unsigned int"/>
   </attribute>
   
- <attribute name="numberOfVariableDatums" comment="Number of variable datums">
+ <attribute name="numberOfVariableDatums" comment="Number of variable datum IDs">
       <primitive type="unsigned int"/>
   </attribute>
 
@@ -410,13 +422,13 @@
       <primitive type="unsigned int"/>
   </attribute>
 
-  <attribute name="fixedDatumIDList" comment="variable length list fixed datums">
+  <attribute name="fixedDatumList" comment="variable length list fixed datums">
      <list type="variable" countFieldName="numberOfFixedDatums">
        <classRef name="FixedDatum"/>
     </list> 
   </attribute>
   
-  <attribute name="variableDatumIDList" comment="variable length list variable datums">
+  <attribute name="variableDatumList" comment="variable length list variable datums. See 6.2.93">
      <list type="variable" countFieldName="numberOfVariableDatums">
        <classRef name="VariableDatum"/>
     </list> 
@@ -487,7 +499,7 @@
 
 </class>
 
-<!-- 6.2.20: directed entergy records -->
+<!-- 6.2.20: directed energy records -->
 <class name="DirectedEnergyAreaAimpoint"
         inheritsFrom="root"
         comment="DE Precision Aimpoint Record. NOT COMPLETE. Section 6.2.20.2">
@@ -524,7 +536,6 @@
     </list> 
    </attribute>
    
-   <!-- Needs to be padding to a 64 bit boundary here -->
     
 </class>
 
@@ -1305,9 +1316,9 @@
     </attribute>
     
     <attribute name="xiValues" comment="list of coordinates">
-        <list type="variable" countFieldName="numberOfPointsOnXiAxis">
+        <variablelist countFieldName="numberOfPointsOnXiAxis">
             <classRef name="TwoByteChunk"/>
-        </list> 
+        </variablelist> 
     </attribute>
     
     <!-- Need something to pad to 64 bit boundary here --> 
@@ -1340,9 +1351,9 @@
   </attribute>
   
    <attribute name="iffData" comment="IFF data.">
-       <list type="variable" countFieldName="recordLength">
+       <variablelist countFieldName="recordLength">
            <classRef name="OneByteChunk"/>
-       </list>
+       </variablelist>
   </attribute>
   
   <!-- Need something here to pad to a 32 bit boundary -->
@@ -1359,9 +1370,9 @@
   </attribute>
   
   <attribute name="iffDataRecords" comment="IFF data records">
-       <list type="variable" countFieldName="numberOfIffDataRecords">
+       <variablelist countFieldName="numberOfIffDataRecords">
            <classRef name="IFFData"/>
-       </list>
+       </variablelist>
   </attribute>
 
 </class>
@@ -1393,9 +1404,9 @@
     </attribute>
     
     <attribute name="systemSpecificData" comment="System-specific data">
-        <list type="fixed" length="3">
+        <fixedlist length="3">
             <primitive type="unsigned byte"/>
-        </list>
+        </fixedlist>
     </attribute>
 
 </class>
@@ -1986,9 +1997,9 @@
 </attribute>
 
 <attribute name="records" comment="variable length list of 32 bit records">
-   <list type="variable" countFieldName="numberOfRecords">
+   <variablelistcountFieldName="numberOfRecords">
      <classRef name="FourByteChunk"/>
-   </list> 
+   </variablelist> 
 </attribute>
 
 </class>
@@ -2031,9 +2042,9 @@
   </attribute>
 
   <attribute name="recordSets" comment="variable length list record specifications.">
-     <list type="variable" countFieldName="numberOfRecordSets">
+     <variablelist countFieldName="numberOfRecordSets">
        <classRef name="RecordSpecificationElement"/>
-    </list>
+    </variablelist>
   </attribute>
 
 </class>
@@ -2126,9 +2137,9 @@
     </attribute>
     
     <attribute name="appearanceRecordList" comment="Variable length list of appearance records">
-     <list type="variable" countFieldName="numberOfAppearanceRecords">
+     <variablelist countFieldName="numberOfAppearanceRecords">
        <classRef name="FourByteChunk"/>
-     </list> 
+     </variablelist> 
     </attribute>
     
 </class>
@@ -2188,9 +2199,9 @@
    </attribute>
    
   <attribute name="standardVariables" comment="variable length list of standard variables, The class type and length here are WRONG and will cause the incorrect serialization of any class in whihc it is embedded.">
-   <list type="variable" countFieldName="numberOfStandardVariableRecords">
+   <variablelist countFieldName="numberOfStandardVariableRecords">
      <classRef name="SimulationManagementPduHeader"/> <!-- This is WRONG, as in the wrong type of class in the list -->
-   </list> 
+   </variablelist> 
 </attribute>
 
    
@@ -2296,7 +2307,7 @@
 
   </class>
 
-  <!-- Section 6.2.87 Absolute timestamps are used when clocks on hosts are synced, perhaps via NTP.
+  <!-- Section 6.2.88 Absolute timestamps are used when clocks on hosts are synced, perhaps via NTP.
   Absolute timestamps have the LSB set to 1. Contents are the system clock time when the data was valid.
 
   Relative timestamps are used when hosts are not synchronized. Each hosts keeps track from an arbitrary
@@ -2304,6 +2315,16 @@
 
   Scale is one hour divided by 2^31-1, about 1.676 microseconds
   -->
+ <class name="Timestamp" comment="LSB is absolute or relative timestamp. Scale is 2^31 - 1 divided into one hour.">
+   <attribute name="timestamp" comment="timestamp">
+       <primitive type="unsigned int">
+        <flags>
+          <flag mask="0x1" name="timestampType" comment="0 relative timestamp, 1 host synchronized timestamp"/>
+          <flag mask="0xFE" name="timestampValue" comment="2^31-1 per hour time units"/>
+        </flags>
+        </primitive>
+   </attribute>
+</class>      
 
 <class name="TotalRecordSets" inheritsFrom="root" comment="Total number of record sets contained in a logical set of one or more PDUs. Used to transfer ownership, etc Section 6.2.88">
 
@@ -2379,19 +2400,23 @@
        inheritsFrom="root" 
        comment="the variable datum type, the datum length, and the value for that variable datum type. NOT COMPLETE. Section 6.2.93">
 
-  <attribute name="variableDatumID" comment="Type of variable datum to be transmitted. 32 bit enumeration defined in EBV">
+  <attribute name="variableDatumID" comment="ID of variable datum to be transmitted. 32 bit enumeration defined in EBV">
       <primitive type="unsigned int"/>
   </attribute>
 
-   <attribute name="variableDatumLength" comment="Length, IN BITS, of the variable datum.">
+  <attribute name="variableDatumLength" comment="Length, IN BITS, of the variable datum.">
     <primitive type="unsigned int"/>
   </attribute>
-
+  
+   <attribute name="variableDatumData" comment="Variable length data class">
+       <variablelist countFieldName="variableDatumLength" units="bits" padToBoundary="64">
+          <primitive type="byte"/>
+       </variablelist>
+   </attribute>
+   
   <attribute name="variableDatumBits" comment="Variable datum. This can be any number of bits long, depending on the datum.">
     <primitive type="unsigned int"/>
   </attribute>
-
-   <!-- Need padding to put on 64-bit boundary -->
 
 </class>
 
@@ -2646,9 +2671,9 @@
   </attribute>
 
  <attribute name="parameters" comment="Dead reckoning parameters. Contents depends on algorithm.">
-     <list type="fixed" length="15">
+     <fixedlist length="15">
        <primitive type="unsigned byte"/>
-     </list>
+     </fixedlist>
   </attribute>
 
   <attribute name="entityLinearAcceleration" comment="Linear acceleration of the entity">
@@ -2666,49 +2691,49 @@
   
   <class name="EightByteChunk" inheritsFrom="root" comment="64 bit piece of data">
      <attribute name="otherParameters" comment="Eight bytes of arbitrary data">
-       <list type="fixed" length="8">
+       <fixedlist length="8">
         <primitive type="byte"/>
-       </list>
+       </fixedlist>
      </attribute>
    </class>
    
    <class name="OneByteChunk" inheritsFrom="root" comment="8 bit piece of data">
      <attribute name="otherParameters" comment="one byte of arbitrary data">
-       <list type="fixed" length="1">
+       <fixedlist length="1">
         <primitive type="byte"/>
-       </list>
+       </fixedlist>
      </attribute>
    </class>
    
     <class name="TwoByteChunk" inheritsFrom="root" comment="16 bit piece of data">
      <attribute name="otherParameters" comment="two bytes of arbitrary data">
-       <list type="fixed" length="2">
+       <fixedlist length="2">
         <primitive type="byte"/>
-       </list>
+       </fixedlist>
      </attribute>
    </class>
    
     <class name="FourByteChunk" inheritsFrom="root" comment="32 bit piece of data">
      <attribute name="otherParameters" comment="four bytes of arbitrary data">
-       <list type="fixed" length="4">
+       <fixedlist length="4">
         <primitive type="byte"/>
-       </list>
+       </fixedlist>
      </attribute>
    </class>
    
 
-<class name="PduStream" inheritsFrom="root" comment="Non-DIS class, used to describe streams of PDUS when logging data to a SQL database. This is not in the DIS standard but can be helpful when logging to a Hibernate sql database">
+<class name="PduStream" inheritsFrom="root" comment="Non-DIS class, used on SQL databases. This is not in the DIS standard but can be helpful when saving DIS to a SQL database, particularly in Java.">
 
  <attribute name="description" comment="Longish description of this PDU stream">
-   <list type="fixed" length="512" couldBeString="true">
+   <fixedlist length="512" couldBeString="true">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
  </attribute>
 
  <attribute name="name" comment="short description of this PDU stream">
-   <list type="fixed" length="256" couldBeString="true">
+   <fixedlist length="256" couldBeString="true">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
  </attribute>
 
   <attribute name="startTime" comment="Start time of recording, in Unix time (seconds since epoch)">
@@ -2718,17 +2743,6 @@
   <attribute name="stopTime" comment="stop time of recording, in Unix time (seconds since epoch)">
     <primitive type= "long"/>
   </attribute>
-  
-  <attribute name="pduCount" comment="how many PDUs in this stream">
-      <primitive type="unsigned int"/>
-  </attribute>
-  
-  <attribute name="pdusInStream" comment="variable length list of PDUs">
-    <list type="variable" countFieldName="pduCount">
-      <classRef name="Pdu"/>
-    </list> 
-   </attribute>
-   
 
  </class>
 
@@ -2839,21 +2853,6 @@
 
 <attribute name="entityAppearance" comment="a series of bit flags that are used to help draw the entity, such as smoking, on fire, etc.">
   <primitive type="unsigned int"/>
-  <flags>
-        <flag mask="0x1" name="paintScheme" comment="0 uniform color, 1 camouflage"/>
-        <flag mask="0x2" name="mobility" comment="0 no mobility kill, 1 mobility kill"/>
-        <flag mask="0x4" name="firepower" comment="0 no firepower iill, 1 firepower kill"/>
-        <flag mask="0x18" name="damage" comment="0 no damage, 1 slight damage, 2 moderate, 3 destroyed"/>
-        <flag mask="0x60" name="smoke" comment="0 no smoke, 1 smoke plume, 2 engine smoke, 3 engine smoke and plume"/>
-        <flag mask="0x180" name="trailingEffects" comment="dust cloud, 0 none 1 small 2 medium 3 large"/>
-        <flag mask="0xe00" name="hatch" comment="0 NA 1 closed popped 3 popped and person visible  4 open 5 open and person visible"/>
-        <flag mask="0x1000" name="headlights" comment="0 off 1 on"/>
-        <flag mask="0x2000" name="tailLights" comment="0 off 1 on"/>
-        <flag mask="0x4000" name="brakeLights" comment="0 off 1 on"/>
-        <flag mask="0x8000" name="flaming" comment="0 off 1 on"/>
-        <flag mask="0x10000" name="launcher" comment="0 not raised 1 raised"/>
-        <flag mask="0x60000" name="camouflageType" comment="0 desert 1 winter 2 forest 3 unused"/>
-    </flags>
 </attribute>
 
  <attribute name="deadReckoningParameters" comment="parameters used for dead reckoning">
@@ -2869,9 +2868,9 @@
 </attribute>
 
   <attribute name="variableParameters" comment="variable length list of variable parameters. In earlier DIS versions this was articulation parameters.">
-   <list type="variable" countFieldName="numberOfVariableParameters">
+   <variablelist countFieldName="numberOfVariableParameters">
      <classRef name="VariableParameter"/>
-   </list> 
+   </variablelist> 
 </attribute>
 
 </class>
@@ -2998,21 +2997,6 @@
 
 <attribute name="entityAppearance" comment="a series of bit flags that are used to help draw the entity, such as smoking, on fire, etc.">
   <primitive type="int"/>
-  <flags>
-        <flag mask="0x1" name="paintScheme" comment="0 uniform color, 1 camouflage"/>
-        <flag mask="0x2" name="mobility" comment="0 no mobility kill, 1 mobility kill"/>
-        <flag mask="0x4" name="firepower" comment="0 no firepower iill, 1 firepower kill"/>
-        <flag mask="0x18" name="damage" comment="0 no damage, 1 slight damage, 2 moderate, 3 destroyed"/>
-        <flag mask="0x60" name="smoke" comment="0 no smoke, 1 smoke plume, 2 engine smoke, 3 engine smoke and plume"/>
-        <flag mask="0x180" name="trailingEffects" comment="dust cloud, 0 none 1 small 2 medium 3 large"/>
-        <flag mask="0xe00" name="hatch" comment="0 NA 1 closed popped 3 popped and person visible  4 open 5 open and person visible"/>
-        <flag mask="0x1000" name="headlights" comment="0 off 1 on"/>
-        <flag mask="0x2000" name="tailLights" comment="0 off 1 on"/>
-        <flag mask="0x4000" name="brakeLights" comment="0 off 1 on"/>
-        <flag mask="0x8000" name="flaming" comment="0 off 1 on"/>
-        <flag mask="0x10000" name="launcher" comment="0 not raised 1 raised"/>
-        <flag mask="0x60000" name="camouflageType" comment="0 desert 1 winter 2 forest 3 unused"/>
-    </flags>
 </attribute>
 
 <attribute name="deadReckoningAlgorithm" comment="enumeration of what dead reckoning algorighm to use">
@@ -3020,9 +3004,9 @@
 </attribute>
   
 <attribute name="otherParameters" comment="other parameters to use in the dead reckoning algorithm">
-   <list type="fixed" length="15">
+   <fixedlist length="15">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
 </attribute>
 
 <attribute name="xAcceleration" comment = "X value">
@@ -3051,9 +3035,9 @@
   </attribute>
 
  <attribute name="marking" comment="characters that can be used for debugging, or to draw unique strings on the side of entities in the world">
-   <list type="fixed" length="12" couldBeString="true">
+   <fixedlist length="12" couldBeString="true">
      <primitive type="byte"/>
-   </list>
+   </fixedlist>
  </attribute>
  
  <attribute name="capabilities" comment="a series of bit flags">
@@ -3061,9 +3045,9 @@
 </attribute>
 
   <attribute name="variableParameters" comment="variable length list of variable parameters. In earlier versions of DIS these were known as articulation parameters">
-   <list type="variable" countFieldName="numberOfVariableParameters">
+   <variablelist countFieldName="numberOfVariableParameters">
      <classRef name="VariableParameter"/>
-   </list> 
+   </variablelist> 
 </attribute>
 
 </class>
@@ -3207,27 +3191,12 @@
 
    <attribute name="entityAppearance" comment="This field shall specify the dynamic changes to the entity’s appearance attributes. This field shall be represented by an Entity Appearance record (see 6.2.26).">
      <primitive type="unsigned int"/>
-     <flags>
-        <flag mask="0x1" name="paintScheme" comment="0 uniform color, 1 camouflage"/>
-        <flag mask="0x2" name="mobility" comment="0 no mobility kill, 1 mobility kill"/>
-        <flag mask="0x4" name="firepower" comment="0 no firepower iill, 1 firepower kill"/>
-        <flag mask="0x18" name="damage" comment="0 no damage, 1 slight damage, 2 moderate, 3 destroyed"/>
-        <flag mask="0x60" name="smoke" comment="0 no smoke, 1 smoke plume, 2 engine smoke, 3 engine smoke and plume"/>
-        <flag mask="0x180" name="trailingEffects" comment="dust cloud, 0 none 1 small 2 medium 3 large"/>
-        <flag mask="0xe00" name="hatch" comment="0 NA 1 closed popped 3 popped and person visible  4 open 5 open and person visible"/>
-        <flag mask="0x1000" name="headlights" comment="0 off 1 on"/>
-        <flag mask="0x2000" name="tailLights" comment="0 off 1 on"/>
-        <flag mask="0x4000" name="brakeLights" comment="0 off 1 on"/>
-        <flag mask="0x8000" name="flaming" comment="0 off 1 on"/>
-        <flag mask="0x10000" name="launcher" comment="0 not raised 1 raised"/>
-        <flag mask="0x60000" name="camouflageType" comment="0 desert 1 winter 2 forest 3 unused"/>
-    </flags>
    </attribute>
 
     <attribute name="variableParameters" comment="This field shall specify the parameter values for each Variable Parameter record that is included (see 6.2.93 and Annex I).">
-     <list type="variable" countFieldName="numberOfVariableParameters">
+     <variablelist countFieldName="numberOfVariableParameters">
        <classRef name="VariableParameter"/>
-     </list>
+     </variablelist>
    </attribute>
 
 </class>
@@ -3378,9 +3347,9 @@
   </attribute>
 
    <attribute name="variableParameters" comment="specify the parameter values for each Variable Parameter record, Section 7.3.3 ">
-     <list type="variable" countFieldName="numberOfVariableParameters">
+     <variablelist countFieldName="numberOfVariableParameters">
        <classRef name="VariableParameter"/>
-     </list>
+     </variablelist>
    </attribute>
 
   </class>
@@ -3453,9 +3422,9 @@
 </attribute>
 
   <attribute name="dERecords" comment="Fields shall contain one or more DE records, records shall conform to the variable record format (Section6.2.82), Section 7.3.4">
-   <list type="variable" countFieldName="numberOfDERecords">
+   <variablelist countFieldName="numberOfDERecords">
      <classRef name="StandardVariableSpecification"/>
-   </list>
+   </variablelist>
 </attribute>
  </class>
 
@@ -3489,9 +3458,9 @@
 
    <attribute name="damageDescriptionRecords"
               comment="Fields shall contain one or more Damage Description records (see 6.2.17) and may contain other Standard Variable records, Section 7.3.5">
-     <list type="variable" countFieldName="numberOfDamageDescription"> 
+     <variablelist countFieldName="numberOfDamageDescription"> 
        <classRef name="DirectedEnergyDamage"/>
-     </list>
+     </variablelist>
    </attribute>
 
 </class>
@@ -3534,12 +3503,10 @@
     <primitive type="short" defaultValue = "0"/>
   </attribute>
 
-  <attribute name="supplies">
-     <list type="variable"
-     countFieldName="numberOfSupplyTypes" comment="Field shall specify the type of supply and the amount of that supply for the number
-                                 specified in the numberOfSupplyTypes (see 6.2.85), Section 7.4.2">
+  <attribute name="supplies" comment="Field shall specify the type of supply and the amount of that supply for the number specified in the numberOfSupplyTypes (see 6.2.85), Section 7.4.2">
+     <variablelist countFieldName="numberOfSupplyTypes" >
        <classRef name="SupplyQuantity"/>
-     </list>
+     </variablelist>
   </attribute>
 
 </class>
@@ -3577,9 +3544,9 @@
 
 <attribute name="supplies"
             comment="A Reord that Specifies the type of supply and the amount of that supply for each of the supply types in numberOfSupplyTypes (see 6.2.85), Section 7.4.3">
-   <list type="variable" countFieldName="numberOfSupplyTypes">
+   <variablelist countFieldName="numberOfSupplyTypes">
      <classRef name="SupplyQuantity"/>
-   </list>
+   </variablelist>
 </attribute>
 
 </class>
@@ -3612,9 +3579,9 @@
  </attribute>
 
  <attribute name="supplies" comment="Type and amount of supplies for each specified supply type.  See 6.2.85 for supply quantity record.">
-   <list type="variable" countFieldName="numberOfSupplyTypes">
+   <variablelist countFieldName="numberOfSupplyTypes">
      <classRef name="SupplyQuantity"/>
-   </list>
+   </variablelist>
 </attribute>
 </class>
 
@@ -3856,15 +3823,15 @@
   </attribute>
 
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist countFieldName="numberOfFixedDatumRecords">
      <classRef name="FixedDatum"/>
-   </list>
+   </variablelist>
   </attribute>
 
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist countFieldName="numberOfVariableDatumRecords">
      <classRef name="VariableDatum"/>
-   </list>
+   </variablelist>
   </attribute>
 
 </class>
@@ -3899,15 +3866,15 @@
   </attribute>
 
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist countFieldName="numberOfFixedDatumRecords">
      <classRef name="FixedDatum"/>
-   </list>
+   </variablelist>
   </attribute>
 
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist countFieldName="numberOfVariableDatumRecords">
      <classRef name="VariableDatum"/>
-   </list>
+   </variablelist>
   </attribute>
 
   </class>
@@ -3935,15 +3902,15 @@
   </attribute>
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
-     <classRef name="UnsignedIntegerWrapper"/>
-   </list> 
+   <variablelist countFieldName="numberOfFixedDatumRecords">
+     <classRef name="FixedDatum"/>
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
-     <classRef name="UnsignedIntegerWrapper"/>
-   </list> 
+   <variablelist countFieldName="numberOfVariableDatumRecords">
+     <classRef name="VariableDatum"/>
+   </variablelist> 
   </attribute>
 
 </class>
@@ -3970,15 +3937,15 @@
   </attribute>
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
-     <classRef name="UnsignedIntegerWrapper"/>
-   </list> 
+   <variablelist  countFieldName="numberOfFixedDatumRecords">
+     <classRef name="FixedDatum"/>
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
-     <classRef name="UnsignedIntegerWrapper"/>
-   </list> 
+   <variablelist countFieldName="numberOfVariableDatumRecords">
+     <classRef name="VariableDatum"/>
+   </variablelist> 
   </attribute>
 
 </class>
@@ -4005,15 +3972,15 @@
   </attribute>
   
    <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist countFieldName="numberOfFixedDatumRecords">
      <classRef name="FixedDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist countFieldName="numberOfVariableDatumRecords">
      <classRef name="VariableDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
 </class>
@@ -4040,15 +4007,15 @@
   </attribute>
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist  countFieldName="numberOfFixedDatumRecords">
      <classRef name="FixedDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist  countFieldName="numberOfVariableDatumRecords">
      <classRef name="VariableDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
 
 </class>
@@ -4067,15 +4034,15 @@
   </attribute>
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
-   <list type="variable" countFieldName="numberOfFixedDatumRecords">
+   <variablelist countFieldName="numberOfFixedDatumRecords">
      <classRef name="FixedDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
-   <list type="variable" countFieldName="numberOfVariableDatumRecords">
+   <variablelist countFieldName="numberOfVariableDatumRecords">
      <classRef name="VariableDatum"/>
-   </list> 
+   </variablelist> 
   </attribute>
 
 </class>
@@ -4129,9 +4096,9 @@
   </attribute>
  
    <attribute name="systems" comment="Electronic emmissions systems THIS IS WRONG. It has the WRONG class type and will cause problems in any marshalling.">
-      <list type="variable" countFieldName="numberOfSystems">
+      <variablelist countFieldName="numberOfSystems">
           <classRef name="Vector3Float"/> <!--THIS IS WRONG-->
-      </list>
+      </variablelist>
   </attribute>
   
  </class>
@@ -4234,21 +4201,21 @@
     </attribute>
   
   <attribute name="shaftRPMs" comment="shaft RPM values. THIS IS WRONG. It has the wrong class in the list.">
-      <list type="variable" countFieldName="numberOfShafts">
+      <variablelist countFieldName="numberOfShafts">
           <classref name="Vector3Float"/>
-      </list>
+      </variablelist>
   </attribute>
   
   <attribute name="apaData" comment="apaData. THIS IS WRONG. It has the worng class in the list.">
-      <list type="variable" countFieldName="numberOfAPAs">
+      <variablelist countFieldName="numberOfAPAs">
           <classRef name="Vector3Float"/>
-      </list>
+      </variablelist>
   </attribute>
   
     <attribute name="emitterSystems" comment="THIS IS WRONG. It has the wrong class in the list.">
-        <list type="variable" countFieldName="numberOfUAEmitterSystems">
+        <variablelist countFieldName="numberOfUAEmitterSystems">
             <classRef name="Vector3Float"/>
-        </list>
+        </variablelist>
     </attribute>
     
 </class>
@@ -4301,9 +4268,9 @@
   </attribute> 
   
    <attribute name="fundamentalIffParameters" comment="variable length list of fundamental parameters. ^^^This is wrong">
-   <list type="variable" countFieldName="pad2">
+   <variablelist countFieldName="pad2">
      <classRef name="FundamentalParameterDataIff"/>
-   </list> 
+   </variablelist> 
   </attribute>
 
 </class>
@@ -4338,15 +4305,15 @@
   </attribute>   
   
   <attribute name="propulsionSystemData" comment="variable length list of propulsion system data">
-   <list type="variable" countFieldName="numberOfPropulsionSystems">
+   <variablelist countFieldName="numberOfPropulsionSystems">
      <classRef name="PropulsionSystemData"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="vectoringSystemData" comment="variable length list of vectoring system data">
-   <list type="variable" countFieldName="numberOfVectoringNozzleSystems">
+   <variablelist countFieldName="numberOfVectoringNozzleSystems">
      <classRef name="VectoringNozzleSystem"/>
-   </list> 
+   </variablelist> 
   </attribute>
        
 </class>
@@ -4394,9 +4361,9 @@
   </attribute>
  
   <attribute name="data" comment="data bytes">
-     <list type="variable" countFieldName="dataLength">
+     <variablelist countFieldName="dataLength">
        <classRef name="OneByteChunk"/>
-    </list> 
+    </variablelist> 
     </attribute>
 </class>
 
@@ -4485,15 +4452,15 @@
   </attribute>
   
   <attribute name="modulationParametersList" comment="variable length list of modulation parameters">
-   <list type="variable" countFieldName="modulationParameterCount">
+   <variablelist countFieldName="modulationParameterCount">
      <classRef name="Vector3Float"/>
-   </list> 
+   </variablelist> 
   </attribute>
   
   <attribute name="antennaPatternList" comment="variable length list of antenna pattern records">
-   <list type="variable" countFieldName="antennaPatternCount">
+   <variablelist countFieldName="antennaPatternCount">
      <classRef name="Vector3Float"/>
-   </list> 
+   </variablelist> 
   </attribute>       
 </class>
 
@@ -4524,9 +4491,9 @@
   </attribute>
   
   <attribute name="data" comment="list of eight bit values">
-    <list type="variable" countFieldName="dataLength">
+    <variablelist countFieldName="dataLength">
        <classRef name="OneByteChunk"/>
-    </list>
+    </variablelist>
   </attribute>
  
 </class>
@@ -4611,9 +4578,9 @@
   </attribute>
   
    <attribute name="intercomParameters" comment="^^^This is wrong the length of the data field is variable. Using a long for now.">
-     <list type="variable" countFieldName="intercomParametersLength">
+     <variablelist countFieldName="intercomParametersLength">
        <classRef name="IntercomCommunicationsParameters"/>
-    </list> 
+    </variablelist> 
     </attribute>
     </class>
 
@@ -4690,15 +4657,15 @@
   </attribute>
   
   <attribute name="aggregateIDList" comment="aggregates  list">
-     <list type="variable" countFieldName="numberOfDisAggregates">
+     <variablelist countFieldName="numberOfDisAggregates">
        <classRef name="AggregateID"/>
-    </list> 
+    </variablelist> 
     </attribute>
   
    <attribute name="entityIDList" comment="entity ID list">
-     <list type="variable" countFieldName="numberOfDisEntities">
+     <variablelist countFieldName="numberOfDisEntities">
        <classRef name="EntityID"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="pad2" comment="^^^padding to put the start of the next list on a 32 bit boundary. This needs to be fixed">
@@ -4706,15 +4673,15 @@
   </attribute>
   
   <attribute name="silentAggregateSystemList" comment="silent entity types">
-     <list type="variable" countFieldName="numberOfSilentAggregateTypes">
+     <variablelist  countFieldName="numberOfSilentAggregateTypes">
        <classRef name="EntityType"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="silentEntitySystemList" comment="silent entity types">
-     <list type="variable" countFieldName="numberOfSilentEntityTypes">
+     <variablelist countFieldName="numberOfSilentEntityTypes">
        <classRef name="EntityType"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
    <attribute name="numberOfVariableDatumRecords" comment="number of variable datum records">
@@ -4722,9 +4689,9 @@
   </attribute>
   
   <attribute name="variableDatumList" comment="variableDatums">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
   
  </class>
@@ -4761,9 +4728,9 @@
   </attribute>
   
    <attribute name="groupedEntityDescriptions" comment="GED records about each individual entity in the group. ^^^this is wrong  need a database lookup to find the actual size of the list elements">
-     <list type="variable" countFieldName="numberOfGroupedEntities">
+     <variablelist countFieldName="numberOfGroupedEntities">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -4804,9 +4771,9 @@
   </attribute>
 
    <attribute name="recordSets" comment="^^^This is wrong the RecordSet class needs more work">
-     <list type="variable" countFieldName="numberOfRecordSets">
+     <variablelist countFieldName="numberOfRecordSets">
        <classRef name="RecordSet"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -4900,15 +4867,15 @@
    </attribute>
    
     <attribute name="perimeterPoints" comment="perimeter points for the minefield">
-     <list type="variable" countFieldName="numberOfPerimeterPoints">
+     <variablelist countFieldName="numberOfPerimeterPoints">
        <classRef name="Vector2Float"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
      <attribute name="mineType" comment="Type of mines">
-     <list type="variable" countFieldName="numberOfMineTypes">
+     <variablelist  countFieldName="numberOfMineTypes">
        <classRef name="EntityType"/>
-    </list> 
+    </variablelist> 
     </attribute>
    
    </class>
@@ -4952,15 +4919,15 @@
    </attribute>
 
  <attribute name="requestedPerimeterPoints" comment="perimeter points of request">
-     <list type="variable" countFieldName="numberOfPerimeterPoints">
+     <variablelist countFieldName="numberOfPerimeterPoints">
        <classRef name="Vector2Float"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="sensorTypes" comment="Sensor types, each 16 bits long">
-     <list type="variable" countFieldName="numberOfSensorTypes">
+     <variablelist countFieldName="numberOfSensorTypes">
        <classRef name="TwoByteChunk"/>
-    </list> 
+    </variablelist> 
     </attribute>
 </class>
 -->
@@ -5016,9 +4983,9 @@
    </attribute>
    
     <attribute name="sensorTypes" comment="Sensor types, each 16 bits long">
-     <list type="variable" countFieldName="numberOfSensorTypes">
+     <variablelist countFieldName="numberOfSensorTypes">
        <classRef name="TwoByteChunk"/>
-    </list> 
+    </variablelist> 
     </attribute>
    
     <attribute name="pad3" comment="Padding to get things 32-bit aligned. ^^^this is wrong dyanmically sized padding needed">
@@ -5026,9 +4993,9 @@
    </attribute>
    
    <attribute name="mineLocation" comment="Mine locations">
-     <list type="variable" countFieldName="numberOfMinesInThisPdu">
+     <variablelist countFieldName="numberOfMinesInThisPdu">
        <classRef name="Vector3Float"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     </class>
@@ -5057,9 +5024,9 @@
    </attribute>
    
     <attribute name="missingPduSequenceNumbers" comment="PDU sequence numbers that were missing">
-     <list type="variable" countFieldName="numberOfMissingPdus">
+     <variablelist countFieldName="numberOfMissingPdus">
        <classRef name="EightByteChunk"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     </class>
@@ -5105,9 +5072,9 @@
    </attribute>
    
    <attribute name="environmentRecords" comment="environemt records">
-     <list type="variable" countFieldName="numberOfEnvironmentRecords">
+     <variablelist countFieldName="numberOfEnvironmentRecords">
        <classRef name="Environment"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
     </class>
@@ -5176,9 +5143,9 @@
    </attribute>
    
      <attribute name="gridDataList" comment="Grid data ^^^This is wrong">
-     <list type="variable" countFieldName="numberOfGridAxes">
+     <variablelist  countFieldName="numberOfGridAxes">
        <classRef name="GridAxisRecord"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -5282,9 +5249,9 @@
    </attribute>
 
      <attribute name="linearSegmentParameters" comment="Linear segment parameters">
-     <list type="variable" countFieldName="numberOfSegments">
+     <variablelist countFieldName="numberOfSegments">
        <classRef name="LinearSegmentParameter"/>
-    </list> 
+    </variablelist> 
     </attribute>
   
     </class>
@@ -5340,9 +5307,9 @@
    </attribute>
    
     <attribute name="objectLocation" comment="location of object">
-     <list type="variable" countFieldName="numberOfPoints">
+     <variablelist countFieldName="numberOfPoints">
        <classRef name="Vector3Double"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
 </class>
@@ -5524,15 +5491,15 @@
    
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist  countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     </class>
@@ -5560,15 +5527,15 @@
    
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -5607,15 +5574,15 @@
    </attribute>
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist  countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -5651,15 +5618,15 @@
    </attribute>
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
 </class>
 
@@ -5694,15 +5661,15 @@
    </attribute>
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
   
 </class>
@@ -5730,15 +5697,15 @@
    </attribute>
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     </class>
@@ -5758,15 +5725,15 @@
    </attribute>
    
      <attribute name="fixedDatumRecords" comment="Fixed datum records">
-     <list type="variable" countFieldName="numberOfFixedDatumRecords">
+     <variablelist countFieldName="numberOfFixedDatumRecords">
        <classRef name="FixedDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     <attribute name="variableDatumRecords" comment="Variable datum records">
-     <list type="variable" countFieldName="numberOfVariableDatumRecords">
+     <variablelist countFieldName="numberOfVariableDatumRecords">
        <classRef name="VariableDatum"/>
-    </list> 
+    </variablelist> 
     </attribute>
 </class>
 
@@ -5804,9 +5771,9 @@
    </attribute>
    
     <attribute name="recordIDs" comment="record IDs">
-     <list type="variable" countFieldName="numberOfRecords">
+     <variablelist countFieldName="numberOfRecords">
        <classRef name="FourByteChunk"/>
-    </list> 
+    </variablelist> 
     </attribute>
 
 </class>
@@ -5839,9 +5806,9 @@
    </attribute>
 
      <attribute name="recordSets" comment="record sets">
-     <list type="variable" countFieldName="numberOfRecordSets">
+     <variablelist countFieldName="numberOfRecordSets">
        <classRef name="RecordSet"/>
-    </list> 
+    </variablelist> 
     </attribute>
     
     </class>
@@ -5859,9 +5826,9 @@
    </attribute>
         
      <attribute name="pdus" comment="record sets">
-     <list type="variable" countFieldName="numberOfPdus">
+     <variablelist countFieldName="numberOfPdus">
        <classRef name="Pdu"/>
-    </list> 
+    </variablelist> 
     </attribute>
         
     </class>
@@ -5967,16 +5934,16 @@
 
    <attribute name="BeamAntennaPatternRecords"
               comment="DE Beam Antenna Pattern Records.">
-     <list type="variable" countFieldName="BeamAntennaPatternRecordCount">
+     <variablelist  countFieldName="BeamAntennaPatternRecordCount">
        <classRef name="DeBeamAntennaPatternRecord"/>
-     </list>
+     </variablelist>
    </attribute>
 
    <attribute name="DeTargetEnergyDepositionRecords"
               comment="DE Beam Antenna Pattern Records.">
-     <list type="variable" countFieldName="DeTargetEnergyDepositionRecordCount">
+     <variablelist countFieldName="DeTargetEnergyDepositionRecordCount">
        <classRef name="DeTargetEnergyDepositionRecord"/>
-     </list>
+     </variablelist>
    </attribute>
 
  </class>
@@ -6055,9 +6022,9 @@
    </attribute>
 
    <attribute name="DeRecords" comment="DE Records variable list.">
-     <list type="variable" countFieldName="DeRecordCount">
+     <variablelist  countFieldName="DeRecordCount">
        <classRef name="DeRecord" recordType="RecordType"/>
-     </list>
+     </variablelist>
    </attribute>
 
  </class>
