@@ -78,7 +78,7 @@ public class VariableLengthData
     
     /**
      * Retrieves data, padded to at least a byte boundary
-     * @return 
+     * @return byte array
      */
     public byte[] getData()
     {
