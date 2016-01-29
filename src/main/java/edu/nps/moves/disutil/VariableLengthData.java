@@ -1,5 +1,5 @@
 
-package java.edu.nps.moves.disutil;
+package edu.nps.moves.disutil;
 
 import java.io.*;
 
