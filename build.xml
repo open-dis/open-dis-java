@@ -263,7 +263,7 @@ is available.
     <target name="compileTest" depends="compile" description="Compile java test code and place it in the test directory of of build">
             
          <javac srcdir="${test}" destdir="${build}/test"
-               source="1.8" target="1.8"
+               source="1.7" target="1.7"
                includeAntRuntime="no">
                <classpath>
                  <fileset dir="${lib}">
@@ -275,7 +275,7 @@ is available.
     </target>
 
  <!-- There are potentially many gotchas with JUNit 4.4, 4.5, and ant 1.5, 1.6, and 1.7 due to classloader issues. Be careful -->
-    <!--target name="test" depends="compileTest" description="run junit unit tests on build">
+    <target name="test" depends="compileTest" description="run junit unit tests on build">
       <junit>
       <formatter type="plain" usefile="false"/>
       <classpath>
@@ -293,7 +293,6 @@ is available.
       
       </junit>
     </target>
-    -->
 
 <!-- sends test case output to XML file, for use by Jenkins -->
 <!--

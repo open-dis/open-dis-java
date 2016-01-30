@@ -1,4 +1,5 @@
 package edu.nps.moves.dis;
+import org.junit.*;
 
 import org.junit.runner.*;
 import org.junit.runners.*;

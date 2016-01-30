@@ -50,13 +50,13 @@ public class IntercomSignalPduUnitTest {
         isp.setData(signalData);
         isp.setEncodingScheme(2);
         isp.setExerciseID((short) 3);
-        isp.setRadioId(4);
+        //isp.setRadioId(4);
         isp.setSampleRate(5);
         isp.setSamples(6);
         isp.setTdlType(7);
         isp.setTimestamp(8);
 
-        isp.setEntityID(eid);
+        isp.setEntityId(eid);
     }
 
     /**
@@ -80,12 +80,12 @@ public class IntercomSignalPduUnitTest {
 
         assertEquals("EncodingScheme", isp.getEncodingScheme(), 2);
 
-        assertEquals("Site ID", isp.getEntityID().getSite(), 102);
-        assertEquals("Application ID", isp.getEntityID().getApplication(), 100);
-        assertEquals("Entity ID", isp.getEntityID().getEntity(), 101);
+        assertEquals("Site ID", isp.getEntityId().getSite(), 102);
+        assertEquals("Application ID", isp.getEntityId().getApplication(), 100);
+        assertEquals("Entity ID", isp.getEntityId().getEntity(), 101);
 
         assertEquals("ExerciseID((short", isp.getExerciseID(), 3);
-        assertEquals("RadioId", isp.getRadioId(), 4);
+        //assertEquals("RadioId", isp.getRadioId(), 4);
         assertEquals("SampleRate", isp.getSampleRate(), 5);
         assertEquals("Samples", isp.getSamples(), 6);
         assertEquals("TdlType", isp.getTdlType(), 7);
@@ -119,8 +119,8 @@ public class IntercomSignalPduUnitTest {
 
         assertEquals("EncodingScheme", isp.getEncodingScheme(), newIsp.getEncodingScheme());
 
-        EntityID oldId = isp.getEntityID();
-        EntityID newId = newIsp.getEntityID();
+        EntityID oldId = isp.getEntityId();
+        EntityID newId = newIsp.getEntityId();
         assertTrue(oldId.equals(newId));
         // assertEquals(newId,  oldId); // They're .equals(), yet this fails.  Why?
         assertEquals("EntityID application", oldId.getApplication(), newId.getApplication());
@@ -128,7 +128,7 @@ public class IntercomSignalPduUnitTest {
         assertEquals("EntityID site", oldId.getSite(), newId.getSite());
 
         assertEquals("ExerciseID((short", isp.getExerciseID(), newIsp.getExerciseID());
-        assertEquals("RadioId", isp.getRadioId(), newIsp.getRadioId());
+        //assertEquals("RadioId", isp.getRadioId(), newIsp.getRadioId());
         assertEquals("SampleRate", isp.getSampleRate(), newIsp.getSampleRate());
         assertEquals("Samples", isp.getSamples(), newIsp.getSamples());
         assertEquals("TdlType", isp.getTdlType(), newIsp.getTdlType());
