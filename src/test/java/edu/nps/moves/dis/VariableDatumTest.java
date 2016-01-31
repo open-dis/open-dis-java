@@ -31,6 +31,12 @@ public class VariableDatumTest
 		assertEquals(64, vd.getVariableDatumLength()); // Check to make sure patch correctly installed
     }
      */
+    
+    @Test
+    public void nullTest()
+    {
+        assert(true);
+    }
 
     @Before
     public void setUp() {

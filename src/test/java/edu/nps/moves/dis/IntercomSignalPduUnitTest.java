@@ -23,7 +23,7 @@ public class IntercomSignalPduUnitTest {
     private IntercomSignalPdu isp;
 
     /**
-     *  Method that runs before every unit test, annoated by a @Test method.
+     *  Method that runs before every unit test, annotated by a @Test method.
      */
     @Before
     public void setUp() {

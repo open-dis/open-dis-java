@@ -51,10 +51,11 @@ public class PduTest
     /** Make sure the timestamp has NOT been set when marshalled with this method
      *
      */
-    /*
+   
     @Test
     public void pduTimestampTest()
     {
+        /*
         EntityStatePdu espdu = new EntityStatePdu();
 
         espdu.setTimestamp(0xffffffffL);
@@ -72,10 +73,10 @@ public class PduTest
         buffer = aPdu.marshal();
         aPdu = factory.createPdu(buffer);
         assertEquals(aPdu.getTimestamp(), (long)0xffffffffL); // make sure no rollover
-
+*/
     }
      
-     */
+ 
 
     /**
      * the PDU returns the current length rather than what has been set

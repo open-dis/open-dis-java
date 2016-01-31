@@ -275,12 +275,14 @@ is available.
     </target>
 
  <!-- There are potentially many gotchas with JUNit 4.4, 4.5, and ant 1.5, 1.6, and 1.7 due to classloader issues. Be careful -->
+ <!--
     <target name="test" depends="compileTest" description="run junit unit tests on build">
       <junit>
       <formatter type="plain" usefile="false"/>
       <classpath>
         <pathelement location="${build}"/>
         <pathelement location="${jarfile}"/>
+        <pathelement location="${src}"/>
         <pathelement location="${build}/test"/>
         <pathelement location="${lib}/junit-4.4.jar"/>
         <fileset dir="${lib}">
@@ -293,9 +295,32 @@ is available.
       
       </junit>
     </target>
+    -->
+    
+ <target name="test" depends="compileTest" description="Run junit4 tests">
+ <junit showoutput="yes" fork="true">
+    <classpath>
+        <pathelement location="${build}"/>
+        <pathelement location="${jarfile}"/>
+        <pathelement location="${src}"/>
+        <pathelement location="${test}"/>
+        <pathelement location="${build}/test"/>
+        <pathelement location="${lib}/junit-4.12.jar"/>
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+
+    <formatter type="plain" usefile="false" />
+
+    <batchtest>
+        <fileset dir="${test}"/>
+    </batchtest>
+</junit>
+ </target>
 
 <!-- sends test case output to XML file, for use by Jenkins -->
-<!--
+
     <target name="testxml" depends="compileTest" description="run junit unit tests on build">
       <junit>
       <formatter type="xml" usefile="true"/>
@@ -314,7 +339,7 @@ is available.
 
       </junit>
     </target>
-    -->
+   
 
 <!-- Setup for findbugs, findbugs.soruceforge.net, a static code analysis tool. You can set this
      up on your box if you like, but this is written with the jenkins continuous integration server
