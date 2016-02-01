@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  *  Detailed information about a radio transmitter. This PDU requires manually written code to complete. The encodingScheme field can be used in multiple        ways, which requires hand-written code to finish. Section 7.7.3. UNFINISHED
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG

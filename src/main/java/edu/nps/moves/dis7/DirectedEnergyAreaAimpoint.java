@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * DE Precision Aimpoint Record. NOT COMPLETE. Section 6.2.20.2
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -32,9 +32,11 @@ public class DirectedEnergyAreaAimpoint extends Object implements Serializable
    protected int  directedEnergyTargetEnergyDepositionRecordCount = (int)0;
 
    /** list of beam antenna records. See 6.2.9.2 */
-   protected List< BeamAntennaPattern > beamAntennaParameterList = new ArrayList< BeamAntennaPattern >(); 
+   protected BeamAntennaPattern  beamAntennaParameterList = new BeamAntennaPattern(); 
+
    /** list of DE target deposition records. See 6.2.21.4 */
-   protected List< DirectedEnergyTargetEnergyDeposition > directedEnergyTargetEnergyDepositionRecordList = new ArrayList< DirectedEnergyTargetEnergyDeposition >(); 
+   protected DirectedEnergyTargetEnergyDeposition  directedEnergyTargetEnergyDepositionRecordList = new DirectedEnergyTargetEnergyDeposition(); 
+
 
 /** Constructor */
  public DirectedEnergyAreaAimpoint()
@@ -50,16 +52,8 @@ public int getMarshalledSize()
    marshalSize = marshalSize + 2;  // padding
    marshalSize = marshalSize + 2;  // beamAntennaPatternRecordCount
    marshalSize = marshalSize + 2;  // directedEnergyTargetEnergyDepositionRecordCount
-   for(int idx=0; idx < beamAntennaParameterList.size(); idx++)
-   {
-        BeamAntennaPattern listElement = beamAntennaParameterList.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
-   for(int idx=0; idx < directedEnergyTargetEnergyDepositionRecordList.size(); idx++)
-   {
-        DirectedEnergyTargetEnergyDeposition listElement = directedEnergyTargetEnergyDepositionRecordList.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
+   marshalSize = marshalSize + beamAntennaParameterList.getMarshalledSize();  // beamAntennaParameterList
+   marshalSize = marshalSize + directedEnergyTargetEnergyDepositionRecordList.getMarshalledSize();  // directedEnergyTargetEnergyDepositionRecordList
 
    return marshalSize;
 }
@@ -89,43 +83,37 @@ public int getPadding()
 { return padding; 
 }
 
-public int getBeamAntennaPatternRecordCount()
-{ return (int)beamAntennaParameterList.size();
-}
-
-/** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
- * The getbeamAntennaPatternRecordCount method will also be based on the actual list length rather than this value. 
- * The method is simply here for java bean completeness.
- */
 public void setBeamAntennaPatternRecordCount(int pBeamAntennaPatternRecordCount)
 { beamAntennaPatternRecordCount = pBeamAntennaPatternRecordCount;
 }
 
-public int getDirectedEnergyTargetEnergyDepositionRecordCount()
-{ return (int)directedEnergyTargetEnergyDepositionRecordList.size();
+public int getBeamAntennaPatternRecordCount()
+{ return beamAntennaPatternRecordCount; 
 }
 
-/** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
- * The getdirectedEnergyTargetEnergyDepositionRecordCount method will also be based on the actual list length rather than this value. 
- * The method is simply here for java bean completeness.
- */
 public void setDirectedEnergyTargetEnergyDepositionRecordCount(int pDirectedEnergyTargetEnergyDepositionRecordCount)
 { directedEnergyTargetEnergyDepositionRecordCount = pDirectedEnergyTargetEnergyDepositionRecordCount;
 }
 
-public void setBeamAntennaParameterList(List<BeamAntennaPattern> pBeamAntennaParameterList)
+public int getDirectedEnergyTargetEnergyDepositionRecordCount()
+{ return directedEnergyTargetEnergyDepositionRecordCount; 
+}
+
+public void setBeamAntennaParameterList(BeamAntennaPattern pBeamAntennaParameterList)
 { beamAntennaParameterList = pBeamAntennaParameterList;
 }
 
-public List<BeamAntennaPattern> getBeamAntennaParameterList()
-{ return beamAntennaParameterList; }
+public BeamAntennaPattern getBeamAntennaParameterList()
+{ return beamAntennaParameterList; 
+}
 
-public void setDirectedEnergyTargetEnergyDepositionRecordList(List<DirectedEnergyTargetEnergyDeposition> pDirectedEnergyTargetEnergyDepositionRecordList)
+public void setDirectedEnergyTargetEnergyDepositionRecordList(DirectedEnergyTargetEnergyDeposition pDirectedEnergyTargetEnergyDepositionRecordList)
 { directedEnergyTargetEnergyDepositionRecordList = pDirectedEnergyTargetEnergyDepositionRecordList;
 }
 
-public List<DirectedEnergyTargetEnergyDeposition> getDirectedEnergyTargetEnergyDepositionRecordList()
-{ return directedEnergyTargetEnergyDepositionRecordList; }
+public DirectedEnergyTargetEnergyDeposition getDirectedEnergyTargetEnergyDepositionRecordList()
+{ return directedEnergyTargetEnergyDepositionRecordList; 
+}
 
 
 public void marshal(DataOutputStream dos)
@@ -135,22 +123,10 @@ public void marshal(DataOutputStream dos)
        dos.writeInt( (int)recordType);
        dos.writeShort( (short)recordLength);
        dos.writeShort( (short)padding);
-       dos.writeShort( (short)beamAntennaParameterList.size());
-       dos.writeShort( (short)directedEnergyTargetEnergyDepositionRecordList.size());
-
-       for(int idx = 0; idx < beamAntennaParameterList.size(); idx++)
-       {
-            BeamAntennaPattern aBeamAntennaPattern = beamAntennaParameterList.get(idx);
-            aBeamAntennaPattern.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < directedEnergyTargetEnergyDepositionRecordList.size(); idx++)
-       {
-            DirectedEnergyTargetEnergyDeposition aDirectedEnergyTargetEnergyDeposition = directedEnergyTargetEnergyDepositionRecordList.get(idx);
-            aDirectedEnergyTargetEnergyDeposition.marshal(dos);
-       } // end of list marshalling
-
+       dos.writeShort( (short)beamAntennaPatternRecordCount);
+       dos.writeShort( (short)directedEnergyTargetEnergyDepositionRecordCount);
+       beamAntennaParameterList.marshal(dos);
+       directedEnergyTargetEnergyDepositionRecordList.marshal(dos);
     } // end try 
     catch(Exception e)
     { 
@@ -166,20 +142,8 @@ public void unmarshal(DataInputStream dis)
        padding = (int)dis.readUnsignedShort();
        beamAntennaPatternRecordCount = (int)dis.readUnsignedShort();
        directedEnergyTargetEnergyDepositionRecordCount = (int)dis.readUnsignedShort();
-       for(int idx = 0; idx < beamAntennaPatternRecordCount; idx++)
-       {
-           BeamAntennaPattern anX = new BeamAntennaPattern();
-           anX.unmarshal(dis);
-           beamAntennaParameterList.add(anX);
-       }
-
-       for(int idx = 0; idx < directedEnergyTargetEnergyDepositionRecordCount; idx++)
-       {
-           DirectedEnergyTargetEnergyDeposition anX = new DirectedEnergyTargetEnergyDeposition();
-           anX.unmarshal(dis);
-           directedEnergyTargetEnergyDepositionRecordList.add(anX);
-       }
-
+       beamAntennaParameterList.unmarshal(dis);
+       directedEnergyTargetEnergyDepositionRecordList.unmarshal(dis);
     } // end try 
    catch(Exception e)
     { 
@@ -201,22 +165,10 @@ public void marshal(java.nio.ByteBuffer buff)
        buff.putInt( (int)recordType);
        buff.putShort( (short)recordLength);
        buff.putShort( (short)padding);
-       buff.putShort( (short)beamAntennaParameterList.size());
-       buff.putShort( (short)directedEnergyTargetEnergyDepositionRecordList.size());
-
-       for(int idx = 0; idx < beamAntennaParameterList.size(); idx++)
-       {
-            BeamAntennaPattern aBeamAntennaPattern = (BeamAntennaPattern)beamAntennaParameterList.get(idx);
-            aBeamAntennaPattern.marshal(buff);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < directedEnergyTargetEnergyDepositionRecordList.size(); idx++)
-       {
-            DirectedEnergyTargetEnergyDeposition aDirectedEnergyTargetEnergyDeposition = (DirectedEnergyTargetEnergyDeposition)directedEnergyTargetEnergyDepositionRecordList.get(idx);
-            aDirectedEnergyTargetEnergyDeposition.marshal(buff);
-       } // end of list marshalling
-
+       buff.putShort( (short)beamAntennaPatternRecordCount);
+       buff.putShort( (short)directedEnergyTargetEnergyDepositionRecordCount);
+       beamAntennaParameterList.marshal(buff);
+       directedEnergyTargetEnergyDepositionRecordList.marshal(buff);
     } // end of marshal method
 
 /**
@@ -233,20 +185,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
        padding = (int)(buff.getShort() & 0xFFFF);
        beamAntennaPatternRecordCount = (int)(buff.getShort() & 0xFFFF);
        directedEnergyTargetEnergyDepositionRecordCount = (int)(buff.getShort() & 0xFFFF);
-       for(int idx = 0; idx < beamAntennaPatternRecordCount; idx++)
-       {
-            BeamAntennaPattern anX = new BeamAntennaPattern();
-            anX.unmarshal(buff);
-            beamAntennaParameterList.add(anX);
-       }
-
-       for(int idx = 0; idx < directedEnergyTargetEnergyDepositionRecordCount; idx++)
-       {
-            DirectedEnergyTargetEnergyDeposition anX = new DirectedEnergyTargetEnergyDeposition();
-            anX.unmarshal(buff);
-            directedEnergyTargetEnergyDepositionRecordList.add(anX);
-       }
-
+       beamAntennaParameterList.unmarshal(buff);
+       directedEnergyTargetEnergyDepositionRecordList.unmarshal(buff);
  } // end of unmarshal method 
 
 
@@ -291,18 +231,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
      if( ! (padding == rhs.padding)) ivarsEqual = false;
      if( ! (beamAntennaPatternRecordCount == rhs.beamAntennaPatternRecordCount)) ivarsEqual = false;
      if( ! (directedEnergyTargetEnergyDepositionRecordCount == rhs.directedEnergyTargetEnergyDepositionRecordCount)) ivarsEqual = false;
-
-     for(int idx = 0; idx < beamAntennaParameterList.size(); idx++)
-     {
-        if( ! ( beamAntennaParameterList.get(idx).equals(rhs.beamAntennaParameterList.get(idx)))) ivarsEqual = false;
-     }
-
-
-     for(int idx = 0; idx < directedEnergyTargetEnergyDepositionRecordList.size(); idx++)
-     {
-        if( ! ( directedEnergyTargetEnergyDepositionRecordList.get(idx).equals(rhs.directedEnergyTargetEnergyDepositionRecordList.get(idx)))) ivarsEqual = false;
-     }
-
+     if( ! (beamAntennaParameterList.equals( rhs.beamAntennaParameterList) )) ivarsEqual = false;
+     if( ! (directedEnergyTargetEnergyDepositionRecordList.equals( rhs.directedEnergyTargetEnergyDepositionRecordList) )) ivarsEqual = false;
 
     return ivarsEqual;
  }

@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * Section 5.3.12.11: reports the occurance of a significatnt event to the simulation manager. Needs manual     intervention to fix padding in variable datums. UNFINISHED.
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG

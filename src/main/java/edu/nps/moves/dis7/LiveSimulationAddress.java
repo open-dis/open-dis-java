@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * A simulation's designation associated with all Live Entity IDs contained in Live Entity PDUs. Section 6.2.55 
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG

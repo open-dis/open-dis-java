@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * The unique designation of each aggrgate in an exercise is specified by an aggregate identifier record. The aggregate ID is not an entity and shall not be treated as such. Section 6.2.3.
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -19,7 +19,7 @@ public class AggregateIdentifier extends Object implements Serializable
    /** Simulation address, ie site and application, the first two fields of the entity ID */
    protected SimulationAddress  simulationAddress = new SimulationAddress(); 
 
-   /** the aggregate ID */
+   /** the aggregate ID, an object identifier */
    protected int  aggregateID;
 
 

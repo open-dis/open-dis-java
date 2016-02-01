@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * Used for XML compatability. A container that holds PDUs
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -19,7 +19,7 @@ public class PduContainer extends Object implements Serializable
    /** Number of PDUs in the container list */
    protected int  numberOfPdus;
 
-   /** record sets */
+   /** List of PDUs */
    protected List< Pdu > pdus = new ArrayList< Pdu >(); 
 
 /** Constructor */

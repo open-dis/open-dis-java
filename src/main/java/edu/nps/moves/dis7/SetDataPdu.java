@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * Section 7.5.10. Change state information with the data contained in this. COMPLETE
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -29,9 +29,9 @@ public class SetDataPdu extends SimulationManagementFamilyPdu implements Seriali
    protected long  numberOfVariableDatumRecords;
 
    /** variable length list of fixed datums */
-   protected List< UnsignedIntegerWrapper > fixedDatums = new ArrayList< UnsignedIntegerWrapper >(); 
+   protected List< FixedDatum > fixedDatums = new ArrayList< FixedDatum >(); 
    /** variable length list of variable length datums */
-   protected List< UnsignedIntegerWrapper > variableDatums = new ArrayList< UnsignedIntegerWrapper >(); 
+   protected List< VariableDatum > variableDatums = new ArrayList< VariableDatum >(); 
 
 /** Constructor */
  public SetDataPdu()
@@ -50,12 +50,12 @@ public int getMarshalledSize()
    marshalSize = marshalSize + 4;  // numberOfVariableDatumRecords
    for(int idx=0; idx < fixedDatums.size(); idx++)
    {
-        UnsignedIntegerWrapper listElement = fixedDatums.get(idx);
+        FixedDatum listElement = fixedDatums.get(idx);
         marshalSize = marshalSize + listElement.getMarshalledSize();
    }
    for(int idx=0; idx < variableDatums.size(); idx++)
    {
-        UnsignedIntegerWrapper listElement = variableDatums.get(idx);
+        VariableDatum listElement = variableDatums.get(idx);
         marshalSize = marshalSize + listElement.getMarshalledSize();
    }
 
@@ -103,18 +103,18 @@ public void setNumberOfVariableDatumRecords(long pNumberOfVariableDatumRecords)
 { numberOfVariableDatumRecords = pNumberOfVariableDatumRecords;
 }
 
-public void setFixedDatums(List<UnsignedIntegerWrapper> pFixedDatums)
+public void setFixedDatums(List<FixedDatum> pFixedDatums)
 { fixedDatums = pFixedDatums;
 }
 
-public List<UnsignedIntegerWrapper> getFixedDatums()
+public List<FixedDatum> getFixedDatums()
 { return fixedDatums; }
 
-public void setVariableDatums(List<UnsignedIntegerWrapper> pVariableDatums)
+public void setVariableDatums(List<VariableDatum> pVariableDatums)
 { variableDatums = pVariableDatums;
 }
 
-public List<UnsignedIntegerWrapper> getVariableDatums()
+public List<VariableDatum> getVariableDatums()
 { return variableDatums; }
 
 
@@ -130,15 +130,15 @@ public void marshal(DataOutputStream dos)
 
        for(int idx = 0; idx < fixedDatums.size(); idx++)
        {
-            UnsignedIntegerWrapper aUnsignedIntegerWrapper = fixedDatums.get(idx);
-            aUnsignedIntegerWrapper.marshal(dos);
+            FixedDatum aFixedDatum = fixedDatums.get(idx);
+            aFixedDatum.marshal(dos);
        } // end of list marshalling
 
 
        for(int idx = 0; idx < variableDatums.size(); idx++)
        {
-            UnsignedIntegerWrapper aUnsignedIntegerWrapper = variableDatums.get(idx);
-            aUnsignedIntegerWrapper.marshal(dos);
+            VariableDatum aVariableDatum = variableDatums.get(idx);
+            aVariableDatum.marshal(dos);
        } // end of list marshalling
 
     } // end try 
@@ -159,14 +159,14 @@ public void unmarshal(DataInputStream dis)
        numberOfVariableDatumRecords = dis.readInt();
        for(int idx = 0; idx < numberOfFixedDatumRecords; idx++)
        {
-           UnsignedIntegerWrapper anX = new UnsignedIntegerWrapper();
+           FixedDatum anX = new FixedDatum();
            anX.unmarshal(dis);
            fixedDatums.add(anX);
        }
 
        for(int idx = 0; idx < numberOfVariableDatumRecords; idx++)
        {
-           UnsignedIntegerWrapper anX = new UnsignedIntegerWrapper();
+           VariableDatum anX = new VariableDatum();
            anX.unmarshal(dis);
            variableDatums.add(anX);
        }
@@ -197,15 +197,15 @@ public void marshal(java.nio.ByteBuffer buff)
 
        for(int idx = 0; idx < fixedDatums.size(); idx++)
        {
-            UnsignedIntegerWrapper aUnsignedIntegerWrapper = (UnsignedIntegerWrapper)fixedDatums.get(idx);
-            aUnsignedIntegerWrapper.marshal(buff);
+            FixedDatum aFixedDatum = (FixedDatum)fixedDatums.get(idx);
+            aFixedDatum.marshal(buff);
        } // end of list marshalling
 
 
        for(int idx = 0; idx < variableDatums.size(); idx++)
        {
-            UnsignedIntegerWrapper aUnsignedIntegerWrapper = (UnsignedIntegerWrapper)variableDatums.get(idx);
-            aUnsignedIntegerWrapper.marshal(buff);
+            VariableDatum aVariableDatum = (VariableDatum)variableDatums.get(idx);
+            aVariableDatum.marshal(buff);
        } // end of list marshalling
 
     } // end of marshal method
@@ -227,14 +227,14 @@ public void unmarshal(java.nio.ByteBuffer buff)
        numberOfVariableDatumRecords = buff.getInt();
        for(int idx = 0; idx < numberOfFixedDatumRecords; idx++)
        {
-            UnsignedIntegerWrapper anX = new UnsignedIntegerWrapper();
+            FixedDatum anX = new FixedDatum();
             anX.unmarshal(buff);
             fixedDatums.add(anX);
        }
 
        for(int idx = 0; idx < numberOfVariableDatumRecords; idx++)
        {
-            UnsignedIntegerWrapper anX = new UnsignedIntegerWrapper();
+            VariableDatum anX = new VariableDatum();
             anX.unmarshal(buff);
             variableDatums.add(anX);
        }

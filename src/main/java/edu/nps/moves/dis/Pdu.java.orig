@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * The superclass for all PDUs. This incorporates the PduHeader record, section 5.2.29.
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -42,6 +42,26 @@ public class Pdu extends Object implements Serializable
  public Pdu()
  {
  }
+   
+public int getLength()
+{
+    return this.getMarshalledSize();    
+}
+   
+public int getLength()
+{
+    return this.getMarshalledSize();    
+}
+   
+public int getLength()
+{
+    return this.getMarshalledSize();    
+}
+   
+public int getLength()
+{
+    return this.getMarshalledSize();    
+}
 
 public int getMarshalledSize()
 {
@@ -68,23 +88,163 @@ public short getProtocolVersion()
 }
 
 public void setExerciseID(short pExerciseID)
+/**
+* Returns the PduType, an enumeration from the disenum jar file. This is an enumerated
+* java type, rather than a simple short integer. This should NOT be marshalled to DIS
+* or XML.
+* @return this Pdu's type enumeration
+*/
+public PduType getPduTypeEnum() {
+   return PduType.lookup[pduType];
+}
+
 { exerciseID = pExerciseID;
 }
 
 public short getExerciseID()
 { return exerciseID; 
+/**
+* Returns the PduType, an enumeration from the disenum jar file. This is an enumerated
+* java type, rather than a simple short integer. This should NOT be marshalled to DIS
+* or XML.
+* @return this Pdu's type enumeration
+*/
+public PduType getPduTypeEnum() {
+   return PduType.lookup[pduType];
+}
+
 }
 
 public void setPduType(short pPduType)
 { pduType = pPduType;
 }
+/**
+* Returns the PduType, an enumeration from the disenum jar file. This is an enumerated
+* java type, rather than a simple short integer. This should NOT be marshalled to DIS
+* or XML.
+* @return this Pdu's type enumeration
+*/
+public PduType getPduTypeEnum() {
+   return PduType.lookup[pduType];
+}
+
 
 public short getPduType()
+private long shiftBytes(int[] fourBytes)
+{
+   long value = 0;
+   value  = ((long) (fourBytes[0] << 24
+               | fourBytes[1] << 16
+               | fourBytes[2] << 8
+               | fourBytes[3]))
+               & 0xFFFFFFFFL;
+        
+   return value;
+}
+    
+public long readUnsignedInt(DataInputStream dis)
+{
+    int fourBytes[] = new int[4];
+        
+    try
+    {
+       fourBytes[0] = dis.readUnsignedByte();
+       fourBytes[1] = dis.readUnsignedByte();
+       fourBytes[2] = dis.readUnsignedByte();
+       fourBytes[3] = dis.readUnsignedByte();
+    }
+    catch(Exception e)
+    {
+        System.out.println(e);
+    }
+        
+    return this.shiftBytes(fourBytes);
+}
+    
+public long readUnsignedInt(java.nio.ByteBuffer buff)
+{
+        int fourBytes[] = new int[4];
+        
+        try
+        {
+            fourBytes[0] = ((int)buff.get()) & 0xff;
+            fourBytes[1] = ((int)buff.get()) & 0xff;
+            fourBytes[2] = ((int)buff.get()) & 0xff;
+            fourBytes[3] = ((int)buff.get()) & 0xff;
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        
+        return this.shiftBytes(fourBytes);
+    }
+    
 { return pduType; 
+}
+
+/**
+* Returns the PduType, an enumeration from the disenum jar file. This is an enumerated
+* java type, rather than a simple short integer. This should NOT be marshalled to DIS
+* or XML.
+* @return this Pdu's type enumeration
+*/
+public PduType getPduTypeEnum() {
+   return PduType.lookup[pduType];
 }
 
 public void setProtocolFamily(short pProtocolFamily)
 { protocolFamily = pProtocolFamily;
+private long shiftBytes(int[] fourBytes)
+{
+   long value = 0;
+   value  = ((long) (fourBytes[0] << 24
+               | fourBytes[1] << 16
+               | fourBytes[2] << 8
+               | fourBytes[3]))
+               & 0xFFFFFFFFL;
+        
+   return value;
+}
+    
+public long readUnsignedInt(DataInputStream dis)
+{
+    int fourBytes[] = new int[4];
+        
+    try
+    {
+       fourBytes[0] = dis.readUnsignedByte();
+       fourBytes[1] = dis.readUnsignedByte();
+       fourBytes[2] = dis.readUnsignedByte();
+       fourBytes[3] = dis.readUnsignedByte();
+    }
+    catch(Exception e)
+    {
+        System.out.println(e);
+    }
+        
+    return this.shiftBytes(fourBytes);
+}
+    
+public long readUnsignedInt(java.nio.ByteBuffer buff)
+{
+        int fourBytes[] = new int[4];
+        
+        try
+        {
+            fourBytes[0] = ((int)buff.get()) & 0xff;
+            fourBytes[1] = ((int)buff.get()) & 0xff;
+            fourBytes[2] = ((int)buff.get()) & 0xff;
+            fourBytes[3] = ((int)buff.get()) & 0xff;
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        
+        return this.shiftBytes(fourBytes);
+    }
+    
 }
 
 public short getProtocolFamily()
@@ -100,6 +260,137 @@ public long getTimestamp()
 }
 
 public void setPduLength(int pPduLength)
+private long shiftBytes(int[] fourBytes)
+{
+   long value = 0;
+   value  = ((long) (fourBytes[0] << 24
+               | fourBytes[1] << 16
+               | fourBytes[2] << 8
+               | fourBytes[3]))
+               & 0xFFFFFFFFL;
+    
+    /**
+     * A convieneince method to marshal to a byte array with the timestamp set to
+     * the DIS standard for absolute timestamps (which works only if the host is
+     * slaved to NTP). This means the timestamp will roll over every hour.
+     * @return IEEE format byte array, with the timestamp set to the current DIS time
+     */
+    public byte[] marshalWithDisAbsoluteTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisAbsoluteTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithDisAbsoluteTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisAbsoluteTimestamp());
+        this.marshal(buff);
+    }
+    
+    
+    /**
+     * A convieneince method to marshal to a byte array with the timestamp set to
+     * the DIS standard for relative timestamps. The timestamp will roll over every
+     * hour
+     * @return IEEE format byte array, with the timestamp set to relative DIS time
+     */
+    public byte[] marshalWithDisRelativeTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisRelativeTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithDisRelativeTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisRelativeTimestamp());
+        this.marshal(buff);
+    }
+    
+    /**
+     * A convienience method to marshal a PDU using the NPS-specific format for
+     * timestamps, which is hundredths of a second since the start of the year.
+     * This effectively eliminates the rollover issues from a practical standpoint.
+     * @return IEEE format byte array, with the timestamp set to hundredths of a second since the start of the year
+     */
+    public byte[] marshalWithNpsTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getNpsTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithNpsTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getNpsTimestamp());
+        this.marshal(buff);
+    }
+    
+    /**
+     * Another option for marshalling with the timestamp field set automatically. The UNIX
+     * time is conventionally seconds since January 1, 1970. UTC time is used, and leap seconds
+     * are excluded. This approach is popular in the wild, but the time resolution is not very
+     * good for high frequency updates, such as aircraft. An entity updating at 30 PDUs/second
+     * would see 30 PDUs sent out with the same timestamp, and have 29 of them discarded as
+     * duplicate packets.
+     *
+     * Note that there are other "Unix times", such milliseconds since 1/1/1970, saved in a long.
+     * This cannot be used, since the value is saved in a long. Java's System.getCurrentTimeMillis()
+     * uses this value.
+     * @return IEEE format byte array, with the timetamp set to seconds since 1970
+     */
+    public byte[] marshalWithUnixTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getUnixTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithUnixTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getUnixTimestamp());
+        this.marshal(buff);
+    }
+
+        
+   return value;
+}
+    
+public long readUnsignedInt(DataInputStream dis)
+{
+    int fourBytes[] = new int[4];
+        
+    try
+    {
+       fourBytes[0] = dis.readUnsignedByte();
+       fourBytes[1] = dis.readUnsignedByte();
+       fourBytes[2] = dis.readUnsignedByte();
+       fourBytes[3] = dis.readUnsignedByte();
+    }
+    catch(Exception e)
+    {
+        System.out.println(e);
+    }
+        
+    return this.shiftBytes(fourBytes);
+}
+    
+public long readUnsignedInt(java.nio.ByteBuffer buff)
+{
+        int fourBytes[] = new int[4];
+        
+        try
+        {
+            fourBytes[0] = ((int)buff.get()) & 0xff;
+            fourBytes[1] = ((int)buff.get()) & 0xff;
+            fourBytes[2] = ((int)buff.get()) & 0xff;
+            fourBytes[3] = ((int)buff.get()) & 0xff;
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        
+        return this.shiftBytes(fourBytes);
+    }
+    
 { pduLength = pPduLength;
 }
 
@@ -115,6 +406,137 @@ public short getPadding()
 { return padding; 
 }
 
+private long shiftBytes(int[] fourBytes)
+{
+   long value = 0;
+   value  = ((long) (fourBytes[0] << 24
+               | fourBytes[1] << 16
+               | fourBytes[2] << 8
+               | fourBytes[3]))
+               & 0xFFFFFFFFL;
+    
+    /**
+     * A convieneince method to marshal to a byte array with the timestamp set to
+     * the DIS standard for absolute timestamps (which works only if the host is
+     * slaved to NTP). This means the timestamp will roll over every hour.
+     * @return IEEE format byte array, with the timestamp set to the current DIS time
+     */
+    public byte[] marshalWithDisAbsoluteTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisAbsoluteTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithDisAbsoluteTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisAbsoluteTimestamp());
+        this.marshal(buff);
+    }
+    
+    
+    /**
+     * A convieneince method to marshal to a byte array with the timestamp set to
+     * the DIS standard for relative timestamps. The timestamp will roll over every
+     * hour
+     * @return IEEE format byte array, with the timestamp set to relative DIS time
+     */
+    public byte[] marshalWithDisRelativeTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisRelativeTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithDisRelativeTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisRelativeTimestamp());
+        this.marshal(buff);
+    }
+    
+    /**
+     * A convienience method to marshal a PDU using the NPS-specific format for
+     * timestamps, which is hundredths of a second since the start of the year.
+     * This effectively eliminates the rollover issues from a practical standpoint.
+     * @return IEEE format byte array, with the timestamp set to hundredths of a second since the start of the year
+     */
+    public byte[] marshalWithNpsTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getNpsTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithNpsTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getNpsTimestamp());
+        this.marshal(buff);
+    }
+    
+    /**
+     * Another option for marshalling with the timestamp field set automatically. The UNIX
+     * time is conventionally seconds since January 1, 1970. UTC time is used, and leap seconds
+     * are excluded. This approach is popular in the wild, but the time resolution is not very
+     * good for high frequency updates, such as aircraft. An entity updating at 30 PDUs/second
+     * would see 30 PDUs sent out with the same timestamp, and have 29 of them discarded as
+     * duplicate packets.
+     *
+     * Note that there are other "Unix times", such milliseconds since 1/1/1970, saved in a long.
+     * This cannot be used, since the value is saved in a long. Java's System.getCurrentTimeMillis()
+     * uses this value.
+     * @return IEEE format byte array, with the timetamp set to seconds since 1970
+     */
+    public byte[] marshalWithUnixTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getUnixTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithUnixTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getUnixTimestamp());
+        this.marshal(buff);
+    }
+
+        
+   return value;
+}
+    
+public long readUnsignedInt(DataInputStream dis)
+{
+    int fourBytes[] = new int[4];
+        
+    try
+    {
+       fourBytes[0] = dis.readUnsignedByte();
+       fourBytes[1] = dis.readUnsignedByte();
+       fourBytes[2] = dis.readUnsignedByte();
+       fourBytes[3] = dis.readUnsignedByte();
+    }
+    catch(Exception e)
+    {
+        System.out.println(e);
+    }
+        
+    return this.shiftBytes(fourBytes);
+}
+    
+public long readUnsignedInt(java.nio.ByteBuffer buff)
+{
+        int fourBytes[] = new int[4];
+        
+        try
+        {
+            fourBytes[0] = ((int)buff.get()) & 0xff;
+            fourBytes[1] = ((int)buff.get()) & 0xff;
+            fourBytes[2] = ((int)buff.get()) & 0xff;
+            fourBytes[3] = ((int)buff.get()) & 0xff;
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        
+        return this.shiftBytes(fourBytes);
+    }
+    
 
 public void marshal(DataOutputStream dos)
 {
@@ -125,7 +547,7 @@ public void marshal(DataOutputStream dos)
        dos.writeByte( (byte)pduType);
        dos.writeByte( (byte)protocolFamily);
        dos.writeInt( (int)timestamp);
-       dos.writeShort( (short)pduLength);
+       dos.writeShort( this.getLength());
        dos.writeShort( (short)padding);
     } // end try 
     catch(Exception e)
@@ -138,6 +560,87 @@ public void unmarshal(DataInputStream dis)
     try 
     {
        protocolVersion = (short)dis.readUnsignedByte();
+    
+    /**
+     * A convieneince method to marshal to a byte array with the timestamp set to
+     * the DIS standard for absolute timestamps (which works only if the host is
+     * slaved to NTP). This means the timestamp will roll over every hour.
+     * @return IEEE format byte array, with the timestamp set to the current DIS time
+     */
+    public byte[] marshalWithDisAbsoluteTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisAbsoluteTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithDisAbsoluteTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisAbsoluteTimestamp());
+        this.marshal(buff);
+    }
+    
+    
+    /**
+     * A convieneince method to marshal to a byte array with the timestamp set to
+     * the DIS standard for relative timestamps. The timestamp will roll over every
+     * hour
+     * @return IEEE format byte array, with the timestamp set to relative DIS time
+     */
+    public byte[] marshalWithDisRelativeTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisRelativeTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithDisRelativeTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisRelativeTimestamp());
+        this.marshal(buff);
+    }
+    
+    /**
+     * A convienience method to marshal a PDU using the NPS-specific format for
+     * timestamps, which is hundredths of a second since the start of the year.
+     * This effectively eliminates the rollover issues from a practical standpoint.
+     * @return IEEE format byte array, with the timestamp set to hundredths of a second since the start of the year
+     */
+    public byte[] marshalWithNpsTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getNpsTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithNpsTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getNpsTimestamp());
+        this.marshal(buff);
+    }
+    
+    /**
+     * Another option for marshalling with the timestamp field set automatically. The UNIX
+     * time is conventionally seconds since January 1, 1970. UTC time is used, and leap seconds
+     * are excluded. This approach is popular in the wild, but the time resolution is not very
+     * good for high frequency updates, such as aircraft. An entity updating at 30 PDUs/second
+     * would see 30 PDUs sent out with the same timestamp, and have 29 of them discarded as
+     * duplicate packets.
+     *
+     * Note that there are other "Unix times", such milliseconds since 1/1/1970, saved in a long.
+     * This cannot be used, since the value is saved in a long. Java's System.getCurrentTimeMillis()
+     * uses this value.
+     * @return IEEE format byte array, with the timetamp set to seconds since 1970
+     */
+    public byte[] marshalWithUnixTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getUnixTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithUnixTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getUnixTimestamp());
+        this.marshal(buff);
+    }
+
        exerciseID = (short)dis.readUnsignedByte();
        pduType = (short)dis.readUnsignedByte();
        protocolFamily = (short)dis.readUnsignedByte();
@@ -167,7 +670,7 @@ public void marshal(java.nio.ByteBuffer buff)
        buff.put( (byte)pduType);
        buff.put( (byte)protocolFamily);
        buff.putInt( (int)timestamp);
-       buff.putShort( (short)pduLength);
+       buff.putShort( (short)this.getLength());
        buff.putShort( (short)padding);
     } // end of marshal method
 
@@ -203,6 +706,87 @@ public byte[] marshal()
     marshal(buff);
     return data;
 }
+    
+    /**
+     * A convieneince method to marshal to a byte array with the timestamp set to
+     * the DIS standard for absolute timestamps (which works only if the host is
+     * slaved to NTP). This means the timestamp will roll over every hour.
+     * @return IEEE format byte array, with the timestamp set to the current DIS time
+     */
+    public byte[] marshalWithDisAbsoluteTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisAbsoluteTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithDisAbsoluteTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisAbsoluteTimestamp());
+        this.marshal(buff);
+    }
+    
+    
+    /**
+     * A convieneince method to marshal to a byte array with the timestamp set to
+     * the DIS standard for relative timestamps. The timestamp will roll over every
+     * hour
+     * @return IEEE format byte array, with the timestamp set to relative DIS time
+     */
+    public byte[] marshalWithDisRelativeTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisRelativeTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithDisRelativeTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getDisRelativeTimestamp());
+        this.marshal(buff);
+    }
+    
+    /**
+     * A convienience method to marshal a PDU using the NPS-specific format for
+     * timestamps, which is hundredths of a second since the start of the year.
+     * This effectively eliminates the rollover issues from a practical standpoint.
+     * @return IEEE format byte array, with the timestamp set to hundredths of a second since the start of the year
+     */
+    public byte[] marshalWithNpsTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getNpsTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithNpsTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getNpsTimestamp());
+        this.marshal(buff);
+    }
+    
+    /**
+     * Another option for marshalling with the timestamp field set automatically. The UNIX
+     * time is conventionally seconds since January 1, 1970. UTC time is used, and leap seconds
+     * are excluded. This approach is popular in the wild, but the time resolution is not very
+     * good for high frequency updates, such as aircraft. An entity updating at 30 PDUs/second
+     * would see 30 PDUs sent out with the same timestamp, and have 29 of them discarded as
+     * duplicate packets.
+     *
+     * Note that there are other "Unix times", such milliseconds since 1/1/1970, saved in a long.
+     * This cannot be used, since the value is saved in a long. Java's System.getCurrentTimeMillis()
+     * uses this value.
+     * @return IEEE format byte array, with the timetamp set to seconds since 1970
+     */
+    public byte[] marshalWithUnixTimestamp() {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getUnixTimestamp());
+        return this.marshal();
+    }
+    
+    public void marshalWithUnixTimestamp(java.nio.ByteBuffer buff) {
+        DisTime disTime = DisTime.getInstance();
+        this.setTimestamp(disTime.getUnixTimestamp());
+        this.marshal(buff);
+    }
+
 
  /*
   * The equals method doesn't always work--mostly it works only on classes that consist only of primitives. Be careful.

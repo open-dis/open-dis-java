@@ -439,9 +439,9 @@ Also provides basic parametric data that may be used to support low-fidelity sim
     </attribute>
     
     <attribute name="variableData" comment="data can be any length, but must increase in 8 byte quanta. This requires some postprocessing patches. Note that setting the data allocates a new internal array to account for the possibly increased size. The default initial size is 64 bits.">
-     <fixedlist  length="8">
-       <primitive type="byte"/>
-    </fixedlist> 
+     <variablelist  countFieldName="variableDatumLength">
+       <classRef name="OneByteChunk"/>
+    </variablelist> 
     </attribute>
      
 </class>
@@ -4158,17 +4158,16 @@ The beam data records should ALL be a the finish, rather than attached to each e
     <!-- Generic holder of PDUs. This is mostly for XML compatability -->
     <class name="PduContainer" 
            inheritsFrom="root"
-           comment="Used for XML compatability. A container that holds PDUs"
-           xmlRootElement="true">
+           comment="A container that holds PDUs">
       
    <attribute name="numberOfPdus" comment="Number of PDUs in the container list">
      <primitive type= "int"/>
    </attribute>
         
-     <attribute name="pdus" comment="record sets">
-     <variablelist  countFieldName="numberOfPdus">
-       <classRef name="Pdu"/>
-    </variablelist> 
+     <attribute name="pdus" comment="List of PDUs">
+       <variablelist  countFieldName="numberOfPdus">
+         <classRef name="Pdu"/>
+      </variablelist> 
     </attribute>
         
     </class>

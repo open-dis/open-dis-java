@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * Specifies the character set used inthe first byte, followed by 11 characters of text data. Section 6.29
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -20,7 +20,7 @@ public class EntityMarking extends Object implements Serializable
    protected short  characterSet;
 
    /** The characters */
-   protected byte[]  characters = new byte[11]; 
+   protected byte  characters;
 
 
 /** Constructor */
@@ -33,7 +33,7 @@ public int getMarshalledSize()
    int marshalSize = 0; 
 
    marshalSize = marshalSize + 1;  // characterSet
-   marshalSize = marshalSize + 11 * 1;  // characters
+   marshalSize = marshalSize + 1;  // characters
 
    return marshalSize;
 }
@@ -47,12 +47,13 @@ public short getCharacterSet()
 { return characterSet; 
 }
 
-public void setCharacters(byte[] pCharacters)
+public void setCharacters(byte pCharacters)
 { characters = pCharacters;
 }
 
-public byte[] getCharacters()
-{ return characters; }
+public byte getCharacters()
+{ return characters; 
+}
 
 
 public void marshal(DataOutputStream dos)
@@ -60,12 +61,7 @@ public void marshal(DataOutputStream dos)
     try 
     {
        dos.writeByte( (byte)characterSet);
-
-       for(int idx = 0; idx < characters.length; idx++)
-       {
-           dos.writeByte(characters[idx]);
-       } // end of array marshaling
-
+       dos.writeByte( (byte)characters);
     } // end try 
     catch(Exception e)
     { 
@@ -77,10 +73,7 @@ public void unmarshal(DataInputStream dis)
     try 
     {
        characterSet = (short)dis.readUnsignedByte();
-       for(int idx = 0; idx < characters.length; idx++)
-       {
-                characters[idx] = dis.readByte();
-       } // end of array unmarshaling
+       characters = dis.readByte();
     } // end try 
    catch(Exception e)
     { 
@@ -100,12 +93,7 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        buff.put( (byte)characterSet);
-
-       for(int idx = 0; idx < characters.length; idx++)
-       {
-           buff.put((byte)characters[idx]);
-       } // end of array marshaling
-
+       buff.put( (byte)characters);
     } // end of marshal method
 
 /**
@@ -118,10 +106,7 @@ public void marshal(java.nio.ByteBuffer buff)
 public void unmarshal(java.nio.ByteBuffer buff)
 {
        characterSet = (short)(buff.get() & 0xFF);
-       for(int idx = 0; idx < characters.length; idx++)
-       {
-                characters[idx] = buff.get();
-       } // end of array unmarshaling
+       characters = buff.get();
  } // end of unmarshal method 
 
 
@@ -162,12 +147,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
      final EntityMarking rhs = (EntityMarking)obj;
 
      if( ! (characterSet == rhs.characterSet)) ivarsEqual = false;
-
-     for(int idx = 0; idx < 11; idx++)
-     {
-          if(!(characters[idx] == rhs.characters[idx])) ivarsEqual = false;
-     }
-
+     if( ! (characters == rhs.characters)) ivarsEqual = false;
 
     return ivarsEqual;
  }

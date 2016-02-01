@@ -7,25 +7,27 @@ import edu.nps.moves.disutil.*;
 
 
 /**
- * List of fixed and variable datum records. Section 6.2.17 
+ * List of fixed and variable datum ID records. Section 6.2.17 
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
  */
 public class DataQueryDatumSpecification extends Object implements Serializable
 {
-   /** Number of fixed datums */
+   /** Number of fixed datum IDs */
    protected long  numberOfFixedDatums;
 
-   /** Number of variable datums */
+   /** Number of variable datum IDs */
    protected long  numberOfVariableDatums;
 
    /** variable length list fixed datum IDs */
-   protected List< UnsignedDISInteger > fixedDatumIDList = new ArrayList< UnsignedDISInteger >(); 
+   protected UnsignedDISInteger  fixedDatumIDList = new UnsignedDISInteger(); 
+
    /** variable length list variable datum IDs */
-   protected List< UnsignedDISInteger > variableDatumIDList = new ArrayList< UnsignedDISInteger >(); 
+   protected UnsignedDISInteger  variableDatumIDList = new UnsignedDISInteger(); 
+
 
 /** Constructor */
  public DataQueryDatumSpecification()
@@ -38,80 +40,54 @@ public int getMarshalledSize()
 
    marshalSize = marshalSize + 4;  // numberOfFixedDatums
    marshalSize = marshalSize + 4;  // numberOfVariableDatums
-   for(int idx=0; idx < fixedDatumIDList.size(); idx++)
-   {
-        UnsignedDISInteger listElement = fixedDatumIDList.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
-   for(int idx=0; idx < variableDatumIDList.size(); idx++)
-   {
-        UnsignedDISInteger listElement = variableDatumIDList.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
+   marshalSize = marshalSize + fixedDatumIDList.getMarshalledSize();  // fixedDatumIDList
+   marshalSize = marshalSize + variableDatumIDList.getMarshalledSize();  // variableDatumIDList
 
    return marshalSize;
 }
 
 
-public long getNumberOfFixedDatums()
-{ return (long)fixedDatumIDList.size();
-}
-
-/** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
- * The getnumberOfFixedDatums method will also be based on the actual list length rather than this value. 
- * The method is simply here for java bean completeness.
- */
 public void setNumberOfFixedDatums(long pNumberOfFixedDatums)
 { numberOfFixedDatums = pNumberOfFixedDatums;
 }
 
-public long getNumberOfVariableDatums()
-{ return (long)variableDatumIDList.size();
+public long getNumberOfFixedDatums()
+{ return numberOfFixedDatums; 
 }
 
-/** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
- * The getnumberOfVariableDatums method will also be based on the actual list length rather than this value. 
- * The method is simply here for java bean completeness.
- */
 public void setNumberOfVariableDatums(long pNumberOfVariableDatums)
 { numberOfVariableDatums = pNumberOfVariableDatums;
 }
 
-public void setFixedDatumIDList(List<UnsignedDISInteger> pFixedDatumIDList)
+public long getNumberOfVariableDatums()
+{ return numberOfVariableDatums; 
+}
+
+public void setFixedDatumIDList(UnsignedDISInteger pFixedDatumIDList)
 { fixedDatumIDList = pFixedDatumIDList;
 }
 
-public List<UnsignedDISInteger> getFixedDatumIDList()
-{ return fixedDatumIDList; }
+public UnsignedDISInteger getFixedDatumIDList()
+{ return fixedDatumIDList; 
+}
 
-public void setVariableDatumIDList(List<UnsignedDISInteger> pVariableDatumIDList)
+public void setVariableDatumIDList(UnsignedDISInteger pVariableDatumIDList)
 { variableDatumIDList = pVariableDatumIDList;
 }
 
-public List<UnsignedDISInteger> getVariableDatumIDList()
-{ return variableDatumIDList; }
+public UnsignedDISInteger getVariableDatumIDList()
+{ return variableDatumIDList; 
+}
 
 
 public void marshal(DataOutputStream dos)
 {
     try 
     {
-       dos.writeInt( (int)fixedDatumIDList.size());
-       dos.writeInt( (int)variableDatumIDList.size());
-
-       for(int idx = 0; idx < fixedDatumIDList.size(); idx++)
-       {
-            UnsignedDISInteger aUnsignedDISInteger = fixedDatumIDList.get(idx);
-            aUnsignedDISInteger.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < variableDatumIDList.size(); idx++)
-       {
-            UnsignedDISInteger aUnsignedDISInteger = variableDatumIDList.get(idx);
-            aUnsignedDISInteger.marshal(dos);
-       } // end of list marshalling
-
+       dos.writeInt( (int)numberOfFixedDatums);
+       dos.writeInt( (int)numberOfVariableDatums);
+       fixedDatumIDList.marshal(dos);
+       variableDatumIDList.marshal(dos);
     } // end try 
     catch(Exception e)
     { 
@@ -124,20 +100,8 @@ public void unmarshal(DataInputStream dis)
     {
        numberOfFixedDatums = dis.readInt();
        numberOfVariableDatums = dis.readInt();
-       for(int idx = 0; idx < numberOfFixedDatums; idx++)
-       {
-           UnsignedDISInteger anX = new UnsignedDISInteger();
-           anX.unmarshal(dis);
-           fixedDatumIDList.add(anX);
-       }
-
-       for(int idx = 0; idx < numberOfVariableDatums; idx++)
-       {
-           UnsignedDISInteger anX = new UnsignedDISInteger();
-           anX.unmarshal(dis);
-           variableDatumIDList.add(anX);
-       }
-
+       fixedDatumIDList.unmarshal(dis);
+       variableDatumIDList.unmarshal(dis);
     } // end try 
    catch(Exception e)
     { 
@@ -156,22 +120,10 @@ public void unmarshal(DataInputStream dis)
  */
 public void marshal(java.nio.ByteBuffer buff)
 {
-       buff.putInt( (int)fixedDatumIDList.size());
-       buff.putInt( (int)variableDatumIDList.size());
-
-       for(int idx = 0; idx < fixedDatumIDList.size(); idx++)
-       {
-            UnsignedDISInteger aUnsignedDISInteger = (UnsignedDISInteger)fixedDatumIDList.get(idx);
-            aUnsignedDISInteger.marshal(buff);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < variableDatumIDList.size(); idx++)
-       {
-            UnsignedDISInteger aUnsignedDISInteger = (UnsignedDISInteger)variableDatumIDList.get(idx);
-            aUnsignedDISInteger.marshal(buff);
-       } // end of list marshalling
-
+       buff.putInt( (int)numberOfFixedDatums);
+       buff.putInt( (int)numberOfVariableDatums);
+       fixedDatumIDList.marshal(buff);
+       variableDatumIDList.marshal(buff);
     } // end of marshal method
 
 /**
@@ -185,20 +137,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
 {
        numberOfFixedDatums = buff.getInt();
        numberOfVariableDatums = buff.getInt();
-       for(int idx = 0; idx < numberOfFixedDatums; idx++)
-       {
-            UnsignedDISInteger anX = new UnsignedDISInteger();
-            anX.unmarshal(buff);
-            fixedDatumIDList.add(anX);
-       }
-
-       for(int idx = 0; idx < numberOfVariableDatums; idx++)
-       {
-            UnsignedDISInteger anX = new UnsignedDISInteger();
-            anX.unmarshal(buff);
-            variableDatumIDList.add(anX);
-       }
-
+       fixedDatumIDList.unmarshal(buff);
+       variableDatumIDList.unmarshal(buff);
  } // end of unmarshal method 
 
 
@@ -240,18 +180,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      if( ! (numberOfFixedDatums == rhs.numberOfFixedDatums)) ivarsEqual = false;
      if( ! (numberOfVariableDatums == rhs.numberOfVariableDatums)) ivarsEqual = false;
-
-     for(int idx = 0; idx < fixedDatumIDList.size(); idx++)
-     {
-        if( ! ( fixedDatumIDList.get(idx).equals(rhs.fixedDatumIDList.get(idx)))) ivarsEqual = false;
-     }
-
-
-     for(int idx = 0; idx < variableDatumIDList.size(); idx++)
-     {
-        if( ! ( variableDatumIDList.get(idx).equals(rhs.variableDatumIDList.get(idx)))) ivarsEqual = false;
-     }
-
+     if( ! (fixedDatumIDList.equals( rhs.fixedDatumIDList) )) ivarsEqual = false;
+     if( ! (variableDatumIDList.equals( rhs.variableDatumIDList) )) ivarsEqual = false;
 
     return ivarsEqual;
  }

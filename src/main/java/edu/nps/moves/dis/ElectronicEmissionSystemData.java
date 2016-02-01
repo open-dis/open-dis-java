@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * Data about one electronic system
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -31,7 +31,7 @@ public class ElectronicEmissionSystemData extends Object implements Serializable
    /** Location with respect to the entity */
    protected Vector3Float  location = new Vector3Float(); 
 
-   /** variable length list of beam data records */
+   /** variable length variablelist of beam data records */
    protected List< ElectronicEmissionBeamData > beamDataRecords = new ArrayList< ElectronicEmissionBeamData >(); 
 
 /** Constructor */

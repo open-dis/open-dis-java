@@ -1997,7 +1997,7 @@
 </attribute>
 
 <attribute name="records" comment="variable length list of 32 bit records">
-   <variablelistcountFieldName="numberOfRecords">
+   <variablelist countFieldName="numberOfRecords">
      <classRef name="FourByteChunk"/>
    </variablelist> 
 </attribute>
@@ -2410,13 +2410,9 @@
   
    <attribute name="variableDatumData" comment="Variable length data class">
        <variablelist countFieldName="variableDatumLength" units="bits" padToBoundary="64">
-          <primitive type="byte"/>
+          <classRef name="OneByteChunk"/>
        </variablelist>
    </attribute>
-   
-  <attribute name="variableDatumBits" comment="Variable datum. This can be any number of bits long, depending on the datum.">
-    <primitive type="unsigned int"/>
-  </attribute>
 
 </class>
 
@@ -5825,7 +5821,7 @@
      <primitive type= "int"/>
    </attribute>
         
-     <attribute name="pdus" comment="record sets">
+     <attribute name="pdus" comment="List of PDUs">
      <variablelist countFieldName="numberOfPdus">
        <classRef name="Pdu"/>
     </variablelist> 

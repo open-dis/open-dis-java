@@ -7,9 +7,9 @@ import edu.nps.moves.disutil.*;
 
 
 /**
- * Non-DIS class, used to describe streams of PDUS when logging data to a SQL database. This is not in the DIS standard but can be helpful when logging to a Hibernate sql database
+ * Non-DIS class, used on SQL databases. This is not in the DIS standard but can be helpful when saving DIS to a SQL database, particularly in Java.
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -28,11 +28,6 @@ public class PduStream extends Object implements Serializable
    /** stop time of recording, in Unix time (seconds since epoch) */
    protected long  stopTime;
 
-   /** how many PDUs in this stream */
-   protected long  pduCount;
-
-   /** variable length list of PDUs */
-   protected List< Pdu > pdusInStream = new ArrayList< Pdu >(); 
 
 /** Constructor */
  public PduStream()
@@ -47,12 +42,6 @@ public int getMarshalledSize()
    marshalSize = marshalSize + 256 * 1;  // name
    marshalSize = marshalSize + 8;  // startTime
    marshalSize = marshalSize + 8;  // stopTime
-   marshalSize = marshalSize + 4;  // pduCount
-   for(int idx=0; idx < pdusInStream.size(); idx++)
-   {
-        Pdu listElement = pdusInStream.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
 
    return marshalSize;
 }
@@ -88,25 +77,6 @@ public long getStopTime()
 { return stopTime; 
 }
 
-public long getPduCount()
-{ return (long)pdusInStream.size();
-}
-
-/** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
- * The getpduCount method will also be based on the actual list length rather than this value. 
- * The method is simply here for java bean completeness.
- */
-public void setPduCount(long pPduCount)
-{ pduCount = pPduCount;
-}
-
-public void setPdusInStream(List<Pdu> pPdusInStream)
-{ pdusInStream = pPdusInStream;
-}
-
-public List<Pdu> getPdusInStream()
-{ return pdusInStream; }
-
 
 public void marshal(DataOutputStream dos)
 {
@@ -126,14 +96,6 @@ public void marshal(DataOutputStream dos)
 
        dos.writeLong( (long)startTime);
        dos.writeLong( (long)stopTime);
-       dos.writeInt( (int)pdusInStream.size());
-
-       for(int idx = 0; idx < pdusInStream.size(); idx++)
-       {
-            Pdu aPdu = pdusInStream.get(idx);
-            aPdu.marshal(dos);
-       } // end of list marshalling
-
     } // end try 
     catch(Exception e)
     { 
@@ -154,14 +116,6 @@ public void unmarshal(DataInputStream dis)
        } // end of array unmarshaling
        startTime = dis.readLong();
        stopTime = dis.readLong();
-       pduCount = dis.readInt();
-       for(int idx = 0; idx < pduCount; idx++)
-       {
-           Pdu anX = new Pdu();
-           anX.unmarshal(dis);
-           pdusInStream.add(anX);
-       }
-
     } // end try 
    catch(Exception e)
     { 
@@ -194,14 +148,6 @@ public void marshal(java.nio.ByteBuffer buff)
 
        buff.putLong( (long)startTime);
        buff.putLong( (long)stopTime);
-       buff.putInt( (int)pdusInStream.size());
-
-       for(int idx = 0; idx < pdusInStream.size(); idx++)
-       {
-            Pdu aPdu = (Pdu)pdusInStream.get(idx);
-            aPdu.marshal(buff);
-       } // end of list marshalling
-
     } // end of marshal method
 
 /**
@@ -223,14 +169,6 @@ public void unmarshal(java.nio.ByteBuffer buff)
        } // end of array unmarshaling
        startTime = buff.getLong();
        stopTime = buff.getLong();
-       pduCount = buff.getInt();
-       for(int idx = 0; idx < pduCount; idx++)
-       {
-            Pdu anX = new Pdu();
-            anX.unmarshal(buff);
-            pdusInStream.add(anX);
-       }
-
  } // end of unmarshal method 
 
 
@@ -284,13 +222,6 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      if( ! (startTime == rhs.startTime)) ivarsEqual = false;
      if( ! (stopTime == rhs.stopTime)) ivarsEqual = false;
-     if( ! (pduCount == rhs.pduCount)) ivarsEqual = false;
-
-     for(int idx = 0; idx < pdusInStream.size(); idx++)
-     {
-        if( ! ( pdusInStream.get(idx).equals(rhs.pdusInStream.get(idx)))) ivarsEqual = false;
-     }
-
 
     return ivarsEqual;
  }

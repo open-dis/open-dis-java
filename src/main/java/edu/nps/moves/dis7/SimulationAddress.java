@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * A Simulation Address record shall consist of the Site Identification number and the Application Identification number. Section 6.2.79 
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG

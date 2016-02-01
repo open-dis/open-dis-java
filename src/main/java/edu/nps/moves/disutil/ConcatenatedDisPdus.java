@@ -14,7 +14,7 @@ import edu.nps.moves.dis.*;
  * length, from a binary file. The assumption is that the PDUs were placed
  * in IEEE format, concatenated one after the other, into the file. <p>
  *
- * It's not uncommonn to place serveral PDUs in a single datagram packet,
+ * It's not uncommon to place serveral PDUs in a single datagram packet,
  * since placing one in each datagram can cause a very heavy network load.
  * This class is useful for extracting the PDUs from that one big byte array.
  * It's also not uncommon to see people simply write out

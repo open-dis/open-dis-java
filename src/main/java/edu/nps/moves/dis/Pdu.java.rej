@@ -1,0 +1,10 @@
+***************
+*** 128
+-        dos.writeShort( (short)pduLength);
+--- 193 -----
++        dos.writeShort( this.getLength());
+***************
+*** 170
+-        buff.putShort( (short)pduLength);
+--- 235 -----
++        buff.putShort( (short)this.getLength());

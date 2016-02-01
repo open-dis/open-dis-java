@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * The specification of an individual segment of a linear segment synthetic environment object in a Linear Object State PDU Section 6.2.52
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG

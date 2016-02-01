@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * 5.2.46.  Intercom communcations parameters
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -22,7 +22,7 @@ public class IntercomCommunicationsParameters extends Object implements Serializ
    /** length of record-specifid field, in octets */
    protected int  recordLength;
 
-   /** variable length list of data parameters  */
+   /** variable length variablelist of data parameters  */
    protected List< OneByteChunk > parameterValues = new ArrayList< OneByteChunk >(); 
 
 /** Constructor */

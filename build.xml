@@ -79,6 +79,7 @@
         <antcall target="generateDisSourceCode"/>
     </target>
 
+<!--
     <target name="generateJavaMobileSourceCode" depends="init" description = "run program to generate java mobile version">
         <property name="xmlSourceFile" value="DIS1998.xml"/>
         <property name="xmlpg.generatedSourceDir" value="${src}"/>
@@ -92,7 +93,7 @@
         <antcall target="generateDisSourceCode"/>
     </target>
 
-
+-->
      <target name="generateJavaDis7SourceCode" depends="init" description = "run program to generate java for DIS 2009, desktop version">
         <echo message="Generating DIS 7 desktop version"/>
         <property name="xmlSourceFile" value="DIS7.xml"/>
@@ -106,6 +107,7 @@
         <antcall target="generateDisSourceCode"/>
     </target>
     
+ <!--
     <target name="generateJavaDis7MobileCode" depends="init" description = "run program to generate java for DIS 2009, mobile version">
         <property name="xmlSourceFile" value="DIS2012.xml"/>
         <property name="xmlpg.generatedSourceDir" value="${src}"/>
@@ -113,10 +115,10 @@
         <property name="xmlpg.useJaxb" value="false"/>
         <property name="xmlpg.package" value="edu.nps.moves.dis7mobile"/>
         <property name="product" value="dis7mobile"/>
-        <!-- apply the patches, manual changes to the code captured in the patch files -->
+        
         <antcall target="generateDisSourceCode"/>
         </target>
-
+-->
 
    <target name="spatial" depends="compile" description = "Run coordinate system santity check">
         <java classname="edu.nps.moves.spatial.RangeCoordinates">

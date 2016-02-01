@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * Service Request PDU shall be used to communicate information associated with                            one entity requesting a service from another). Section 7.4.2 COMPLETE
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -31,6 +31,7 @@ public class ServiceRequestPdu extends LogisticsFamilyPdu implements Serializabl
    /** padding */
    protected short  serviceRequestPadding = (short)0;
 
+   /** Field shall specify the type of supply and the amount of that supply for the number specified in the numberOfSupplyTypes (see 6.2.85), Section 7.4.2 */
    protected List< SupplyQuantity > supplies = new ArrayList< SupplyQuantity >(); 
 
 /** Constructor */

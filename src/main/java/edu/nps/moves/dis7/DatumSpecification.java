@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * List of fixed and variable datum records. Section 6.2.18 
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
@@ -23,9 +23,11 @@ public class DatumSpecification extends Object implements Serializable
    protected long  numberOfVariableDatums;
 
    /** variable length list fixed datums */
-   protected List< FixedDatum > fixedDatumIDList = new ArrayList< FixedDatum >(); 
-   /** variable length list variable datums */
-   protected List< VariableDatum > variableDatumIDList = new ArrayList< VariableDatum >(); 
+   protected FixedDatum  fixedDatumList = new FixedDatum(); 
+
+   /** variable length list variable datums. See 6.2.93 */
+   protected VariableDatum  variableDatumList = new VariableDatum(); 
+
 
 /** Constructor */
  public DatumSpecification()
@@ -38,80 +40,54 @@ public int getMarshalledSize()
 
    marshalSize = marshalSize + 4;  // numberOfFixedDatums
    marshalSize = marshalSize + 4;  // numberOfVariableDatums
-   for(int idx=0; idx < fixedDatumIDList.size(); idx++)
-   {
-        FixedDatum listElement = fixedDatumIDList.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
-   for(int idx=0; idx < variableDatumIDList.size(); idx++)
-   {
-        VariableDatum listElement = variableDatumIDList.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
+   marshalSize = marshalSize + fixedDatumList.getMarshalledSize();  // fixedDatumList
+   marshalSize = marshalSize + variableDatumList.getMarshalledSize();  // variableDatumList
 
    return marshalSize;
 }
 
 
-public long getNumberOfFixedDatums()
-{ return (long)fixedDatumIDList.size();
-}
-
-/** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
- * The getnumberOfFixedDatums method will also be based on the actual list length rather than this value. 
- * The method is simply here for java bean completeness.
- */
 public void setNumberOfFixedDatums(long pNumberOfFixedDatums)
 { numberOfFixedDatums = pNumberOfFixedDatums;
 }
 
-public long getNumberOfVariableDatums()
-{ return (long)variableDatumIDList.size();
+public long getNumberOfFixedDatums()
+{ return numberOfFixedDatums; 
 }
 
-/** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
- * The getnumberOfVariableDatums method will also be based on the actual list length rather than this value. 
- * The method is simply here for java bean completeness.
- */
 public void setNumberOfVariableDatums(long pNumberOfVariableDatums)
 { numberOfVariableDatums = pNumberOfVariableDatums;
 }
 
-public void setFixedDatumIDList(List<FixedDatum> pFixedDatumIDList)
-{ fixedDatumIDList = pFixedDatumIDList;
+public long getNumberOfVariableDatums()
+{ return numberOfVariableDatums; 
 }
 
-public List<FixedDatum> getFixedDatumIDList()
-{ return fixedDatumIDList; }
-
-public void setVariableDatumIDList(List<VariableDatum> pVariableDatumIDList)
-{ variableDatumIDList = pVariableDatumIDList;
+public void setFixedDatumList(FixedDatum pFixedDatumList)
+{ fixedDatumList = pFixedDatumList;
 }
 
-public List<VariableDatum> getVariableDatumIDList()
-{ return variableDatumIDList; }
+public FixedDatum getFixedDatumList()
+{ return fixedDatumList; 
+}
+
+public void setVariableDatumList(VariableDatum pVariableDatumList)
+{ variableDatumList = pVariableDatumList;
+}
+
+public VariableDatum getVariableDatumList()
+{ return variableDatumList; 
+}
 
 
 public void marshal(DataOutputStream dos)
 {
     try 
     {
-       dos.writeInt( (int)fixedDatumIDList.size());
-       dos.writeInt( (int)variableDatumIDList.size());
-
-       for(int idx = 0; idx < fixedDatumIDList.size(); idx++)
-       {
-            FixedDatum aFixedDatum = fixedDatumIDList.get(idx);
-            aFixedDatum.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < variableDatumIDList.size(); idx++)
-       {
-            VariableDatum aVariableDatum = variableDatumIDList.get(idx);
-            aVariableDatum.marshal(dos);
-       } // end of list marshalling
-
+       dos.writeInt( (int)numberOfFixedDatums);
+       dos.writeInt( (int)numberOfVariableDatums);
+       fixedDatumList.marshal(dos);
+       variableDatumList.marshal(dos);
     } // end try 
     catch(Exception e)
     { 
@@ -124,20 +100,8 @@ public void unmarshal(DataInputStream dis)
     {
        numberOfFixedDatums = dis.readInt();
        numberOfVariableDatums = dis.readInt();
-       for(int idx = 0; idx < numberOfFixedDatums; idx++)
-       {
-           FixedDatum anX = new FixedDatum();
-           anX.unmarshal(dis);
-           fixedDatumIDList.add(anX);
-       }
-
-       for(int idx = 0; idx < numberOfVariableDatums; idx++)
-       {
-           VariableDatum anX = new VariableDatum();
-           anX.unmarshal(dis);
-           variableDatumIDList.add(anX);
-       }
-
+       fixedDatumList.unmarshal(dis);
+       variableDatumList.unmarshal(dis);
     } // end try 
    catch(Exception e)
     { 
@@ -156,22 +120,10 @@ public void unmarshal(DataInputStream dis)
  */
 public void marshal(java.nio.ByteBuffer buff)
 {
-       buff.putInt( (int)fixedDatumIDList.size());
-       buff.putInt( (int)variableDatumIDList.size());
-
-       for(int idx = 0; idx < fixedDatumIDList.size(); idx++)
-       {
-            FixedDatum aFixedDatum = (FixedDatum)fixedDatumIDList.get(idx);
-            aFixedDatum.marshal(buff);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < variableDatumIDList.size(); idx++)
-       {
-            VariableDatum aVariableDatum = (VariableDatum)variableDatumIDList.get(idx);
-            aVariableDatum.marshal(buff);
-       } // end of list marshalling
-
+       buff.putInt( (int)numberOfFixedDatums);
+       buff.putInt( (int)numberOfVariableDatums);
+       fixedDatumList.marshal(buff);
+       variableDatumList.marshal(buff);
     } // end of marshal method
 
 /**
@@ -185,20 +137,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
 {
        numberOfFixedDatums = buff.getInt();
        numberOfVariableDatums = buff.getInt();
-       for(int idx = 0; idx < numberOfFixedDatums; idx++)
-       {
-            FixedDatum anX = new FixedDatum();
-            anX.unmarshal(buff);
-            fixedDatumIDList.add(anX);
-       }
-
-       for(int idx = 0; idx < numberOfVariableDatums; idx++)
-       {
-            VariableDatum anX = new VariableDatum();
-            anX.unmarshal(buff);
-            variableDatumIDList.add(anX);
-       }
-
+       fixedDatumList.unmarshal(buff);
+       variableDatumList.unmarshal(buff);
  } // end of unmarshal method 
 
 
@@ -240,18 +180,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      if( ! (numberOfFixedDatums == rhs.numberOfFixedDatums)) ivarsEqual = false;
      if( ! (numberOfVariableDatums == rhs.numberOfVariableDatums)) ivarsEqual = false;
-
-     for(int idx = 0; idx < fixedDatumIDList.size(); idx++)
-     {
-        if( ! ( fixedDatumIDList.get(idx).equals(rhs.fixedDatumIDList.get(idx)))) ivarsEqual = false;
-     }
-
-
-     for(int idx = 0; idx < variableDatumIDList.size(); idx++)
-     {
-        if( ! ( variableDatumIDList.get(idx).equals(rhs.variableDatumIDList.get(idx)))) ivarsEqual = false;
-     }
-
+     if( ! (fixedDatumList.equals( rhs.fixedDatumList) )) ivarsEqual = false;
+     if( ! (variableDatumList.equals( rhs.variableDatumList) )) ivarsEqual = false;
 
     return ivarsEqual;
  }

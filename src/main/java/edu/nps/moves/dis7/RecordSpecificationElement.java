@@ -9,7 +9,7 @@ import edu.nps.moves.disutil.*;
 /**
  * Synthetic record, made up from section 6.2.72. This is used to acheive a repeating variable list element.
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG

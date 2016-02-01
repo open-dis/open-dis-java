@@ -9,22 +9,21 @@ import edu.nps.moves.disutil.*;
 /**
  * the variable datum type, the datum length, and the value for that variable datum type. NOT COMPLETE. Section 6.2.93
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
  */
 public class VariableDatum extends Object implements Serializable
 {
-   /** Type of variable datum to be transmitted. 32 bit enumeration defined in EBV */
+   /** ID of variable datum to be transmitted. 32 bit enumeration defined in EBV */
    protected long  variableDatumID;
 
    /** Length, IN BITS, of the variable datum. */
    protected long  variableDatumLength;
 
-   /** Variable datum. This can be any number of bits long, depending on the datum. */
-   protected long  variableDatumBits;
-
+   /** Variable length data class */
+   protected List< OneByteChunk > variableDatumData = new ArrayList< OneByteChunk >(); 
 
 /** Constructor */
  public VariableDatum()
@@ -37,7 +36,11 @@ public int getMarshalledSize()
 
    marshalSize = marshalSize + 4;  // variableDatumID
    marshalSize = marshalSize + 4;  // variableDatumLength
-   marshalSize = marshalSize + 4;  // variableDatumBits
+   for(int idx=0; idx < variableDatumData.size(); idx++)
+   {
+        OneByteChunk listElement = variableDatumData.get(idx);
+        marshalSize = marshalSize + listElement.getMarshalledSize();
+   }
 
    return marshalSize;
 }
@@ -51,21 +54,24 @@ public long getVariableDatumID()
 { return variableDatumID; 
 }
 
+public long getVariableDatumLength()
+{ return (long)variableDatumData.size();
+}
+
+/** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
+ * The getvariableDatumLength method will also be based on the actual list length rather than this value. 
+ * The method is simply here for java bean completeness.
+ */
 public void setVariableDatumLength(long pVariableDatumLength)
 { variableDatumLength = pVariableDatumLength;
 }
 
-public long getVariableDatumLength()
-{ return variableDatumLength; 
+public void setVariableDatumData(List<OneByteChunk> pVariableDatumData)
+{ variableDatumData = pVariableDatumData;
 }
 
-public void setVariableDatumBits(long pVariableDatumBits)
-{ variableDatumBits = pVariableDatumBits;
-}
-
-public long getVariableDatumBits()
-{ return variableDatumBits; 
-}
+public List<OneByteChunk> getVariableDatumData()
+{ return variableDatumData; }
 
 
 public void marshal(DataOutputStream dos)
@@ -73,8 +79,14 @@ public void marshal(DataOutputStream dos)
     try 
     {
        dos.writeInt( (int)variableDatumID);
-       dos.writeInt( (int)variableDatumLength);
-       dos.writeInt( (int)variableDatumBits);
+       dos.writeInt( (int)variableDatumData.size());
+
+       for(int idx = 0; idx < variableDatumData.size(); idx++)
+       {
+            OneByteChunk aOneByteChunk = variableDatumData.get(idx);
+            aOneByteChunk.marshal(dos);
+       } // end of list marshalling
+
     } // end try 
     catch(Exception e)
     { 
@@ -87,7 +99,13 @@ public void unmarshal(DataInputStream dis)
     {
        variableDatumID = dis.readInt();
        variableDatumLength = dis.readInt();
-       variableDatumBits = dis.readInt();
+       for(int idx = 0; idx < variableDatumLength; idx++)
+       {
+           OneByteChunk anX = new OneByteChunk();
+           anX.unmarshal(dis);
+           variableDatumData.add(anX);
+       }
+
     } // end try 
    catch(Exception e)
     { 
@@ -107,8 +125,14 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        buff.putInt( (int)variableDatumID);
-       buff.putInt( (int)variableDatumLength);
-       buff.putInt( (int)variableDatumBits);
+       buff.putInt( (int)variableDatumData.size());
+
+       for(int idx = 0; idx < variableDatumData.size(); idx++)
+       {
+            OneByteChunk aOneByteChunk = (OneByteChunk)variableDatumData.get(idx);
+            aOneByteChunk.marshal(buff);
+       } // end of list marshalling
+
     } // end of marshal method
 
 /**
@@ -122,7 +146,13 @@ public void unmarshal(java.nio.ByteBuffer buff)
 {
        variableDatumID = buff.getInt();
        variableDatumLength = buff.getInt();
-       variableDatumBits = buff.getInt();
+       for(int idx = 0; idx < variableDatumLength; idx++)
+       {
+            OneByteChunk anX = new OneByteChunk();
+            anX.unmarshal(buff);
+            variableDatumData.add(anX);
+       }
+
  } // end of unmarshal method 
 
 
@@ -164,7 +194,12 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      if( ! (variableDatumID == rhs.variableDatumID)) ivarsEqual = false;
      if( ! (variableDatumLength == rhs.variableDatumLength)) ivarsEqual = false;
-     if( ! (variableDatumBits == rhs.variableDatumBits)) ivarsEqual = false;
+
+     for(int idx = 0; idx < variableDatumData.size(); idx++)
+     {
+        if( ! ( variableDatumData.get(idx).equals(rhs.variableDatumData.get(idx)))) ivarsEqual = false;
+     }
+
 
     return ivarsEqual;
  }

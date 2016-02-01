@@ -9,18 +9,18 @@ import edu.nps.moves.disutil.*;
 /**
  * Time measurements that exceed one hour are represented by this record. The first field is the hours since the unix epoch (Jan 1 1970, used by most Unix systems and java) and the second field the timestamp units since the top of the hour. Section 6.2.14
  *
- * Copyright (c) 2008-2014, MOVES Institute, Naval Postgraduate School. All rights reserved.
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
  */
 public class ClockTime extends Object implements Serializable
 {
-   /** Hours in UTC */
+   /** Hours since midnight, 1970, UTC */
    protected long  hour;
 
-   /** Time past the hour */
-   protected long  timePastHour;
+   /** Time past the hour, in timestamp form */
+   protected Timestamp  timePastHour = new Timestamp(); 
 
 
 /** Constructor */
@@ -33,7 +33,7 @@ public int getMarshalledSize()
    int marshalSize = 0; 
 
    marshalSize = marshalSize + 4;  // hour
-   marshalSize = marshalSize + 4;  // timePastHour
+   marshalSize = marshalSize + timePastHour.getMarshalledSize();  // timePastHour
 
    return marshalSize;
 }
@@ -47,11 +47,11 @@ public long getHour()
 { return hour; 
 }
 
-public void setTimePastHour(long pTimePastHour)
+public void setTimePastHour(Timestamp pTimePastHour)
 { timePastHour = pTimePastHour;
 }
 
-public long getTimePastHour()
+public Timestamp getTimePastHour()
 { return timePastHour; 
 }
 
@@ -61,7 +61,7 @@ public void marshal(DataOutputStream dos)
     try 
     {
        dos.writeInt( (int)hour);
-       dos.writeInt( (int)timePastHour);
+       timePastHour.marshal(dos);
     } // end try 
     catch(Exception e)
     { 
@@ -73,7 +73,7 @@ public void unmarshal(DataInputStream dis)
     try 
     {
        hour = dis.readInt();
-       timePastHour = dis.readInt();
+       timePastHour.unmarshal(dis);
     } // end try 
    catch(Exception e)
     { 
@@ -93,7 +93,7 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        buff.putInt( (int)hour);
-       buff.putInt( (int)timePastHour);
+       timePastHour.marshal(buff);
     } // end of marshal method
 
 /**
@@ -106,7 +106,7 @@ public void marshal(java.nio.ByteBuffer buff)
 public void unmarshal(java.nio.ByteBuffer buff)
 {
        hour = buff.getInt();
-       timePastHour = buff.getInt();
+       timePastHour.unmarshal(buff);
  } // end of unmarshal method 
 
 
@@ -147,7 +147,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
      final ClockTime rhs = (ClockTime)obj;
 
      if( ! (hour == rhs.hour)) ivarsEqual = false;
-     if( ! (timePastHour == rhs.timePastHour)) ivarsEqual = false;
+     if( ! (timePastHour.equals( rhs.timePastHour) )) ivarsEqual = false;
 
     return ivarsEqual;
  }
