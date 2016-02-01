@@ -44,6 +44,50 @@ public long getTimestamp()
 }
 
 
+/**
+ * 0 relative timestamp, 1 host synchronized timestamp
+ */
+public int getTimestamp_timestampType()
+{
+    long val = (long)(this.timestamp   & (long)0x1);
+    return (int)(val >> 0);
+}
+
+
+/** 
+ * 0 relative timestamp, 1 host synchronized timestamp
+ */
+public void setTimestamp_timestampType(int val)
+{
+    long  aVal = 0;
+    this.timestamp &= (long)(~0x1); // clear bits
+    aVal = (long)(val << 0);
+    this.timestamp = (long)(this.timestamp | aVal);
+}
+
+
+/**
+ * 2^31-1 per hour time units
+ */
+public int getTimestamp_timestampValue()
+{
+    long val = (long)(this.timestamp   & (long)0xFE);
+    return (int)(val >> 1);
+}
+
+
+/** 
+ * 2^31-1 per hour time units
+ */
+public void setTimestamp_timestampValue(int val)
+{
+    long  aVal = 0;
+    this.timestamp &= (long)(~0xFE); // clear bits
+    aVal = (long)(val << 1);
+    this.timestamp = (long)(this.timestamp | aVal);
+}
+
+
 public void marshal(DataOutputStream dos)
 {
     try 

@@ -44,6 +44,50 @@ public short getBeamState()
 }
 
 
+/**
+ * 0 active, 1 deactivated
+ */
+public int getBeamState_beamState()
+{
+    short val = (short)(this.beamState   & (short)0x1);
+    return (int)(val >> 0);
+}
+
+
+/** 
+ * 0 active, 1 deactivated
+ */
+public void setBeamState_beamState(int val)
+{
+    short  aVal = 0;
+    this.beamState &= (short)(~0x1); // clear bits
+    aVal = (short)(val << 0);
+    this.beamState = (short)(this.beamState | aVal);
+}
+
+
+/**
+ * padding
+ */
+public int getBeamState_padding()
+{
+    short val = (short)(this.beamState   & (short)0xFE);
+    return (int)(val >> 1);
+}
+
+
+/** 
+ * padding
+ */
+public void setBeamState_padding(int val)
+{
+    short  aVal = 0;
+    this.beamState &= (short)(~0xFE); // clear bits
+    aVal = (short)(val << 1);
+    this.beamState = (short)(this.beamState | aVal);
+}
+
+
 public void marshal(DataOutputStream dos)
 {
     try 

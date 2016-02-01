@@ -44,6 +44,270 @@ public long getBitFlags()
 }
 
 
+/**
+ * boolean
+ */
+public int getBitFlags_groundBurialDepthOffset()
+{
+    long val = (long)(this.bitFlags   & (long)0x1);
+    return (int)(val >> 0);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_groundBurialDepthOffset(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x1); // clear bits
+    aVal = (long)(val << 0);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * boolean
+ */
+public int getBitFlags_waterBurialDepthOffset()
+{
+    long val = (long)(this.bitFlags   & (long)0x2);
+    return (int)(val >> 1);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_waterBurialDepthOffset(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x2); // clear bits
+    aVal = (long)(val << 1);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * boolean
+ */
+public int getBitFlags_snowBurialDepthOffset()
+{
+    long val = (long)(this.bitFlags   & (long)0x4);
+    return (int)(val >> 2);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_snowBurialDepthOffset(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x4); // clear bits
+    aVal = (long)(val << 2);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * boolean
+ */
+public int getBitFlags_mineOrientation()
+{
+    long val = (long)(this.bitFlags   & (long)0x8);
+    return (int)(val >> 3);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_mineOrientation(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x8); // clear bits
+    aVal = (long)(val << 3);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * boolean
+ */
+public int getBitFlags_thermalContrast()
+{
+    long val = (long)(this.bitFlags   & (long)0x10);
+    return (int)(val >> 4);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_thermalContrast(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x10); // clear bits
+    aVal = (long)(val << 4);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * boolean
+ */
+public int getBitFlags_reflectance()
+{
+    long val = (long)(this.bitFlags   & (long)0x20);
+    return (int)(val >> 5);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_reflectance(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x20); // clear bits
+    aVal = (long)(val << 5);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * boolean
+ */
+public int getBitFlags_mineEmplacementTime()
+{
+    long val = (long)(this.bitFlags   & (long)0x40);
+    return (int)(val >> 6);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_mineEmplacementTime(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x40); // clear bits
+    aVal = (long)(val << 6);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * boolean
+ */
+public int getBitFlags_tripDetonationWire()
+{
+    long val = (long)(this.bitFlags   & (long)0x80);
+    return (int)(val >> 7);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_tripDetonationWire(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x80); // clear bits
+    aVal = (long)(val << 7);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * boolean
+ */
+public int getBitFlags_fusing()
+{
+    long val = (long)(this.bitFlags   & (long)0x100);
+    return (int)(val >> 8);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_fusing(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x100); // clear bits
+    aVal = (long)(val << 8);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * boolean
+ */
+public int getBitFlags_scalarDetectionCoefficient()
+{
+    long val = (long)(this.bitFlags   & (long)0x200);
+    return (int)(val >> 9);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_scalarDetectionCoefficient(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x200); // clear bits
+    aVal = (long)(val << 9);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * boolean
+ */
+public int getBitFlags_paintScheme()
+{
+    long val = (long)(this.bitFlags   & (long)0x400);
+    return (int)(val >> 10);
+}
+
+
+/** 
+ * boolean
+ */
+public void setBitFlags_paintScheme(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0x400); // clear bits
+    aVal = (long)(val << 10);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
+/**
+ * padding
+ */
+public int getBitFlags_padding()
+{
+    long val = (long)(this.bitFlags   & (long)0xff800);
+    return (int)(val >> 11);
+}
+
+
+/** 
+ * padding
+ */
+public void setBitFlags_padding(int val)
+{
+    long  aVal = 0;
+    this.bitFlags &= (long)(~0xff800); // clear bits
+    aVal = (long)(val << 11);
+    this.bitFlags = (long)(this.bitFlags | aVal);
+}
+
+
 public void marshal(DataOutputStream dos)
 {
     try 

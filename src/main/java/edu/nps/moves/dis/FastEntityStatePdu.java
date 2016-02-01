@@ -513,6 +513,292 @@ public List<ArticulationParameter> getArticulationParameters()
 { return articulationParameters; }
 
 
+/**
+ * 0 uniform color, 1 camouflage
+ */
+public int getEntityAppearance_paintScheme()
+{
+    int val = (int)(this.entityAppearance   & (int)0x1);
+    return (int)(val >> 0);
+}
+
+
+/** 
+ * 0 uniform color, 1 camouflage
+ */
+public void setEntityAppearance_paintScheme(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x1); // clear bits
+    aVal = (int)(val << 0);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 no mobility kill, 1 mobility kill
+ */
+public int getEntityAppearance_mobility()
+{
+    int val = (int)(this.entityAppearance   & (int)0x2);
+    return (int)(val >> 1);
+}
+
+
+/** 
+ * 0 no mobility kill, 1 mobility kill
+ */
+public void setEntityAppearance_mobility(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x2); // clear bits
+    aVal = (int)(val << 1);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 no firepower iill, 1 firepower kill
+ */
+public int getEntityAppearance_firepower()
+{
+    int val = (int)(this.entityAppearance   & (int)0x4);
+    return (int)(val >> 2);
+}
+
+
+/** 
+ * 0 no firepower iill, 1 firepower kill
+ */
+public void setEntityAppearance_firepower(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x4); // clear bits
+    aVal = (int)(val << 2);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 no damage, 1 slight damage, 2 moderate, 3 destroyed
+ */
+public int getEntityAppearance_damage()
+{
+    int val = (int)(this.entityAppearance   & (int)0x18);
+    return (int)(val >> 3);
+}
+
+
+/** 
+ * 0 no damage, 1 slight damage, 2 moderate, 3 destroyed
+ */
+public void setEntityAppearance_damage(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x18); // clear bits
+    aVal = (int)(val << 3);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 no smoke, 1 smoke plume, 2 engine smoke, 3 engine smoke and plume
+ */
+public int getEntityAppearance_smoke()
+{
+    int val = (int)(this.entityAppearance   & (int)0x60);
+    return (int)(val >> 5);
+}
+
+
+/** 
+ * 0 no smoke, 1 smoke plume, 2 engine smoke, 3 engine smoke and plume
+ */
+public void setEntityAppearance_smoke(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x60); // clear bits
+    aVal = (int)(val << 5);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * dust cloud, 0 none 1 small 2 medium 3 large
+ */
+public int getEntityAppearance_trailingEffects()
+{
+    int val = (int)(this.entityAppearance   & (int)0x180);
+    return (int)(val >> 7);
+}
+
+
+/** 
+ * dust cloud, 0 none 1 small 2 medium 3 large
+ */
+public void setEntityAppearance_trailingEffects(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x180); // clear bits
+    aVal = (int)(val << 7);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 NA 1 closed popped 3 popped and person visible  4 open 5 open and person visible
+ */
+public int getEntityAppearance_hatch()
+{
+    int val = (int)(this.entityAppearance   & (int)0xe00);
+    return (int)(val >> 9);
+}
+
+
+/** 
+ * 0 NA 1 closed popped 3 popped and person visible  4 open 5 open and person visible
+ */
+public void setEntityAppearance_hatch(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0xe00); // clear bits
+    aVal = (int)(val << 9);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 off 1 on
+ */
+public int getEntityAppearance_headlights()
+{
+    int val = (int)(this.entityAppearance   & (int)0x1000);
+    return (int)(val >> 12);
+}
+
+
+/** 
+ * 0 off 1 on
+ */
+public void setEntityAppearance_headlights(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x1000); // clear bits
+    aVal = (int)(val << 12);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 off 1 on
+ */
+public int getEntityAppearance_tailLights()
+{
+    int val = (int)(this.entityAppearance   & (int)0x2000);
+    return (int)(val >> 13);
+}
+
+
+/** 
+ * 0 off 1 on
+ */
+public void setEntityAppearance_tailLights(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x2000); // clear bits
+    aVal = (int)(val << 13);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 off 1 on
+ */
+public int getEntityAppearance_brakeLights()
+{
+    int val = (int)(this.entityAppearance   & (int)0x4000);
+    return (int)(val >> 14);
+}
+
+
+/** 
+ * 0 off 1 on
+ */
+public void setEntityAppearance_brakeLights(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x4000); // clear bits
+    aVal = (int)(val << 14);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 off 1 on
+ */
+public int getEntityAppearance_flaming()
+{
+    int val = (int)(this.entityAppearance   & (int)0x8000);
+    return (int)(val >> 15);
+}
+
+
+/** 
+ * 0 off 1 on
+ */
+public void setEntityAppearance_flaming(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x8000); // clear bits
+    aVal = (int)(val << 15);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 not raised 1 raised
+ */
+public int getEntityAppearance_launcher()
+{
+    int val = (int)(this.entityAppearance   & (int)0x10000);
+    return (int)(val >> 16);
+}
+
+
+/** 
+ * 0 not raised 1 raised
+ */
+public void setEntityAppearance_launcher(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x10000); // clear bits
+    aVal = (int)(val << 16);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
+/**
+ * 0 desert 1 winter 2 forest 3 unused
+ */
+public int getEntityAppearance_camouflageType()
+{
+    int val = (int)(this.entityAppearance   & (int)0x60000);
+    return (int)(val >> 17);
+}
+
+
+/** 
+ * 0 desert 1 winter 2 forest 3 unused
+ */
+public void setEntityAppearance_camouflageType(int val)
+{
+    int  aVal = 0;
+    this.entityAppearance &= (int)(~0x60000); // clear bits
+    aVal = (int)(val << 17);
+    this.entityAppearance = (int)(this.entityAppearance | aVal);
+}
+
+
 public void marshal(DataOutputStream dos)
 {
     super.marshal(dos);
