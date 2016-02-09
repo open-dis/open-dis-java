@@ -109,7 +109,7 @@ public long getSampleRate()
 }
 
 public int getDataLength()
-{ return (int)data.size();
+{ return dataLength;
 }
 
 /** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
@@ -146,7 +146,7 @@ public void marshal(DataOutputStream dos)
        dos.writeShort( (short)encodingScheme);
        dos.writeShort( (short)tdlType);
        dos.writeInt( (int)sampleRate);
-       dos.writeShort( (short)data.size());
+       dos.writeShort( (short)dataLength);
        dos.writeShort( (short)samples);
 
        for(int idx = 0; idx < data.size(); idx++)
@@ -174,7 +174,8 @@ public void unmarshal(DataInputStream dis)
        sampleRate = dis.readInt();
        dataLength = (int)dis.readUnsignedShort();
        samples = (int)dis.readUnsignedShort();
-       for(int idx = 0; idx < dataLength; idx++)
+       final int dataLengthBytes = dataLength / Byte.SIZE;
+       for(int idx = 0; idx < dataLengthBytes; idx++)
        {
            OneByteChunk anX = new OneByteChunk();
            anX.unmarshal(dis);
@@ -205,7 +206,7 @@ public void marshal(java.nio.ByteBuffer buff)
        buff.putShort( (short)encodingScheme);
        buff.putShort( (short)tdlType);
        buff.putInt( (int)sampleRate);
-       buff.putShort( (short)data.size());
+       buff.putShort( (short)dataLength);
        buff.putShort( (short)samples);
 
        for(int idx = 0; idx < data.size(); idx++)
@@ -234,7 +235,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
        sampleRate = buff.getInt();
        dataLength = (int)(buff.getShort() & 0xFFFF);
        samples = (int)(buff.getShort() & 0xFFFF);
-       for(int idx = 0; idx < dataLength; idx++)
+       final int dataLengthBytes = dataLength / Byte.SIZE;
+       for(int idx = 0; idx < dataLengthBytes; idx++)
        {
             OneByteChunk anX = new OneByteChunk();
             anX.unmarshal(buff);
