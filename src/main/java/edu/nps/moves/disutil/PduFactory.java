@@ -146,6 +146,11 @@ public class PduFactory {
                 aPdu.unmarshal(dis);
                 break;
 
+            case EVENT_REPORT:
+                aPdu = new EventReportPdu();
+                aPdu.unmarshal(dis);
+                break;
+
             case FIRE:
                 aPdu = new FirePdu();
                 aPdu.unmarshal(dis);
