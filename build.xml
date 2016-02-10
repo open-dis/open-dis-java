@@ -500,21 +500,6 @@ is available.
         </java>
     </target>
 
-<target name="runSql" depends="jar" description="runs hibernate storage program">
-        <java classname="edu.nps.moves.sql.DatabaseConfiguration">
-            <classpath>
-                <fileset dir="${dist}">
-                    <include name="**/*.jar"/>
-                </fileset>
-                <fileset refid="lib.jars"/>
-            </classpath>
-            <sysproperty key="port" value="3000"/>            <!-- UDP port to listen on -->
-            <sysproperty key="networkMode" value="broadcast"/> <!-- multicast, unicast, broadcast -->
-            <sysproperty key="mulitcastAddress" value="239.1.2.3"/> <!-- mcast address to use; ignored if unicast or broadcast mode -->
-        </java>
-    </target>
-
-
     <target name="runLogger" depends="jar" description="runs example DIS logging program">
         <java classname="edu.nps.moves.logger.DisLogger">
             <arg value="logger.properties"/>
