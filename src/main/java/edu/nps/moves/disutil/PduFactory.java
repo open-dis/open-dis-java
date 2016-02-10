@@ -23,6 +23,7 @@ public class PduFactory {
     private boolean useFastPdu = false;
     
     /** Release version of objects we should return. The DIS version has more features and is suitable for desktops. */
+    @SuppressWarnings("unused")
     private Platform release = Platform.DESKTOP;
     
     public enum Platform{DESKTOP, MOBILE};
@@ -146,6 +147,11 @@ public class PduFactory {
                 aPdu.unmarshal(dis);
                 break;
 
+            case EVENT_REPORT:
+                aPdu = new EventReportPdu();
+                aPdu.unmarshal(dis);
+                break;
+
             case FIRE:
                 aPdu = new FirePdu();
                 aPdu.unmarshal(dis);
@@ -246,6 +252,10 @@ public class PduFactory {
 
             case COLLISION:
                 aPdu = new CollisionPdu();
+                break;
+
+            case EVENT_REPORT:
+                aPdu = new EventReportPdu();
                 break;
 
             case SERVICE_REQUEST:
