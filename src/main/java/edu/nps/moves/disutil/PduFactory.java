@@ -23,6 +23,7 @@ public class PduFactory {
     private boolean useFastPdu = false;
     
     /** Release version of objects we should return. The DIS version has more features and is suitable for desktops. */
+    @SuppressWarnings("unused")
     private Platform release = Platform.DESKTOP;
     
     public enum Platform{DESKTOP, MOBILE};
