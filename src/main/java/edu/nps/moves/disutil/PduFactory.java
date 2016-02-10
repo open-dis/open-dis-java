@@ -254,6 +254,10 @@ public class PduFactory {
                 aPdu = new CollisionPdu();
                 break;
 
+            case EVENT_REPORT:
+                aPdu = new EventReportPdu();
+                break;
+
             case SERVICE_REQUEST:
                 aPdu = new ServiceRequestPdu();
                 break;
