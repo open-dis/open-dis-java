@@ -3,7 +3,10 @@ package edu.nps.moves.dis;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import org.junit.Ignore;
 
+// This is a utility class used by other unit tests
+@Ignore
 public class PduFileLoader {
 
     // Load a Signal Pdu captured with Wireshark
