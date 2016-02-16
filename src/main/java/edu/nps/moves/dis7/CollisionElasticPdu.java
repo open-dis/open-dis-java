@@ -58,7 +58,7 @@ public class CollisionElasticPdu extends EntityInformationFamilyPdu implements S
    /** This record shall represent the normal vector to the surface at the point of collision detection. The surface normal shall be represented in world coordinates. This field shall be represented by an Entity Coordinate Vector record [see 6.2.95 item a)]. */
    protected Vector3Float  unitSurfaceNormal = new Vector3Float(); 
 
-   /** This field shall represent the degree to which energy is conserved in a collision and shall be represented by a 32-bit floating point number. In addition, it represents a free parameter by which simulation application developers may “tune” their collision interactions. */
+   /** This field shall represent the degree to which energy is conserved in a collision and shall be represented by a 32-bit floating point number. In addition, it represents a free parameter by which simulation application developers may "tune" their collision interactions. */
    protected float  coefficientOfRestitution;
 
 
