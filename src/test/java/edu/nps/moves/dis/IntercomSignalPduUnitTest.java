@@ -28,9 +28,9 @@ public class IntercomSignalPduUnitTest {
     @Before
     public void setUp() {
         eid = new EntityID();
-        eid.setApplication(100);
-        eid.setEntity(101);
-        eid.setSite(102);
+        eid.setApplication((short) 100);
+        eid.setEntity((short) 101);
+        eid.setSite((short) 102);
 
         /**
          *  Ugh. The data for each chunk is a one byte array, rather than just

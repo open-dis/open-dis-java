@@ -32,9 +32,9 @@ public static void main(String args[])
     // EID should match up with the ID for the object specified in the 
     // VMRL/x3d world.
     EntityID eid = espdu.getEntityID();
-    eid.setSite(1);
-    eid.setApplication(0); // 1
-    eid.setEntity(210); // 2
+    eid.setSite((short) 1);
+    eid.setApplication((short) 0); // 1
+    eid.setEntity((short) 210); // 2
 
     try
     {

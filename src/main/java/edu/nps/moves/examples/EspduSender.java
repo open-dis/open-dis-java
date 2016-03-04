@@ -128,9 +128,9 @@ public static void main(String args[])
     // EID should match up with the ID for the object specified in the 
     // VMRL/x3d/virtual world.
     EntityID eid = espdu.getEntityID();
-    eid.setSite(1);  // 0 is apparently not a valid site number, per the spec
-    eid.setApplication(1); 
-    eid.setEntity(2); 
+    eid.setSite((short) 1);  // 0 is apparently not a valid site number, per the spec
+    eid.setApplication((short) 1); 
+    eid.setEntity((short) 2); 
     
     // Set the entity type. SISO has a big list of enumerations, so that by
     // specifying various numbers we can say this is an M1A2 American tank,
