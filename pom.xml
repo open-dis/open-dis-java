@@ -28,12 +28,12 @@
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <version>9</version>
     </parent>
     <scm>
-        <url>http://svn.code.sf.net/p/open-dis/code</url>
-        <connection>scm:svn:svn://svn.code.sf.net/p/open-dis/code</connection>
-        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/open-dis/code</developerConnection>
+        <url>https://github.com/open-dis/open-dis-java</url>
+        <connection>scm:git:git@github.com:open-dis/open-dis-java.git</connection>
+        <developerConnection>scm:git:git@github.com:open-dis/open-dis-java.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
     <dependencies>
@@ -73,22 +73,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.4.1</version>
+                <version>2.5.3</version>
                 <configuration>
-                    <localCheckout>true</localCheckout>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
                 </configuration>
-                <!-- Help 'mvn release:perform' find the pom when it does a checkout -->
-                <executions>
-                    <execution>
-                        <id>default</id>
-                        <goals>
-                            <goal>perform</goal>
-                        </goals>
-                        <configuration>
-                            <pomFileName>languages/java/trunk/pom.xml</pomFileName>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
