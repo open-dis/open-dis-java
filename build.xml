@@ -39,29 +39,22 @@
         <mkdir dir="${src}/edu/nps"/>
         <mkdir dir="${src}/edu/nps/moves"/>
         <mkdir dir="${src}/edu/nps/moves/dis"/>
-        <mkdir dir="${src}/edu/nps/moves/dismobile"/>
         <mkdir dir="${src}/edu/nps/moves/dis7"/>
-        <mkdir dir="${src}/edu/nps/moves/dis7mobile"/>
 
     </target>
 
-    <!-- We have serveral products we can generate, including versions tuned for desktop and mobile java use.
+    <!-- We have serveral products we can generate.
          This builds all the products.
       -->
 
     <target name="generateAllSource">
       <antcall target="generateJavaDisSourceCode"/>
-      <!--<antcall target="generateJavaMobileSourceCode"/> -->
       <antcall target="generateJavaDis7SourceCode"/>
-      <!--<antcall target="generateJavaDis7MobileCode"/> -->
     </target>    
 
     <!-- Generate the desktop Java code. This relies on the jar file xmlpg.jar, from 
          a separate project in the trunk that is included in the lib directory of this project. You
          must run patch after this to apply known manual fixes to the source code generated.
-         The code generated here is intended for desktop use; it includes the ability to marshal
-         to XML via JAXB and to SQL databases via hibernate. But these packages are usually not
-         present in mobile environments, such as android.
      
          Some source code generation properties are set in the XML file, such as the directory location.
          These may be overridden by command line options that set java system properties via
@@ -86,23 +79,6 @@
         <antcall target="generateDisSourceCode"/>
     </target>
 
-<!--
-    <target name="generateJavaMobileSourceCode" depends="init" description = "run program to generate java mobile version">
-        <echo message="Be sure to bring in the git submodule for DISDescription with git submodule init; git submodule
- update"/>
-        <property name="xmlSourceFile" value="DISDescription/DIS6.xml"/>
-        <property name="xmlpg.generatedSourceDir" value="${src}"/>
-        <property name="xmlpg.useHibernate" value="false"/>
-        <property name="xmlpg.useJaxb" value="false"/>
-        <property name="xmlpg.package" value="edu.nps.moves.dismobile"/>
-        <property name="product" value="dismobile"/>
-        <echo message="Generating DIS source code for java mobile"/>
-        <echo message="source dir=${xmlpg.generatedSourceDir}"/>
-        <echo message="Package name= ${xmlpg.package}"/>
-        <antcall target="generateDisSourceCode"/>
-    </target>
-
--->
      <target name="generateJavaDis7SourceCode" depends="init" description = "run program to generate java for DIS 2009, desktop version">
         <echo message="Be sure to bring in the git submodule for DISDescription with git submodule init; git submodule
  update"/>
@@ -118,20 +94,6 @@
         <antcall target="generateDisSourceCode"/>
     </target>
     
- <!--
-    <target name="generateJavaDis7MobileCode" depends="init" description = "run program to generate java for DIS 2009, mobile version">
-        <echo message="Be sure to bring in the git submodule for DISDescription with git submodule init; git submodule update"/>
-        <property name="xmlSourceFile" value="DISDescription/DIS7.xml"/>
-        <property name="xmlpg.generatedSourceDir" value="${src}"/>
-        <property name="xmlpg.useHibernate" value="false"/>
-        <property name="xmlpg.useJaxb" value="false"/>
-        <property name="xmlpg.package" value="edu.nps.moves.dis7mobile"/>
-        <property name="product" value="dis7mobile"/>
-        
-        <antcall target="generateDisSourceCode"/>
-        </target>
--->
-
    <target name="spatial" depends="compile" description = "Run coordinate system santity check">
         <java classname="edu.nps.moves.spatial.RangeCoordinates">
             <classpath refid="lib.path"/>
