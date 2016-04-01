@@ -36,7 +36,19 @@ This will generate the code in the above mentioned packages.
 Supporting Java files are in the `edu.nps.moves.*` directories.
 These include classes that unmarshall IEEE 1278.1 files.
 
-= Using the Java Library
+## Using the Java Library
+
+### Maven
+
+Add the following to your `pom.xml`.
+
+    <dependency>
+        <groupId>edu.nps.moves</groupId>
+        <artifactId>open-dis</artifactId>
+        <version>4.08</version>
+    </dependency>
+
+### Ant
 
 Include the `open-dis-<version-number>.jar` file in your project, along with the supporting jar files in the `lib` directory.
 (The `xmlpg.jar` file is not needed.)
