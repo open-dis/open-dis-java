@@ -4,7 +4,7 @@
     <artifactId>open-dis</artifactId>
     <packaging>jar</packaging>
     <name>Open-DIS</name>
-    <version>4.16-SNAPSHOT</version>
+    <version>5.0-SNAPSHOT</version>
     <description>An open source implementation of the Distributed Interactive Simulation (DIS) IEEE-1278 protocol</description>
     <url>http://open-dis.sourceforge.net</url>
     <licenses>
