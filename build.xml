@@ -150,30 +150,6 @@
         </copy>
     </target>
     
-     <!-- schemagen ant task, which generates a schema from java beans-complaint source code 
-     Gag. Java8 removed a deprecated class, AnnotationProcessorFactory, that causes
-         schemagen to fail. For now simply comment out the XML-schema dependent
-         tasks, since I don't think anyone actually uses that.
-       -->
-    <!--
-    <taskdef name="schemagen" classname="com.sun.tools.jxc.SchemaGenTask">
-        <classpath>
-            <fileset dir="${lib}" includes="*.jar"/>
-        </classpath>
-    </taskdef>
-    -->
-    
-    <!-- generate schema from the java source code 
-        (removed for now due to changes in Java 8)
-
-    <target name="generateSchema" depends="compile" description="Generate a schema from the Java code">
-        <schemagen srcdir="${src}/edu/nps/moves/dis" destdir="." includeantruntime="false">
-            <classpath refid="lib.path"/>
-        </schemagen>
-        <move file="schema1.xsd" tofile="disJaxb.xsd"/>
-    </target>
-    -->
-
     <!-- Run patch scripts on the generated code to fix various problems. This is run by the generateDisSourceCode task -->
     <target name="patch" description="patch generated source code">
         <!--exec executable="patches/applyPatches.bash"-->
