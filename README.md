@@ -33,6 +33,13 @@ Include the `open-dis-<version-number>.jar` file in your project, along with the
 
 ## Release Notes
 
+### 5.0 release highlights
+
+* Dropped Hibernate and JAXB support (i.e. the annotations were removed from PDU classes), consequently the `dismobile` and `dis7mobile` packages became redundant and  were removed.
+* `PDUFactory` has gained support for more PDU's; `EventPDU`, `SignalPDU`, `TransmitterPDU` and `ReceiverPDU`.
+* Added more JUnit tests.
+* Migrated to GitHub and extracted Java library into own repository.
+
 ### 4.x release highlights
 
 * SQL support.
