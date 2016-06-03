@@ -2313,13 +2313,13 @@ PduHeader record, section 5.2.29.">
   
   <attribute name="fixedDatums" comment="variable length list of fixed datums">
    <variablelist  countFieldName="numberOfFixedDatumRecords">
-     <classRef name="UnsignedIntegerWrapper"/>
+     <classRef name="FixedDatum"/>
    </variablelist> 
   </attribute>
   
   <attribute name="variableDatums" comment="variable length list of variable length datums">
    <variablelist  countFieldName="numberOfVariableDatumRecords">
-     <classRef name="UnsignedIntegerWrapper"/>
+     <classRef name="VariableDatum"/>
    </variablelist> 
   </attribute>
 
