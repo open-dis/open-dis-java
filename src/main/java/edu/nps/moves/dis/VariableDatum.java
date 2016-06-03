@@ -55,7 +55,7 @@ public long getVariableDatumID()
 }
 
 public long getVariableDatumLength()
-{ return (long)variableData.size();
+{ return (long)variableData.size() * Byte.SIZE;
 }
 
 /** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
@@ -79,7 +79,7 @@ public void marshal(DataOutputStream dos)
     try 
     {
        dos.writeInt( (int)variableDatumID);
-       dos.writeInt( (int)variableData.size());
+       dos.writeInt( (int)getVariableDatumLength());
 
        for(int idx = 0; idx < variableData.size(); idx++)
        {
@@ -99,7 +99,7 @@ public void unmarshal(DataInputStream dis)
     {
        variableDatumID = dis.readInt();
        variableDatumLength = dis.readInt();
-       for(int idx = 0; idx < variableDatumLength; idx++)
+       for(int idx = 0; idx < variableDatumLength / Byte.SIZE; idx++)
        {
            OneByteChunk anX = new OneByteChunk();
            anX.unmarshal(dis);
@@ -125,7 +125,7 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        buff.putInt( (int)variableDatumID);
-       buff.putInt( (int)variableData.size());
+       buff.putInt( (int)getVariableDatumLength());
 
        for(int idx = 0; idx < variableData.size(); idx++)
        {
@@ -146,7 +146,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
 {
        variableDatumID = buff.getInt();
        variableDatumLength = buff.getInt();
-       for(int idx = 0; idx < variableDatumLength; idx++)
+       for(int idx = 0; idx < variableDatumLength / Byte.SIZE; idx++)
        {
             OneByteChunk anX = new OneByteChunk();
             anX.unmarshal(buff);
