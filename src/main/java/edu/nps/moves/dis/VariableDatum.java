@@ -42,6 +42,9 @@ public int getMarshalledSize()
         marshalSize = marshalSize + listElement.getMarshalledSize();
    }
 
+   // Account for required padding.
+   marshalSize = marshalSize + datumPaddingSize();
+
    return marshalSize;
 }
 
@@ -86,6 +89,11 @@ public void marshal(DataOutputStream dos)
             OneByteChunk aOneByteChunk = variableData.get(idx);
             aOneByteChunk.marshal(dos);
        } // end of list marshalling
+
+        // Add padding.
+        for (int i = 0; i < datumPaddingSize(); i++) {
+            dos.write((byte) 0);
+        }
 
     } // end try 
     catch(Exception e)
@@ -133,6 +141,10 @@ public void marshal(java.nio.ByteBuffer buff)
             aOneByteChunk.marshal(buff);
        } // end of list marshalling
 
+        // Add padding.
+        for (int i = 0; i < datumPaddingSize(); i++) {
+            buff.put((byte) 0);
+        }
     } // end of marshal method
 
 /**
@@ -203,4 +215,16 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
     return ivarsEqual;
  }
+    
+    // "This field shall be padded at the end to make the length a multiple of 64-bits."
+    private int datumPaddingSize() {
+        final int BYTES_IN_64_BITS = 8;
+        int padding = 0;
+        final int remainder = variableData.size() % BYTES_IN_64_BITS;
+        if (remainder != 0) {
+            padding = BYTES_IN_64_BITS - remainder;
+        }
+        return padding;
+    }
+
 } // end of class
