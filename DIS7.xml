@@ -140,12 +140,12 @@
 
   <attribute name="antennaLocation" comment="Location of the radiating portion of the antenna in world 
   coordinates">
-    <classref name="Vector3Double"/>
+    <classRef name="Vector3Double"/>
   </attribute>
   
    <attribute name="relativeAntennaLocation" comment="Location of the radiating portion of the antenna 
    in entity coordinates">
-    <classref name="Vector3Float"/>
+    <classRef name="Vector3Float"/>
   </attribute>
   
   </class>
@@ -154,7 +154,7 @@
          comment="Used when the antenna pattern type field has a value of 1. Specifies the direction, pattern, and polarization of radiation from an antenna. Section 6.2.9.2">
    
    <attribute name="beamDirection" comment="The rotation that transforms the reference coordinate sytem into the beam coordinate system. Either world coordinates or entity coordinates may be used as the reference coordinate system, as specified by the reference system field of the antenna pattern record.">
-    <classref name="EulerAngles"/>
+    <classRef name="EulerAngles"/>
     </attribute>
     
     <attribute name="azimuthBeamwidth" commment="Full width of the beam to the -3dB power density points in the x-y plane of the beam coordinnate system.  Elevation beamwidth is represented by a 32 bit floating point number in units of radians.">
@@ -316,7 +316,7 @@
         </attribute>
  
         <attribute name="damageLocation" comment="location of damage, relative to center of entity">
-             <classref name="Vector3Float"/> 
+             <classRef name="Vector3Float"/> 
         </attribute>
 
          <attribute name="damageDiameter" comment="Size of damaged area, in meters.">
@@ -344,7 +344,7 @@
         </attribute>
 
         <attribute name="fireEventID" comment="For any component damage resulting this field shall be set to the fire event ID from that PDU.">
-             <classref name="EventIdentifier"/> 
+             <classRef name="EventIdentifier"/> 
         </attribute>
 
         <attribute name="padding2" comment="padding">
@@ -468,7 +468,7 @@
          comment="Explosion of a non-munition. Section 6.2.19.3">
 
     <attribute name="explodingObject" comment="Type of the object that exploded. See 6.2.30">
-      <classref name="EntityType"/> 
+      <classRef name="EntityType"/> 
     </attribute>
     
     <attribute name="explosiveMaterial" comment="Material that exploded. Can be grain dust, tnt, gasoline, etc. Enumeration">
@@ -490,7 +490,7 @@
          comment="Burst of chaff or expendible device. Section 6.2.19.4">
 
     <attribute name="expendableType" comment="Type of the object that exploded">
-      <classref name="EntityType"/> 
+      <classRef name="EntityType"/> 
     </attribute>
     
     <attribute name="padding" comment="Padding">
@@ -557,23 +557,23 @@
    </attribute>
 
    <attribute name="targetSpotLocation" comment="Position of Target Spot in World Coordinates.">
-     <classref name="Vector3Double"/>
+     <classRef name="Vector3Double"/>
    </attribute>
 
    <attribute name="targetSpotEntityLocation" comment="Position (meters) of Target Spot relative to Entity Position.">
-     <classref name="Vector3Float"/>
+     <classRef name="Vector3Float"/>
    </attribute>
 
    <attribute name="targetSpotVelocity" comment="Velocity (meters/sec) of Target Spot.">
-     <classref name="Vector3Float"/>
+     <classRef name="Vector3Float"/>
    </attribute>
 
    <attribute name="targetSpotAcceleration" comment="Acceleration (meters/sec/sec) of Target Spot.">
-     <classref name="Vector3Float"/>
+     <classRef name="Vector3Float"/>
    </attribute>
 
    <attribute name="targetEntityID" comment="Unique ID of the target entity.">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
    </attribute>
 
    <attribute name="targetComponentID" comment="Target Component ID ENUM, same as in DamageDescriptionRecord.">
@@ -610,7 +610,7 @@
         comment="DE energy depostion properties for a target entity. Section 6.2.20.4">
  
  <attribute name="targetEntityID" comment="Unique ID of the target entity.">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
   </attribute>
   
   <attribute name="padding" comment="padding">
@@ -922,7 +922,7 @@
         comment="Entity Identifier. Unique ID for entities in the world. Consists of an simulation address and a entity number. Section 6.2.28.">
     
    <attribute name="simulationAddress" comment="Site and application IDs">
-     <classref name="SimulationAddress"/>
+     <classRef name="SimulationAddress"/>
   </attribute>
                 
   <attribute name="entityNumber" comment="Entity number">
@@ -1105,7 +1105,7 @@
        comment="Identifies an event in the world. Use this format for every PDU EXCEPT the LiveEntityPdu. Section 6.2.34.">
 
     <attribute name="simulationAddress" comment="Site and application IDs">
-     <classref name="SimulationAddress"/>
+     <classRef name="SimulationAddress"/>
   </attribute>
   
    <attribute name="eventNumber">
@@ -2387,7 +2387,7 @@
 <class name="UnattachedIdentifier" inheritsFrom="root" comment="The unique designation of one or more unattached radios in an event or exercise Section 6.2.91">
 
   <attribute name="simulationAddress" comment="See 6.2.79">
-      <classref name="SimulationAddress"/>
+      <classRef name="SimulationAddress"/>
   </attribute>
   
    <attribute name="referenceNumber" comment="Reference number">
@@ -2673,11 +2673,11 @@
   </attribute>
 
   <attribute name="entityLinearAcceleration" comment="Linear acceleration of the entity">
-    <classref name="Vector3Float"/>
+    <classRef name="Vector3Float"/>
   </attribute>
 
   <attribute name="entityAngularVelocity" comment="Angular velocity of the entity">
-    <classref name="Vector3Float"/>
+    <classRef name="Vector3Float"/>
   </attribute>
   
 </class>
@@ -2816,7 +2816,7 @@
  <initialValue name="pduType" value="1"/>
   
   <attribute name="entityID" comment="Unique ID for an entity that is tied to this state information">
-    <classref name="EntityID"/> 
+    <classRef name="EntityID"/> 
   </attribute>
   
  <attribute name="forceId" comment="What force this entity is affiliated with, eg red, blue, neutral, etc">
@@ -2828,7 +2828,7 @@
 </attribute>
 
 <attribute name="entityType" comment="Describes the type of entity in the world">
-  <classref name="EntityType"/>
+  <classRef name="EntityType"/>
 </attribute>
 
 <attribute name="alternativeEntityType">
@@ -3433,7 +3433,7 @@
 
    <attribute name="damagedEntityID"
             comment="Field shall identify the damaged entity (see 6.2.28), Section 7.3.4 COMPLETE">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
    </attribute>
 
    <attribute name="padding1"
@@ -3480,11 +3480,11 @@
  <initialValue name="pduType" value="5"/>
 
   <attribute name="requestingEntityID" comment="Entity that is requesting service (see 6.2.28), Section 7.4.2">
-    <classref name="EntityID"/>
+    <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="servicingEntityID" comment="Entity that is providing the service (see 6.2.28), Section 7.4.2">
-    <classref name="EntityID"/>
+    <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="serviceTypeRequested" comment="Type of service requested, Section 7.4.2">
@@ -3516,12 +3516,12 @@
 
 <attribute name="receivingEntityID"
             comment="Field identifies the Entity and respective Entity Record ID that is receiving service (see 6.2.28), Section 7.4.3">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="supplyingEntityID"
             comment="Identifies the Entity and respective Entity ID Record that is supplying  (see 6.2.28), Section 7.4.3">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="numberOfSupplyTypes"
@@ -3555,11 +3555,11 @@
  <initialValue name="pduType" value="7"/>
 
 <attribute name="receivingEntityID" comment="Entity that is receiving service.  Shall be represented by Entity Identifier record (see 6.2.28)">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="supplyingEntityID" comment="Entity that is supplying.  Shall be represented by Entity Identifier record (see 6.2.28)">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="numberOfSupplyTypes" comment="How many supplies are taken by receiving entity">
@@ -3587,11 +3587,11 @@
  <initialValue name="pduType" value="9"/>
 
 <attribute name="receivingEntityID" comment="Entity that is receiving service.  See 6.2.28">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="repairingEntityID" comment="Entity that is supplying.  See 6.2.28">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="repair" comment="Enumeration for type of repair.  See 6.2.74">
@@ -3610,11 +3610,11 @@
  <initialValue name="pduType" value="10"/>
 
 <attribute name="receivingEntityID" comment="Entity that requested repairs.  See 6.2.28">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="repairingEntityID" comment="Entity that is repairing.  See 6.2.28">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="repairResult" comment="Result of repair operation">
@@ -3636,11 +3636,11 @@
  <initialValue name="protocolFamily" value="5"/>
 
  <attribute name="originatingEntityID" comment="Entity that is sending message">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="receivingEntityID" comment="Entity that is intended to receive message">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
  </class>
@@ -3650,11 +3650,11 @@
  <initialValue name="pduType" value="11"/>
 
  <attribute name="originatingID" comment="Identifier for the request">
-   <classref name="EntityID"/>
+   <classRef name="EntityID"/>
  </attribute>
 
  <attribute name="receivingID" comment="Identifier for the request">
-   <classref name="EntityID"/>
+   <classRef name="EntityID"/>
  </attribute>
 
 <attribute name="requestID" comment="Identifier for the request.  See 6.2.75">
@@ -3670,11 +3670,11 @@
  <initialValue name="pduType" value="12"/>
 
  <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
  </attribute>
  
  <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
  </attribute>
  
 <attribute name="requestID" comment="This field shall identify the specific and unique start/resume request being made by the SM">
@@ -3689,11 +3689,11 @@
  <initialValue name="pduType" value="12"/>
 
  <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
  </attribute>
 
  <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
  </attribute>
 
 <attribute name="requestID" comment="This field shall identify the specific and unique start/resume request being made by the SM">
@@ -3708,11 +3708,11 @@
  <initialValue name="pduType" value="13"/>
 
  <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
  </attribute>
 
  <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
  </attribute>
 
  <attribute name="realWorldTime" comment="This field shall specify the real-world time (UTC) at which the entity is to start/resume in the exercise. This information shall be used by the participating simulation applications to start/resume an exercise synchronously. This field shall be represented by a Clock Time record (see 6.2.16).">
@@ -3734,11 +3734,11 @@
   <initialValue name="pduType" value="14"/>
 
   <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="realWorldTime" comment="real-world(UTC) time at which the entity shall stop or freeze in the exercise">
@@ -3768,11 +3768,11 @@
    <initialValue name="pduType" value="15"/>
 
   <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
   </attribute>
 
    <attribute name="acknowledgeFlag" comment="type of message being acknowledged">
@@ -3794,11 +3794,11 @@
    <initialValue name="pduType" value="16"/>
 
   <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="requestID" comment="identifies the request being made by the simulaton manager">
@@ -3838,11 +3838,11 @@
 
 
   <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="requestID" comment="Request ID that is unique">
@@ -4198,7 +4198,7 @@
   
   <attribute name="shaftRPMs" comment="shaft RPM values. THIS IS WRONG. It has the wrong class in the list.">
       <variablelist countFieldName="numberOfShafts">
-          <classref name="Vector3Float"/>
+          <classRef name="Vector3Float"/>
       </variablelist>
   </attribute>
   
@@ -5898,7 +5898,7 @@
         comment="DE Target Energy Deposition Record.">
 
    <attribute name="TargetEntityID" comment="Unique ID for Target Entity.">
-     <classref name="EntityType"/>
+     <classRef name="EntityType"/>
    </attribute>
 
    <attribute name="Padding">
@@ -5951,19 +5951,19 @@
         comment="This message is sent by the network or weapon module whenever a directed engery weapon is fired.">
 
    <attribute name="FiringEntityID" comment="Unique ID of the firing entity.">
-     <classref name="EntityID"/>
+     <classRef name="EntityID"/>
    </attribute>
 
    <attribute name="EventID" comment="Unique event ID for this event.">
-     <classref name="EventIdentifier"/>
+     <classRef name="EventIdentifier"/>
    </attribute>
 
    <attribute name="MunitionType" comment="Unique ID of the munition from the munition.cfg file.">
-     <classref name="EntityType"/>
+     <classRef name="EntityType"/>
    </attribute>
 
    <attribute name="ShotStartTime" comment="Time the shot started.">
-     <classref name="ClockTime"/>
+     <classRef name="ClockTime"/>
    </attribute>
 
    <attribute name="CumulativeShotTime" comment="Total amount of fire time accumulated.">
@@ -5971,7 +5971,7 @@
    </attribute>
 
    <attribute name="ApEmLocation" comment="Aperture/Emitter Position (meters) of firing entity relative to entity centroid.">
-     <classref name="Vector3Float"/>
+     <classRef name="Vector3Float"/>
    </attribute>
 
    <attribute name="ApertureDiameter" comment="Diameter of Aperture (meters).">
@@ -6044,7 +6044,7 @@
    </attribute>
 
    <attribute name="Location" comment="Position (meters) relative to body centroid.">
-     <classref name="Vector3Float"/>
+     <classRef name="Vector3Float"/>
    </attribute>
 
    <attribute name="DamageDiameter" comment="Diameter of damage (meters).">
@@ -6113,7 +6113,7 @@
    </attribute>
 
    <attribute name="FireEventID" comment="Unique event ID for this event.">
-     <classref name="EventIdentifier"/>
+     <classRef name="EventIdentifier"/>
    </attribute>
 
    <attribute name="Padding2" comment="Padding.">
