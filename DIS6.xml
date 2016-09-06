@@ -68,12 +68,12 @@
 
   <attribute name="antennaLocation" comment="Location of the radiating portion of the antenna in world 
   coordinates">
-    <classref name="Vector3Double"/>
+    <classRef name="Vector3Double"/>
   </attribute>
   
    <attribute name="relativeAntennaLocation" comment="Location of the radiating portion of the antenna 
    in entity coordinates">
-    <classref name="Vector3Float"/>
+    <classRef name="Vector3Float"/>
   </attribute>
   
   </class>
@@ -85,7 +85,7 @@
    <attribute name="beamDirection" comment="The rotation that transformst he reference coordinate sytem 
    into the beam coordinate system. Either world coordinates or entity coordinates may be used as the 
    reference coordinate system, as specified by teh reference system field of the antenna pattern record.">
-    <classref name="Orientation"/>
+    <classRef name="Orientation"/>
     </attribute>
     
     <attribute name="azimuthBeamwidth" commment="Full width of the beam to the -3dB power density points in the x-y plane of the beam coordinnate system.  Elevation beamwidth is represented by a 32 bit floating point number in units of radians.">
@@ -173,7 +173,7 @@ value of each parameter.">
         rounds per minute.">
 
     <attribute name="munition" comment="What munition was used in the burst">
-      <classref name="EntityType"/> 
+      <classRef name="EntityType"/> 
     </attribute>
     
     <attribute name="warhead" comment="type of warhead">
@@ -818,11 +818,11 @@ receiver of the create entity to define the entity identifier number of the new 
     </attribute>
     
     <attribute name="acousticEmitterSystem" comment="This field shall specify the system for a particular UA emitter.">
-     <classref name="AcousticEmitterSystem"/>
+     <classRef name="AcousticEmitterSystem"/>
    </attribute>
    
    <attribute name="emitterLocation" comment="Represents the location wrt the entity">
-     <classref name="Vector3Float"/>
+     <classRef name="Vector3Float"/>
    </attribute>
    
     <attribute name="beamRecords" comment="For each beam in numberOfBeams, an emitter system. This is not right--the beam records need to be at the end of the PDU, rather than attached to each system.">
@@ -1408,7 +1408,7 @@ PduHeader record, section 5.2.29.">
  <initialValue name="pduType" value="1"/>
   
   <attribute name="entityID" comment="Unique ID for an entity that is tied to this state information">
-    <classref name="EntityID"/> 
+    <classRef name="EntityID"/> 
   </attribute>
   
  <attribute name="forceId" comment="What force this entity is affiliated with, eg red, blue, neutral, etc">
@@ -1420,7 +1420,7 @@ PduHeader record, section 5.2.29.">
 </attribute>
 
 <attribute name="entityType" comment="Describes the type of entity in the world">
-  <classref name="EntityType"/>
+  <classRef name="EntityType"/>
 </attribute>
 
 <attribute name="alternativeEntityType">
@@ -1938,11 +1938,11 @@ PduHeader record, section 5.2.29.">
  <initialValue name="pduType" value="5"/>
  
   <attribute name="requestingEntityID" comment="Entity that is requesting service">
-    <classref name="EntityID"/>
+    <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="servicingEntityID" comment="Entity that is providing the service">
-    <classref name="EntityID"/>
+    <classRef name="EntityID"/>
   </attribute>
 
   <attribute name="serviceTypeRequested" comment="type of service requested">
@@ -1971,11 +1971,11 @@ PduHeader record, section 5.2.29.">
  <initialValue name="pduType" value="6"/>
 
 <attribute name="receivingEntityID" comment="Entity that is receiving service">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="supplyingEntityID" comment="Entity that is supplying">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="numberOfSupplyTypes" comment="how many supplies are being offered">
@@ -2003,11 +2003,11 @@ PduHeader record, section 5.2.29.">
  <initialValue name="pduType" value="7"/>
 
 <attribute name="receivingEntityID" comment="Entity that is receiving service">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="supplyingEntityID" comment="Entity that is supplying">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="numberOfSupplyTypes" comment="how many supplies are being offered">
@@ -2034,11 +2034,11 @@ PduHeader record, section 5.2.29.">
  <initialValue name="pduType" value="8"/>
 
 <attribute name="receivingEntityID" comment="Entity that is receiving service">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="supplyingEntityID" comment="Entity that is supplying">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 </class>
@@ -2048,11 +2048,11 @@ PduHeader record, section 5.2.29.">
  <initialValue name="pduType" value="9"/>
 
 <attribute name="receivingEntityID" comment="Entity that is receiving service">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="repairingEntityID" comment="Entity that is supplying">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="repair" comment="Enumeration for type of repair">
@@ -2070,11 +2070,11 @@ PduHeader record, section 5.2.29.">
  <initialValue name="pduType" value="10"/>
 
 <attribute name="receivingEntityID" comment="Entity that is receiving service">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="repairingEntityID" comment="Entity that is supplying">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="repairResult" comment="Result of repair operation">
@@ -2096,11 +2096,11 @@ PduHeader record, section 5.2.29.">
  <initialValue name="protocolFamily" value="5"/>
 
  <attribute name="originatingEntityID" comment="Entity that is sending message">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
 <attribute name="receivingEntityID" comment="Entity that is intended to receive message">
-  <classref name="EntityID"/>
+  <classRef name="EntityID"/>
 </attribute>
 
  </class>
@@ -2557,7 +2557,7 @@ The beam data records should ALL be a the finish, rather than attached to each e
   
   <attribute name="shaftRPMs" comment="shaft RPM values">
       <variablelist  countFieldName="numberOfShafts">
-          <classref name="ShaftRPMs"/>
+          <classRef name="ShaftRPMs"/>
       </variablelist>
   </attribute>
   
