@@ -3661,26 +3661,6 @@
 
  <initialValue name="pduType" value="12"/>
 
- 
-<attribute name="requestID" comment="This field shall identify the specific and unique start/resume request being made by the SM">
-   <primitive type="unsigned int"/>
- </attribute>
- 
- </class>
-
- 
- <class name="RemoveEntityPdu" inheritsFrom="SimulationManagementFamilyPdu" comment="Section 7.5.3 The removal of an entity from an exercise shall be communicated with a Remove Entity PDU. COMPLETE">
-
- <initialValue name="pduType" value="12"/>
-
- <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classRef name="EntityID"/>
- </attribute>
-
- <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classRef name="EntityID"/>
- </attribute>
-
 <attribute name="requestID" comment="This field shall identify the specific and unique start/resume request being made by the SM">
    <primitive type="unsigned int"/>
  </attribute>
