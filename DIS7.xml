@@ -3649,14 +3649,6 @@
 
  <initialValue name="pduType" value="11"/>
 
- <attribute name="originatingID" comment="Identifier for the request">
-   <classRef name="EntityID"/>
- </attribute>
-
- <attribute name="receivingID" comment="Identifier for the request">
-   <classRef name="EntityID"/>
- </attribute>
-
 <attribute name="requestID" comment="Identifier for the request.  See 6.2.75">
    <primitive type="unsigned int"/>
  </attribute>
@@ -3669,13 +3661,6 @@
 
  <initialValue name="pduType" value="12"/>
 
- <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classRef name="EntityID"/>
- </attribute>
- 
- <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classRef name="EntityID"/>
- </attribute>
  
 <attribute name="requestID" comment="This field shall identify the specific and unique start/resume request being made by the SM">
    <primitive type="unsigned int"/>
@@ -3707,14 +3692,6 @@
 
  <initialValue name="pduType" value="13"/>
 
- <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classRef name="EntityID"/>
- </attribute>
-
- <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classRef name="EntityID"/>
- </attribute>
-
  <attribute name="realWorldTime" comment="This field shall specify the real-world time (UTC) at which the entity is to start/resume in the exercise. This information shall be used by the participating simulation applications to start/resume an exercise synchronously. This field shall be represented by a Clock Time record (see 6.2.16).">
    <classRef name="ClockTime"/>
  </attribute>
@@ -3732,14 +3709,6 @@
   <class name="StopFreezePdu" inheritsFrom="SimulationManagementFamilyPdu" comment="Section 7.5.5. Stop or freeze an enity (or exercise). COMPLETE">
 
   <initialValue name="pduType" value="14"/>
-
-  <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classRef name="EntityID"/>
-  </attribute>
-
-  <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classRef name="EntityID"/>
-  </attribute>
 
   <attribute name="realWorldTime" comment="real-world(UTC) time at which the entity shall stop or freeze in the exercise">
    <classRef name="ClockTime"/>
@@ -3767,14 +3736,6 @@
 
    <initialValue name="pduType" value="15"/>
 
-  <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classRef name="EntityID"/>
-  </attribute>
-
-  <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classRef name="EntityID"/>
-  </attribute>
-
    <attribute name="acknowledgeFlag" comment="type of message being acknowledged">
    <primitive type="unsigned short"/>
   </attribute>
@@ -3792,14 +3753,6 @@
 <class name="ActionRequestPdu" inheritsFrom="SimulationManagementFamilyPdu" comment="Section 7.5.7. Request from simulation manager to a managed entity to perform a specified action. COMPLETE">
 
    <initialValue name="pduType" value="16"/>
-
-  <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classRef name="EntityID"/>
-  </attribute>
-
-  <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classRef name="EntityID"/>
-  </attribute>
 
   <attribute name="requestID" comment="identifies the request being made by the simulaton manager">
    <primitive type="unsigned int"/>
@@ -3835,15 +3788,6 @@
 <class name="ActionResponsePdu" inheritsFrom="SimulationManagementFamilyPdu" comment="Section 7.5.8. response to an action request PDU. COMPLETE">
 
  <initialValue name="pduType" value="17"/>
-
-
-  <attribute name="originatingID" comment="Identifier for originating entity(or simulation)">
-     <classRef name="EntityID"/>
-  </attribute>
-
-  <attribute name="receivingID" comment="Identifier for the receiving entity(or simulation)">
-     <classRef name="EntityID"/>
-  </attribute>
 
   <attribute name="requestID" comment="Request ID that is unique">
    <primitive type="unsigned int"/>
