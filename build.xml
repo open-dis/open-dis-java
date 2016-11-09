@@ -134,19 +134,6 @@
             </classpath>
         </java>
     </target>
-
-<!-- Saves an example XML file -->
-    <target name="runXmlPdus" depends="jar" description="run DIS XML PDU generator program">
-        <java classname="edu.nps.moves.examples.MarshallExample">
-            <classpath>
-                <fileset dir="${dist}">
-                    <include name="**/*.jar"/>
-                </fileset>
-                <fileset refid="lib.jars"/>
-            </classpath>
-        </java>
-    </target>
-
     
      <!-- Runs a generator that sends many or most of the PDU types, and saves an example XML file -->
     <target name="runConcatReader" depends="jar" description="run DIS PDU program that reads IEEE concatenated PDUs from a file">
