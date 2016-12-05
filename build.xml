@@ -66,9 +66,16 @@
          Some source code generation properties are set in the XML file, such as the directory location.
          These may be overridden by command line options that set java system properties via
          the -D option.
+
+         This uses git submodules to share the XML description file across language implementations.
+         to pull it in, run
+        
+         git submodule init
+         git submodule update
     --> 
     <target name="generateJavaDisSourceCode" depends="init" description = "run program to generate desktop java">
-        <property name="xmlSourceFile" value="DIS6.xml"/>
+        <echo message="Be sure to bring in the git submodule for DISDescription with git submodule init; git submodule update"/>
+        <property name="xmlSourceFile" value="DISDescription/DIS6.xml"/>
         <property name="xmlpg.generatedSourceDir" value="${src}"/>
         <property name="xmlpg.useHibernate" value="false"/>
         <property name="xmlpg.useJaxb" value="false"/>
@@ -81,7 +88,9 @@
 
 <!--
     <target name="generateJavaMobileSourceCode" depends="init" description = "run program to generate java mobile version">
-        <property name="xmlSourceFile" value="DIS1998.xml"/>
+        <echo message="Be sure to bring in the git submodule for DISDescription with git submodule init; git submodule
+ update"/>
+        <property name="xmlSourceFile" value="DISDescription/DIS6.xml"/>
         <property name="xmlpg.generatedSourceDir" value="${src}"/>
         <property name="xmlpg.useHibernate" value="false"/>
         <property name="xmlpg.useJaxb" value="false"/>
@@ -95,8 +104,10 @@
 
 -->
      <target name="generateJavaDis7SourceCode" depends="init" description = "run program to generate java for DIS 2009, desktop version">
+        <echo message="Be sure to bring in the git submodule for DISDescription with git submodule init; git submodule
+ update"/>
         <echo message="Generating DIS 7 desktop version"/>
-        <property name="xmlSourceFile" value="DIS7.xml"/>
+        <property name="xmlSourceFile" value="DISDescription/DIS7.xml"/>
         <property name="javadir" value="${src}"/>
         <property name="xmlpg.useHibernate" value="false"/>
         <property name="xmlpg.useJaxb" value="false"/>
@@ -109,7 +120,8 @@
     
  <!--
     <target name="generateJavaDis7MobileCode" depends="init" description = "run program to generate java for DIS 2009, mobile version">
-        <property name="xmlSourceFile" value="DIS2012.xml"/>
+        <echo message="Be sure to bring in the git submodule for DISDescription with git submodule init; git submodule update"/>
+        <property name="xmlSourceFile" value="DISDescription/DIS7.xml"/>
         <property name="xmlpg.generatedSourceDir" value="${src}"/>
         <property name="xmlpg.useHibernate" value="false"/>
         <property name="xmlpg.useJaxb" value="false"/>
