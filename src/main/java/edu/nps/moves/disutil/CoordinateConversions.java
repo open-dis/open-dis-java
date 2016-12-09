@@ -92,8 +92,8 @@ public class CoordinateConversions
     {
         double degrees[] = CoordinateConversions.xyzToLatLonRadians(xyz);
         
-        degrees[0] = degrees[0] * 180.0 / Math.PI;
-        degrees[1] = degrees[1] * 180.0 / Math.PI;
+        degrees[0] = degrees[0] * CoordinateConversions.RADIANS_TO_DEGREES;
+        degrees[1] = degrees[1] * CoordinateConversions.RADIANS_TO_DEGREES;
         
         return degrees;
 
