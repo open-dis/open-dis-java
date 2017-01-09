@@ -45,13 +45,56 @@ public short getCharacterSet()
 { return characterSet; 
 }
 
+/**
+* Ensure what is set does not go over 11 characters, and anything under
+* 11 characters zero-fills.  post-processing patch
+* @param pCharacters an array of characters to set
+*/
 public void setCharacters(byte[] pCharacters)
-{ characters = pCharacters;
+{
+ if (pCharacters.length >= characters.length)
+   {
+       System.arraycopy(pCharacters, 0, characters, 0, characters.length);
+   }
+ else
+ {
+   int pCharactersLength = pCharacters.length;
+   System.arraycopy(pCharacters, 0, characters, 0, pCharactersLength);
+   for (int ix = pCharactersLength; ix < characters.length; ix++)
+   {
+       // Ensure all zeros in unfilled fields
+       characters[ix] = 0;
+   }
+ }
 }
 
-public byte[] getCharacters()
-{ return characters; }
+/**
+ * An added conveniece method (added by patch): accepts a string, and either
+ * truncates or zero-fills it to fit into the 11-byte character marking field.
+ * @param marking the marking string, converted internally into a character array that
+ * is exactly 11 bytes long
+ */
+public void setCharactersString(String marking)
+{
+  byte[] buff = marking.getBytes();
+  this.setCharacters(buff);
+}
 
+/**
+ * Post-processing added convenience method. Converts the byte array of
+ * characters to a string. This uses the platform's default charset,
+ * rather than respecting the charset specified in the other field. 
+ * For the most part this will work, unless you're in some wacky foreign
+ * country, in which case you should start speaking English.
+ * 
+ * @return character array converted to a string
+ */
+public String getCharactersString()
+{
+    String charString = new String(characters);
+    
+    return charString;
+}
 
 public void marshal(DataOutputStream dos)
 {

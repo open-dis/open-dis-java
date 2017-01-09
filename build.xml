@@ -12,7 +12,7 @@
     <property name="lib" location="lib"/>
     <property name="dist" location="dist"/>
     <property name="test" location="src/test/java"/>
-    <property name="version" value="4.15"/>
+    <property name="version" value="4.16"/>
     <property name="testReportOutputDir" value="${build}/testReportOutputDir"/>
     
     <property name="jarfile" location="${dist}/open-dis_${version}.jar"/>
