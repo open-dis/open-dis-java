@@ -1,4 +1,4 @@
 /target/
 /build/
-/dist/*.jar
+/dist/
 /nbproject/
