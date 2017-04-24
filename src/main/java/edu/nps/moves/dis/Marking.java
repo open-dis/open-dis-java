@@ -68,6 +68,9 @@ public void setCharacters(byte[] pCharacters)
  }
 }
 
+public byte[] getCharacters()
+{ return characters; }
+
 /**
  * An added conveniece method (added by patch): accepts a string, and either
  * truncates or zero-fills it to fit into the 11-byte character marking field.

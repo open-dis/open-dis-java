@@ -16,6 +16,8 @@ import static org.junit.Assert.*;
  */
 public class MarkingTest
 {
+    private static final int MARKING_STRING_LENGTH = 11;
+    
     public void Marking()
     {
 
@@ -29,7 +31,7 @@ public class MarkingTest
         final String s = new String("This is a marking that is much, much too loong");
         marking.setCharacters(s.getBytes());
         byte[] buff = marking.getCharacters();
-        assertEquals(buff.length, s.length());
+        assertEquals(buff.length, MARKING_STRING_LENGTH);
     }
 
     @Test
@@ -40,7 +42,7 @@ public class MarkingTest
         final String s = new String("short");
         marking.setCharacters(s.getBytes());
         byte[] buff = marking.getCharacters();
-        assertEquals(buff.length, s.length());
+        assertEquals(buff.length, MARKING_STRING_LENGTH);
     }
 
     @Before
