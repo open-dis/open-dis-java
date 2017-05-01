@@ -349,18 +349,17 @@ public class Matrix
                     "this.cols must equal M2.rows");
         
         Matrix result = new Matrix(rows(), M2.cols());
-        double tmp = 0, tmp2=0, sum=0;   
         
         for (int i = 0; i < result.rows(); i++) 
         {            
             for (int j = 0; j < result.cols(); j++) 
-            {      
-                for (int k = 0; k < result.cols(); k++)
+            {
+                double tmp = 0.0;
+                for (int k = 0; k < cols(); k++)
                 {
-                    tmp += cell(i, k)*M2.cell(k, j);
+                    tmp += cell(i, k) * M2.cell(k, j);
                 }                
                 result.setCell(i, j, tmp);
-                tmp = 0;                
             }
         }        
         return result;
