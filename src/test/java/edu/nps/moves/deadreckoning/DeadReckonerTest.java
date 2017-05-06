@@ -1,6 +1,7 @@
 package edu.nps.moves.deadreckoning;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,7 @@ public class DeadReckonerTest {
     EntityStatePdu espdu4, espdu8;
     private static final int FRAMES_PER_SECOND = 2;
     private static final double DELTA_TIME = 1.0 / (double) FRAMES_PER_SECOND;
+    private static final long TIMESTAMP_TOLERANCE = 2;
 
     /*
      * A helper function to make it easier to test DIS_DeadReckoning et al.
@@ -40,7 +42,7 @@ public class DeadReckonerTest {
         allDis[12] = entityStatePdu.getDeadReckoningParameters().getEntityAngularVelocity().getX();
         allDis[13] = entityStatePdu.getDeadReckoningParameters().getEntityAngularVelocity().getY();
         allDis[14] = entityStatePdu.getDeadReckoningParameters().getEntityAngularVelocity().getZ();
-        
+
         return allDis;
     }
 
@@ -56,7 +58,7 @@ public class DeadReckonerTest {
         entityStatePdu.getEntityOrientation().setTheta((float) newLoc[4]);
         entityStatePdu.getEntityOrientation().setPhi(  (float) newLoc[5]);
     }
-    
+
     @Before
     public void setUp() throws Exception {
         espdu4 = new EntityStatePdu();
@@ -106,6 +108,8 @@ public class DeadReckonerTest {
      * 
      * DIS_DeadReckoning et al do not update velocity or timestamp,
      * so we don't check as many fields when testing those classes.
+     * The timestamps are a little finicky, especially when taking half setps,
+     * so we allow some tolerance there.
      */
 
     void answers1B(EntityStatePdu espdu4, boolean testAll) {
@@ -119,10 +123,10 @@ public class DeadReckonerTest {
             assertEquals(30.0f, espdu4.getEntityLinearVelocity().getX(), 0.01);
             assertEquals(35.0f, espdu4.getEntityLinearVelocity().getY(), 0.01);
             assertEquals(40.0f, espdu4.getEntityLinearVelocity().getZ(), 0.01);
-            assertEquals(0x1159E260, espdu4.getTimestamp());
+            assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
         }
     }
-    
+
     void answers2(EntityStatePdu espdu4, boolean testAll) {
         assertEquals(-6378122.0, espdu4.getEntityLocation().getX(), 0.01);
         assertEquals(12.5, espdu4.getEntityLocation().getY(), 0.01);
@@ -134,7 +138,7 @@ public class DeadReckonerTest {
             assertEquals(30.0f, espdu4.getEntityLinearVelocity().getX(), 0.01);
             assertEquals(35.0f, espdu4.getEntityLinearVelocity().getY(), 0.01);
             assertEquals(40.0f, espdu4.getEntityLinearVelocity().getZ(), 0.01);
-            assertEquals(0x1159E260, espdu4.getTimestamp());
+            assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
         }
     }
 
@@ -149,7 +153,7 @@ public class DeadReckonerTest {
             assertEquals(30.0f, espdu4.getEntityLinearVelocity().getX(), 0.01);
             assertEquals(35.0f, espdu4.getEntityLinearVelocity().getY(), 0.01);
             assertEquals(40.0f, espdu4.getEntityLinearVelocity().getZ(), 0.01);
-            assertEquals(0x1159E260, espdu4.getTimestamp());
+            assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
         }
     }
 
@@ -164,7 +168,7 @@ public class DeadReckonerTest {
             assertEquals(-10.0, espdu4.getEntityLinearVelocity().getX(), 0.01);
             assertEquals(-7.5, espdu4.getEntityLinearVelocity().getY(), 0.01);
             assertEquals(-5.0, espdu4.getEntityLinearVelocity().getZ(), 0.01);
-            assertEquals(0x1159E260, espdu4.getTimestamp());
+            assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
         }
     }
 
@@ -179,7 +183,7 @@ public class DeadReckonerTest {
             assertEquals(-10.0, espdu4.getEntityLinearVelocity().getX(), 0.01);
             assertEquals(-7.5, espdu4.getEntityLinearVelocity().getY(), 0.01);
             assertEquals(-5.0, espdu4.getEntityLinearVelocity().getZ(), 0.01);
-            assertEquals(0x1159E260, espdu4.getTimestamp());
+            assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
         }
     }
 
@@ -194,7 +198,7 @@ public class DeadReckonerTest {
             assertEquals(30.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
             assertEquals(35.0f, espdu8.getEntityLinearVelocity().getY(), 0.01);
             assertEquals(40.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
-            assertEquals(0x127D27A0, espdu8.getTimestamp());
+            assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
         }
     }
 
@@ -209,11 +213,9 @@ public class DeadReckonerTest {
             assertEquals(30.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
             assertEquals(35.0f, espdu8.getEntityLinearVelocity().getY(), 0.01);
             assertEquals(40.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
-            assertEquals(0x127D27A0, espdu8.getTimestamp());
+            assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
         }
     }
-
-    // FIXME: DR6 and DR7 should have the same entityLocation!
 
     void answers7(EntityStatePdu espdu8, boolean testAll) {
         assertEquals(6378156.77, espdu8.getEntityLocation().getX(), 0.01);
@@ -226,7 +228,7 @@ public class DeadReckonerTest {
             assertEquals(30.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
             assertEquals(35.0f, espdu8.getEntityLinearVelocity().getY(), 0.01);
             assertEquals(40.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
-            assertEquals(0x127D27A0, espdu8.getTimestamp());
+            assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
         }
     }
 
@@ -241,11 +243,9 @@ public class DeadReckonerTest {
             assertEquals(-10.0, espdu8.getEntityLinearVelocity().getX(), 0.01);
             assertEquals(-7.5, espdu8.getEntityLinearVelocity().getY(), 0.01);
             assertEquals(-5.0, espdu8.getEntityLinearVelocity().getZ(), 0.01);
-            assertEquals(0x127D27A0, espdu8.getTimestamp());
+            assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
         }
     }
-
-    // FIXME: DR9 should have same position as DR8
 
     void answers9(EntityStatePdu espdu8, boolean testAll) {
         assertEquals(6378144.46, espdu8.getEntityLocation().getX(), 0.01);
@@ -258,7 +258,7 @@ public class DeadReckonerTest {
             assertEquals(-10.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
             assertEquals(-7.5f, espdu8.getEntityLinearVelocity().getY(), 0.01);
             assertEquals(-5.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
-            assertEquals(0x127D27A0, espdu8.getTimestamp());
+            assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
         }
     }
 
@@ -267,78 +267,124 @@ public class DeadReckonerTest {
      * e.g. if we choose an algorithm that does not handle rotation
      * we do not explicitly zero out the angularVelocity fields. 
      */
-//    @Test
-//    public void testPerform_DR1B() {
-//        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.STATIC_ENTITY_DOES_NOT_MOVE.getValue());
-//        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
-//        answers1B(espdu4, true);
-//    }
-//
-//    @Test
-//    public void testPerform_DR2() {
-//        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_P_W.getValue());
-//        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
-//        answers2(espdu4, true);
-//    }
-//
-//    @Test
-//    public void testPerform_DR3() {
-//        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_W.getValue());
-//        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
-//        answers3(espdu4, true);
-//    }
-//
-//    @Test
-//    public void testPerform_DR4() {
-//        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_W.getValue());
-//        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
-//        answers4(espdu4, true);
-//    }
-//
-//    @Test
-//    public void testPerform_DR5() {
-//        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_V_W.getValue());
-//        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
-//        answers5(espdu4, true);
-//    }
-//
-//    @Test
-//    public void testPerform_DR1W() {
-//        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.STATIC_ENTITY_DOES_NOT_MOVE.getValue());
-//        DeadReckoner.perform_DR(espdu8, DELTA_TIME);
-//        answers1W(espdu8, true);
-//    }
-//
-//    @Test
-//    public void testPerform_DR6() {
-//        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_P_B.getValue());
-//        DeadReckoner.perform_DR(espdu8, DELTA_TIME);
-//        answers6(espdu8, true);
-//    }
-//
+    @Test
+    public void testPerform_DR1B() {
+        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.STATIC_ENTITY_DOES_NOT_MOVE.getValue());
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
+        answers1B(espdu4, true);
+    }
+
+    @Test
+    public void testPerform_DR2() {
+        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_P_W.getValue());
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
+        answers2(espdu4, true);
+    }
+
+    @Test
+    public void testPerform_DR3() {
+        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_W.getValue());
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
+        answers3(espdu4, true);
+    }
+
+    @Test
+    public void testPerform_DR4() {
+        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_W.getValue());
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
+        answers4(espdu4, true);
+    }
+
+    /*
+     * There was a bug in the DIS_DeadReckoning abstract classes with
+     * acceleration and multiple time steps.  I added regression cases
+     * for both the old DIS_DeadReckoning and new DeadReckoner classes.
+     */
+    
+    @Test
+    public void testPerform_DR4halfStep() {
+        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_W.getValue());
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME / 2.0);
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME / 2.0);
+        answers4(espdu4, true);
+    }
+
+    @Test
+    public void testPerform_DR5() {
+        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_V_W.getValue());
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
+        answers5(espdu4, true);
+    }
+
+    @Test
+    public void testPerform_DR5halfStep() {
+        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_V_W.getValue());
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME / 2.0);
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME / 2.0);
+        answers5(espdu4, true);
+    }
+
+    @Test
+    public void testPerform_DR1W() {
+        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.STATIC_ENTITY_DOES_NOT_MOVE.getValue());
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME);
+        answers1W(espdu8, true);
+    }
+
+    @Test
+    public void testPerform_DR6() {
+        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_P_B.getValue());
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME);
+        answers6(espdu8, true);
+    }
+
     @Test
     public void testPerform_DR7() {
         espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_B.getValue());
         DeadReckoner.perform_DR(espdu8, DELTA_TIME);
         answers7(espdu8, true);
     }
-//
-//    @Test
-//    public void testPerform_DR8() {
-//        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_B.getValue());
-//        DeadReckoner.perform_DR(espdu8, DELTA_TIME);
-//        answers8(espdu8, true);
-//    }
-//
-//    @Test
-//    public void testPerform_DR9() {
-//        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_V_B.getValue());
-//        DeadReckoner.perform_DR(espdu8, DELTA_TIME);
-//        answers9(espdu8, true);
-//    }
+
+    @Test
+    public void testPerform_DR7halfStep() {
+        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_B.getValue());
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
+        answers7(espdu8, true);
+    }
+
+    @Test
+    public void testPerform_DR8() {
+        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_B.getValue());
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME);
+        answers8(espdu8, true);
+    }
+
+    @Test
+    public void testPerform_DR8halfStep() {
+        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_B.getValue());
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
+        answers8(espdu8, true);
+    }
+
+    @Test
+    public void testPerform_DR9() {
+        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_V_B.getValue());
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME);
+        answers9(espdu8, true);
+    }
+
+    @Test
+    public void testPerform_DR9halfStep() {
+        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_V_B.getValue());
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
+        answers9(espdu8, true);
+    }
 
     // DIS_DeadReckoning et al
-    
+
     @Test
     public void testStatic01B() throws Exception {
         DIS_DR_Static_01 disDr = new DIS_DR_Static_01();
@@ -383,6 +429,18 @@ public class DeadReckonerTest {
         answers4(espdu4, false);
     }
 
+    @Test
+    public void testRvw04halfStep() throws Exception {
+        DIS_DR_RVW_04 disDr = new DIS_DR_RVW_04();
+        disDr.setNewAll(toAllDis(espdu4));
+        disDr.setFPS(2 * FRAMES_PER_SECOND);
+        disDr.update();
+        disDr.update();
+        double[] newLoc = disDr.getUpdatedPositionOrientation();
+        fromNewLoc(newLoc, espdu4);
+        answers4(espdu4, false);
+    }
+
     // DIS_DR_RPW_03b and DIS_DR_RVW_04b do not follow IEEE Std 1278.1
     // and should be deprecated immediately!
 
@@ -391,6 +449,18 @@ public class DeadReckonerTest {
         DIS_DR_FVW_05 disDr = new DIS_DR_FVW_05();
         disDr.setNewAll(toAllDis(espdu4));
         disDr.setFPS(FRAMES_PER_SECOND);
+        disDr.update();
+        double[] newLoc = disDr.getUpdatedPositionOrientation();
+        fromNewLoc(newLoc, espdu4);
+        answers5(espdu4, false);
+    }
+
+    @Test
+    public void testRvw05halfStep() throws Exception {
+        DIS_DR_FVW_05 disDr = new DIS_DR_FVW_05();
+        disDr.setNewAll(toAllDis(espdu4));
+        disDr.setFPS(2 * FRAMES_PER_SECOND);
+        disDr.update();
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
         fromNewLoc(newLoc, espdu4);
@@ -431,6 +501,18 @@ public class DeadReckonerTest {
     }
 
     @Test
+    public void testRpb07HalfStep() throws Exception {
+        DIS_DR_RPB_07 disDr = new DIS_DR_RPB_07();
+        disDr.setNewAll(toAllDis(espdu8));
+        disDr.setFPS(2 * FRAMES_PER_SECOND);
+        disDr.update();
+        disDr.update();
+        double[] newLoc = disDr.getUpdatedPositionOrientation();
+        fromNewLoc(newLoc, espdu8);
+        answers7(espdu8, false);
+    }
+
+    @Test
     public void testRvb08() throws Exception {
         DIS_DR_RVB_08 disDr = new DIS_DR_RVB_08();
         disDr.setNewAll(toAllDis(espdu8));
@@ -442,10 +524,34 @@ public class DeadReckonerTest {
     }
 
     @Test
+    public void testRvb08halfStep() throws Exception {
+        DIS_DR_RVB_08 disDr = new DIS_DR_RVB_08();
+        disDr.setNewAll(toAllDis(espdu8));
+        disDr.setFPS(2 * FRAMES_PER_SECOND);
+        disDr.update();
+        disDr.update();
+        double[] newLoc = disDr.getUpdatedPositionOrientation();
+        fromNewLoc(newLoc, espdu8);
+        answers8(espdu8, false);
+    }
+
+    @Test
     public void testFvb09() throws Exception {
         DIS_DR_FVB_09 disDr = new DIS_DR_FVB_09();
         disDr.setNewAll(toAllDis(espdu8));
         disDr.setFPS(FRAMES_PER_SECOND);
+        disDr.update();
+        double[] newLoc = disDr.getUpdatedPositionOrientation();
+        fromNewLoc(newLoc, espdu8);
+        answers9(espdu8, false);
+    }
+
+    @Test
+    public void testFvb09halfStep() throws Exception {
+        DIS_DR_FVB_09 disDr = new DIS_DR_FVB_09();
+        disDr.setNewAll(toAllDis(espdu8));
+        disDr.setFPS(2 * FRAMES_PER_SECOND);
+        disDr.update();
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
         fromNewLoc(newLoc, espdu8);

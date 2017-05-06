@@ -5,7 +5,10 @@ package edu.nps.moves.deadreckoning;
  * Acceleration and rotation (Alterntive non-IEEE)
  * 
  * @author Sheldon L. Snyder
+ * 
+ * @deprecated use {@link DIS_DR_RVW_04} instead
  */
+@Deprecated
 public class DIS_DR_RVW_04b extends DIS_DeadReckoning
 {
 
@@ -41,4 +44,3 @@ public class DIS_DR_RVW_04b extends DIS_DeadReckoning
         entityOrientation_phi = (entityOrientation_phi + entityAngularVelocity_Z * changeDelta) % (2*myPI);
     }
 }
-

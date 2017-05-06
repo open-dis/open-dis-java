@@ -2,8 +2,6 @@ package edu.nps.moves.deadreckoning;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-import edu.nps.moves.deadreckoning.utils.*;
-
 /**
  * 
  * (SECONDARY Methods Group) Fixed, rate of position, body coordinates || 
@@ -40,10 +38,11 @@ public class DIS_DR_FPB_06 extends DIS_DeadReckoning
         }
     }//run()--------------------------------------------------------------------
 
-    void update() throws MatrixException, Exception {
+    void update() {
         deltaCt++;
         // solve for the new position
         Vector3D velVec = new Vector3D(entityLinearVelocity_X, entityLinearVelocity_Y, entityLinearVelocity_Z);
+        // For fixed (non-rotating), R1 = changeDelta * Identity
         Vector3D updated = initOrien.applyInverseTo(velVec.scalarMultiply(changeDelta));
 
         // set the new position...

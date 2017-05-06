@@ -9,7 +9,10 @@ package edu.nps.moves.deadreckoning;
  * Takes a more straightforward approach to rotation
  * 
  * @author Sheldon L. Snyder
+ * 
+ * @deprecated use {@link DIS_DR_RPW_03} instead
  */
+@Deprecated
 public class DIS_DR_RPW_03b extends DIS_DeadReckoning
 {
 
@@ -45,4 +48,3 @@ public class DIS_DR_RPW_03b extends DIS_DeadReckoning
         entityOrientation_phi = (entityOrientation_phi + entityAngularVelocity_Z * changeDelta) % (2*myPI);
     }
 }
-

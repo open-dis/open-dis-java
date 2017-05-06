@@ -583,9 +583,8 @@ public abstract class DIS_DeadReckoning implements Runnable
      * DR fields from a PDU update or initial 
      * 
      * @param allDis - 15 double precisions representing the above in order of the above
-     * @throws Exception
      */
-    public void setNewAll(double[] allDis) throws Exception
+    public void setNewAll(double[] allDis)
     {
         entityLocation_X = allDis[0];
         entityLocation_Y = allDis[1];
@@ -644,9 +643,8 @@ public abstract class DIS_DeadReckoning implements Runnable
     /***************************************************************************
      * With each setNewAll() makes the new initial orientation matrix given the
      * new parameters
-     * @throws java.lang.Exception
      */    
-    private void setInitOrient() throws Exception
+    private void setInitOrient()
     {
         initOrien = new Rotation(
                 RotationOrder.ZYX,
@@ -654,16 +652,15 @@ public abstract class DIS_DeadReckoning implements Runnable
                 entityOrientation_psi,
                 entityOrientation_theta,
                 entityOrientation_phi);
-    }//setInitOrient() throws Exception-----------------------------------------
+    }
 
 
 
     /***************************************************************************
      * With each setNewAll() makes the new angular velocity matrix given the
      * new parameters
-     * @throws java.lang.Exception
      */
-    private void setWW() throws Exception
+    private void setWW()
     {
         ww = MatrixUtils.createRealMatrix(3, 3);
         ww.setEntry(0, 0, entityAngularVelocity_X * entityAngularVelocity_X);
@@ -675,16 +672,15 @@ public abstract class DIS_DeadReckoning implements Runnable
         ww.setEntry(2, 0, entityAngularVelocity_Z * entityAngularVelocity_X);
         ww.setEntry(2, 1, entityAngularVelocity_Z * entityAngularVelocity_Y);
         ww.setEntry(2, 2, entityAngularVelocity_Z * entityAngularVelocity_Z);        
-    }//setWW() throws Exception-------------------------------------------------
+    }
 
 
 
     /***************************************************************************
      * With each setNewAll() makes the new skew matrix given the
      * new parameters
-     * @throws java.lang.Exception
      */
-    private void setOmega() throws Exception
+    private void setOmega()
     {
         skewOmega = MatrixUtils.createRealMatrix(3, 3);
         skewOmega.setEntry(0, 0, 0);
@@ -696,7 +692,7 @@ public abstract class DIS_DeadReckoning implements Runnable
         skewOmega.setEntry(0, 1, -entityAngularVelocity_Z);
         skewOmega.setEntry(0, 2, entityAngularVelocity_Y);
         skewOmega.setEntry(1, 2, -entityAngularVelocity_X);          
-    }//setOmega() throws Exception----------------------------------------------
+    }
 
 
 
