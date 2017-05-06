@@ -25,8 +25,13 @@ public class DIS_DR_FVW_05 extends DIS_DeadReckoning
 
     void update() {
         deltaCt++;   
+
         entityLocation_X += (entityLinearVelocity_X * changeDelta) + (.5 * entityLinearAcceleration_X * changeDelta * changeDelta);
         entityLocation_Y += (entityLinearVelocity_Y * changeDelta) + (.5 * entityLinearAcceleration_Y * changeDelta * changeDelta);
         entityLocation_Z += (entityLinearVelocity_Z * changeDelta) + (.5 * entityLinearAcceleration_Z * changeDelta * changeDelta);
+
+        entityLinearVelocity_X += entityLinearAcceleration_X * changeDelta;
+        entityLinearVelocity_Y += entityLinearAcceleration_Y * changeDelta;
+        entityLinearVelocity_Z += entityLinearAcceleration_Z * changeDelta;
     }
 }

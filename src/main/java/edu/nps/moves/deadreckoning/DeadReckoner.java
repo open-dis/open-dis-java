@@ -53,7 +53,6 @@ public class DeadReckoner {
         }
 
         // Update the ESPDU timestamp
-        // TODO: Need to deal with timeStamp absolute / relative bit, and rollover.
         long dtimeStamp = 2 * (long) (deltaTime * 2147483648. / 3600.);
         pESPDU.setTimestamp(pESPDU.getTimestamp() + dtimeStamp);
 
@@ -175,15 +174,6 @@ public class DeadReckoner {
                 vDistECS1 = new Vector3D(vIntECS2toECS1Mat.operate(
                         MatrixUtils.createRealVector(velocity.toArray())).toArray());
 
-                System.out.println("vIntTerm1:" + vIntTerm1);
-                System.out.println("term3:" + term3);
-                System.out.println("term1:" + term1);
-
-                System.out.println("vIntECS2toECS1Mat:");
-                for (int i = 0; i < 3; i++) {
-                    System.out.println(vIntECS2toECS1Mat.getEntry(i, 0) + " " + vIntECS2toECS1Mat.getEntry(i, 1) + " " + vIntECS2toECS1Mat.getEntry(i, 2));
-                }
-
                 if (accelerating) {
                     // Compute first integral of the final ECS to initial ECS
                     //   rotation matrix times time for use with acceleration
@@ -202,12 +192,6 @@ public class DeadReckoner {
                     // aDistECS1 = aIntECS2toECS1Mat * acceleration, a little hard to read due to type changes...
                     aDistECS1 = new Vector3D(aIntECS2toECS1Mat.operate(
                             MatrixUtils.createRealVector(acceleration.toArray())).toArray());
-
-                    //                    System.out.println("aIntECS2toECS1Mat:");
-                    //                    for (int i = 0; i < 3; i++) {
-                    //                        System.out.println(aIntECS2toECS1Mat.getEntry(i, 0) + " " + aIntECS2toECS1Mat.getEntry(i, 1) + " " + aIntECS2toECS1Mat.getEntry(i, 2));
-                    //                    }
-
                 }
             }
 

@@ -37,11 +37,15 @@ public class DIS_DR_RVW_04 extends DIS_DeadReckoning
         }
     }//run()--------------------------------------------------------------------
 
-    void update() throws Exception {
+    void update() {
         deltaCt++;
         entityLocation_X += (entityLinearVelocity_X * changeDelta) + (.5 * entityLinearAcceleration_X * changeDelta * changeDelta);
         entityLocation_Y += (entityLinearVelocity_Y * changeDelta) + (.5 * entityLinearAcceleration_Y * changeDelta * changeDelta);
         entityLocation_Z += (entityLinearVelocity_Z * changeDelta) + (.5 * entityLinearAcceleration_Z * changeDelta * changeDelta);
+
+        entityLinearVelocity_X += entityLinearAcceleration_X * changeDelta;
+        entityLinearVelocity_Y += entityLinearAcceleration_Y * changeDelta;
+        entityLinearVelocity_Z += entityLinearAcceleration_Z * changeDelta;
 
         makeThisDR();
 
@@ -64,9 +68,8 @@ public class DIS_DR_RVW_04 extends DIS_DeadReckoning
 
     /***************************************************************************
      * Makes this iterations DR matrix
-     * @throws java.lang.Exception
      */
-    private void makeThisDR() throws Exception
+    private void makeThisDR()
     {
         double wDelta = wMag * changeDelta * deltaCt;  
         double cosWdelta = Math.cos(wDelta);
@@ -81,6 +84,6 @@ public class DIS_DR_RVW_04 extends DIS_DeadReckoning
 
         DR = wwTmp.add(identTmp);
         DR = DR.subtract(skwTmp);
-    }//makeThisDR() throws Exception--------------------------------------------
+    }
 
 }

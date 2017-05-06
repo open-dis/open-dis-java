@@ -8,8 +8,6 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
-import edu.nps.moves.deadreckoning.utils.*;
-
 /**
  * 
  * (SECONDARY Methods Group) Rotating, rate of position, body coordinates || 
@@ -51,19 +49,21 @@ public class DIS_DR_RPB_07 extends DIS_DeadReckoning
         }
     }//run()--------------------------------------------------------------------
 
-    void update() throws MatrixException, Exception {
+    void update() {
         deltaCt++;
 
         // solve for the new position
         makeR1();
-        System.out.println("R1:");
-        for (int i = 0; i < 3; i++) {
-            System.out.println(R1.getEntry(i, 0) + " " + R1.getEntry(i, 1) + " " + R1.getEntry(i, 2));
-        }
 
         RealVector velVec = MatrixUtils.createRealVector(new double[]
                 {entityLinearVelocity_X, entityLinearVelocity_Y, entityLinearVelocity_Z});
-        Vector3D updated = initOrien.applyInverseTo(new Vector3D(R1.operate(velVec).toArray()));
+        Rotation currOrien = new Rotation(
+                RotationOrder.ZYX,
+                RotationConvention.FRAME_TRANSFORM,
+                entityOrientation_psi,
+                entityOrientation_theta,
+                entityOrientation_phi);
+        Vector3D updated = currOrien.applyInverseTo(new Vector3D(R1.operate(velVec).toArray()));
 
         // set new positons
         entityLocation_X += updated.getX();
@@ -93,9 +93,8 @@ public class DIS_DR_RPB_07 extends DIS_DeadReckoning
 
     /***************************************************************************
      * Makes this iterations DR matrix
-     * @throws java.lang.Exception
      */
-    private void makeThisDR() throws Exception
+    private void makeThisDR()
     {
         double wDelta = wMag * changeDelta * deltaCt;  
         double cosWdelta = Math.cos(wDelta);
@@ -110,29 +109,25 @@ public class DIS_DR_RPB_07 extends DIS_DeadReckoning
 
         DR = wwTmp.add(identTmp);
         DR = DR.subtract(skwTmp);
-    }//makeThisDR() throws Exception--------------------------------------------
+    }
 
 
     /***************************************************************************
      * Makes the R1 matrix
      * @return - the vector R1
-     * @throws java.lang.Exception
      */
-    private void makeR1() throws Exception
+    private void makeR1()
     {
         RealMatrix ident = MatrixUtils.createRealIdentityMatrix(3);  
 
         // common factors
-        double wDelta = wMag * changeDelta * deltaCt;  
+        // double wDelta = wMag * changeDelta * deltaCt;  
+        double wDelta = wMag * changeDelta;  
 
         // matrix scalars
         double wwScale = (wDelta-Math.sin(wDelta)) / (wSq * wMag); 
         double identScalar = Math.sin(wDelta) / wMag;
         double skewScale = (1.0 - Math.cos(wDelta)) / wSq;
-
-        System.out.println("wwScale: " + wwScale);
-        System.out.println("identScalar: " + identScalar);
-        System.out.println("skewScale: " + skewScale);
 
         // scaled matrixes
         RealMatrix wwTmp = ww.scalarMultiply(wwScale);
@@ -141,7 +136,7 @@ public class DIS_DR_RPB_07 extends DIS_DeadReckoning
 
         R1 = wwTmp.add(identTmp);
         R1 = R1.add(skwTmp);
-    }//makeR1() throws Exception------------------------------------------------
+    }
 
 
 }
