@@ -1,6 +1,10 @@
 package edu.nps.moves.deadreckoning;
 
-import edu.nps.moves.deadreckoning.utils.*;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
+import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
 /**
  * The root super class for all DIS Dead-Reckoning algorithms.
@@ -136,12 +140,12 @@ import edu.nps.moves.deadreckoning.utils.*;
  * <hr>
  * <p>
  * <center><b><u>REVISED POSITION</U></B></CENTER>
-  * <P>
+ * <P>
  * <hr>
  * <p>
  *
  * The Position portion of the algorithms</b><br>
- 
+
  * <hr>
  * <p>
  * <center><b><u>ORIENTATION SOLVER</U></B></CENTER>
@@ -149,7 +153,7 @@ import edu.nps.moves.deadreckoning.utils.*;
  * Ultimately, the PSI (rotation about the y-axis), THETA (rotation about the
  * z-axis), PHI (rotation about the x-axis) need to be in the range 
  * of 0 - 2PI since the fields are in radians.
-  * <P>
+ * <P>
  * <hr>
  * <p>
  * 
@@ -162,7 +166,7 @@ import edu.nps.moves.deadreckoning.utils.*;
  * <hr>
  * <p>
  * <center><b><u>DR MATRIX SOLVER</U></B></CENTER>
-  * <P>
+ * <P>
  * <hr>
  * <p>
  * <b><a href="..\..\RefsImgs\22_drMatrix.jpg">
@@ -191,7 +195,7 @@ import edu.nps.moves.deadreckoning.utils.*;
  * <center><img src="..\..\RefsImgs\24_omegaSKEW.jpg"/></center>
  * <br>
  * 
-  * <b><a href="..\..\RefsImgs\25_angVelMult.jpg">
+ * <b><a href="..\..\RefsImgs\25_angVelMult.jpg">
  * The angular velocity Matrix</A></b><br>
  * <center><img src="..\..\RefsImgs\25_angVelMult.jpg"/></center>
  * <br>
@@ -202,11 +206,11 @@ import edu.nps.moves.deadreckoning.utils.*;
  * axis angular velocities is needed. Thus the following transformation 
  * formulas are given:
  * <p>
-  * <b><a href="..\..\RefsImgs\body_world.jpg">
+ * <b><a href="..\..\RefsImgs\body_world.jpg">
  * Body to Wrold Transformation</A></b><br>
  * <center><img src="..\..\RefsImgs\body_world.jpg"/></center>
  * <br>
-  * <b><a href="..\..\RefsImgs\world_body.jpg">
+ * <b><a href="..\..\RefsImgs\world_body.jpg">
  * World to Body Transformation</A></b><br>
  * <center><img src="..\..\RefsImgs\world_body.jpg"/></center>
  * <br>
@@ -214,20 +218,20 @@ import edu.nps.moves.deadreckoning.utils.*;
  * <hr>
  * <p>
  * <center><b><u>R MATRIX SOLVER</U></B></CENTER>
-  * <P>
+ * <P>
  * <hr>
  * <p>
-  * <b><a href="..\..\RefsImgs\initOrientMatrix.jpg">
+ * <b><a href="..\..\RefsImgs\initOrientMatrix.jpg">
  * Initial Orientation Matrix</A></b><br>
  * <center><img src="..\..\RefsImgs\initOrientMatrix.jpg"/></center>
  * <P>
  * <hr>
  * <p>
  * <center><b><u>REVISED ORIENTATION</U></B></CENTER>
-  * <P>
+ * <P>
  * <hr>
  * <p>
-  * <b><a href="..\..\RefsImgs\getRevOrientation.jpg">
+ * <b><a href="..\..\RefsImgs\getRevOrientation.jpg">
  * Get the Revised Orientation</A></b><br>
  * <center><img src="..\..\RefsImgs\getRevOrientation.jpg"/></center>
  * 
@@ -277,10 +281,10 @@ public class runTest
         // make the arrays of location and other parameters
         //                loc      orien    lin V    Accel    Ang V
         double[] locOr = {2,3,4,   5,6,1,   1,2,1,   0,0,0,   0,0,0};
-        
+
         // set the parameters
         dr.setNewAll(locOr);
-        
+
         // Print out the current state
         System.out.println(dr.toString());
         System.out.println();
@@ -289,12 +293,12 @@ public class runTest
         {
             // wait 1 second
             Thread.sleep(1000);
-            
+
             // request an update from the DR algorith
             // should be original + 1 full value of other parameters
             // new position should be (3, 5, 5)
             double[] update = dr.getUpdatedPositionOrientation();
-            
+
             // print the update to the screen
             System.out.println(dr.toString());        
         }
@@ -302,7 +306,7 @@ public class runTest
         {
             System.out.println("Unknow Error...?\n    " + e);
         }
-        
+
         // terminate with exit to get out of the inf while loop
         System.exit(0);
     }
@@ -324,8 +328,8 @@ Current State of this Entity:
     Entity Linear Acceleration = (0.0, 0.0, 0.0)
     Entity Angular Velocity = (0.0, 0.0, 0.0)
     Delta between updates = 0.033333335
- 
- 
+
+
 </pre>
  * 
  * @author Sheldon L. Snyder
@@ -344,7 +348,7 @@ public abstract class DIS_DeadReckoning implements Runnable
      * The entity's Z coordinate location with double percision 64bit 
      */    
     protected double entityLocation_Z;    
-    
+
     /**
      * The X orientation of the entity with 32bit float
      */ 
@@ -357,7 +361,7 @@ public abstract class DIS_DeadReckoning implements Runnable
      * The Z orientation of the entity with 32bit float
      */     
     protected float entityOrientation_phi;        
-    
+
     /**
      * The X linear velocity 32bit float
      */ 
@@ -370,7 +374,7 @@ public abstract class DIS_DeadReckoning implements Runnable
      * The Z linear velocity 32bit float
      */     
     protected float entityLinearVelocity_Z = 0;   
-  
+
     /**
      * The linear X acceleration 32bit float
      */ 
@@ -383,7 +387,7 @@ public abstract class DIS_DeadReckoning implements Runnable
      * The linear Z acceleration 32bit float
      */     
     protected float entityLinearAcceleration_Z = 0;  
-    
+
     /**
      * The X angular velocity 32bit float
      */ 
@@ -396,7 +400,7 @@ public abstract class DIS_DeadReckoning implements Runnable
      * The Z angular velocity 32bit float
      */     
     protected float entityAngularVelocity_Z = 0;   
-    
+
     /**
      * how may times per second to update this entity's positon
      */
@@ -430,30 +434,30 @@ public abstract class DIS_DeadReckoning implements Runnable
      * not lose ownership of any monitors.      
      */
     protected long stall = (long)(1000/fps);
-    
+
     /**
      * Thread for the DR algorithm update timing (1/30 second)
      */
     protected Thread aThread;
-    
+
     /**
      * the inital orientation, constant between delta T
      * Only changes when a setNewAll is called
      */
-    Matrix initOrien = new Matrix(3);    
-      
+    Rotation initOrien;    
+
     /**
      * SKEW matrix, constant between delta T
-     * Only changes when a setNewAll is called     * Only changes when a setNewAll is called
+     * Only changes when a setNewAll is called
      */
-    Matrix skewOmega = new Matrix(3);
-    
+    RealMatrix skewOmega;
+
     /**
      * Angular velocity matrix, constant between delta T
      * Only changes when a setNewAll is called
      */
-    Matrix ww = new Matrix(3);
-    
+    RealMatrix ww;
+
     /**
      * Angular velocity magnitude, constant between delta T
      * Only changes when a setNewAll is called
@@ -467,7 +471,7 @@ public abstract class DIS_DeadReckoning implements Runnable
      * Float of PI for moduls rounding as needed
      */
     float myPI = 3.1415926f;
- 
+
     /***************************************************************************
      * Constructor for all DR algorithms...
      * <P>
@@ -480,21 +484,21 @@ public abstract class DIS_DeadReckoning implements Runnable
         aThread = new Thread(this);
         aThread.start();
     }//DIS_DeadReckoning()------------------------------------------------------
-    
+
     /***************************************************************************
      * Gets the revised position and orientation of this entity
      * <p>
      * Applies the required DR formula to the initial position and orientation 
-     * of this entity and returns the updated locaiton and position.
+     * of this entity and returns the updated location and position.
      * <p>
      * This function does not actually perform the computations, it only returns
-     * the current state of the entity. The entity state is updated byt the 
-     * specified DR alorithm within the DR class behind the scenes. Updates are
-     * crated every 1/30 seconds.
+     * the current state of the entity. The entity state is updated by the 
+     * specified DR algorithm within the DR class behind the scenes. Updates are
+     * created every 1/30 seconds.
      * <ol>
      * Assume a desire of 30 fps
      * All parameters are in meters/s
-     * to move 1 meter/second with 30 incriments = 1/30 Delta between updates
+     * to move 1 meter/second with 30 increments = 1/30 Delta between updates
      * 
      * <p>
      * Only returns an array of location and orientation because that
@@ -517,12 +521,12 @@ public abstract class DIS_DeadReckoning implements Runnable
     public double[] getUpdatedPositionOrientation()
     {    
         double[] newLoc = {entityLocation_X, entityLocation_Y, entityLocation_Z,
-                    entityOrientation_psi, entityOrientation_theta, entityOrientation_phi};
+                entityOrientation_psi, entityOrientation_theta, entityOrientation_phi};
         return newLoc;
     }//getUpdatedPositionOrientation()------------------------------------------
-    
-    
-    
+
+
+
     /***************************************************************************
      * Sets the refresh rate for the scene.
      * <p>
@@ -535,26 +539,26 @@ public abstract class DIS_DeadReckoning implements Runnable
         fps = frames;
         changeDelta = 1/fps;
     }//setFPS(int frames)-------------------------------------------------------
-    
-    
-    
+
+
+
     /***************************************************************************
      * Set the parameters for this entity's DR function based on the most
      * recent PDU.
      * <p>
-     * This ic called by the entity anytime the entity receives an updated
+     * This is called by the entity any time the entity receives an updated
      * ESPDU for this entity.
      * <P>
      * This can be the first and initialization call or update. 
      * <P>
-     * The folowing (triples) are set with each call:
+     * The following (triples) are set with each call:
      * <OL>
-     * <LI>Entity Locaiton 64bit
+     * <LI>Entity Location 64bit
      * <LI>Entity Orientation 32bit
      * Entity Linear Velocity 32bit
      * Entity Linear Acceleration 32bit
      * Entity Angular Velocity 32bit
-       
+
      * <P>
      * entityLocation_X = allDis[0];<br>
      * entityLocation_Y = allDis[1];<br>
@@ -578,7 +582,7 @@ public abstract class DIS_DeadReckoning implements Runnable
      * <P>
      * DR fields from a PDU update or initial 
      * 
-     * @param allDis - 15 double percisions representing the above in order of the above
+     * @param allDis - 15 double precisions representing the above in order of the above
      * @throws Exception
      */
     public void setNewAll(double[] allDis) throws Exception
@@ -586,57 +590,57 @@ public abstract class DIS_DeadReckoning implements Runnable
         entityLocation_X = allDis[0];
         entityLocation_Y = allDis[1];
         entityLocation_Z = allDis[2];
-        
+
         entityOrientation_psi = (float)allDis[3];
         entityOrientation_theta = (float)allDis[4];
         entityOrientation_phi = (float)allDis[5];
-        
+
         entityLinearVelocity_X = (float)allDis[6];
         entityLinearVelocity_Y = (float)allDis[7];
         entityLinearVelocity_Z = (float)allDis[8];
-        
+
         entityLinearAcceleration_X = (float)allDis[9];
         entityLinearAcceleration_Y = (float)allDis[10];
         entityLinearAcceleration_Z = (float)allDis[11];
-        
+
         entityAngularVelocity_X = (float)allDis[12];
         entityAngularVelocity_Y = (float)allDis[13];
         entityAngularVelocity_Z = (float)allDis[14];
-        
+
         // solve for magnatude
         wMag = Math.sqrt(entityAngularVelocity_X * entityAngularVelocity_X + 
                 entityAngularVelocity_Y * entityAngularVelocity_Y +
                 entityAngularVelocity_Z * entityAngularVelocity_Z);
-        
+
         wSq = wMag * wMag;
 
         //System.out.println("wMag print");
         //System.out.println(wMag);
         //System.out.println();
-        
+
         // build the skew matrix
         setOmega();
         //System.out.println("skewOmega print");
         //skewOmega.print();
         //System.out.println();
-        
+
         // build the angular velocity matrix
         setWW();
         //System.out.println("ww print");
         //ww.print();
         //System.out.println();
-        
+
         // reset delta count given this new update        
         setInitOrient();
         //System.out.println("init Orient print");
         //initOrien.print();
         //System.out.println();        
-        
+
         deltaCt = 0;
     }//setNewAll(double[] allDis)-----------------------------------------------
-    
-    
-    
+
+
+
     /***************************************************************************
      * With each setNewAll() makes the new initial orientation matrix given the
      * new parameters
@@ -644,28 +648,16 @@ public abstract class DIS_DeadReckoning implements Runnable
      */    
     private void setInitOrient() throws Exception
     {
-        double cosPsi = Math.cos(entityOrientation_psi);
-        double sinPsi = Math.sin(entityOrientation_psi);        
-        double cosTheta = Math.cos(entityOrientation_theta);
-        double sinTheta = Math.sin(entityOrientation_theta);
-        double cosPhi = Math.cos(entityOrientation_phi);
-        double sinPhi = Math.sin(entityOrientation_phi);        
-        
-        initOrien.setCell(0, 0, cosTheta*cosPsi);
-        initOrien.setCell(0, 1, cosTheta*sinPsi);
-        initOrien.setCell(0, 2, -sinTheta);  
-        
-        initOrien.setCell(1, 0, sinPhi*sinTheta*cosPsi - cosPhi*sinPsi);
-        initOrien.setCell(1, 1, sinPhi*sinTheta*sinPsi + cosPhi*cosPsi);
-        initOrien.setCell(1, 2, sinPhi*cosTheta);
-        
-        initOrien.setCell(2, 0, cosPhi*sinTheta*cosPsi + sinPhi*sinPsi);
-        initOrien.setCell(2, 1, cosPhi*sinTheta*sinPsi - sinPhi*cosPsi);
-        initOrien.setCell(2, 2, cosPhi*cosTheta);        
+        initOrien = new Rotation(
+                RotationOrder.ZYX,
+                RotationConvention.FRAME_TRANSFORM,
+                entityOrientation_psi,
+                entityOrientation_theta,
+                entityOrientation_phi);
     }//setInitOrient() throws Exception-----------------------------------------
-    
-    
-    
+
+
+
     /***************************************************************************
      * With each setNewAll() makes the new angular velocity matrix given the
      * new parameters
@@ -673,19 +665,20 @@ public abstract class DIS_DeadReckoning implements Runnable
      */
     private void setWW() throws Exception
     {
-        ww.setCell(0, 0, entityAngularVelocity_X * entityAngularVelocity_X);
-        ww.setCell(0, 1, entityAngularVelocity_X * entityAngularVelocity_Y);
-        ww.setCell(0, 2, entityAngularVelocity_X * entityAngularVelocity_Z);                
-        ww.setCell(1, 0, entityAngularVelocity_Y * entityAngularVelocity_X);
-        ww.setCell(1, 1, entityAngularVelocity_Y * entityAngularVelocity_Y);
-        ww.setCell(1, 2, entityAngularVelocity_Y * entityAngularVelocity_Z);
-        ww.setCell(2, 0, entityAngularVelocity_Z * entityAngularVelocity_X);
-        ww.setCell(2, 1, entityAngularVelocity_Z * entityAngularVelocity_Y);
-        ww.setCell(2, 2, entityAngularVelocity_Z * entityAngularVelocity_Z);        
+        ww = MatrixUtils.createRealMatrix(3, 3);
+        ww.setEntry(0, 0, entityAngularVelocity_X * entityAngularVelocity_X);
+        ww.setEntry(0, 1, entityAngularVelocity_X * entityAngularVelocity_Y);
+        ww.setEntry(0, 2, entityAngularVelocity_X * entityAngularVelocity_Z);                
+        ww.setEntry(1, 0, entityAngularVelocity_Y * entityAngularVelocity_X);
+        ww.setEntry(1, 1, entityAngularVelocity_Y * entityAngularVelocity_Y);
+        ww.setEntry(1, 2, entityAngularVelocity_Y * entityAngularVelocity_Z);
+        ww.setEntry(2, 0, entityAngularVelocity_Z * entityAngularVelocity_X);
+        ww.setEntry(2, 1, entityAngularVelocity_Z * entityAngularVelocity_Y);
+        ww.setEntry(2, 2, entityAngularVelocity_Z * entityAngularVelocity_Z);        
     }//setWW() throws Exception-------------------------------------------------
-    
-    
-    
+
+
+
     /***************************************************************************
      * With each setNewAll() makes the new skew matrix given the
      * new parameters
@@ -693,19 +686,20 @@ public abstract class DIS_DeadReckoning implements Runnable
      */
     private void setOmega() throws Exception
     {
-        skewOmega.setCell(0, 0, 0);
-        skewOmega.setCell(1, 1, 0);
-        skewOmega.setCell(2, 2, 0);        
-        skewOmega.setCell(1, 0, entityAngularVelocity_Z);
-        skewOmega.setCell(2, 0, -entityAngularVelocity_Y);
-        skewOmega.setCell(2, 1, entityAngularVelocity_X);              
-        skewOmega.setCell(0, 1, -entityAngularVelocity_Z);
-        skewOmega.setCell(0, 2, entityAngularVelocity_Y);
-        skewOmega.setCell(1, 2, -entityAngularVelocity_X);          
+        skewOmega = MatrixUtils.createRealMatrix(3, 3);
+        skewOmega.setEntry(0, 0, 0);
+        skewOmega.setEntry(1, 1, 0);
+        skewOmega.setEntry(2, 2, 0);        
+        skewOmega.setEntry(1, 0, entityAngularVelocity_Z);
+        skewOmega.setEntry(2, 0, -entityAngularVelocity_Y);
+        skewOmega.setEntry(2, 1, entityAngularVelocity_X);              
+        skewOmega.setEntry(0, 1, -entityAngularVelocity_Z);
+        skewOmega.setEntry(0, 2, entityAngularVelocity_Y);
+        skewOmega.setEntry(1, 2, -entityAngularVelocity_X);          
     }//setOmega() throws Exception----------------------------------------------
-    
-    
-    
+
+
+
     /***************************************************************************
      * Pretty print the current state of this Dead Reckoning object
      * <p>
@@ -716,12 +710,12 @@ public abstract class DIS_DeadReckoning implements Runnable
     public String toString()
     {
         String buff = "Current State of this Entity:\n" +
-            "    Entity Location = (" + entityLocation_X + ", " +
-            entityLocation_Y + ", " + entityLocation_Z + ")\n" +
-                    
+                "    Entity Location = (" + entityLocation_X + ", " +
+                entityLocation_Y + ", " + entityLocation_Z + ")\n" +
+
             "    Entity Orientation = (" + entityOrientation_psi + ", " +
             entityOrientation_theta + ", " + entityOrientation_phi + ")\n" +
-                    
+
             "    Entity Linear Velocity = (" + entityLinearVelocity_X + ", " +
             entityLinearVelocity_Y + ", " + entityLinearVelocity_Z + ")\n" +
 
@@ -730,9 +724,9 @@ public abstract class DIS_DeadReckoning implements Runnable
 
             "    Entity Angular Velocity = (" + entityAngularVelocity_X + ", " + 
             entityAngularVelocity_Y + ", " + entityAngularVelocity_Z + ")\n" +
-                    
+
             "    Delta between updates = " + changeDelta;
-       
+
         return buff;
     }// toString()--------------------------------------------------------------
 }// DIS_DeadReckoning-----------------------------------------------------------
