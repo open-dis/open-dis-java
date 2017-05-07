@@ -13,6 +13,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
  * (e.g. phi,theta,psi or roll,pitch,yaw)
  * even though that many not be the order of rotation.
  * 
+ * @author camejia
  *
  */
 public class RotationUtils {
