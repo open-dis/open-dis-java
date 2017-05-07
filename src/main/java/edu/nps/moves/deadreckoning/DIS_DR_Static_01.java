@@ -13,5 +13,7 @@ public class DIS_DR_Static_01 extends DIS_DeadReckoning
      */
     public void run()    {    }    
 
-    void update() { }
+    void update() {
+        deltaCt++;   
+    }
 }

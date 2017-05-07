@@ -472,6 +472,11 @@ public abstract class DIS_DeadReckoning implements Runnable
      */
     float myPI = 3.1415926f;
 
+    /**
+     * DIS timestamp
+     */
+    private long initTimestamp;
+    
     /***************************************************************************
      * Constructor for all DR algorithms...
      * <P>
@@ -525,8 +530,19 @@ public abstract class DIS_DeadReckoning implements Runnable
         return newLoc;
     }//getUpdatedPositionOrientation()------------------------------------------
 
+    /**
+     * @return e doubles of velocity
+     */
+    public double[] getUpdatedVelocity()
+    {    
+        return new double[] { entityLinearVelocity_X, entityLinearVelocity_Y, entityLinearVelocity_Z };
+    }//getUpdatedVelocity()------------------------------------------
 
-
+    public long getUpdatedTimestamp() {
+        long dtimeStamp = 2 * (long) (deltaCt * changeDelta * 2147483648. / 3600.);
+        return initTimestamp + dtimeStamp;
+    }
+    
     /***************************************************************************
      * Sets the refresh rate for the scene.
      * <p>
@@ -638,7 +654,13 @@ public abstract class DIS_DeadReckoning implements Runnable
         deltaCt = 0;
     }//setNewAll(double[] allDis)-----------------------------------------------
 
-
+    /**
+     * Set the timestamp
+     * @param timestamp
+     */
+    public void setInitTimestamp(long initTimestamp) {
+        this.initTimestamp = initTimestamp;
+    }
 
     /***************************************************************************
      * With each setNewAll() makes the new initial orientation matrix given the
