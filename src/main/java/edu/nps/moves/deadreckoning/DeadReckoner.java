@@ -1,12 +1,3 @@
-// This Java implementation is based on the C implementation from the paper:
-// Towers, J., and Hines, J., "Equations of motion of the DIS 2.0.3 dead reckoning algorithms,"
-// Tenth Workshop on Standards for the Interoperability of Defense Simulations, Orlando, FL, pp. 431-462, Mar. 1994.
-// Available at http://www.sisostds.org/DigitalLibrary.aspx?EntryId=31599
-
-// This provides an alternate to the existing classes
-// (DIS_DeadReckoning, DIS_DR_Static_01, DIS_DR_FPW_02, etc.)
-// in the Java Open-DIS library.
-
 package edu.nps.moves.deadreckoning;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
@@ -21,6 +12,19 @@ import edu.nps.moves.dis.ArticulationParameter;
 import edu.nps.moves.dis.EntityStatePdu;
 import edu.nps.moves.disenum.DeadReckoningAlgorithm;
 
+/**
+ * This Java implementation is based on the C implementation from the paper:
+ * Towers, J., and Hines, J., "Equations of motion of the DIS 2.0.3 dead reckoning algorithms,"
+ * Tenth Workshop on Standards for the Interoperability of Defense Simulations, Orlando, FL, pp. 431-462, Mar. 1994.
+ * Available at http://www.sisostds.org/DigitalLibrary.aspx?EntryId=31599
+ * 
+ * This provides an alternate to the existing classes
+ * (DIS_DeadReckoning, DIS_DR_Static_01, DIS_DR_FPW_02, etc.)
+ * in the Java Open-DIS library.
+ * 
+ * @author camejia
+ *
+ */
 public class DeadReckoner {
 
     private static double MIN_ROTATION_RATE = 0.2 * Math.PI / 180;  // minimum significant rate = 1deg/5sec

@@ -49,7 +49,7 @@ public class DeadReckonerTest {
     /*
      * Another helper function to make it easier to test DIS_DeadReckoning et al.
      */
-    static void fromNewLoc(double[] newLoc, EntityStatePdu entityStatePdu) {
+    static void fromNewLocVelTimestamp(double[] newLoc, double[] newVel, long timestamp, EntityStatePdu entityStatePdu) {
         entityStatePdu.getEntityLocation().setX(newLoc[0]); 
         entityStatePdu.getEntityLocation().setY(newLoc[1]); 
         entityStatePdu.getEntityLocation().setZ(newLoc[2]); 
@@ -57,6 +57,12 @@ public class DeadReckonerTest {
         entityStatePdu.getEntityOrientation().setPsi(  (float) newLoc[3]);
         entityStatePdu.getEntityOrientation().setTheta((float) newLoc[4]);
         entityStatePdu.getEntityOrientation().setPhi(  (float) newLoc[5]);
+
+        entityStatePdu.getEntityLinearVelocity().setX((float) newVel[0]);
+        entityStatePdu.getEntityLinearVelocity().setY((float) newVel[1]);
+        entityStatePdu.getEntityLinearVelocity().setZ((float) newVel[2]);
+
+        entityStatePdu.setTimestamp(timestamp);
     }
 
     @Before
@@ -106,160 +112,138 @@ public class DeadReckonerTest {
      * DR6, DR7, and DR9 are special cases of DR8
      * DR1 is a special case of both.
      * 
-     * DIS_DeadReckoning et al do not update velocity or timestamp,
-     * so we don't check as many fields when testing those classes.
      * The timestamps are a little finicky, especially when taking half setps,
      * so we allow some tolerance there.
      */
 
-    void answers1B(EntityStatePdu espdu4, boolean testAll) {
+    void answers1B(EntityStatePdu espdu4) {
         assertEquals(-6378137.0, espdu4.getEntityLocation().getX(), 0.01);
         assertEquals(-5.0, espdu4.getEntityLocation().getY(), 0.01);
         assertEquals(-10.0, espdu4.getEntityLocation().getZ(), 0.01);
         assertEquals(15.0, espdu4.getEntityOrientation().getPsi() * 180.0 / Math.PI, 0.01);
         assertEquals(20.0, espdu4.getEntityOrientation().getTheta() * 180.0 / Math.PI, 0.01);
         assertEquals(25.0, espdu4.getEntityOrientation().getPhi() * 180.0 / Math.PI, 0.01);
-        if (testAll) {
-            assertEquals(30.0f, espdu4.getEntityLinearVelocity().getX(), 0.01);
-            assertEquals(35.0f, espdu4.getEntityLinearVelocity().getY(), 0.01);
-            assertEquals(40.0f, espdu4.getEntityLinearVelocity().getZ(), 0.01);
-            assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
-        }
+        assertEquals(30.0f, espdu4.getEntityLinearVelocity().getX(), 0.01);
+        assertEquals(35.0f, espdu4.getEntityLinearVelocity().getY(), 0.01);
+        assertEquals(40.0f, espdu4.getEntityLinearVelocity().getZ(), 0.01);
+        assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
     }
 
-    void answers2(EntityStatePdu espdu4, boolean testAll) {
+    void answers2(EntityStatePdu espdu4) {
         assertEquals(-6378122.0, espdu4.getEntityLocation().getX(), 0.01);
         assertEquals(12.5, espdu4.getEntityLocation().getY(), 0.01);
         assertEquals(10.0, espdu4.getEntityLocation().getZ(), 0.01);
         assertEquals(15.0, espdu4.getEntityOrientation().getPsi() * 180.0 / Math.PI, 0.01);
         assertEquals(20.0, espdu4.getEntityOrientation().getTheta() * 180.0 / Math.PI, 0.01);
         assertEquals(25.0, espdu4.getEntityOrientation().getPhi() * 180.0 / Math.PI, 0.01);
-        if (testAll) {
-            assertEquals(30.0f, espdu4.getEntityLinearVelocity().getX(), 0.01);
-            assertEquals(35.0f, espdu4.getEntityLinearVelocity().getY(), 0.01);
-            assertEquals(40.0f, espdu4.getEntityLinearVelocity().getZ(), 0.01);
-            assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
-        }
+        assertEquals(30.0f, espdu4.getEntityLinearVelocity().getX(), 0.01);
+        assertEquals(35.0f, espdu4.getEntityLinearVelocity().getY(), 0.01);
+        assertEquals(40.0f, espdu4.getEntityLinearVelocity().getZ(), 0.01);
+        assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
     }
 
-    void answers3(EntityStatePdu espdu4, boolean testAll) {
+    void answers3(EntityStatePdu espdu4) {
         assertEquals(-6378122.0, espdu4.getEntityLocation().getX(), 0.01);
         assertEquals(12.5, espdu4.getEntityLocation().getY(), 0.01);
         assertEquals(10.0, espdu4.getEntityLocation().getZ(), 0.01);
         assertEquals(64.32, espdu4.getEntityOrientation().getPsi() * 180.0 / Math.PI, 0.01);
         assertEquals(14.84, espdu4.getEntityOrientation().getTheta() * 180.0 / Math.PI, 0.01);
         assertEquals(72.5, espdu4.getEntityOrientation().getPhi() * 180.0 / Math.PI, 0.01);
-        if (testAll) {
-            assertEquals(30.0f, espdu4.getEntityLinearVelocity().getX(), 0.01);
-            assertEquals(35.0f, espdu4.getEntityLinearVelocity().getY(), 0.01);
-            assertEquals(40.0f, espdu4.getEntityLinearVelocity().getZ(), 0.01);
-            assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
-        }
+        assertEquals(30.0f, espdu4.getEntityLinearVelocity().getX(), 0.01);
+        assertEquals(35.0f, espdu4.getEntityLinearVelocity().getY(), 0.01);
+        assertEquals(40.0f, espdu4.getEntityLinearVelocity().getZ(), 0.01);
+        assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
     }
 
-    void answers4(EntityStatePdu espdu4, boolean testAll) {
+    void answers4(EntityStatePdu espdu4) {
         assertEquals(-6378132.0, espdu4.getEntityLocation().getX(), 0.01);
         assertEquals(1.88, espdu4.getEntityLocation().getY(), 0.01);
         assertEquals(-1.25, espdu4.getEntityLocation().getZ(), 0.01);
         assertEquals(64.32, espdu4.getEntityOrientation().getPsi() * 180.0 / Math.PI, 0.01);
         assertEquals(14.84, espdu4.getEntityOrientation().getTheta() * 180.0 / Math.PI, 0.01);
         assertEquals(72.5, espdu4.getEntityOrientation().getPhi() * 180.0 / Math.PI, 0.01);
-        if (testAll) {
-            assertEquals(-10.0, espdu4.getEntityLinearVelocity().getX(), 0.01);
-            assertEquals(-7.5, espdu4.getEntityLinearVelocity().getY(), 0.01);
-            assertEquals(-5.0, espdu4.getEntityLinearVelocity().getZ(), 0.01);
-            assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
-        }
+        assertEquals(-10.0, espdu4.getEntityLinearVelocity().getX(), 0.01);
+        assertEquals(-7.5, espdu4.getEntityLinearVelocity().getY(), 0.01);
+        assertEquals(-5.0, espdu4.getEntityLinearVelocity().getZ(), 0.01);
+        assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
     }
 
-    void answers5(EntityStatePdu espdu4, boolean testAll) {
+    void answers5(EntityStatePdu espdu4) {
         assertEquals(-6378132.0, espdu4.getEntityLocation().getX(), 0.01);
         assertEquals(1.88, espdu4.getEntityLocation().getY(), 0.01);
         assertEquals(-1.25, espdu4.getEntityLocation().getZ(), 0.01);
         assertEquals(15.0, espdu4.getEntityOrientation().getPsi() * 180.0 / Math.PI, 0.01);
         assertEquals(20.0, espdu4.getEntityOrientation().getTheta() * 180.0 / Math.PI, 0.01);
         assertEquals(25.0, espdu4.getEntityOrientation().getPhi() * 180.0 / Math.PI, 0.01);
-        if (testAll) {
-            assertEquals(-10.0, espdu4.getEntityLinearVelocity().getX(), 0.01);
-            assertEquals(-7.5, espdu4.getEntityLinearVelocity().getY(), 0.01);
-            assertEquals(-5.0, espdu4.getEntityLinearVelocity().getZ(), 0.01);
-            assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
-        }
+        assertEquals(-10.0, espdu4.getEntityLinearVelocity().getX(), 0.01);
+        assertEquals(-7.5, espdu4.getEntityLinearVelocity().getY(), 0.01);
+        assertEquals(-5.0, espdu4.getEntityLinearVelocity().getZ(), 0.01);
+        assertTrue(Math.abs(0x1159E260 - espdu4.getTimestamp()) <= TIMESTAMP_TOLERANCE);
     }
 
-    void answers1W(EntityStatePdu espdu8, boolean testAll) {
+    void answers1W(EntityStatePdu espdu8) {
         assertEquals(6378137.0, espdu8.getEntityLocation().getX(), 0.01);
         assertEquals(5.0, espdu8.getEntityLocation().getY(), 0.01);
         assertEquals(10.0, espdu8.getEntityLocation().getZ(), 0.01);
         assertEquals(15.0, espdu8.getEntityOrientation().getPsi() * 180.0 / Math.PI, 0.01);
         assertEquals(20.0, espdu8.getEntityOrientation().getTheta() * 180.0 / Math.PI, 0.01);
         assertEquals(25.0, espdu8.getEntityOrientation().getPhi() * 180.0 / Math.PI, 0.01);
-        if (testAll) {
-            assertEquals(30.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
-            assertEquals(35.0f, espdu8.getEntityLinearVelocity().getY(), 0.01);
-            assertEquals(40.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
-            assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
-        }
+        assertEquals(30.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
+        assertEquals(35.0f, espdu8.getEntityLinearVelocity().getY(), 0.01);
+        assertEquals(40.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
+        assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
     }
 
-    void answers6(EntityStatePdu espdu8, boolean testAll) {
+    void answers6(EntityStatePdu espdu8) {
         assertEquals(6378157.13, espdu8.getEntityLocation().getX(), 0.01);
         assertEquals(18.06, espdu8.getEntityLocation().getY(), 0.01);
         assertEquals(28.85, espdu8.getEntityLocation().getZ(), 0.01);
         assertEquals(15.0, espdu8.getEntityOrientation().getPsi() * 180.0 / Math.PI, 0.01);
         assertEquals(20.0, espdu8.getEntityOrientation().getTheta() * 180.0 / Math.PI, 0.01);
         assertEquals(25.0, espdu8.getEntityOrientation().getPhi() * 180.0 / Math.PI, 0.01);
-        if (testAll) {
-            assertEquals(30.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
-            assertEquals(35.0f, espdu8.getEntityLinearVelocity().getY(), 0.01);
-            assertEquals(40.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
-            assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
-        }
+        assertEquals(30.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
+        assertEquals(35.0f, espdu8.getEntityLinearVelocity().getY(), 0.01);
+        assertEquals(40.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
+        assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
     }
 
-    void answers7(EntityStatePdu espdu8, boolean testAll) {
+    void answers7(EntityStatePdu espdu8) {
         assertEquals(6378156.77, espdu8.getEntityLocation().getX(), 0.01);
         assertEquals(18.75, espdu8.getEntityLocation().getY(), 0.01);
         assertEquals(28.73, espdu8.getEntityLocation().getZ(), 0.01);
         assertEquals(-23.07, espdu8.getEntityOrientation().getPsi() * 180.0 / Math.PI, 0.01);
         assertEquals(-8.68, espdu8.getEntityOrientation().getTheta() * 180.0 / Math.PI, 0.01);
         assertEquals(-10.86, espdu8.getEntityOrientation().getPhi() * 180.0 / Math.PI, 0.01);
-        if (testAll) {
-            assertEquals(30.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
-            assertEquals(35.0f, espdu8.getEntityLinearVelocity().getY(), 0.01);
-            assertEquals(40.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
-            assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
-        }
+        assertEquals(30.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
+        assertEquals(35.0f, espdu8.getEntityLinearVelocity().getY(), 0.01);
+        assertEquals(40.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
+        assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
     }
 
-    void answers8(EntityStatePdu espdu8, boolean testAll) {
+    void answers8(EntityStatePdu espdu8) {
         assertEquals(6378144.03, espdu8.getEntityLocation().getX(), 0.01);
         assertEquals(10.46, espdu8.getEntityLocation().getY(), 0.01);
         assertEquals(18.32, espdu8.getEntityLocation().getZ(), 0.01);
         assertEquals(-23.07, espdu8.getEntityOrientation().getPsi() * 180.0 / Math.PI, 0.01);
         assertEquals(-8.68, espdu8.getEntityOrientation().getTheta() * 180.0 / Math.PI, 0.01);
         assertEquals(-10.86, espdu8.getEntityOrientation().getPhi() * 180.0 / Math.PI, 0.01);
-        if (testAll) {
-            assertEquals(-10.0, espdu8.getEntityLinearVelocity().getX(), 0.01);
-            assertEquals(-7.5, espdu8.getEntityLinearVelocity().getY(), 0.01);
-            assertEquals(-5.0, espdu8.getEntityLinearVelocity().getZ(), 0.01);
-            assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
-        }
+        assertEquals(-10.0, espdu8.getEntityLinearVelocity().getX(), 0.01);
+        assertEquals(-7.5, espdu8.getEntityLinearVelocity().getY(), 0.01);
+        assertEquals(-5.0, espdu8.getEntityLinearVelocity().getZ(), 0.01);
+        assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
     }
 
-    void answers9(EntityStatePdu espdu8, boolean testAll) {
+    void answers9(EntityStatePdu espdu8) {
         assertEquals(6378144.46, espdu8.getEntityLocation().getX(), 0.01);
         assertEquals(9.62, espdu8.getEntityLocation().getY(), 0.01);
         assertEquals(18.47, espdu8.getEntityLocation().getZ(), 0.01);
         assertEquals(15.0, espdu8.getEntityOrientation().getPsi() * 180.0 / Math.PI, 0.01);
         assertEquals(20.0, espdu8.getEntityOrientation().getTheta() * 180.0 / Math.PI, 0.01);
         assertEquals(25.0, espdu8.getEntityOrientation().getPhi() * 180.0 / Math.PI, 0.01);
-        if (testAll) {
-            assertEquals(-10.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
-            assertEquals(-7.5f, espdu8.getEntityLinearVelocity().getY(), 0.01);
-            assertEquals(-5.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
-            assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
-        }
+        assertEquals(-10.0f, espdu8.getEntityLinearVelocity().getX(), 0.01);
+        assertEquals(-7.5f, espdu8.getEntityLinearVelocity().getY(), 0.01);
+        assertEquals(-5.0f, espdu8.getEntityLinearVelocity().getZ(), 0.01);
+        assertTrue(Math.abs(0x127D27A0 - espdu8.getTimestamp()) <= TIMESTAMP_TOLERANCE);
     }
 
     /*
@@ -271,28 +255,28 @@ public class DeadReckonerTest {
     public void testPerform_DR1B() {
         espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.STATIC_ENTITY_DOES_NOT_MOVE.getValue());
         DeadReckoner.perform_DR(espdu4, DELTA_TIME);
-        answers1B(espdu4, true);
+        answers1B(espdu4);
     }
 
     @Test
     public void testPerform_DR2() {
         espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_P_W.getValue());
         DeadReckoner.perform_DR(espdu4, DELTA_TIME);
-        answers2(espdu4, true);
+        answers2(espdu4);
     }
 
     @Test
     public void testPerform_DR3() {
         espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_W.getValue());
         DeadReckoner.perform_DR(espdu4, DELTA_TIME);
-        answers3(espdu4, true);
+        answers3(espdu4);
     }
 
     @Test
     public void testPerform_DR4() {
         espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_W.getValue());
         DeadReckoner.perform_DR(espdu4, DELTA_TIME);
-        answers4(espdu4, true);
+        answers4(espdu4);
     }
 
     /*
@@ -300,20 +284,20 @@ public class DeadReckonerTest {
      * acceleration and multiple time steps.  I added regression cases
      * for both the old DIS_DeadReckoning and new DeadReckoner classes.
      */
-    
+
     @Test
     public void testPerform_DR4halfStep() {
         espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_W.getValue());
         DeadReckoner.perform_DR(espdu4, DELTA_TIME / 2.0);
         DeadReckoner.perform_DR(espdu4, DELTA_TIME / 2.0);
-        answers4(espdu4, true);
+        answers4(espdu4);
     }
 
     @Test
     public void testPerform_DR5() {
         espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_V_W.getValue());
         DeadReckoner.perform_DR(espdu4, DELTA_TIME);
-        answers5(espdu4, true);
+        answers5(espdu4);
     }
 
     @Test
@@ -321,28 +305,28 @@ public class DeadReckonerTest {
         espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_V_W.getValue());
         DeadReckoner.perform_DR(espdu4, DELTA_TIME / 2.0);
         DeadReckoner.perform_DR(espdu4, DELTA_TIME / 2.0);
-        answers5(espdu4, true);
+        answers5(espdu4);
     }
 
     @Test
     public void testPerform_DR1W() {
         espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.STATIC_ENTITY_DOES_NOT_MOVE.getValue());
         DeadReckoner.perform_DR(espdu8, DELTA_TIME);
-        answers1W(espdu8, true);
+        answers1W(espdu8);
     }
 
     @Test
     public void testPerform_DR6() {
         espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_P_B.getValue());
         DeadReckoner.perform_DR(espdu8, DELTA_TIME);
-        answers6(espdu8, true);
+        answers6(espdu8);
     }
 
     @Test
     public void testPerform_DR7() {
         espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_B.getValue());
         DeadReckoner.perform_DR(espdu8, DELTA_TIME);
-        answers7(espdu8, true);
+        answers7(espdu8);
     }
 
     @Test
@@ -350,14 +334,14 @@ public class DeadReckonerTest {
         espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_B.getValue());
         DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
         DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
-        answers7(espdu8, true);
+        answers7(espdu8);
     }
 
     @Test
     public void testPerform_DR8() {
         espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_B.getValue());
         DeadReckoner.perform_DR(espdu8, DELTA_TIME);
-        answers8(espdu8, true);
+        answers8(espdu8);
     }
 
     @Test
@@ -365,14 +349,14 @@ public class DeadReckonerTest {
         espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_B.getValue());
         DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
         DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
-        answers8(espdu8, true);
+        answers8(espdu8);
     }
 
     @Test
     public void testPerform_DR9() {
         espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_V_B.getValue());
         DeadReckoner.perform_DR(espdu8, DELTA_TIME);
-        answers9(espdu8, true);
+        answers9(espdu8);
     }
 
     @Test
@@ -380,7 +364,7 @@ public class DeadReckonerTest {
         espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMF_V_B.getValue());
         DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
         DeadReckoner.perform_DR(espdu8, DELTA_TIME / 2.0);
-        answers9(espdu8, true);
+        answers9(espdu8);
     }
 
     // DIS_DeadReckoning et al
@@ -389,56 +373,71 @@ public class DeadReckonerTest {
     public void testStatic01B() throws Exception {
         DIS_DR_Static_01 disDr = new DIS_DR_Static_01();
         disDr.setNewAll(toAllDis(espdu4));
+        disDr.setInitTimestamp(espdu4.getTimestamp());
         disDr.setFPS(FRAMES_PER_SECOND);
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu4);
-        answers1B(espdu4, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu4);
+        answers1B(espdu4);
     }
 
     @Test
     public void testFpw02() throws Exception {
         DIS_DR_FPW_02 disDr = new DIS_DR_FPW_02();
         disDr.setNewAll(toAllDis(espdu4));
+        disDr.setInitTimestamp(espdu4.getTimestamp());
         disDr.setFPS(FRAMES_PER_SECOND);
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu4);
-        answers2(espdu4, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu4);
+        answers2(espdu4);
     }
 
     @Test
     public void testRpw03() throws Exception {
         DIS_DR_RPW_03 disDr = new DIS_DR_RPW_03();
         disDr.setNewAll(toAllDis(espdu4));
+        disDr.setInitTimestamp(espdu4.getTimestamp());
         disDr.setFPS(FRAMES_PER_SECOND);
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu4);
-        answers3(espdu4, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu4);
+        answers3(espdu4);
     }
 
     @Test
     public void testRvw04() throws Exception {
         DIS_DR_RVW_04 disDr = new DIS_DR_RVW_04();
         disDr.setNewAll(toAllDis(espdu4));
+        disDr.setInitTimestamp(espdu4.getTimestamp());
         disDr.setFPS(FRAMES_PER_SECOND);
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu4);
-        answers4(espdu4, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu4);
+        answers4(espdu4);
     }
 
     @Test
     public void testRvw04halfStep() throws Exception {
         DIS_DR_RVW_04 disDr = new DIS_DR_RVW_04();
         disDr.setNewAll(toAllDis(espdu4));
+        disDr.setInitTimestamp(espdu4.getTimestamp());
         disDr.setFPS(2 * FRAMES_PER_SECOND);
         disDr.update();
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu4);
-        answers4(espdu4, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu4);
+        answers4(espdu4);
     }
 
     // DIS_DR_RPW_03b and DIS_DR_RVW_04b do not follow IEEE Std 1278.1
@@ -448,114 +447,144 @@ public class DeadReckonerTest {
     public void testRvw05() throws Exception {
         DIS_DR_FVW_05 disDr = new DIS_DR_FVW_05();
         disDr.setNewAll(toAllDis(espdu4));
+        disDr.setInitTimestamp(espdu4.getTimestamp());
         disDr.setFPS(FRAMES_PER_SECOND);
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu4);
-        answers5(espdu4, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu4);
+        answers5(espdu4);
     }
 
     @Test
     public void testRvw05halfStep() throws Exception {
         DIS_DR_FVW_05 disDr = new DIS_DR_FVW_05();
         disDr.setNewAll(toAllDis(espdu4));
+        disDr.setInitTimestamp(espdu4.getTimestamp());
         disDr.setFPS(2 * FRAMES_PER_SECOND);
         disDr.update();
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu4);
-        answers5(espdu4, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu4);
+        answers5(espdu4);
     }
 
     @Test
     public void testStatic01W() throws Exception {
         DIS_DR_Static_01 disDr = new DIS_DR_Static_01();
         disDr.setNewAll(toAllDis(espdu8));
+        disDr.setInitTimestamp(espdu8.getTimestamp());
         disDr.setFPS(FRAMES_PER_SECOND);
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu8);
-        answers1W(espdu8, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu8);
+        answers1W(espdu8);
     }
 
     @Test
     public void testFpb06() throws Exception {
         DIS_DR_FPB_06 disDr = new DIS_DR_FPB_06();
         disDr.setNewAll(toAllDis(espdu8));
+        disDr.setInitTimestamp(espdu8.getTimestamp());
         disDr.setFPS(FRAMES_PER_SECOND);
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu8);
-        answers6(espdu8, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu8);
+        answers6(espdu8);
     }
 
     @Test
     public void testRpb07() throws Exception {
         DIS_DR_RPB_07 disDr = new DIS_DR_RPB_07();
         disDr.setNewAll(toAllDis(espdu8));
+        disDr.setInitTimestamp(espdu8.getTimestamp());
         disDr.setFPS(FRAMES_PER_SECOND);
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu8);
-        answers7(espdu8, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu8);
+        answers7(espdu8);
     }
 
     @Test
     public void testRpb07HalfStep() throws Exception {
         DIS_DR_RPB_07 disDr = new DIS_DR_RPB_07();
         disDr.setNewAll(toAllDis(espdu8));
+        disDr.setInitTimestamp(espdu8.getTimestamp());
         disDr.setFPS(2 * FRAMES_PER_SECOND);
         disDr.update();
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu8);
-        answers7(espdu8, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu8);
+        answers7(espdu8);
     }
 
     @Test
     public void testRvb08() throws Exception {
         DIS_DR_RVB_08 disDr = new DIS_DR_RVB_08();
         disDr.setNewAll(toAllDis(espdu8));
+        disDr.setInitTimestamp(espdu8.getTimestamp());
         disDr.setFPS(FRAMES_PER_SECOND);
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu8);
-        answers8(espdu8, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu8);
+        answers8(espdu8);
     }
 
     @Test
     public void testRvb08halfStep() throws Exception {
         DIS_DR_RVB_08 disDr = new DIS_DR_RVB_08();
         disDr.setNewAll(toAllDis(espdu8));
+        disDr.setInitTimestamp(espdu8.getTimestamp());
         disDr.setFPS(2 * FRAMES_PER_SECOND);
         disDr.update();
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu8);
-        answers8(espdu8, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu8);
+        answers8(espdu8);
     }
 
     @Test
     public void testFvb09() throws Exception {
         DIS_DR_FVB_09 disDr = new DIS_DR_FVB_09();
         disDr.setNewAll(toAllDis(espdu8));
+        disDr.setInitTimestamp(espdu8.getTimestamp());
         disDr.setFPS(FRAMES_PER_SECOND);
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu8);
-        answers9(espdu8, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu8);
+        answers9(espdu8);
     }
 
     @Test
     public void testFvb09halfStep() throws Exception {
         DIS_DR_FVB_09 disDr = new DIS_DR_FVB_09();
         disDr.setNewAll(toAllDis(espdu8));
+        disDr.setInitTimestamp(espdu8.getTimestamp());
         disDr.setFPS(2 * FRAMES_PER_SECOND);
         disDr.update();
         disDr.update();
         double[] newLoc = disDr.getUpdatedPositionOrientation();
-        fromNewLoc(newLoc, espdu8);
-        answers9(espdu8, false);
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu8);
+        answers9(espdu8);
     }
 
 }
