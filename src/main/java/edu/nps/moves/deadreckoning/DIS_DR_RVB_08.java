@@ -1,6 +1,12 @@
 package edu.nps.moves.deadreckoning;
 
-import edu.nps.moves.deadreckoning.utils.*;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
+import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealVector;
 
 /**
  * 
@@ -20,14 +26,9 @@ import edu.nps.moves.deadreckoning.utils.*;
 public class DIS_DR_RVB_08 extends DIS_DeadReckoning
 {
     // put these in main abstract class...?
-    Matrix DR = new Matrix(3);
-    Matrix DRR = new Matrix(3);    
-    Matrix initInv;
-    double[] velVec = {entityLinearVelocity_X, entityLinearVelocity_Y, entityLinearVelocity_Z};
-    double[] angVec = {entityAngularVelocity_X,entityAngularVelocity_Y,entityAngularVelocity_Z};    
-    double[] updated1 = new double[3]; 
-    double[] updated2 = new double[3]; 
-    double[] updated = new double[3];
+    RealMatrix DR;
+    RealMatrix R1;
+    RealMatrix R2;
 
     /**
      * The driver for a DIS_DR_RVB_08 DR algorithm from the Runnable interface
@@ -38,44 +39,10 @@ public class DIS_DR_RVB_08 extends DIS_DeadReckoning
     {
         try
         {            
-            initInv = Matrix.transpose(initOrien);              
-            
             while(true)
             {
-                deltaCt++;
                 Thread.sleep(stall);    
-                
-                // make the R1 and R2 vectors
-                updated1 = makeR1();
-                updated2 = makeR2();
-                // add the R1 and R2
-                updated[0] = updated1[0] + updated2[0];
-                updated[1] = updated1[1] + updated2[1];
-                updated[2] = updated1[2] + updated2[2];                
-                // Solve for new position 
-                updated = Matrix.multVec(initInv, updated);
-                // Set the new position
-                entityLocation_X += updated[0];
-                entityLocation_Y += updated[1];
-                entityLocation_Z += updated[2];                    
-
-                // make the rotation information updates...same as 1-4                
-                makeThisDR();                
-                DRR = Matrix.mult(DR, initOrien);
-                        
-                entityOrientation_theta = (float)Math.asin(-DRR.cell(0, 2));                
-                entityOrientation_psi = (float)
-                        (   Math.acos(  DRR.cell(0, 0) /  Math.cos(entityOrientation_theta)  ) 
-                            * Math.signum(DRR.cell(0, 1)));
-                entityOrientation_phi = (float)(Math.acos(DRR.cell(2, 2) / 
-                            Math.cos(entityOrientation_theta)) * Math.signum(DRR.cell(1, 2)));             
-                
-                if(Double.isNaN(entityOrientation_psi))
-                    entityOrientation_psi = 0;
-                if(Double.isNaN(entityOrientation_theta))
-                    entityOrientation_theta = 0;
-                if(Double.isNaN(entityOrientation_phi))
-                    entityOrientation_phi = 0;
+                update();
             }//while(true)  
         }// try
         catch(Exception e)
@@ -83,84 +50,131 @@ public class DIS_DR_RVB_08 extends DIS_DeadReckoning
             System.out.println(e);     
         }
     }//run()--------------------------------------------------------------------
-    
-    
-    
+
+    void update() {
+        deltaCt++;
+
+        RealVector velVec = MatrixUtils.createRealVector(new double[]
+                {entityLinearVelocity_X, entityLinearVelocity_Y, entityLinearVelocity_Z});
+        RealVector accVec = MatrixUtils.createRealVector(new double[]
+                {entityLinearAcceleration_X, entityLinearAcceleration_Y, entityLinearAcceleration_Z});
+
+        Rotation currOrien = new Rotation(
+                RotationOrder.ZYX,
+                RotationConvention.FRAME_TRANSFORM,
+                entityOrientation_psi,
+                entityOrientation_theta,
+                entityOrientation_phi);
+
+        // make the R1 and R2 matrices
+        makeR1();
+        makeR2();
+
+        RealVector updated1 = R1.operate(velVec);
+        RealVector updated2 = R2.operate(accVec);
+
+        // add the R1 and R2
+        // Solve for new position 
+        Vector3D updated = currOrien.applyInverseTo(new Vector3D(updated1.add(updated2).toArray()));
+
+        // Set the new position
+        entityLocation_X += updated.getX();
+        entityLocation_Y += updated.getY();
+        entityLocation_Z += updated.getZ();                    
+
+        entityLinearVelocity_X += entityLinearAcceleration_X * changeDelta;
+        entityLinearVelocity_Y += entityLinearAcceleration_Y * changeDelta;
+        entityLinearVelocity_Z += entityLinearAcceleration_Z * changeDelta;
+
+        // make the rotation information updates...same as 1-4                
+        makeThisDR();
+        Rotation DRR = new Rotation(DR.getData(), 1e-15).applyTo(initOrien);
+        double[] eulerAngles = DRR.getAngles(RotationOrder.ZYX, RotationConvention.FRAME_TRANSFORM);
+
+        entityOrientation_theta = (float) eulerAngles[1];   
+        //System.out.println(entityOrientation_theta);
+        entityOrientation_psi = (float) eulerAngles[0];
+        entityOrientation_phi = (float) eulerAngles[2];
+
+        if(Double.isNaN(entityOrientation_psi))
+            entityOrientation_psi = 0;
+        if(Double.isNaN(entityOrientation_theta))
+            entityOrientation_theta = 0;
+        if(Double.isNaN(entityOrientation_phi))
+            entityOrientation_phi = 0;
+    }
+
     /***************************************************************************
      * Makes this iterations DR matrix
-     * @throws java.lang.Exception
      */
-    private void makeThisDR() throws Exception
+    private void makeThisDR()
     {
-        Matrix ident = new Matrix(3);        
+        RealMatrix ident = MatrixUtils.createRealIdentityMatrix(3);  
         double wDelta = wMag * changeDelta * deltaCt;  
         double cosWdelta = Math.cos(wDelta);
 
         double wwScale = (1 - cosWdelta) / wSq; 
         double identScalar = cosWdelta;
         double skewScale = Math.sin(wDelta) / wMag;
-                
-        Matrix wwTmp = ww.mult(wwScale);
-        Matrix identTmp = ident.mult(identScalar);
-        Matrix skwTmp = skewOmega.mult(skewScale);
-        
-        DR = Matrix.add(wwTmp, identTmp);
-        DR = Matrix.subtract(DR, skwTmp);
-    }//makeThisDR() throws Exception--------------------------------------------
-    
-    
+
+        RealMatrix wwTmp = ww.scalarMultiply(wwScale);
+        RealMatrix identTmp = ident.scalarMultiply(identScalar);
+        RealMatrix skwTmp = skewOmega.scalarMultiply(skewScale);
+
+        DR = wwTmp.add(identTmp);
+        DR = DR.subtract(skwTmp);
+    }
+
+
     /***************************************************************************
      * Makes the R2 vector
      * @return - the r2 vector
-     * @throws java.lang.Exception
      */
-    private double[] makeR2() throws Exception
+    private void makeR2()
     {
-        Matrix R2 = new Matrix(3); 
-        Matrix ident = new Matrix(3);  
-        
+        RealMatrix ident = MatrixUtils.createRealIdentityMatrix(3);  
+
         // common factors
-        double wDelta = wMag * changeDelta * deltaCt;  
-        
+        // double wDelta = wMag * changeDelta * deltaCt;  
+        double wDelta = wMag * changeDelta;  
+
         // matrix scalars
-        double wwScale = .5*wSq*changeDelta * deltaCt*changeDelta * deltaCt;
-            wwScale -= Math.cos(wDelta);
-            wwScale -= wDelta*Math.sin(wDelta);
-            wwScale++;
-            wwScale /= wSq * wSq;
-     
-        double identScalar = Math.cbrt(wDelta) + wDelta*Math.sin(wDelta) - 1;
-            identScalar /= wSq;
-            
+        // double wwScale = .5*wSq*changeDelta * deltaCt*changeDelta * deltaCt;
+        double wwScale = .5 * wSq * changeDelta * changeDelta;
+        wwScale -= Math.cos(wDelta);
+        wwScale -= wDelta*Math.sin(wDelta);
+        wwScale++;
+        wwScale /= wSq * wSq;
+
+        double identScalar = Math.cos(wDelta) + wDelta*Math.sin(wDelta) - 1;
+        identScalar /= wSq;
+
         double skewScale = Math.sin(wDelta) - wDelta*Math.cos(wDelta);
-            skewScale /= wSq * wMag;
-                
+        skewScale /= wSq * wMag;
+
         // scaled matrixes
-        Matrix wwTmp = ww.mult(wwScale);
-        Matrix identTmp = ident.mult(identScalar);
-        Matrix skwTmp = skewOmega.mult(skewScale);
-        
-        R2 = Matrix.add(wwTmp, identTmp);
-        R2 = Matrix.add(R2, skwTmp);  
-                
-        return Matrix.multVec(R2, angVec);
-    }//makeR2() throws Exception------------------------------------------------
-    
-    
-    
+        RealMatrix wwTmp = ww.scalarMultiply(wwScale);
+        RealMatrix identTmp = ident.scalarMultiply(identScalar);
+        RealMatrix skwTmp = skewOmega.scalarMultiply(skewScale);
+
+        R2 = wwTmp.add(identTmp);
+        R2 = R2.add(skwTmp);
+    }
+
+
+
     /***************************************************************************
      * Makes the R1 matrix
      * @return - the vector R1
-     * @throws java.lang.Exception
      */
-    private double[] makeR1() throws Exception
+    private void makeR1()
     {
-        Matrix R1 = new Matrix(3); 
-        Matrix ident = new Matrix(3);  
-        
+        RealMatrix ident = MatrixUtils.createRealIdentityMatrix(3);  
+
         // common factors
-        double wDelta = wMag * changeDelta * deltaCt;  
-        
+        // double wDelta = wMag * changeDelta * deltaCt;  
+        double wDelta = wMag * changeDelta;  
+
         // matrix scalars
         double wwScale = (wDelta-Math.sin(wDelta)) / (wSq * wMag); 
         double identScalar = Math.sin(wDelta) / wMag;
@@ -168,16 +182,14 @@ public class DIS_DR_RVB_08 extends DIS_DeadReckoning
         // http://discussions.sisostds.org/default.asp?action=9&read=44981&fid=32
         // Thanks to Ian Gilles for the correction.
         double skewScale = (1 - Math.cos(wDelta)) / wSq;
-                
+
         // scaled matrixes
-        Matrix wwTmp = ww.mult(wwScale);
-        Matrix identTmp = ident.mult(identScalar);
-        Matrix skwTmp = skewOmega.mult(skewScale);
-        
-        R1 = Matrix.add(wwTmp, identTmp);
-        R1 = Matrix.subtract(R1, skwTmp);  
-               
-        return Matrix.multVec(R1, velVec);
-    }//makeR1() throws Exception------------------------------------------------    
+        RealMatrix wwTmp = ww.scalarMultiply(wwScale);
+        RealMatrix identTmp = ident.scalarMultiply(identScalar);
+        RealMatrix skwTmp = skewOmega.scalarMultiply(skewScale);
+
+        R1 = wwTmp.add(identTmp);
+        R1 = R1.add(skwTmp);
+    }    
 
 }
