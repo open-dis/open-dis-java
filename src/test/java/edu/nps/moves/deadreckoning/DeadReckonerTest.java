@@ -3,6 +3,7 @@ package edu.nps.moves.deadreckoning;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +16,8 @@ public class DeadReckonerTest {
     private static final int FRAMES_PER_SECOND = 2;
     private static final double DELTA_TIME = 1.0 / (double) FRAMES_PER_SECOND;
     private static final long TIMESTAMP_TOLERANCE = 2;
+    private static double DELTA_DOUBLE = 2.0e-3;
+    private static float DELTA_FLOAT = 2.0e-3f;
 
     /*
      * A helper function to make it easier to test DIS_DeadReckoning et al.
@@ -587,4 +590,294 @@ public class DeadReckonerTest {
         answers9(espdu8);
     }
 
+    @Test
+    public void testCwCircle() {
+        double gravity = 10.0;  // Rounded from 9.8 m/s^2
+        double speed = 100.0;
+        double radius = 5000.0;
+        double centripetal = speed * speed / radius;
+        double magRoll = Math.atan(centripetal / gravity);
+        double period = 2.0 * Math.PI * radius / speed;
+        
+        double psi = Math.PI / 2.0;
+        double theta = 0.0;
+        double phi = magRoll;
+        
+        double dPsiDt = 2.0 * Math.PI / period;
+        double dThetaDt = 0.0;
+        double dPhiDt = 0.0;
+        double[] bodyAngularVelocities = RotationUtils.world2bodyAngularVelocities(dPhiDt, dThetaDt, dPsiDt,
+                phi, theta);
+        
+        assertTrue(bodyAngularVelocities[1] > 0.0);
+        assertTrue(bodyAngularVelocities[2] > 0.0);
+        
+        EntityStatePdu cwCircle;
+        cwCircle = new EntityStatePdu();
+        cwCircle.getEntityLocation().setX(radius);
+        cwCircle.getEntityLocation().setY(0.0);
+        cwCircle.getEntityLocation().setZ(0.0);
+        cwCircle.getEntityLinearVelocity().setX((float) speed);
+        cwCircle.getEntityLinearVelocity().setY(0.0f);
+        cwCircle.getEntityLinearVelocity().setZ(0.0f);
+        cwCircle.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_B.getValue());
+        cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().setX(0.0f);
+        cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().setY(0.0f);
+        cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().setZ(0.0f);
+        cwCircle.getEntityOrientation().setPsi((float) psi);
+        cwCircle.getEntityOrientation().setTheta((float) theta);
+        cwCircle.getEntityOrientation().setPhi((float) phi);
+        cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().setX((float) bodyAngularVelocities[0]);
+        cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().setY((float) bodyAngularVelocities[1]);
+        cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().setZ((float) bodyAngularVelocities[2]);
+        cwCircle.setTimestamp(0);
+
+        double[] worldAngularVelocities;
+        
+        DeadReckoner.perform_DR(cwCircle, period / 4.0);
+        worldAngularVelocities = RotationUtils.body2worldAngularVelocities(
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getX(),
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getY(),
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getZ(),
+                cwCircle.getEntityOrientation().getPhi(),
+                cwCircle.getEntityOrientation().getTheta());
+
+        assertEquals(0.0, cwCircle.getEntityLocation().getX(), DELTA_DOUBLE);
+        assertEquals(radius, cwCircle.getEntityLocation().getY(), DELTA_DOUBLE);
+        assertEquals(0.0, cwCircle.getEntityLocation().getZ(), DELTA_DOUBLE);
+        assertEquals((float) speed, cwCircle.getEntityLinearVelocity().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getEntityLinearVelocity().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getEntityLinearVelocity().getZ(), DELTA_FLOAT);
+        assertEquals((short)DeadReckoningAlgorithm.DRMR_P_B.getValue(), cwCircle.getDeadReckoningParameters().getDeadReckoningAlgorithm());
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getZ(), DELTA_FLOAT);
+        assertEquals(Math.PI, Math.abs(cwCircle.getEntityOrientation().getPsi()), DELTA_DOUBLE);
+        assertEquals(0.0, cwCircle.getEntityOrientation().getTheta(), DELTA_DOUBLE);
+        assertEquals(magRoll, cwCircle.getEntityOrientation().getPhi(), DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[0], DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[1], DELTA_DOUBLE);
+        assertEquals(dPsiDt, worldAngularVelocities[2], DELTA_DOUBLE);
+
+        DeadReckoner.perform_DR(cwCircle, period / 4.0);
+        worldAngularVelocities = RotationUtils.body2worldAngularVelocities(
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getX(),
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getY(),
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getZ(),
+                cwCircle.getEntityOrientation().getPhi(),
+                cwCircle.getEntityOrientation().getTheta());
+
+        assertEquals(-radius, cwCircle.getEntityLocation().getX(), DELTA_DOUBLE);
+        assertEquals(0.0, cwCircle.getEntityLocation().getY(), DELTA_DOUBLE);
+        assertEquals(0.0, cwCircle.getEntityLocation().getZ(), DELTA_DOUBLE);
+        assertEquals((float) speed, cwCircle.getEntityLinearVelocity().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getEntityLinearVelocity().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getEntityLinearVelocity().getZ(), DELTA_FLOAT);
+        assertEquals((short)DeadReckoningAlgorithm.DRMR_P_B.getValue(), cwCircle.getDeadReckoningParameters().getDeadReckoningAlgorithm());
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getZ(), DELTA_FLOAT);
+        assertEquals(-Math.PI / 2.0, cwCircle.getEntityOrientation().getPsi(), DELTA_DOUBLE);
+        assertEquals(0.0, cwCircle.getEntityOrientation().getTheta(), DELTA_DOUBLE);
+        assertEquals(magRoll, cwCircle.getEntityOrientation().getPhi(), DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[0], DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[1], DELTA_DOUBLE);
+        assertEquals(dPsiDt, worldAngularVelocities[2], DELTA_DOUBLE);
+
+        DeadReckoner.perform_DR(cwCircle, period / 4.0);
+        worldAngularVelocities = RotationUtils.body2worldAngularVelocities(
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getX(),
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getY(),
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getZ(),
+                cwCircle.getEntityOrientation().getPhi(),
+                cwCircle.getEntityOrientation().getTheta());
+
+        assertEquals(0.0, cwCircle.getEntityLocation().getX(), DELTA_DOUBLE);
+        assertEquals(-radius, cwCircle.getEntityLocation().getY(), DELTA_DOUBLE);
+        assertEquals(0.0, cwCircle.getEntityLocation().getZ(), DELTA_DOUBLE);
+        assertEquals((float) speed, cwCircle.getEntityLinearVelocity().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getEntityLinearVelocity().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getEntityLinearVelocity().getZ(), DELTA_FLOAT);
+        assertEquals((short)DeadReckoningAlgorithm.DRMR_P_B.getValue(), cwCircle.getDeadReckoningParameters().getDeadReckoningAlgorithm());
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getZ(), DELTA_FLOAT);
+        assertEquals(0.0, Math.abs(cwCircle.getEntityOrientation().getPsi()), DELTA_DOUBLE);
+        assertEquals(0.0, cwCircle.getEntityOrientation().getTheta(), DELTA_DOUBLE);
+        assertEquals(magRoll, cwCircle.getEntityOrientation().getPhi(), DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[0], DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[1], DELTA_DOUBLE);
+        assertEquals(dPsiDt, worldAngularVelocities[2], DELTA_DOUBLE);
+
+        DeadReckoner.perform_DR(cwCircle, period / 4.0);
+        worldAngularVelocities = RotationUtils.body2worldAngularVelocities(
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getX(),
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getY(),
+                cwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getZ(),
+                cwCircle.getEntityOrientation().getPhi(),
+                cwCircle.getEntityOrientation().getTheta());
+
+        assertEquals(radius, cwCircle.getEntityLocation().getX(), DELTA_DOUBLE);
+        assertEquals(0.0, cwCircle.getEntityLocation().getY(), DELTA_DOUBLE);
+        assertEquals(0.0, cwCircle.getEntityLocation().getZ(), DELTA_DOUBLE);
+        assertEquals((float) speed, cwCircle.getEntityLinearVelocity().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getEntityLinearVelocity().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getEntityLinearVelocity().getZ(), DELTA_FLOAT);
+        assertEquals((short)DeadReckoningAlgorithm.DRMR_P_B.getValue(), cwCircle.getDeadReckoningParameters().getDeadReckoningAlgorithm());
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, cwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getZ(), DELTA_FLOAT);
+        assertEquals(Math.PI / 2.0, cwCircle.getEntityOrientation().getPsi(), DELTA_DOUBLE);
+        assertEquals(0.0, cwCircle.getEntityOrientation().getTheta(), DELTA_DOUBLE);
+        assertEquals(magRoll, cwCircle.getEntityOrientation().getPhi(), DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[0], DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[1], DELTA_DOUBLE);
+        assertEquals(dPsiDt, worldAngularVelocities[2], DELTA_DOUBLE);
+    }
+    
+    @Test
+    public void testCcwCircle() {
+        double gravity = 10.0;  // Rounded from 9.8 m/s^2
+        double speed = 200.0;
+        double radius = 5000.0;
+        double centripetal = speed * speed / radius;
+        double magRoll = Math.atan(centripetal / gravity);
+        double period = 2.0 * Math.PI * radius / speed;
+        
+        double psi = 0.0;
+        double theta = 0.0;
+        double phi = -magRoll;
+        
+        double dPsiDt = -2.0 * Math.PI / period;
+        double dThetaDt = 0.0;
+        double dPhiDt = 0.0;
+        double[] bodyAngularVelocities = RotationUtils.world2bodyAngularVelocities(dPhiDt, dThetaDt, dPsiDt,
+                phi, theta);
+        
+        assertTrue(bodyAngularVelocities[1] > 0.0);
+        assertTrue(bodyAngularVelocities[2] < 0.0);
+        
+        EntityStatePdu ccwCircle;
+        ccwCircle = new EntityStatePdu();
+        ccwCircle.getEntityLocation().setX(0.0);
+        ccwCircle.getEntityLocation().setY(radius);
+        ccwCircle.getEntityLocation().setZ(0.0);
+        ccwCircle.getEntityLinearVelocity().setX((float) speed);
+        ccwCircle.getEntityLinearVelocity().setY(0.0f);
+        ccwCircle.getEntityLinearVelocity().setZ(0.0f);
+        ccwCircle.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_B.getValue());
+        ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().setX(0.0f);
+        ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().setY(0.0f);
+        ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().setZ(0.0f);
+        ccwCircle.getEntityOrientation().setPsi((float) psi);
+        ccwCircle.getEntityOrientation().setTheta((float) theta);
+        ccwCircle.getEntityOrientation().setPhi((float) phi);
+        ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().setX((float) bodyAngularVelocities[0]);
+        ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().setY((float) bodyAngularVelocities[1]);
+        ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().setZ((float) bodyAngularVelocities[2]);
+        ccwCircle.setTimestamp(0);
+
+        double[] worldAngularVelocities;
+        
+        DeadReckoner.perform_DR(ccwCircle, period / 4.0);
+        worldAngularVelocities = RotationUtils.body2worldAngularVelocities(
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getX(),
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getY(),
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getZ(),
+                ccwCircle.getEntityOrientation().getPhi(),
+                ccwCircle.getEntityOrientation().getTheta());
+
+        assertEquals(radius, ccwCircle.getEntityLocation().getX(), DELTA_DOUBLE);
+        assertEquals(0.0, ccwCircle.getEntityLocation().getY(), DELTA_DOUBLE);
+        assertEquals(0.0, ccwCircle.getEntityLocation().getZ(), DELTA_DOUBLE);
+        assertEquals((float) speed, ccwCircle.getEntityLinearVelocity().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getEntityLinearVelocity().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getEntityLinearVelocity().getZ(), DELTA_FLOAT);
+        assertEquals((short)DeadReckoningAlgorithm.DRMR_P_B.getValue(), ccwCircle.getDeadReckoningParameters().getDeadReckoningAlgorithm());
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getZ(), DELTA_FLOAT);
+        assertEquals(Math.PI / 2.0, Math.abs(ccwCircle.getEntityOrientation().getPsi()), DELTA_DOUBLE);
+        assertEquals(0.0, ccwCircle.getEntityOrientation().getTheta(), DELTA_DOUBLE);
+        assertEquals(-magRoll, ccwCircle.getEntityOrientation().getPhi(), DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[0], DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[1], DELTA_DOUBLE);
+        assertEquals(dPsiDt, worldAngularVelocities[2], DELTA_DOUBLE);
+
+        DeadReckoner.perform_DR(ccwCircle, period / 4.0);
+        worldAngularVelocities = RotationUtils.body2worldAngularVelocities(
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getX(),
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getY(),
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getZ(),
+                ccwCircle.getEntityOrientation().getPhi(),
+                ccwCircle.getEntityOrientation().getTheta());
+
+        assertEquals(0.0, ccwCircle.getEntityLocation().getX(), DELTA_DOUBLE);
+        assertEquals(-radius, ccwCircle.getEntityLocation().getY(), DELTA_DOUBLE);
+        assertEquals(0.0, ccwCircle.getEntityLocation().getZ(), DELTA_DOUBLE);
+        assertEquals((float) speed, ccwCircle.getEntityLinearVelocity().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getEntityLinearVelocity().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getEntityLinearVelocity().getZ(), DELTA_FLOAT);
+        assertEquals((short)DeadReckoningAlgorithm.DRMR_P_B.getValue(), ccwCircle.getDeadReckoningParameters().getDeadReckoningAlgorithm());
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getZ(), DELTA_FLOAT);
+        assertEquals(Math.PI, Math.abs(ccwCircle.getEntityOrientation().getPsi()), DELTA_DOUBLE);
+        assertEquals(0.0, ccwCircle.getEntityOrientation().getTheta(), DELTA_DOUBLE);
+        assertEquals(-magRoll, ccwCircle.getEntityOrientation().getPhi(), DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[0], DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[1], DELTA_DOUBLE);
+        assertEquals(dPsiDt, worldAngularVelocities[2], DELTA_DOUBLE);
+
+        DeadReckoner.perform_DR(ccwCircle, period / 4.0);
+        worldAngularVelocities = RotationUtils.body2worldAngularVelocities(
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getX(),
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getY(),
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getZ(),
+                ccwCircle.getEntityOrientation().getPhi(),
+                ccwCircle.getEntityOrientation().getTheta());
+
+        assertEquals(-radius, ccwCircle.getEntityLocation().getX(), DELTA_DOUBLE);
+        assertEquals(0.0, ccwCircle.getEntityLocation().getY(), DELTA_DOUBLE);
+        assertEquals(0.0, ccwCircle.getEntityLocation().getZ(), DELTA_DOUBLE);
+        assertEquals((float) speed, ccwCircle.getEntityLinearVelocity().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getEntityLinearVelocity().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getEntityLinearVelocity().getZ(), DELTA_FLOAT);
+        assertEquals((short)DeadReckoningAlgorithm.DRMR_P_B.getValue(), ccwCircle.getDeadReckoningParameters().getDeadReckoningAlgorithm());
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getZ(), DELTA_FLOAT);
+        assertEquals(Math.PI / 2.0, Math.abs(ccwCircle.getEntityOrientation().getPsi()), DELTA_DOUBLE);
+        assertEquals(0.0, ccwCircle.getEntityOrientation().getTheta(), DELTA_DOUBLE);
+        assertEquals(-magRoll, ccwCircle.getEntityOrientation().getPhi(), DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[0], DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[1], DELTA_DOUBLE);
+        assertEquals(dPsiDt, worldAngularVelocities[2], DELTA_DOUBLE);
+
+        DeadReckoner.perform_DR(ccwCircle, period / 4.0);
+        worldAngularVelocities = RotationUtils.body2worldAngularVelocities(
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getX(),
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getY(),
+                ccwCircle.getDeadReckoningParameters().getEntityAngularVelocity().getZ(),
+                ccwCircle.getEntityOrientation().getPhi(),
+                ccwCircle.getEntityOrientation().getTheta());
+
+        assertEquals(0.0, ccwCircle.getEntityLocation().getX(), DELTA_DOUBLE);
+        assertEquals(radius, ccwCircle.getEntityLocation().getY(), DELTA_DOUBLE);
+        assertEquals(0.0, ccwCircle.getEntityLocation().getZ(), DELTA_DOUBLE);
+        assertEquals((float) speed, ccwCircle.getEntityLinearVelocity().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getEntityLinearVelocity().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getEntityLinearVelocity().getZ(), DELTA_FLOAT);
+        assertEquals((short)DeadReckoningAlgorithm.DRMR_P_B.getValue(), ccwCircle.getDeadReckoningParameters().getDeadReckoningAlgorithm());
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getX(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getY(), DELTA_FLOAT);
+        assertEquals(0.0f, ccwCircle.getDeadReckoningParameters().getEntityLinearAcceleration().getZ(), DELTA_FLOAT);
+        assertEquals(0.0, ccwCircle.getEntityOrientation().getPsi(), DELTA_DOUBLE);
+        assertEquals(0.0, ccwCircle.getEntityOrientation().getTheta(), DELTA_DOUBLE);
+        assertEquals(-magRoll, ccwCircle.getEntityOrientation().getPhi(), DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[0], DELTA_DOUBLE);
+        assertEquals(0.0, worldAngularVelocities[1], DELTA_DOUBLE);
+        assertEquals(dPsiDt, worldAngularVelocities[2], DELTA_DOUBLE);
+    }
+    
 }
