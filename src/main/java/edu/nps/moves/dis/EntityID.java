@@ -17,13 +17,13 @@ import edu.nps.moves.disutil.*;
 public class EntityID extends Object implements Serializable
 {
    /** The site ID */
-   protected int  site;
+   protected short  site;
 
    /** The application ID */
-   protected int  application;
+   protected short  application;
 
    /** the entity ID */
-   protected int  entity;
+   protected short  entity;
 
 
 /** Constructor */
@@ -43,27 +43,27 @@ public int getMarshalledSize()
 }
 
 
-public void setSite(int pSite)
+public void setSite(short pSite)
 { site = pSite;
 }
 
-public int getSite()
+public short getSite()
 { return site; 
 }
 
-public void setApplication(int pApplication)
+public void setApplication(short pApplication)
 { application = pApplication;
 }
 
-public int getApplication()
+public short getApplication()
 { return application; 
 }
 
-public void setEntity(int pEntity)
+public void setEntity(short pEntity)
 { entity = pEntity;
 }
 
-public int getEntity()
+public short getEntity()
 { return entity; 
 }
 
@@ -85,9 +85,9 @@ public void unmarshal(DataInputStream dis)
 {
     try 
     {
-       site = (int)dis.readUnsignedShort();
-       application = (int)dis.readUnsignedShort();
-       entity = (int)dis.readUnsignedShort();
+       site = (short)dis.readUnsignedShort();
+       application = (short)dis.readUnsignedShort();
+       entity = (short)dis.readUnsignedShort();
     } // end try 
    catch(Exception e)
     { 
@@ -120,9 +120,9 @@ public void marshal(java.nio.ByteBuffer buff)
  */
 public void unmarshal(java.nio.ByteBuffer buff)
 {
-       site = (int)(buff.getShort() & 0xFFFF);
-       application = (int)(buff.getShort() & 0xFFFF);
-       entity = (int)(buff.getShort() & 0xFFFF);
+       site = (short)(buff.getShort() & 0xFFFF);
+       application = (short)(buff.getShort() & 0xFFFF);
+       entity = (short)(buff.getShort() & 0xFFFF);
  } // end of unmarshal method 
 
 
