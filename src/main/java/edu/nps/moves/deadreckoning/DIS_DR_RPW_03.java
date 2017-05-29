@@ -8,10 +8,6 @@ import org.apache.commons.math3.linear.RealMatrix;
 /**
  * (PRIMARY Methods group) Rotating, rate of position, world coordinates || Constant Linear motion with
  * Rotation
- * <p>
- * I am not sure about the transformation between world and body coordinates
- * This does not seem to return what I would expect...but it does follow the
- * IEEE algorithms.
  * 
  * @author Sheldon L. Snyder
  */
@@ -72,6 +68,11 @@ public class DIS_DR_RPW_03 extends DIS_DeadReckoning
      */
     private void makeThisDR()
     {
+        if (wMag < MIN_ROTATION_RATE) {
+            DR = MatrixUtils.createRealIdentityMatrix(3);
+            return;
+        }
+        
         double wDelta = wMag * changeDelta * deltaCt;  
         double cosWdelta = Math.cos(wDelta);
 

@@ -447,7 +447,7 @@ public class DeadReckonerTest {
     // and should be deprecated immediately!
 
     @Test
-    public void testRvw05() throws Exception {
+    public void testFvw05() throws Exception {
         DIS_DR_FVW_05 disDr = new DIS_DR_FVW_05();
         disDr.setNewAll(toAllDis(espdu4));
         disDr.setInitTimestamp(espdu4.getTimestamp());
@@ -461,7 +461,7 @@ public class DeadReckonerTest {
     }
 
     @Test
-    public void testRvw05halfStep() throws Exception {
+    public void testFvw05halfStep() throws Exception {
         DIS_DR_FVW_05 disDr = new DIS_DR_FVW_05();
         disDr.setNewAll(toAllDis(espdu4));
         disDr.setInitTimestamp(espdu4.getTimestamp());
@@ -880,4 +880,122 @@ public class DeadReckonerTest {
         assertEquals(dPsiDt, worldAngularVelocities[2], DELTA_DOUBLE);
     }
     
+    // zero angular velocity tests
+    
+    @Test
+    public void testRpw03omega0() throws Exception {
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setX(0.0f);
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setY(0.0f);
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setZ(0.0f);
+
+        DIS_DR_RPW_03 disDr = new DIS_DR_RPW_03();
+        disDr.setNewAll(toAllDis(espdu4));
+        disDr.setInitTimestamp(espdu4.getTimestamp());
+        disDr.setFPS(FRAMES_PER_SECOND);
+        disDr.update();
+        double[] newLoc = disDr.getUpdatedPositionOrientation();
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu4);
+        answers2(espdu4);  // NOTE: With zero angular velocity, DR3 should get same results as DR2
+    }
+    
+    @Test
+    public void testRvw04omega0() throws Exception {
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setX(0.0f);
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setY(0.0f);
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setZ(0.0f);
+
+        DIS_DR_RVW_04 disDr = new DIS_DR_RVW_04();
+        disDr.setNewAll(toAllDis(espdu4));
+        disDr.setInitTimestamp(espdu4.getTimestamp());
+        disDr.setFPS(FRAMES_PER_SECOND);
+        disDr.update();
+        double[] newLoc = disDr.getUpdatedPositionOrientation();
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu4);
+        answers5(espdu4);  // NOTE: With zero angular velocity, DR4 should get same results as DR5
+    }
+
+    @Test
+    public void testRpb07omega0() throws Exception {
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setX(0.0f);
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setY(0.0f);
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setZ(0.0f);
+
+        DIS_DR_RPB_07 disDr = new DIS_DR_RPB_07();
+        disDr.setNewAll(toAllDis(espdu8));
+        disDr.setInitTimestamp(espdu8.getTimestamp());
+        disDr.setFPS(FRAMES_PER_SECOND);
+        disDr.update();
+        double[] newLoc = disDr.getUpdatedPositionOrientation();
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu8);
+        answers6(espdu8);  // NOTE: With zero angular velocity, DR7 should get same results as DR6
+    }
+
+    @Test
+    public void testRvb08omega0() throws Exception {
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setX(0.0f);
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setY(0.0f);
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setZ(0.0f);
+
+        DIS_DR_RVB_08 disDr = new DIS_DR_RVB_08();
+        disDr.setNewAll(toAllDis(espdu8));
+        disDr.setInitTimestamp(espdu8.getTimestamp());
+        disDr.setFPS(FRAMES_PER_SECOND);
+        disDr.update();
+        double[] newLoc = disDr.getUpdatedPositionOrientation();
+        double[] newVel = disDr.getUpdatedVelocity();
+        long timestamp = disDr.getUpdatedTimestamp();
+        fromNewLocVelTimestamp(newLoc, newVel, timestamp, espdu8);
+        answers9(espdu8);  // NOTE: With zero angular velocity, DR8 should get same results as DR9
+    }
+
+    @Test
+    public void testPerform_DR3omega0() {
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setX(0.0f);
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setY(0.0f);
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setZ(0.0f);
+
+        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_W.getValue());
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
+        answers2(espdu4);  // NOTE: With zero angular velocity, DR3 should get same results as DR2
+    }
+
+    @Test
+    public void testPerform_DR4omega0() {
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setX(0.0f);
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setY(0.0f);
+        espdu4.getDeadReckoningParameters().getEntityAngularVelocity().setZ(0.0f);
+
+        espdu4.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_W.getValue());
+        DeadReckoner.perform_DR(espdu4, DELTA_TIME);
+        answers5(espdu4);  // NOTE: With zero angular velocity, DR4 should get same results as DR5
+    }
+
+    @Test
+    public void testPerform_DR7omega0() {
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setX(0.0f);
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setY(0.0f);
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setZ(0.0f);
+
+        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_P_B.getValue());
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME);
+        answers6(espdu8);  // NOTE: With zero angular velocity, DR7 should get same results as DR6
+    }
+
+    @Test
+    public void testPerform_DR8omega0() {
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setX(0.0f);
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setY(0.0f);
+        espdu8.getDeadReckoningParameters().getEntityAngularVelocity().setZ(0.0f);
+
+        espdu8.getDeadReckoningParameters().setDeadReckoningAlgorithm((short)DeadReckoningAlgorithm.DRMR_V_B.getValue());
+        DeadReckoner.perform_DR(espdu8, DELTA_TIME);
+        answers9(espdu8);  // NOTE: With zero angular velocity, DR8 should get same results as DR9
+    }
+
 }

@@ -8,30 +8,30 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 /**
  * The root super class for all DIS Dead-Reckoning algorithms.
- * Based on the algrorithms from the 
+ * Based on the algorithms from the 
  * IEEE 1278_1-1995_DIS standards found in Annex B.
  * <p>
  * Creates an abstract instance of a Dead Reckoning (DR) algorithm, defined 
  * by the concrete Dead Reckoning algorithm on the right hand side.
  * <P>
  * At each PDU update received, call the set function to update the DR 
- * algorithm with the most accurance and update information. Expected to receive 
- * a new update approx every 5 seconds or so. Each PDU is essentally a 
+ * algorithm with the most accurate and updated information. Expected to receive 
+ * a new update approximately every 5 seconds or so. Each PDU is essentially a 
  * restart or reset of the DR state.
  * <p>
- * The DR wroks off the last good state (origin) and extrapulates out from that 
+ * The DR works off the last good state (origin) and extrapolates out from that 
  * point based on the velocity and acceleration parameters from the set
  * function.
  * <P>
  * The DR algorithm updates 30 times a second. The instantiating entity
- * can get updated DR states at its leasure upto 30 times a second by calling 
+ * can get updated DR states at its leisure up to 30 times a second by calling 
  * the get function, which returns an array of 6 doubles 3 x location and 
- * 3 x orientation. With these 6 parameters the entity can redraw itslef in an
- * updatedloation and orientsation based on its projected path.
+ * 3 x orientation. With these 6 parameters the entity can redraw itself in an
+ * updated location and orientation based on its projected path.
  * <p>
  * <hr>
  * <p>
- * <center><h2>Keynotes form the IEEE DIS standard about DR</h2></center>
+ * <center><h2>Key notes form the IEEE DIS standard about DR</h2></center>
  * <p>
  * <center><img src="..\..\RefsImgs\formulas.jpg"/></center>
  * <P>
@@ -49,7 +49,7 @@ import org.apache.commons.math3.linear.RealMatrix;
  * <hr>
  * <p>
  * <b>5.2.1 Angle representation</b><br>
- * Angles shall be specfified as 32-bit floating point numbers expressed 
+ * Angles shall be specified as 32-bit floating point numbers expressed 
  * in radians.(page 55)
  * <p>
  * <b>5.2.2 Angular Velocity Vector record</b><br>
@@ -269,7 +269,7 @@ import org.apache.commons.math3.linear.RealMatrix;
  * <p>
  * <u>An Example:</u><br>
  * <pre>
-import DIS.DeadReconing.*;
+import DIS.DeadReckoning.*;
 
 public class runTest 
 {
@@ -294,7 +294,7 @@ public class runTest
             // wait 1 second
             Thread.sleep(1000);
 
-            // request an update from the DR algorith
+            // request an update from the DR algorithm
             // should be original + 1 full value of other parameters
             // new position should be (3, 5, 5)
             double[] update = dr.getUpdatedPositionOrientation();
@@ -337,15 +337,15 @@ Current State of this Entity:
 public abstract class DIS_DeadReckoning implements Runnable
 {
     /**
-     * The entity's X coordinate location with double percision 64bit 
+     * The entity's X coordinate location with double precision 64bit 
      */
     protected double entityLocation_X;
     /**
-     * The entity's Y coordinate location with double percision 64bit 
+     * The entity's Y coordinate location with double precision 64bit 
      */
     protected double entityLocation_Y;
     /**
-     * The entity's Z coordinate location with double percision 64bit 
+     * The entity's Z coordinate location with double precision 64bit 
      */    
     protected double entityLocation_Z;    
 
@@ -402,7 +402,7 @@ public abstract class DIS_DeadReckoning implements Runnable
     protected float entityAngularVelocity_Z = 0;   
 
     /**
-     * how may times per second to update this entity's positon
+     * how may times per second to update this entity's position
      */
     protected float fps = 30;
 
@@ -423,9 +423,9 @@ public abstract class DIS_DeadReckoning implements Runnable
      * <ol>
      * Assumed a desired rate of 30 fps
      * Given from the standard that all parameters are in meters/s
-     * To move 1 meter/second with 30 incriments = 1/30 Delta between updates
-     * delay in milli seconds is 1/30 * 1000 || 1000 / 30
-     * </lo>
+     * To move 1 meter/second with 30 increments = 1/30 Delta between updates
+     * delay in milliseconds is 1/30 * 1000 || 1000 / 30
+     * </ol>
      * <p>
      * Note from Java Doc for JDK: <br>
      * Causes the currently executing thread to sleep (temporarily cease 
@@ -441,7 +441,7 @@ public abstract class DIS_DeadReckoning implements Runnable
     protected Thread aThread;
 
     /**
-     * the inital orientation, constant between delta T
+     * the initial orientation, constant between delta T
      * Only changes when a setNewAll is called
      */
     Rotation initOrien;    
@@ -464,19 +464,17 @@ public abstract class DIS_DeadReckoning implements Runnable
      */
     double wMag;    
     /**
-     * Magnatutd of angular velocity squared
+     * Magnitude of angular velocity squared
      */
     double wSq;
-    /**
-     * Float of PI for moduls rounding as needed
-     */
-    float myPI = 3.1415926f;
 
     /**
      * DIS timestamp
      */
     private long initTimestamp;
     
+    static double MIN_ROTATION_RATE = 0.2 * Math.PI / 180;  // minimum significant rate = 1deg/5sec
+
     /***************************************************************************
      * Constructor for all DR algorithms...
      * <P>
@@ -500,18 +498,26 @@ public abstract class DIS_DeadReckoning implements Runnable
      * the current state of the entity. The entity state is updated by the 
      * specified DR algorithm within the DR class behind the scenes. Updates are
      * created every 1/30 seconds.
+     * 
+     * NOTE: The concrete classes implementing the various DR algorithms are not
+     * (currently) thread safe.  As a result, the getter functions may return a
+     * result while the behind the scenes update is still in progress,
+     * i.e. this getter functions may sample an inconsistent state in which
+     * some fields have been updated to the current time sample while other
+     * fields still pertain to the previous time sample.
+     * 
      * <ol>
-     * Assume a desire of 30 fps
+     * Assume a desired rate of 30 fps
      * All parameters are in meters/s
      * to move 1 meter/second with 30 increments = 1/30 Delta between updates
      * 
      * <p>
      * Only returns an array of location and orientation because that
      * is all that is needed to update the location of the entity.  All other 
-     * DR inputs are parameters for solving the locaiton and orientation and so
+     * DR inputs are parameters for solving the location and orientation and so
      * are not returned, only set.
      * <p>
-     * Order of the retruned array elements
+     * Order of the returned array elements
      * <ol> 
      * entityLocation_X
      * entityLocation_Y
@@ -546,9 +552,9 @@ public abstract class DIS_DeadReckoning implements Runnable
     /***************************************************************************
      * Sets the refresh rate for the scene.
      * <p>
-     * Default is 30 but can be changed throught this function call
+     * Default is 30 but can be changed through this function call
      * 
-     * @param frames - the number of updats per second to make
+     * @param frames - the number of updates per second to make
      */
     public void setFPS(int frames)
     {
@@ -622,12 +628,11 @@ public abstract class DIS_DeadReckoning implements Runnable
         entityAngularVelocity_Y = (float)allDis[13];
         entityAngularVelocity_Z = (float)allDis[14];
 
-        // solve for magnatude
-        wMag = Math.sqrt(entityAngularVelocity_X * entityAngularVelocity_X + 
+        // solve for magnitude
+        wSq = entityAngularVelocity_X * entityAngularVelocity_X +
                 entityAngularVelocity_Y * entityAngularVelocity_Y +
-                entityAngularVelocity_Z * entityAngularVelocity_Z);
-
-        wSq = wMag * wMag;
+                entityAngularVelocity_Z * entityAngularVelocity_Z;
+        wMag = Math.sqrt(wSq);
 
         //System.out.println("wMag print");
         //System.out.println(wMag);

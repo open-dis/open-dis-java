@@ -6,12 +6,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  * 
  * (SECONDARY Methods Group) Fixed, rate of position, body coordinates || 
  * Linear motion without rotation
- * <p>
- * it is coded up, but the linear motion does not seem to work....
- * <p>
- * The alogrithm is coded IAW IEEE 1278.1-1995 so perhaps it is a 
- * coordinate change of basis issue and since I am not working in both world
- * and body coordinates, it fails or limits to 0
  * 
  * @author Sheldon L. Snyder
  */

@@ -2,7 +2,7 @@ package edu.nps.moves.deadreckoning;
 
 /**
  *
- * (PRIMARY Methods group) Fixed, Rate of Positon, World || Constant Linear motion
+ * (PRIMARY Methods group) Fixed, Rate of Position, World || Constant Linear motion
  * 
  * @author Sheldon L. Snyder
  */

@@ -71,6 +71,11 @@ public class DIS_DR_RVW_04 extends DIS_DeadReckoning
      */
     private void makeThisDR()
     {
+        if (wMag < MIN_ROTATION_RATE) {
+            DR = MatrixUtils.createRealIdentityMatrix(3);
+            return;
+        }
+
         double wDelta = wMag * changeDelta * deltaCt;  
         double cosWdelta = Math.cos(wDelta);
 

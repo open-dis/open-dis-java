@@ -12,14 +12,6 @@ import org.apache.commons.math3.linear.RealVector;
  * 
  * (SECONDARY Methods Group) Rotating, rate of velocity, body coordinates || 
  * Linear motion with Rotation
- * <p>
- * it is coded up, but the linear motion does not seem to work....rotation
- * works but linear motion fails...not sure why they are calculating the 
- * linear motion the way they are...
- *  <p>
- * The alogrithm is coded IAW IEEE 1278.1-1995 so perhaps it is a 
- * coordinate change of basis issue and since I am not working in both world
- * and body coordinates, it fails or limits to 0
  * 
  * @author Sheldon L. Snyder
  */
@@ -109,6 +101,11 @@ public class DIS_DR_RVB_08 extends DIS_DeadReckoning
      */
     private void makeThisDR()
     {
+        if (wMag < MIN_ROTATION_RATE) {
+            DR = MatrixUtils.createRealIdentityMatrix(3);
+            return;
+        }
+
         RealMatrix ident = MatrixUtils.createRealIdentityMatrix(3);  
         double wDelta = wMag * changeDelta * deltaCt;  
         double cosWdelta = Math.cos(wDelta);
@@ -132,6 +129,11 @@ public class DIS_DR_RVB_08 extends DIS_DeadReckoning
      */
     private void makeR2()
     {
+        if (wMag < MIN_ROTATION_RATE) {
+            R2 = MatrixUtils.createRealIdentityMatrix(3).scalarMultiply(changeDelta * deltaCt * changeDelta * deltaCt / 2.0);
+            return;
+        }
+        
         RealMatrix ident = MatrixUtils.createRealIdentityMatrix(3);  
 
         // common factors
@@ -169,6 +171,11 @@ public class DIS_DR_RVB_08 extends DIS_DeadReckoning
      */
     private void makeR1()
     {
+        if (wMag < MIN_ROTATION_RATE) {
+            R1 = MatrixUtils.createRealIdentityMatrix(3).scalarMultiply(changeDelta * deltaCt);
+            return;
+        }
+        
         RealMatrix ident = MatrixUtils.createRealIdentityMatrix(3);  
 
         // common factors
