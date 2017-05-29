@@ -43,8 +43,8 @@ public class DIS_DR_RPW_03b extends DIS_DeadReckoning
         entityLocation_Y += entityLinearVelocity_Y * changeDelta;
         entityLocation_Z += entityLinearVelocity_Z * changeDelta;
 
-        entityOrientation_psi = (entityOrientation_psi + entityAngularVelocity_X * changeDelta) % (2*myPI);
-        entityOrientation_theta = (entityOrientation_theta + entityAngularVelocity_Y * changeDelta) % (2*myPI);
-        entityOrientation_phi = (entityOrientation_phi + entityAngularVelocity_Z * changeDelta) % (2*myPI);
+        entityOrientation_psi   = (entityOrientation_psi   + entityAngularVelocity_X * changeDelta) % (2.0f * (float) Math.PI);
+        entityOrientation_theta = (entityOrientation_theta + entityAngularVelocity_Y * changeDelta) % (2.0f * (float) Math.PI);
+        entityOrientation_phi   = (entityOrientation_phi   + entityAngularVelocity_Z * changeDelta) % (2.0f * (float) Math.PI);
     }
 }

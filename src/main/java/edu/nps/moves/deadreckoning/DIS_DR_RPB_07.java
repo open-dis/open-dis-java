@@ -88,6 +88,11 @@ public class DIS_DR_RPB_07 extends DIS_DeadReckoning
      */
     private void makeThisDR()
     {
+        if (wMag < MIN_ROTATION_RATE) {
+            DR = MatrixUtils.createRealIdentityMatrix(3);
+            return;
+        }
+        
         double wDelta = wMag * changeDelta * deltaCt;  
         double cosWdelta = Math.cos(wDelta);
 
@@ -110,6 +115,11 @@ public class DIS_DR_RPB_07 extends DIS_DeadReckoning
      */
     private void makeR1()
     {
+        if (wMag < MIN_ROTATION_RATE) {
+            R1 = MatrixUtils.createRealIdentityMatrix(3).scalarMultiply(changeDelta * deltaCt);
+            return;
+        }
+        
         RealMatrix ident = MatrixUtils.createRealIdentityMatrix(3);  
 
         // common factors
