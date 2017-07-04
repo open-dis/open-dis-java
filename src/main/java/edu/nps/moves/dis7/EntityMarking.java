@@ -2,7 +2,7 @@ package edu.nps.moves.dis7;
 
 import java.util.*;
 import java.io.*;
-import edu.nps.moves.disenum.*;
+//import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
 
 
@@ -12,6 +12,9 @@ import edu.nps.moves.disutil.*;
  * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
  * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
  *
+ * Manually edited to get the correct 11 characters. Apparently some problem in code generation
+ * from XML.
+ * 
  * @author DMcG
  */
 public class EntityMarking extends Object implements Serializable
@@ -20,7 +23,7 @@ public class EntityMarking extends Object implements Serializable
    protected short  characterSet;
 
    /** The characters */
-   protected byte  characters;
+   protected byte[]  characters = new byte[11]; 
 
 
 /** Constructor */
@@ -33,7 +36,7 @@ public int getMarshalledSize()
    int marshalSize = 0; 
 
    marshalSize = marshalSize + 1;  // characterSet
-   marshalSize = marshalSize + 1;  // characters
+   marshalSize = marshalSize + 11 * 1;  // characters
 
    return marshalSize;
 }
@@ -47,21 +50,71 @@ public short getCharacterSet()
 { return characterSet; 
 }
 
-public void setCharacters(byte pCharacters)
-{ characters = pCharacters;
+/**
+* Ensure what is set does not go over 11 characters, and anything under
+* 11 characters zero-fills.  post-processing patch
+* @param pCharacters an array of characters to set
+*/
+public void setCharacters(byte[] pCharacters)
+{
+ if (pCharacters.length >= characters.length)
+   {
+       System.arraycopy(pCharacters, 0, characters, 0, characters.length);
+   }
+ else
+ {
+   int pCharactersLength = pCharacters.length;
+   System.arraycopy(pCharacters, 0, characters, 0, pCharactersLength);
+   for (int ix = pCharactersLength; ix < characters.length; ix++)
+   {
+       // Ensure all zeros in unfilled fields
+       characters[ix] = 0;
+   }
+ }
 }
 
-public byte getCharacters()
-{ return characters; 
+public byte[] getCharacters()
+{ return characters; }
+
+/**
+ * An added conveniece method (added by patch): accepts a string, and either
+ * truncates or zero-fills it to fit into the 11-byte character marking field.
+ * @param marking the marking string, converted internally into a character array that
+ * is exactly 11 bytes long
+ */
+public void setCharactersString(String marking)
+{
+  byte[] buff = marking.getBytes();
+  this.setCharacters(buff);
 }
 
+/**
+ * Post-processing added convenience method. Converts the byte array of
+ * characters to a string. This uses the platform's default charset,
+ * rather than respecting the charset specified in the other field. 
+ * For the most part this will work, unless you're in some wacky foreign
+ * country, in which case you should start speaking English.
+ * 
+ * @return character array converted to a string
+ */
+public String getCharactersString()
+{
+    String charString = new String(characters);
+    
+    return charString;
+}
 
 public void marshal(DataOutputStream dos)
 {
     try 
     {
        dos.writeByte( (byte)characterSet);
-       dos.writeByte( (byte)characters);
+
+       for(int idx = 0; idx < characters.length; idx++)
+       {
+           dos.writeByte(characters[idx]);
+       } // end of array marshaling
+
     } // end try 
     catch(Exception e)
     { 
@@ -73,7 +126,10 @@ public void unmarshal(DataInputStream dis)
     try 
     {
        characterSet = (short)dis.readUnsignedByte();
-       characters = dis.readByte();
+       for(int idx = 0; idx < characters.length; idx++)
+       {
+            characters[idx] = dis.readByte();
+       } // end of array unmarshaling
     } // end try 
    catch(Exception e)
     { 
@@ -93,7 +149,10 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        buff.put( (byte)characterSet);
-       buff.put( (byte)characters);
+       for(int idx = 0; idx < 11; idx++)
+       {
+         buff.put( (byte)characters[idx]);
+       }
     } // end of marshal method
 
 /**
@@ -106,7 +165,10 @@ public void marshal(java.nio.ByteBuffer buff)
 public void unmarshal(java.nio.ByteBuffer buff)
 {
        characterSet = (short)(buff.get() & 0xFF);
-       characters = buff.get();
+       for(int idx = 0; idx < 11; idx++)
+       {
+            characters[idx] = buff.get();
+       }
  } // end of unmarshal method 
 
 
