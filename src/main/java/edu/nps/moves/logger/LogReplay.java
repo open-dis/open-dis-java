@@ -219,7 +219,6 @@ public class LogReplay
                 edu.nps.moves.dis.ApaData.class,
                 edu.nps.moves.dis.BeamData.class,
                 edu.nps.moves.dis.PropulsionSystemData.class,
-                edu.nps.moves.dis.OneByteChunk.class,
                 edu.nps.moves.dis.AcousticEmitter.class,
                 edu.nps.moves.dis.TransmitterPdu.class,
                 edu.nps.moves.dis.EventID.class,

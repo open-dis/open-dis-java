@@ -42,10 +42,7 @@ public class DataPduTest {
         assertEquals(1, vd.getVariableDatumID());
         assertEquals(1976, vd.getVariableDatumLength());
 
-        byte[] datumValue = new byte[(int) vd.getVariableData().size()];
-        for (int i = 0; i < vd.getVariableData().size(); i++) {
-            datumValue[i] = vd.getVariableData().get(i).getOtherParameters()[0];
-        }
+        byte[] datumValue = vd.getVariableData();
         assertEquals("[UAV2_PAYLOAD,UAV2_PLANNER,unit_7,UAV1_PLANNER,UAV1_PAYLOAD,unit_3,B 1-1-C-4:1,B 1-1-C-4:2,B 1-1-C-4:3,B 1-1-C-5:1,B 1-1-C-5:2,B 1-1-C-5:3,B 1-1-C-6:1,B 1-1-C-6:2,B 1-1-C-6:3,B 1-1-A-4:1,B 1-1-A-9:1,B 1-1-A-5:1,B 1-1-B-4:1,B 1-1-A-6:1,B 1-1-A-6:2]", new String(datumValue));
     }
 

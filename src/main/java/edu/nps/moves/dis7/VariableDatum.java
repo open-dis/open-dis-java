@@ -23,7 +23,7 @@ public class VariableDatum extends Object implements Serializable
    protected long  variableDatumLength;
 
    /** Variable length data class */
-   protected List< OneByteChunk > variableDatumData = new ArrayList< OneByteChunk >(); 
+   protected byte[] variableDatumData = new byte[0];
 
 /** Constructor */
  public VariableDatum()
@@ -36,11 +36,7 @@ public int getMarshalledSize()
 
    marshalSize = marshalSize + 4;  // variableDatumID
    marshalSize = marshalSize + 4;  // variableDatumLength
-   for(int idx=0; idx < variableDatumData.size(); idx++)
-   {
-        OneByteChunk listElement = variableDatumData.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
+   marshalSize = marshalSize + variableDatumData.length;
 
    return marshalSize;
 }
@@ -55,7 +51,7 @@ public long getVariableDatumID()
 }
 
 public long getVariableDatumLength()
-{ return (long)variableDatumData.size();
+{ return (long)variableDatumData.length;
 }
 
 /** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
@@ -66,11 +62,11 @@ public void setVariableDatumLength(long pVariableDatumLength)
 { variableDatumLength = pVariableDatumLength;
 }
 
-public void setVariableDatumData(List<OneByteChunk> pVariableDatumData)
+public void setVariableDatumData(byte[] pVariableDatumData)
 { variableDatumData = pVariableDatumData;
 }
 
-public List<OneByteChunk> getVariableDatumData()
+public byte[] getVariableDatumData()
 { return variableDatumData; }
 
 
@@ -79,14 +75,8 @@ public void marshal(DataOutputStream dos)
     try 
     {
        dos.writeInt( (int)variableDatumID);
-       dos.writeInt( (int)variableDatumData.size());
-
-       for(int idx = 0; idx < variableDatumData.size(); idx++)
-       {
-            OneByteChunk aOneByteChunk = variableDatumData.get(idx);
-            aOneByteChunk.marshal(dos);
-       } // end of list marshalling
-
+       dos.writeInt( (int)variableDatumData.length);
+       dos.write(variableDatumData);
     } // end try 
     catch(Exception e)
     { 
@@ -99,13 +89,8 @@ public void unmarshal(DataInputStream dis)
     {
        variableDatumID = dis.readInt();
        variableDatumLength = dis.readInt();
-       for(int idx = 0; idx < variableDatumLength; idx++)
-       {
-           OneByteChunk anX = new OneByteChunk();
-           anX.unmarshal(dis);
-           variableDatumData.add(anX);
-       }
-
+       variableDatumData = new byte[(int) variableDatumLength];
+       dis.read(variableDatumData);
     } // end try 
    catch(Exception e)
     { 
@@ -125,14 +110,8 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        buff.putInt( (int)variableDatumID);
-       buff.putInt( (int)variableDatumData.size());
-
-       for(int idx = 0; idx < variableDatumData.size(); idx++)
-       {
-            OneByteChunk aOneByteChunk = (OneByteChunk)variableDatumData.get(idx);
-            aOneByteChunk.marshal(buff);
-       } // end of list marshalling
-
+       buff.putInt( (int)variableDatumData.length);
+       buff.put(variableDatumData);
     } // end of marshal method
 
 /**
@@ -146,13 +125,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
 {
        variableDatumID = buff.getInt();
        variableDatumLength = buff.getInt();
-       for(int idx = 0; idx < variableDatumLength; idx++)
-       {
-            OneByteChunk anX = new OneByteChunk();
-            anX.unmarshal(buff);
-            variableDatumData.add(anX);
-       }
-
+       variableDatumData = new byte[(int) variableDatumLength];
+       buff.get(variableDatumData);
  } // end of unmarshal method 
 
 
@@ -194,12 +168,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      if( ! (variableDatumID == rhs.variableDatumID)) ivarsEqual = false;
      if( ! (variableDatumLength == rhs.variableDatumLength)) ivarsEqual = false;
-
-     for(int idx = 0; idx < variableDatumData.size(); idx++)
-     {
-        if( ! ( variableDatumData.get(idx).equals(rhs.variableDatumData.get(idx)))) ivarsEqual = false;
-     }
-
+     if( ! (Arrays.equals(variableDatumData, rhs.variableDatumData))) ivarsEqual = false;
 
     return ivarsEqual;
  }

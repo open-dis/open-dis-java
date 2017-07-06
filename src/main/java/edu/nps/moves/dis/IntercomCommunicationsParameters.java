@@ -23,7 +23,7 @@ public class IntercomCommunicationsParameters extends Object implements Serializ
    protected int  recordLength;
 
    /** variable length variablelist of data parameters  */
-   protected List< OneByteChunk > parameterValues = new ArrayList< OneByteChunk >(); 
+   protected byte[] parameterValues = new byte[0];
 
 /** Constructor */
  public IntercomCommunicationsParameters()
@@ -36,11 +36,7 @@ public int getMarshalledSize()
 
    marshalSize = marshalSize + 2;  // recordType
    marshalSize = marshalSize + 2;  // recordLength
-   for(int idx=0; idx < parameterValues.size(); idx++)
-   {
-        OneByteChunk listElement = parameterValues.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
+   marshalSize = marshalSize + parameterValues.length;
 
    return marshalSize;
 }
@@ -55,7 +51,7 @@ public int getRecordType()
 }
 
 public int getRecordLength()
-{ return (int)parameterValues.size();
+{ return parameterValues.length;
 }
 
 /** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
@@ -66,11 +62,11 @@ public void setRecordLength(int pRecordLength)
 { recordLength = pRecordLength;
 }
 
-public void setParameterValues(List<OneByteChunk> pParameterValues)
+public void setParameterValues(byte[] pParameterValues)
 { parameterValues = pParameterValues;
 }
 
-public List<OneByteChunk> getParameterValues()
+public byte[] getParameterValues()
 { return parameterValues; }
 
 
@@ -79,14 +75,8 @@ public void marshal(DataOutputStream dos)
     try 
     {
        dos.writeShort( (short)recordType);
-       dos.writeShort( (short)parameterValues.size());
-
-       for(int idx = 0; idx < parameterValues.size(); idx++)
-       {
-            OneByteChunk aOneByteChunk = parameterValues.get(idx);
-            aOneByteChunk.marshal(dos);
-       } // end of list marshalling
-
+       dos.writeShort( (short)parameterValues.length);
+       dos.write(parameterValues);
     } // end try 
     catch(Exception e)
     { 
@@ -99,13 +89,8 @@ public void unmarshal(DataInputStream dis)
     {
        recordType = (int)dis.readUnsignedShort();
        recordLength = (int)dis.readUnsignedShort();
-       for(int idx = 0; idx < recordLength; idx++)
-       {
-           OneByteChunk anX = new OneByteChunk();
-           anX.unmarshal(dis);
-           parameterValues.add(anX);
-       }
-
+       parameterValues = new byte[recordLength];
+       dis.read(parameterValues);
     } // end try 
    catch(Exception e)
     { 
@@ -125,14 +110,8 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        buff.putShort( (short)recordType);
-       buff.putShort( (short)parameterValues.size());
-
-       for(int idx = 0; idx < parameterValues.size(); idx++)
-       {
-            OneByteChunk aOneByteChunk = (OneByteChunk)parameterValues.get(idx);
-            aOneByteChunk.marshal(buff);
-       } // end of list marshalling
-
+       buff.putShort( (short)parameterValues.length);
+       buff.put(parameterValues);
     } // end of marshal method
 
 /**
@@ -146,13 +125,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
 {
        recordType = (int)(buff.getShort() & 0xFFFF);
        recordLength = (int)(buff.getShort() & 0xFFFF);
-       for(int idx = 0; idx < recordLength; idx++)
-       {
-            OneByteChunk anX = new OneByteChunk();
-            anX.unmarshal(buff);
-            parameterValues.add(anX);
-       }
-
+       parameterValues = new byte[recordLength];
+       buff.get(parameterValues);
  } // end of unmarshal method 
 
 
@@ -194,12 +168,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      if( ! (recordType == rhs.recordType)) ivarsEqual = false;
      if( ! (recordLength == rhs.recordLength)) ivarsEqual = false;
-
-     for(int idx = 0; idx < parameterValues.size(); idx++)
-     {
-        if( ! ( parameterValues.get(idx).equals(rhs.parameterValues.get(idx)))) ivarsEqual = false;
-     }
-
+     if( ! (Arrays.equals(parameterValues, rhs.parameterValues))) ivarsEqual = false;
 
     return ivarsEqual;
  }

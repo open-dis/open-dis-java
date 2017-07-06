@@ -34,24 +34,16 @@ public class SignalPduTest {
         assertEquals(22050, spdu.getSampleRate());
         assertEquals(8192, spdu.getDataLength());
         assertEquals(512, spdu.getSamples());
-        assertEquals(8192 / Byte.SIZE, spdu.getData().size());
+        assertEquals(8192 / Byte.SIZE, spdu.getData().length);
     }
 
     @Test
     public void marshal() {
         SignalPdu spdu = new SignalPdu();
-        List<OneByteChunk> audioChunks = new ArrayList();
         final int numChunks = 10;
+        byte[] data = new byte[numChunks];
 
-        for (int i = 0; i < numChunks; i++) {
-            OneByteChunk obc = new OneByteChunk();
-            byte[] onebyte = new byte[1];
-            onebyte[0] = 1; // fake audio data, whatever.
-            obc.setOtherParameters(onebyte);
-            audioChunks.add(obc);
-        }
-
-        spdu.setData(audioChunks);
+        spdu.setData(data);
         spdu.setDataLength((short) numChunks * Byte.SIZE);
 
         assertEquals(numChunks * Byte.SIZE, spdu.getDataLength());

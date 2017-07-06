@@ -32,18 +32,7 @@ public class IntercomSignalPduUnitTest {
         eid.setEntity(101);
         eid.setSite(102);
 
-        /**
-         *  Ugh. The data for each chunk is a one byte array, rather than just
-         * a byte. Why did I do this?
-         */
-        List<OneByteChunk> signalData = new ArrayList<OneByteChunk>();
-        for (int i = 0; i < 100; i++) {
-            OneByteChunk chunk = new OneByteChunk();
-            byte data[] = new byte[1];
-            data[0] = (byte) i;
-            chunk.setOtherParameters(data);
-            signalData.add(chunk);
-        }
+        byte[] signalData = new byte[100];
 
         isp = new IntercomSignalPdu();
         isp.setCommunicationsDeviceID(1);
@@ -68,15 +57,11 @@ public class IntercomSignalPduUnitTest {
 
         assertEquals("CommunicationsDeviceID", isp.getCommunicationsDeviceID(), 1);
 
-        List<OneByteChunk> retrievedData = isp.getData();
+        byte[] retrievedData = isp.getData();
         assertEquals("Signal data length wrong", isp.getDataLength(), 100);
 
         // Check that each value in the variable-length array is the same as we set
-        for (int i = 0; i < 100; i++) {
-            OneByteChunk chunk = retrievedData.get(i);
-            byte[] data = chunk.getOtherParameters();
-            assertEquals("Signal data mismatch", data[0], i);
-        }
+        assertArrayEquals("Signal data mismatch", retrievedData, new byte[100]);
 
         assertEquals("EncodingScheme", isp.getEncodingScheme(), 2);
 
@@ -108,14 +93,10 @@ public class IntercomSignalPduUnitTest {
 
         assertEquals("CommunicationsDeviceID", isp.getCommunicationsDeviceID(), newIsp.getCommunicationsDeviceID());
 
-        List<OneByteChunk> oldData = isp.getData();
-        List<OneByteChunk> retrievedData = newIsp.getData();
+        byte[] oldData = isp.getData();
+        byte[] retrievedData = newIsp.getData();
         assertEquals("Signal data length wrong", isp.getDataLength(), newIsp.getDataLength());
-        for (int idx = 0; idx < 100; idx++) {
-            OneByteChunk oldChunk = oldData.get(idx);
-            OneByteChunk newChunk = retrievedData.get(idx);
-            assertEquals("Signal data mismatch", oldChunk.getOtherParameters()[0], newChunk.getOtherParameters()[0]);
-        }
+        assertArrayEquals("Signal data mismatch", oldData, retrievedData);
 
         assertEquals("EncodingScheme", isp.getEncodingScheme(), newIsp.getEncodingScheme());
 

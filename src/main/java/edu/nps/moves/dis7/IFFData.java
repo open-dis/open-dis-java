@@ -23,7 +23,7 @@ public class IFFData extends Object implements Serializable
    protected int  recordLength;
 
    /** IFF data. */
-   protected List< OneByteChunk > iffData = new ArrayList< OneByteChunk >(); 
+   protected byte[] iffData = new byte[0];
 
 /** Constructor */
  public IFFData()
@@ -36,11 +36,7 @@ public int getMarshalledSize()
 
    marshalSize = marshalSize + 4;  // recordType
    marshalSize = marshalSize + 2;  // recordLength
-   for(int idx=0; idx < iffData.size(); idx++)
-   {
-        OneByteChunk listElement = iffData.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
+   marshalSize = marshalSize + iffData.length;
 
    return marshalSize;
 }
@@ -55,7 +51,7 @@ public long getRecordType()
 }
 
 public int getRecordLength()
-{ return (int)iffData.size();
+{ return iffData.length;
 }
 
 /** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
@@ -66,11 +62,11 @@ public void setRecordLength(int pRecordLength)
 { recordLength = pRecordLength;
 }
 
-public void setIffData(List<OneByteChunk> pIffData)
+public void setIffData(byte[] pIffData)
 { iffData = pIffData;
 }
 
-public List<OneByteChunk> getIffData()
+public byte[] getIffData()
 { return iffData; }
 
 
@@ -79,14 +75,8 @@ public void marshal(DataOutputStream dos)
     try 
     {
        dos.writeInt( (int)recordType);
-       dos.writeShort( (short)iffData.size());
-
-       for(int idx = 0; idx < iffData.size(); idx++)
-       {
-            OneByteChunk aOneByteChunk = iffData.get(idx);
-            aOneByteChunk.marshal(dos);
-       } // end of list marshalling
-
+       dos.writeShort( (short)iffData.length);
+       dos.write(iffData);
     } // end try 
     catch(Exception e)
     { 
@@ -99,13 +89,8 @@ public void unmarshal(DataInputStream dis)
     {
        recordType = dis.readInt();
        recordLength = (int)dis.readUnsignedShort();
-       for(int idx = 0; idx < recordLength; idx++)
-       {
-           OneByteChunk anX = new OneByteChunk();
-           anX.unmarshal(dis);
-           iffData.add(anX);
-       }
-
+       iffData = new byte[recordLength];
+       dis.read(iffData);
     } // end try 
    catch(Exception e)
     { 
@@ -125,14 +110,8 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        buff.putInt( (int)recordType);
-       buff.putShort( (short)iffData.size());
-
-       for(int idx = 0; idx < iffData.size(); idx++)
-       {
-            OneByteChunk aOneByteChunk = (OneByteChunk)iffData.get(idx);
-            aOneByteChunk.marshal(buff);
-       } // end of list marshalling
-
+       buff.putShort( (short)iffData.length);
+       buff.put(iffData);
     } // end of marshal method
 
 /**
@@ -146,13 +125,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
 {
        recordType = buff.getInt();
        recordLength = (int)(buff.getShort() & 0xFFFF);
-       for(int idx = 0; idx < recordLength; idx++)
-       {
-            OneByteChunk anX = new OneByteChunk();
-            anX.unmarshal(buff);
-            iffData.add(anX);
-       }
-
+       iffData = new byte[recordLength];
+       buff.get(iffData);
  } // end of unmarshal method 
 
 
@@ -194,12 +168,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      if( ! (recordType == rhs.recordType)) ivarsEqual = false;
      if( ! (recordLength == rhs.recordLength)) ivarsEqual = false;
-
-     for(int idx = 0; idx < iffData.size(); idx++)
-     {
-        if( ! ( iffData.get(idx).equals(rhs.iffData.get(idx)))) ivarsEqual = false;
-     }
-
+     if( ! (Arrays.equals(iffData, rhs.iffData))) ivarsEqual = false;
 
     return ivarsEqual;
  }

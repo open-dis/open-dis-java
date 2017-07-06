@@ -23,7 +23,7 @@ public class VariableDatum extends Object implements Serializable
    protected long  variableDatumLength;
 
    /** data can be any length, but must increase in 8 byte quanta. This requires some postprocessing patches. Note that setting the data allocates a new internal array to account for the possibly increased size. The default initial size is 64 bits. */
-   protected List< OneByteChunk > variableData = new ArrayList< OneByteChunk >(); 
+   protected byte[] variableData;
 
 /** Constructor */
  public VariableDatum()
@@ -36,11 +36,7 @@ public int getMarshalledSize()
 
    marshalSize = marshalSize + 4;  // variableDatumID
    marshalSize = marshalSize + 4;  // variableDatumLength
-   for(int idx=0; idx < variableData.size(); idx++)
-   {
-        OneByteChunk listElement = variableData.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
+   marshalSize = marshalSize + variableData.length;
 
    // Account for required padding.
    marshalSize = marshalSize + datumPaddingSize();
@@ -58,7 +54,7 @@ public long getVariableDatumID()
 }
 
 public long getVariableDatumLength()
-{ return (long)variableData.size() * Byte.SIZE;
+{ return (long)variableData.length * Byte.SIZE;
 }
 
 /** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
@@ -69,11 +65,11 @@ public void setVariableDatumLength(long pVariableDatumLength)
 { variableDatumLength = pVariableDatumLength;
 }
 
-public void setVariableData(List<OneByteChunk> pVariableData)
+public void setVariableData(byte[] pVariableData)
 { variableData = pVariableData;
 }
 
-public List<OneByteChunk> getVariableData()
+public byte[] getVariableData()
 { return variableData; }
 
 
@@ -83,12 +79,7 @@ public void marshal(DataOutputStream dos)
     {
        dos.writeInt( (int)variableDatumID);
        dos.writeInt( (int)getVariableDatumLength());
-
-       for(int idx = 0; idx < variableData.size(); idx++)
-       {
-            OneByteChunk aOneByteChunk = variableData.get(idx);
-            aOneByteChunk.marshal(dos);
-       } // end of list marshalling
+       dos.write(variableData);
 
         // Add padding.
         for (int i = 0; i < datumPaddingSize(); i++) {
@@ -107,13 +98,9 @@ public void unmarshal(DataInputStream dis)
     {
        variableDatumID = dis.readInt();
        variableDatumLength = dis.readInt();
-       for(int idx = 0; idx < variableDatumLength / Byte.SIZE; idx++)
-       {
-           OneByteChunk anX = new OneByteChunk();
-           anX.unmarshal(dis);
-           variableData.add(anX);
-       }
-
+       final int dataLengthBytes = (int)variableDatumLength / Byte.SIZE;
+       variableData = new byte[dataLengthBytes];
+       dis.read(variableData);
     } // end try 
    catch(Exception e)
     { 
@@ -134,12 +121,7 @@ public void marshal(java.nio.ByteBuffer buff)
 {
        buff.putInt( (int)variableDatumID);
        buff.putInt( (int)getVariableDatumLength());
-
-       for(int idx = 0; idx < variableData.size(); idx++)
-       {
-            OneByteChunk aOneByteChunk = (OneByteChunk)variableData.get(idx);
-            aOneByteChunk.marshal(buff);
-       } // end of list marshalling
+       buff.put(variableData);
 
         // Add padding.
         for (int i = 0; i < datumPaddingSize(); i++) {
@@ -158,12 +140,9 @@ public void unmarshal(java.nio.ByteBuffer buff)
 {
        variableDatumID = buff.getInt();
        variableDatumLength = buff.getInt();
-       for(int idx = 0; idx < variableDatumLength / Byte.SIZE; idx++)
-       {
-            OneByteChunk anX = new OneByteChunk();
-            anX.unmarshal(buff);
-            variableData.add(anX);
-       }
+       final int dataLengthBytes = (int)variableDatumLength / Byte.SIZE;
+       variableData = new byte[dataLengthBytes];
+       buff.get(variableData);
 
  } // end of unmarshal method 
 
@@ -206,12 +185,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      if( ! (variableDatumID == rhs.variableDatumID)) ivarsEqual = false;
      if( ! (variableDatumLength == rhs.variableDatumLength)) ivarsEqual = false;
-
-     for(int idx = 0; idx < variableData.size(); idx++)
-     {
-        if( ! ( variableData.get(idx).equals(rhs.variableData.get(idx)))) ivarsEqual = false;
-     }
-
+     if( ! (Arrays.equals(variableData, rhs.variableData))) ivarsEqual = false;
 
     return ivarsEqual;
  }
@@ -220,7 +194,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
     private int datumPaddingSize() {
         final int BYTES_IN_64_BITS = 8;
         int padding = 0;
-        final int remainder = variableData.size() % BYTES_IN_64_BITS;
+        final int remainder = (int)variableData.length % BYTES_IN_64_BITS;
         if (remainder != 0) {
             padding = BYTES_IN_64_BITS - remainder;
         }
