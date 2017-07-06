@@ -20,7 +20,7 @@ public class GridAxisRecordRepresentation0 extends GridAxisRecord implements Ser
    protected int  numberOfBytes;
 
    /** variable length variablelist of data parameters ^^^this is wrong--need padding as well */
-   protected List< OneByteChunk > dataValues = new ArrayList< OneByteChunk >(); 
+   protected byte[] dataValues = new byte[0];
 
 /** Constructor */
  public GridAxisRecordRepresentation0()
@@ -33,18 +33,14 @@ public int getMarshalledSize()
 
    marshalSize = super.getMarshalledSize();
    marshalSize = marshalSize + 2;  // numberOfBytes
-   for(int idx=0; idx < dataValues.size(); idx++)
-   {
-        OneByteChunk listElement = dataValues.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
+   marshalSize = marshalSize + dataValues.length;
 
    return marshalSize;
 }
 
 
 public int getNumberOfBytes()
-{ return (int)dataValues.size();
+{ return dataValues.length;
 }
 
 /** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
@@ -55,11 +51,11 @@ public void setNumberOfBytes(int pNumberOfBytes)
 { numberOfBytes = pNumberOfBytes;
 }
 
-public void setDataValues(List<OneByteChunk> pDataValues)
+public void setDataValues(byte[] pDataValues)
 { dataValues = pDataValues;
 }
 
-public List<OneByteChunk> getDataValues()
+public byte[] getDataValues()
 { return dataValues; }
 
 
@@ -68,13 +64,7 @@ public void marshal(DataOutputStream dos)
     super.marshal(dos);
     try 
     {
-       dos.writeShort( (short)dataValues.size());
-
-       for(int idx = 0; idx < dataValues.size(); idx++)
-       {
-            OneByteChunk aOneByteChunk = dataValues.get(idx);
-            aOneByteChunk.marshal(dos);
-       } // end of list marshalling
+       dos.write(dataValues);
 
     } // end try 
     catch(Exception e)
@@ -89,13 +79,8 @@ public void unmarshal(DataInputStream dis)
     try 
     {
        numberOfBytes = (int)dis.readUnsignedShort();
-       for(int idx = 0; idx < numberOfBytes; idx++)
-       {
-           OneByteChunk anX = new OneByteChunk();
-           anX.unmarshal(dis);
-           dataValues.add(anX);
-       }
-
+       dataValues = new byte[numberOfBytes];
+       dis.read(dataValues);
     } // end try 
    catch(Exception e)
     { 
@@ -115,14 +100,8 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        super.marshal(buff);
-       buff.putShort( (short)dataValues.size());
-
-       for(int idx = 0; idx < dataValues.size(); idx++)
-       {
-            OneByteChunk aOneByteChunk = (OneByteChunk)dataValues.get(idx);
-            aOneByteChunk.marshal(buff);
-       } // end of list marshalling
-
+       buff.putShort((short)dataValues.length);
+       buff.put(dataValues);
     } // end of marshal method
 
 /**
@@ -137,13 +116,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
        super.unmarshal(buff);
 
        numberOfBytes = (int)(buff.getShort() & 0xFFFF);
-       for(int idx = 0; idx < numberOfBytes; idx++)
-       {
-            OneByteChunk anX = new OneByteChunk();
-            anX.unmarshal(buff);
-            dataValues.add(anX);
-       }
-
+       dataValues = new byte[numberOfBytes];
+       buff.get(dataValues);
  } // end of unmarshal method 
 
 
@@ -179,12 +153,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
      final GridAxisRecordRepresentation0 rhs = (GridAxisRecordRepresentation0)obj;
 
      if( ! (numberOfBytes == rhs.numberOfBytes)) ivarsEqual = false;
-
-     for(int idx = 0; idx < dataValues.size(); idx++)
-     {
-        if( ! ( dataValues.get(idx).equals(rhs.dataValues.get(idx)))) ivarsEqual = false;
-     }
-
+     if( ! (Arrays.equals(dataValues, rhs.dataValues))) ivarsEqual = false;
 
     return ivarsEqual && super.equalsImpl(rhs);
  }

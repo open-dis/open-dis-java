@@ -42,10 +42,7 @@ public class SetDataPduTest {
         assertEquals(1, vd.getVariableDatumID());
         assertEquals(64, vd.getVariableDatumLength());
 
-        byte[] datumValue = new byte[(int) vd.getVariableData().size()];
-        for (int i = 0; i < vd.getVariableData().size(); i++) {
-            datumValue[i] = vd.getVariableData().get(i).getOtherParameters()[0];
-        }
+        byte[] datumValue = vd.getVariableData();
         assertEquals("allunits", new String(datumValue));
     }
 

@@ -27,16 +27,7 @@ public class VariableDatumTest
         VariableDatum vd = new VariableDatum();
 
         final String datum = "1234567"; // seven bytes
-
-        List<OneByteChunk> datumBytes = new ArrayList();
-        for (byte b : datum.getBytes()) {
-            OneByteChunk obc = new OneByteChunk();
-            byte[] onebyte = new byte[1];
-            onebyte[0] = b;
-            obc.setOtherParameters(onebyte);
-            datumBytes.add(obc);
-        }
-
+        byte[] datumBytes = datum.getBytes();
         vd.setVariableData(datumBytes);
 		
         assertEquals(56, vd.getVariableDatumLength()); // Ensure length is in bits.
