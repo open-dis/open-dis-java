@@ -16,11 +16,6 @@ import edu.nps.moves.disutil.*;
  */
 public class StartResumePdu extends SimulationManagementFamilyPdu implements Serializable
 {
-   /** Identifier for originating entity(or simulation) */
-   protected EntityID  originatingID = new EntityID(); 
-
-   /** Identifier for the receiving entity(or simulation) */
-   protected EntityID  receivingID = new EntityID(); 
 
    /** This field shall specify the real-world time (UTC) at which the entity is to start/resume in the exercise. This information shall be used by the participating simulation applications to start/resume an exercise synchronously. This field shall be represented by a Clock Time record (see 6.2.16). */
    protected ClockTime  realWorldTime = new ClockTime(); 
@@ -43,30 +38,11 @@ public int getMarshalledSize()
    int marshalSize = 0; 
 
    marshalSize = super.getMarshalledSize();
-   marshalSize = marshalSize + originatingID.getMarshalledSize();  // originatingID
-   marshalSize = marshalSize + receivingID.getMarshalledSize();  // receivingID
    marshalSize = marshalSize + realWorldTime.getMarshalledSize();  // realWorldTime
    marshalSize = marshalSize + simulationTime.getMarshalledSize();  // simulationTime
    marshalSize = marshalSize + 4;  // requestID
 
    return marshalSize;
-}
-
-
-public void setOriginatingID(EntityID pOriginatingID)
-{ originatingID = pOriginatingID;
-}
-
-public EntityID getOriginatingID()
-{ return originatingID; 
-}
-
-public void setReceivingID(EntityID pReceivingID)
-{ receivingID = pReceivingID;
-}
-
-public EntityID getReceivingID()
-{ return receivingID; 
 }
 
 public void setRealWorldTime(ClockTime pRealWorldTime)
@@ -99,8 +75,6 @@ public void marshal(DataOutputStream dos)
     super.marshal(dos);
     try 
     {
-       originatingID.marshal(dos);
-       receivingID.marshal(dos);
        realWorldTime.marshal(dos);
        simulationTime.marshal(dos);
        dos.writeInt( (int)requestID);
@@ -116,8 +90,6 @@ public void unmarshal(DataInputStream dis)
 
     try 
     {
-       originatingID.unmarshal(dis);
-       receivingID.unmarshal(dis);
        realWorldTime.unmarshal(dis);
        simulationTime.unmarshal(dis);
        requestID = dis.readInt();
@@ -140,8 +112,6 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        super.marshal(buff);
-       originatingID.marshal(buff);
-       receivingID.marshal(buff);
        realWorldTime.marshal(buff);
        simulationTime.marshal(buff);
        buff.putInt( (int)requestID);
@@ -158,8 +128,6 @@ public void unmarshal(java.nio.ByteBuffer buff)
 {
        super.unmarshal(buff);
 
-       originatingID.unmarshal(buff);
-       receivingID.unmarshal(buff);
        realWorldTime.unmarshal(buff);
        simulationTime.unmarshal(buff);
        requestID = buff.getInt();
@@ -197,8 +165,6 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      final StartResumePdu rhs = (StartResumePdu)obj;
 
-     if( ! (originatingID.equals( rhs.originatingID) )) ivarsEqual = false;
-     if( ! (receivingID.equals( rhs.receivingID) )) ivarsEqual = false;
      if( ! (realWorldTime.equals( rhs.realWorldTime) )) ivarsEqual = false;
      if( ! (simulationTime.equals( rhs.simulationTime) )) ivarsEqual = false;
      if( ! (requestID == rhs.requestID)) ivarsEqual = false;
