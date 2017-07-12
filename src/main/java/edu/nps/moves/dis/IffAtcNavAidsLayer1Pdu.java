@@ -123,26 +123,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       emittingEntityId.unmarshal(dis);
-       eventID.unmarshal(dis);
-       location.unmarshal(dis);
-       systemID.unmarshal(dis);
-       pad2 = (int)dis.readUnsignedShort();
-       fundamentalParameters.unmarshal(dis);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

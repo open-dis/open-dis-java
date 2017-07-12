@@ -201,32 +201,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       objectID.unmarshal(dis);
-       referencedObjectID.unmarshal(dis);
-       updateNumber = (int)dis.readUnsignedShort();
-       forceID = (short)dis.readUnsignedByte();
-       modifications = (short)dis.readUnsignedByte();
-       objectType.unmarshal(dis);
-       objectLocation.unmarshal(dis);
-       objectOrientation.unmarshal(dis);
-       objectAppearance = dis.readDouble();
-       requesterID.unmarshal(dis);
-       receivingID.unmarshal(dis);
-       pad2 = dis.readInt();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

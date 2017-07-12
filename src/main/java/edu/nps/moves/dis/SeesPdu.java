@@ -173,40 +173,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       orginatingEntityID.unmarshal(dis);
-       infraredSignatureRepresentationIndex = (int)dis.readUnsignedShort();
-       acousticSignatureRepresentationIndex = (int)dis.readUnsignedShort();
-       radarCrossSectionSignatureRepresentationIndex = (int)dis.readUnsignedShort();
-       numberOfPropulsionSystems = (int)dis.readUnsignedShort();
-       numberOfVectoringNozzleSystems = (int)dis.readUnsignedShort();
-       for(int idx = 0; idx < numberOfPropulsionSystems; idx++)
-       {
-           PropulsionSystemData anX = new PropulsionSystemData();
-           anX.unmarshal(dis);
-           propulsionSystemData.add(anX);
-       }
-
-       for(int idx = 0; idx < numberOfVectoringNozzleSystems; idx++)
-       {
-           VectoringNozzleSystemData anX = new VectoringNozzleSystemData();
-           anX.unmarshal(dis);
-           vectoringSystemData.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

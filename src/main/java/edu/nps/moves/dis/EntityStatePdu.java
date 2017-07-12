@@ -4,6 +4,9 @@ import java.util.*;
 import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
+import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -510,39 +513,6 @@ public void marshal(DataOutputStream dos)
     { 
       System.out.println(e);}
     } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       entityID.unmarshal(dis);
-       forceId = (short)dis.readUnsignedByte();
-       numberOfArticulationParameters = dis.readByte();
-       entityType.unmarshal(dis);
-       alternativeEntityType.unmarshal(dis);
-       entityLinearVelocity.unmarshal(dis);
-       entityLocation.unmarshal(dis);
-       entityOrientation.unmarshal(dis);
-       entityAppearance = dis.readInt();
-       deadReckoningParameters.unmarshal(dis);
-       marking.unmarshal(dis);
-       capabilities = dis.readInt();
-       for(int idx = 0; idx < numberOfArticulationParameters; idx++)
-       {
-           ArticulationParameter anX = new ArticulationParameter();
-           anX.unmarshal(dis);
-           articulationParameters.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
 
 /**
  * Packs a Pdu into the ByteBuffer.

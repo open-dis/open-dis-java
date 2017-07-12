@@ -4,6 +4,9 @@ import java.util.*;
 import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
+import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -200,19 +203,20 @@ public void marshal(DataOutputStream dos)
 
 public void unmarshal(DataInputStream dis)
 {
-    try 
-    {
-       protocolVersion = (short)dis.readUnsignedByte();
-       exerciseID = (short)dis.readUnsignedByte();
-       pduType = (short)dis.readUnsignedByte();
-       protocolFamily = (short)dis.readUnsignedByte();
-       timestamp = dis.readInt();
-       pduLength = (int)dis.readUnsignedShort();
-       padding = dis.readShort();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
+    try {
+        // Read the pdu header to determine the pdu length
+        byte[] header = new byte[12];
+        dis.mark(header.length);
+        dis.read(header, 0, header.length);
+        pduLength = (int) ByteBuffer.wrap(header).getShort(8);
+        dis.reset();
+        
+        // Now allocate enough space for full pdu
+        byte[] pdu = new byte[pduLength];
+        dis.read(pdu, 0, pduLength);
+        unmarshal(ByteBuffer.wrap(pdu));
+    } catch (IOException ex) {
+        Logger.getLogger(EntityStatePdu.class.getName()).log(Level.SEVERE, null, ex);
     }
  } // end of unmarshal method 
 

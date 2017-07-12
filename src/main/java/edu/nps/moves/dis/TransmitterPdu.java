@@ -342,53 +342,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       entityId.unmarshal(dis);
-       radioId = (int)dis.readUnsignedShort();
-       radioEntityType.unmarshal(dis);
-       transmitState = (short)dis.readUnsignedByte();
-       inputSource = (short)dis.readUnsignedByte();
-       padding1 = (int)dis.readUnsignedShort();
-       antennaLocation.unmarshal(dis);
-       relativeAntennaLocation.unmarshal(dis);
-       antennaPatternType = (int)dis.readUnsignedShort();
-       antennaPatternCount = (int)dis.readUnsignedShort();
-       frequency = dis.readLong();
-       transmitFrequencyBandwidth = dis.readFloat();
-       power = dis.readFloat();
-       modulationType.unmarshal(dis);
-       cryptoSystem = (int)dis.readUnsignedShort();
-       cryptoKeyId = (int)dis.readUnsignedShort();
-       modulationParameterCount = (short)dis.readUnsignedByte();
-       padding2 = (int)dis.readUnsignedShort();
-       padding3 = (short)dis.readUnsignedByte();
-       for(int idx = 0; idx < modulationParameterCount; idx++)
-       {
-           ModulationType anX = new ModulationType();
-           anX.unmarshal(dis);
-           modulationParametersList.add(anX);
-       }
-
-       for(int idx = 0; idx < antennaPatternCount; idx++)
-       {
-           BeamAntennaPattern anX = new BeamAntennaPattern();
-           anX.unmarshal(dis);
-           antennaPatternList.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

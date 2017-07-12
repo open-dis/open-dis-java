@@ -186,36 +186,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       munitionID.unmarshal(dis);
-       eventID.unmarshal(dis);
-       velocity.unmarshal(dis);
-       locationInWorldCoordinates.unmarshal(dis);
-       burstDescriptor.unmarshal(dis);
-       locationInEntityCoordinates.unmarshal(dis);
-       detonationResult = (short)dis.readUnsignedByte();
-       numberOfArticulationParameters = (short)dis.readUnsignedByte();
-       pad = dis.readShort();
-       for(int idx = 0; idx < numberOfArticulationParameters; idx++)
-       {
-           ArticulationParameter anX = new ArticulationParameter();
-           anX.unmarshal(dis);
-           articulationParameters.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

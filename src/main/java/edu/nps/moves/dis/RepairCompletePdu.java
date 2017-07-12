@@ -97,23 +97,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       receivingEntityID.unmarshal(dis);
-       repairingEntityID.unmarshal(dis);
-       repair = (int)dis.readUnsignedShort();
-       padding2 = dis.readShort();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
 
 /**
  * Packs a Pdu into the ByteBuffer.

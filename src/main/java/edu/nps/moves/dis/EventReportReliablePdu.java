@@ -147,37 +147,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       eventType = (int)dis.readUnsignedShort();
-       pad1 = dis.readInt();
-       numberOfFixedDatumRecords = dis.readInt();
-       numberOfVariableDatumRecords = dis.readInt();
-       for(int idx = 0; idx < numberOfFixedDatumRecords; idx++)
-       {
-           FixedDatum anX = new FixedDatum();
-           anX.unmarshal(dis);
-           fixedDatumRecords.add(anX);
-       }
-
-       for(int idx = 0; idx < numberOfVariableDatumRecords; idx++)
-       {
-           VariableDatum anX = new VariableDatum();
-           anX.unmarshal(dis);
-           variableDatumRecords.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
 
 /**
  * Packs a Pdu into the ByteBuffer.

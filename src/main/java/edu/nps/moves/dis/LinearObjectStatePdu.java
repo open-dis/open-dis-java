@@ -174,35 +174,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       objectID.unmarshal(dis);
-       referencedObjectID.unmarshal(dis);
-       updateNumber = (int)dis.readUnsignedShort();
-       forceID = (short)dis.readUnsignedByte();
-       numberOfSegments = (short)dis.readUnsignedByte();
-       requesterID.unmarshal(dis);
-       receivingID.unmarshal(dis);
-       objectType.unmarshal(dis);
-       for(int idx = 0; idx < numberOfSegments; idx++)
-       {
-           LinearSegmentParameter anX = new LinearSegmentParameter();
-           anX.unmarshal(dis);
-           linearSegmentParameters.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

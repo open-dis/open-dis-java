@@ -236,50 +236,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       emittingEntityID.unmarshal(dis);
-       eventID.unmarshal(dis);
-       stateChangeIndicator = dis.readByte();
-       pad = dis.readByte();
-       passiveParameterIndex = (int)dis.readUnsignedShort();
-       propulsionPlantConfiguration = (short)dis.readUnsignedByte();
-       numberOfShafts = (short)dis.readUnsignedByte();
-       numberOfAPAs = (short)dis.readUnsignedByte();
-       numberOfUAEmitterSystems = (short)dis.readUnsignedByte();
-       for(int idx = 0; idx < numberOfShafts; idx++)
-       {
-           ShaftRPMs anX = new ShaftRPMs();
-           anX.unmarshal(dis);
-           shaftRPMs.add(anX);
-       }
-
-       for(int idx = 0; idx < numberOfAPAs; idx++)
-       {
-           ApaData anX = new ApaData();
-           anX.unmarshal(dis);
-           apaData.add(anX);
-       }
-
-       for(int idx = 0; idx < numberOfUAEmitterSystems; idx++)
-       {
-           AcousticEmitterSystemData anX = new AcousticEmitterSystemData();
-           anX.unmarshal(dis);
-           emitterSystems.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

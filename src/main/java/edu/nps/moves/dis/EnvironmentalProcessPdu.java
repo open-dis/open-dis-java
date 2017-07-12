@@ -146,33 +146,7 @@ public void marshal(DataOutputStream dos)
     catch(Exception e)
     { 
       System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       environementalProcessID.unmarshal(dis);
-       environmentType.unmarshal(dis);
-       modelType = (short)dis.readUnsignedByte();
-       environmentStatus = (short)dis.readUnsignedByte();
-       numberOfEnvironmentRecords = (short)dis.readUnsignedByte();
-       sequenceNumber = (int)dis.readUnsignedShort();
-       for(int idx = 0; idx < numberOfEnvironmentRecords; idx++)
-       {
-           Environment anX = new Environment();
-           anX.unmarshal(dis);
-           environmentRecords.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
+} // end of marshal method
 
 
 /**

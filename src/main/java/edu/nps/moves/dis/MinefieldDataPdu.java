@@ -251,46 +251,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       minefieldID.unmarshal(dis);
-       requestingEntityID.unmarshal(dis);
-       minefieldSequenceNumbeer = (int)dis.readUnsignedShort();
-       requestID = (short)dis.readUnsignedByte();
-       pduSequenceNumber = (short)dis.readUnsignedByte();
-       numberOfPdus = (short)dis.readUnsignedByte();
-       numberOfMinesInThisPdu = (short)dis.readUnsignedByte();
-       numberOfSensorTypes = (short)dis.readUnsignedByte();
-       pad2 = (short)dis.readUnsignedByte();
-       dataFilter = dis.readInt();
-       mineType.unmarshal(dis);
-       for(int idx = 0; idx < numberOfSensorTypes; idx++)
-       {
-           TwoByteChunk anX = new TwoByteChunk();
-           anX.unmarshal(dis);
-           sensorTypes.add(anX);
-       }
-
-       pad3 = (short)dis.readUnsignedByte();
-       for(int idx = 0; idx < numberOfMinesInThisPdu; idx++)
-       {
-           Vector3Float anX = new Vector3Float();
-           anX.unmarshal(dis);
-           mineLocation.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

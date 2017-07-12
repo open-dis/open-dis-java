@@ -161,34 +161,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       requestID = dis.readInt();
-       requiredReliabilityService = (short)dis.readUnsignedByte();
-       pad1 = (int)dis.readUnsignedShort();
-       pad2 = (short)dis.readUnsignedByte();
-       eventType = (int)dis.readUnsignedShort();
-       time = dis.readInt();
-       numberOfRecords = dis.readInt();
-       for(int idx = 0; idx < numberOfRecords; idx++)
-       {
-           FourByteChunk anX = new FourByteChunk();
-           anX.unmarshal(dis);
-           recordIDs.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

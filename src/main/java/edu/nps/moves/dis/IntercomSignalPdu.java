@@ -149,30 +149,7 @@ public void marshal(DataOutputStream dos)
     catch(Exception e)
     { 
       System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       entityId.unmarshal(dis);
-       communicationsDeviceID = (int)dis.readUnsignedShort();
-       encodingScheme = (int)dis.readUnsignedShort();
-       tdlType = (int)dis.readUnsignedShort();
-       sampleRate = dis.readInt();
-       dataLength = (int)dis.readUnsignedShort();
-       samples = (int)dis.readUnsignedShort();
-       data = new byte[dataLength];
-       dis.read(data);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
+} // end of marshal method
 
 /**
  * Packs a Pdu into the ByteBuffer.

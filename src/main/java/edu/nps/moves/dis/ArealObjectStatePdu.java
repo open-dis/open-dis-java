@@ -200,36 +200,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       objectID.unmarshal(dis);
-       referencedObjectID.unmarshal(dis);
-       updateNumber = (int)dis.readUnsignedShort();
-       forceID = (short)dis.readUnsignedByte();
-       modifications = (short)dis.readUnsignedByte();
-       objectType.unmarshal(dis);
-       objectAppearance.unmarshal(dis);
-       numberOfPoints = (int)dis.readUnsignedShort();
-       requesterID.unmarshal(dis);
-       receivingID.unmarshal(dis);
-       for(int idx = 0; idx < numberOfPoints; idx++)
-       {
-           Vector3Double anX = new Vector3Double();
-           anX.unmarshal(dis);
-           objectLocation.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
 
 /**
  * Packs a Pdu into the ByteBuffer.

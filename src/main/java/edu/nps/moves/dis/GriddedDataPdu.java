@@ -252,41 +252,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       environmentalSimulationApplicationID.unmarshal(dis);
-       fieldNumber = (int)dis.readUnsignedShort();
-       pduNumber = (int)dis.readUnsignedShort();
-       pduTotal = (int)dis.readUnsignedShort();
-       coordinateSystem = (int)dis.readUnsignedShort();
-       numberOfGridAxes = (short)dis.readUnsignedByte();
-       constantGrid = (short)dis.readUnsignedByte();
-       environmentType.unmarshal(dis);
-       orientation.unmarshal(dis);
-       sampleTime = dis.readLong();
-       totalValues = dis.readInt();
-       vectorDimension = (short)dis.readUnsignedByte();
-       padding1 = (int)dis.readUnsignedShort();
-       padding2 = (short)dis.readUnsignedByte();
-       for(int idx = 0; idx < numberOfGridAxes; idx++)
-       {
-           GridAxisRecord anX = new GridAxisRecord();
-           anX.unmarshal(dis);
-           gridDataList.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

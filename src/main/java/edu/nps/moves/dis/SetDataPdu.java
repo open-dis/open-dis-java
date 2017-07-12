@@ -147,38 +147,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       requestID = dis.readInt();
-       padding1 = dis.readInt();
-       numberOfFixedDatumRecords = dis.readInt();
-       numberOfVariableDatumRecords = dis.readInt();
-       for(int idx = 0; idx < numberOfFixedDatumRecords; idx++)
-       {
-           FixedDatum fd = new FixedDatum();
-           fd.unmarshal(dis);
-           fixedDatums.add(fd);
-       }
-
-       for(int idx = 0; idx < numberOfVariableDatumRecords; idx++)
-       {
-           VariableDatum vd = new VariableDatum();
-           vd.unmarshal(dis);
-           variableDatums.add(vd);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

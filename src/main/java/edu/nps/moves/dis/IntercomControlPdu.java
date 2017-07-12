@@ -213,38 +213,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       controlType = (short)dis.readUnsignedByte();
-       communicationsChannelType = (short)dis.readUnsignedByte();
-       sourceEntityID.unmarshal(dis);
-       sourceCommunicationsDeviceID = (short)dis.readUnsignedByte();
-       sourceLineID = (short)dis.readUnsignedByte();
-       transmitPriority = (short)dis.readUnsignedByte();
-       transmitLineState = (short)dis.readUnsignedByte();
-       command = (short)dis.readUnsignedByte();
-       masterEntityID.unmarshal(dis);
-       masterCommunicationsDeviceID = (int)dis.readUnsignedShort();
-       intercomParametersLength = dis.readInt();
-       for(int idx = 0; idx < intercomParametersLength; idx++)
-       {
-           IntercomCommunicationsParameters anX = new IntercomCommunicationsParameters();
-           anX.unmarshal(dis);
-           intercomParameters.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

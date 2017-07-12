@@ -104,29 +104,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       layerHeader.unmarshal(dis);
-       beamData.unmarshal(dis);
-       secondaryOperationalData.unmarshal(dis);
-       for(int idx = 0; idx < pad2; idx++)
-       {
-           FundamentalParameterDataIff anX = new FundamentalParameterDataIff();
-           anX.unmarshal(dis);
-           fundamentalIffParameters.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
 
 /**
  * Packs a Pdu into the ByteBuffer.

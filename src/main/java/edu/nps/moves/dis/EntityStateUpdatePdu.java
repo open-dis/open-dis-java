@@ -447,34 +447,6 @@ public void marshal(DataOutputStream dos)
       System.out.println(e);}
     } // end of marshal method
 
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       entityID.unmarshal(dis);
-       padding1 = dis.readByte();
-       numberOfArticulationParameters = (short)dis.readUnsignedByte();
-       entityLinearVelocity.unmarshal(dis);
-       entityLocation.unmarshal(dis);
-       entityOrientation.unmarshal(dis);
-       entityAppearance = dis.readInt();
-       for(int idx = 0; idx < numberOfArticulationParameters; idx++)
-       {
-           ArticulationParameter anX = new ArticulationParameter();
-           anX.unmarshal(dis);
-           articulationParameters.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small
