@@ -81,22 +81,6 @@ public long getRequestID()
 { return requestID; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       dos.writeByte( (byte)requiredReliabilityService);
-       dos.writeShort( (short)pad1);
-       dos.writeByte( (byte)pad2);
-       dos.writeInt( (int)requestID);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

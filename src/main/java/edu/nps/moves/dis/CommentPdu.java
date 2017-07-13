@@ -93,34 +93,6 @@ public void setVariableDatums(List<VariableDatum> pVariableDatums)
 public List<VariableDatum> getVariableDatums()
 { return variableDatums; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       dos.writeInt( (int)fixedDatums.size());
-       dos.writeInt( (int)variableDatums.size());
-
-       for(int idx = 0; idx < fixedDatums.size(); idx++)
-       {
-            FixedDatum aFixedDatum = fixedDatums.get(idx);
-            aFixedDatum.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < variableDatums.size(); idx++)
-       {
-            VariableDatum aVariableDatum = variableDatums.get(idx);
-            aVariableDatum.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

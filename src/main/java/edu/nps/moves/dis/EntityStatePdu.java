@@ -483,37 +483,6 @@ public void setEntityAppearance_camouflageType(int val)
     this.entityAppearance = (int)(this.entityAppearance | aVal);
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       entityID.marshal(dos);
-       dos.writeByte( (byte)forceId);
-       dos.writeByte( (byte)articulationParameters.size());
-       entityType.marshal(dos);
-       alternativeEntityType.marshal(dos);
-       entityLinearVelocity.marshal(dos);
-       entityLocation.marshal(dos);
-       entityOrientation.marshal(dos);
-       dos.writeInt( (int)entityAppearance);
-       deadReckoningParameters.marshal(dos);
-       marking.marshal(dos);
-       dos.writeInt( (int)capabilities);
-
-       for(int idx = 0; idx < articulationParameters.size(); idx++)
-       {
-            ArticulationParameter aArticulationParameter = articulationParameters.get(idx);
-            aArticulationParameter.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

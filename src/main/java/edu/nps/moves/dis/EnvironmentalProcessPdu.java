@@ -123,32 +123,6 @@ public void setEnvironmentRecords(List<Environment> pEnvironmentRecords)
 public List<Environment> getEnvironmentRecords()
 { return environmentRecords; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       environementalProcessID.marshal(dos);
-       environmentType.marshal(dos);
-       dos.writeByte( (byte)modelType);
-       dos.writeByte( (byte)environmentStatus);
-       dos.writeByte( (byte)environmentRecords.size());
-       dos.writeShort( (short)sequenceNumber);
-
-       for(int idx = 0; idx < environmentRecords.size(); idx++)
-       {
-            Environment aEnvironment = environmentRecords.get(idx);
-            aEnvironment.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-} // end of marshal method
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

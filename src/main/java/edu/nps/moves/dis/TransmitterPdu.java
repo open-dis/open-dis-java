@@ -297,51 +297,6 @@ public void setAntennaPatternList(List<BeamAntennaPattern> pAntennaPatternList)
 public List<BeamAntennaPattern> getAntennaPatternList()
 { return antennaPatternList; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       entityId.marshal(dos);
-       dos.writeShort( (short)radioId);
-       radioEntityType.marshal(dos);
-       dos.writeByte( (byte)transmitState);
-       dos.writeByte( (byte)inputSource);
-       dos.writeShort( (short)padding1);
-       antennaLocation.marshal(dos);
-       relativeAntennaLocation.marshal(dos);
-       dos.writeShort( (short)antennaPatternType);
-       dos.writeShort( (short)antennaPatternList.size());
-       dos.writeLong( (long)frequency);
-       dos.writeFloat( (float)transmitFrequencyBandwidth);
-       dos.writeFloat( (float)power);
-       modulationType.marshal(dos);
-       dos.writeShort( (short)cryptoSystem);
-       dos.writeShort( (short)cryptoKeyId);
-       dos.writeByte( (byte)modulationParametersList.size());
-       dos.writeShort( (short)padding2);
-       dos.writeByte( (byte)padding3);
-
-       for(int idx = 0; idx < modulationParametersList.size(); idx++)
-       {
-            ModulationType aModulationType = modulationParametersList.get(idx);
-            aModulationType.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < antennaPatternList.size(); idx++)
-       {
-            BeamAntennaPattern aBeamAntennaPattern = antennaPatternList.get(idx);
-            aBeamAntennaPattern.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

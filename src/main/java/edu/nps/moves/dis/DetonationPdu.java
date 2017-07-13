@@ -158,34 +158,6 @@ public void setArticulationParameters(List<ArticulationParameter> pArticulationP
 public List<ArticulationParameter> getArticulationParameters()
 { return articulationParameters; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       munitionID.marshal(dos);
-       eventID.marshal(dos);
-       velocity.marshal(dos);
-       locationInWorldCoordinates.marshal(dos);
-       burstDescriptor.marshal(dos);
-       locationInEntityCoordinates.marshal(dos);
-       dos.writeByte( (byte)detonationResult);
-       dos.writeByte( (byte)articulationParameters.size());
-       dos.writeShort( (short)pad);
-
-       for(int idx = 0; idx < articulationParameters.size(); idx++)
-       {
-            ArticulationParameter aArticulationParameter = articulationParameters.get(idx);
-            aArticulationParameter.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

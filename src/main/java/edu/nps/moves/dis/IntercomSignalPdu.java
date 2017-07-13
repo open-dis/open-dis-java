@@ -131,26 +131,6 @@ public void setData(byte[] pData)
 public byte[] getData()
 { return data; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       entityId.marshal(dos);
-       dos.writeShort( (short)communicationsDeviceID);
-       dos.writeShort( (short)encodingScheme);
-       dos.writeShort( (short)tdlType);
-       dos.writeInt( (int)sampleRate);
-       dos.writeShort( (short)data.length);
-       dos.writeShort( (short)samples);
-       dos.write(data);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-} // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

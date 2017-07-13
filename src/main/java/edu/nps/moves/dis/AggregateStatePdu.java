@@ -315,69 +315,6 @@ public void setVariableDatumList(List<VariableDatum> pVariableDatumList)
 public List<VariableDatum> getVariableDatumList()
 { return variableDatumList; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       aggregateID.marshal(dos);
-       dos.writeByte( (byte)forceID);
-       dos.writeByte( (byte)aggregateState);
-       aggregateType.marshal(dos);
-       dos.writeInt( (int)formation);
-       aggregateMarking.marshal(dos);
-       dimensions.marshal(dos);
-       orientation.marshal(dos);
-       centerOfMass.marshal(dos);
-       velocity.marshal(dos);
-       dos.writeShort( (short)aggregateIDList.size());
-       dos.writeShort( (short)entityIDList.size());
-       dos.writeShort( (short)silentAggregateSystemList.size());
-       dos.writeShort( (short)silentEntitySystemList.size());
-
-       for(int idx = 0; idx < aggregateIDList.size(); idx++)
-       {
-            AggregateID aAggregateID = aggregateIDList.get(idx);
-            aAggregateID.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < entityIDList.size(); idx++)
-       {
-            EntityID aEntityID = entityIDList.get(idx);
-            aEntityID.marshal(dos);
-       } // end of list marshalling
-
-       dos.writeByte( (byte)pad2);
-
-       for(int idx = 0; idx < silentAggregateSystemList.size(); idx++)
-       {
-            EntityType aEntityType = silentAggregateSystemList.get(idx);
-            aEntityType.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < silentEntitySystemList.size(); idx++)
-       {
-            EntityType aEntityType = silentEntitySystemList.get(idx);
-            aEntityType.marshal(dos);
-       } // end of list marshalling
-
-       dos.writeInt( (int)variableDatumList.size());
-
-       for(int idx = 0; idx < variableDatumList.size(); idx++)
-       {
-            VariableDatum aVariableDatum = variableDatumList.get(idx);
-            aVariableDatum.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

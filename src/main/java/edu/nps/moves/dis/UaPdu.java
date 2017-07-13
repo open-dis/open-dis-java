@@ -194,48 +194,6 @@ public void setEmitterSystems(List<AcousticEmitterSystemData> pEmitterSystems)
 public List<AcousticEmitterSystemData> getEmitterSystems()
 { return emitterSystems; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       emittingEntityID.marshal(dos);
-       eventID.marshal(dos);
-       dos.writeByte( (byte)stateChangeIndicator);
-       dos.writeByte( (byte)pad);
-       dos.writeShort( (short)passiveParameterIndex);
-       dos.writeByte( (byte)propulsionPlantConfiguration);
-       dos.writeByte( (byte)shaftRPMs.size());
-       dos.writeByte( (byte)apaData.size());
-       dos.writeByte( (byte)emitterSystems.size());
-
-       for(int idx = 0; idx < shaftRPMs.size(); idx++)
-       {
-            ShaftRPMs aShaftRPMs = shaftRPMs.get(idx);
-            aShaftRPMs.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < apaData.size(); idx++)
-       {
-            ApaData aApaData = apaData.get(idx);
-            aApaData.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < emitterSystems.size(); idx++)
-       {
-            AcousticEmitterSystemData aAcousticEmitterSystemData = emitterSystems.get(idx);
-            aAcousticEmitterSystemData.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

@@ -219,39 +219,6 @@ public void setGridDataList(List<GridAxisRecord> pGridDataList)
 public List<GridAxisRecord> getGridDataList()
 { return gridDataList; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       environmentalSimulationApplicationID.marshal(dos);
-       dos.writeShort( (short)fieldNumber);
-       dos.writeShort( (short)pduNumber);
-       dos.writeShort( (short)pduTotal);
-       dos.writeShort( (short)coordinateSystem);
-       dos.writeByte( (byte)gridDataList.size());
-       dos.writeByte( (byte)constantGrid);
-       environmentType.marshal(dos);
-       orientation.marshal(dos);
-       dos.writeLong( (long)sampleTime);
-       dos.writeInt( (int)totalValues);
-       dos.writeByte( (byte)vectorDimension);
-       dos.writeShort( (short)padding1);
-       dos.writeByte( (byte)padding2);
-
-       for(int idx = 0; idx < gridDataList.size(); idx++)
-       {
-            GridAxisRecord aGridAxisRecord = gridDataList.get(idx);
-            aGridAxisRecord.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

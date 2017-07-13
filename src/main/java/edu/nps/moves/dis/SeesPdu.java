@@ -141,38 +141,6 @@ public void setVectoringSystemData(List<VectoringNozzleSystemData> pVectoringSys
 public List<VectoringNozzleSystemData> getVectoringSystemData()
 { return vectoringSystemData; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       orginatingEntityID.marshal(dos);
-       dos.writeShort( (short)infraredSignatureRepresentationIndex);
-       dos.writeShort( (short)acousticSignatureRepresentationIndex);
-       dos.writeShort( (short)radarCrossSectionSignatureRepresentationIndex);
-       dos.writeShort( (short)propulsionSystemData.size());
-       dos.writeShort( (short)vectoringSystemData.size());
-
-       for(int idx = 0; idx < propulsionSystemData.size(); idx++)
-       {
-            PropulsionSystemData aPropulsionSystemData = propulsionSystemData.get(idx);
-            aPropulsionSystemData.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < vectoringSystemData.size(); idx++)
-       {
-            VectoringNozzleSystemData aVectoringNozzleSystemData = vectoringSystemData.get(idx);
-            aVectoringNozzleSystemData.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

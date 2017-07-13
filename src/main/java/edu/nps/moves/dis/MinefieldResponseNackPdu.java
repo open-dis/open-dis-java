@@ -99,29 +99,6 @@ public void setMissingPduSequenceNumbers(List<EightByteChunk> pMissingPduSequenc
 public List<EightByteChunk> getMissingPduSequenceNumbers()
 { return missingPduSequenceNumbers; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       minefieldID.marshal(dos);
-       requestingEntityID.marshal(dos);
-       dos.writeByte( (byte)requestID);
-       dos.writeByte( (byte)missingPduSequenceNumbers.size());
-
-       for(int idx = 0; idx < missingPduSequenceNumbers.size(); idx++)
-       {
-            EightByteChunk aEightByteChunk = missingPduSequenceNumbers.get(idx);
-            aEightByteChunk.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

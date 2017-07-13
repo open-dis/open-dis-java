@@ -135,32 +135,6 @@ public void setRecordIDs(List<FourByteChunk> pRecordIDs)
 public List<FourByteChunk> getRecordIDs()
 { return recordIDs; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       dos.writeInt( (int)requestID);
-       dos.writeByte( (byte)requiredReliabilityService);
-       dos.writeShort( (short)pad1);
-       dos.writeByte( (byte)pad2);
-       dos.writeShort( (short)eventType);
-       dos.writeInt( (int)time);
-       dos.writeInt( (int)recordIDs.size());
-
-       for(int idx = 0; idx < recordIDs.size(); idx++)
-       {
-            FourByteChunk aFourByteChunk = recordIDs.get(idx);
-            aFourByteChunk.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

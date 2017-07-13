@@ -213,44 +213,6 @@ public void setMineLocation(List<Vector3Float> pMineLocation)
 public List<Vector3Float> getMineLocation()
 { return mineLocation; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       minefieldID.marshal(dos);
-       requestingEntityID.marshal(dos);
-       dos.writeShort( (short)minefieldSequenceNumbeer);
-       dos.writeByte( (byte)requestID);
-       dos.writeByte( (byte)pduSequenceNumber);
-       dos.writeByte( (byte)numberOfPdus);
-       dos.writeByte( (byte)mineLocation.size());
-       dos.writeByte( (byte)sensorTypes.size());
-       dos.writeByte( (byte)pad2);
-       dos.writeInt( (int)dataFilter);
-       mineType.marshal(dos);
-
-       for(int idx = 0; idx < sensorTypes.size(); idx++)
-       {
-            TwoByteChunk aTwoByteChunk = sensorTypes.get(idx);
-            aTwoByteChunk.marshal(dos);
-       } // end of list marshalling
-
-       dos.writeByte( (byte)pad3);
-
-       for(int idx = 0; idx < mineLocation.size(); idx++)
-       {
-            Vector3Float aVector3Float = mineLocation.get(idx);
-            aVector3Float.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

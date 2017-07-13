@@ -183,36 +183,6 @@ public void setIntercomParameters(List<IntercomCommunicationsParameters> pInterc
 public List<IntercomCommunicationsParameters> getIntercomParameters()
 { return intercomParameters; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       dos.writeByte( (byte)controlType);
-       dos.writeByte( (byte)communicationsChannelType);
-       sourceEntityID.marshal(dos);
-       dos.writeByte( (byte)sourceCommunicationsDeviceID);
-       dos.writeByte( (byte)sourceLineID);
-       dos.writeByte( (byte)transmitPriority);
-       dos.writeByte( (byte)transmitLineState);
-       dos.writeByte( (byte)command);
-       masterEntityID.marshal(dos);
-       dos.writeShort( (short)masterCommunicationsDeviceID);
-       dos.writeInt( (int)intercomParameters.size());
-
-       for(int idx = 0; idx < intercomParameters.size(); idx++)
-       {
-            IntercomCommunicationsParameters aIntercomCommunicationsParameters = intercomParameters.get(idx);
-            aIntercomCommunicationsParameters.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

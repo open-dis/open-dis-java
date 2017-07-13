@@ -57,20 +57,6 @@ public EntityID getTargetEntityID()
 { return targetEntityID; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       firingEntityID.marshal(dos);
-       targetEntityID.marshal(dos);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

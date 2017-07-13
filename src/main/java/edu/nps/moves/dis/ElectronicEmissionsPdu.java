@@ -112,30 +112,6 @@ public void setSystems(List<ElectronicEmissionSystemData> pSystems)
 public List<ElectronicEmissionSystemData> getSystems()
 { return systems; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       emittingEntityID.marshal(dos);
-       eventID.marshal(dos);
-       dos.writeByte( (byte)stateUpdateIndicator);
-       dos.writeByte( (byte)systems.size());
-       dos.writeShort( (short)paddingForEmissionsPdu);
-
-       for(int idx = 0; idx < systems.size(); idx++)
-       {
-            ElectronicEmissionSystemData aElectronicEmissionSystemData = systems.get(idx);
-            aElectronicEmissionSystemData.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

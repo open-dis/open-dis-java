@@ -123,31 +123,6 @@ public void setGroupedEntityDescriptions(List<VariableDatum> pGroupedEntityDescr
 public List<VariableDatum> getGroupedEntityDescriptions()
 { return groupedEntityDescriptions; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       groupEntityID.marshal(dos);
-       dos.writeByte( (byte)groupedEntityCategory);
-       dos.writeByte( (byte)groupedEntityDescriptions.size());
-       dos.writeInt( (int)pad2);
-       dos.writeDouble( (double)latitude);
-       dos.writeDouble( (double)longitude);
-
-       for(int idx = 0; idx < groupedEntityDescriptions.size(); idx++)
-       {
-            VariableDatum aVariableDatum = groupedEntityDescriptions.get(idx);
-            aVariableDatum.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

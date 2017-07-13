@@ -111,30 +111,6 @@ public void setRecordSets(List<RecordSet> pRecordSets)
 public List<RecordSet> getRecordSets()
 { return recordSets; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       dos.writeInt( (int)requestID);
-       dos.writeByte( (byte)requiredReliabilityService);
-       dos.writeShort( (short)pad1);
-       dos.writeByte( (byte)pad2);
-       dos.writeInt( (int)recordSets.size());
-
-       for(int idx = 0; idx < recordSets.size(); idx++)
-       {
-            RecordSet aRecordSet = recordSets.get(idx);
-            aRecordSet.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

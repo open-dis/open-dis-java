@@ -165,40 +165,6 @@ public void setSensorTypes(List<TwoByteChunk> pSensorTypes)
 public List<TwoByteChunk> getSensorTypes()
 { return sensorTypes; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       minefieldID.marshal(dos);
-       requestingEntityID.marshal(dos);
-       dos.writeByte( (byte)requestID);
-       dos.writeByte( (byte)requestedPerimeterPoints.size());
-       dos.writeByte( (byte)pad2);
-       dos.writeByte( (byte)sensorTypes.size());
-       dos.writeInt( (int)dataFilter);
-       requestedMineType.marshal(dos);
-
-       for(int idx = 0; idx < requestedPerimeterPoints.size(); idx++)
-       {
-            Point aPoint = requestedPerimeterPoints.get(idx);
-            aPoint.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < sensorTypes.size(); idx++)
-       {
-            TwoByteChunk aTwoByteChunk = sensorTypes.get(idx);
-            aTwoByteChunk.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

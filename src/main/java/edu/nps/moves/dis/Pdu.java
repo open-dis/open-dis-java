@@ -186,20 +186,12 @@ public long readUnsignedInt(java.nio.ByteBuffer buff)
 
 public void marshal(DataOutputStream dos)
 {
-    try 
-    {
-       dos.writeByte( (byte)protocolVersion);
-       dos.writeByte( (byte)exerciseID);
-       dos.writeByte( (byte)pduType);
-       dos.writeByte( (byte)protocolFamily);
-       dos.writeInt( (int)timestamp);
-       dos.writeShort( this.getLength());
-       dos.writeShort( (short)padding);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
+    try {
+        dos.write(marshal());
+    } catch (IOException ex) {
+        Logger.getLogger(Pdu.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}
 
 public void unmarshal(DataInputStream dis)
 {

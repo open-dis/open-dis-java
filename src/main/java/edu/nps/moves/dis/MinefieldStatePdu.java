@@ -189,42 +189,6 @@ public void setMineType(List<EntityType> pMineType)
 public List<EntityType> getMineType()
 { return mineType; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       minefieldID.marshal(dos);
-       dos.writeShort( (short)minefieldSequence);
-       dos.writeByte( (byte)forceID);
-       dos.writeByte( (byte)perimeterPoints.size());
-       minefieldType.marshal(dos);
-       dos.writeShort( (short)mineType.size());
-       minefieldLocation.marshal(dos);
-       minefieldOrientation.marshal(dos);
-       dos.writeShort( (short)appearance);
-       dos.writeShort( (short)protocolMode);
-
-       for(int idx = 0; idx < perimeterPoints.size(); idx++)
-       {
-            Point aPoint = perimeterPoints.get(idx);
-            aPoint.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < mineType.size(); idx++)
-       {
-            EntityType aEntityType = mineType.get(idx);
-            aEntityType.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

@@ -177,30 +177,6 @@ public Vector3Float getEntityLinearAcceleration()
 { return entityLinearAcceleration; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       designatingEntityID.marshal(dos);
-       dos.writeShort( (short)codeName);
-       designatedEntityID.marshal(dos);
-       dos.writeShort( (short)designatorCode);
-       dos.writeFloat( (float)designatorPower);
-       dos.writeFloat( (float)designatorWavelength);
-       designatorSpotWrtDesignated.marshal(dos);
-       designatorSpotLocation.marshal(dos);
-       dos.writeByte( (byte)deadReckoningAlgorithm);
-       dos.writeShort( (short)padding1);
-       dos.writeByte( (byte)padding2);
-       entityLinearAcceleration.marshal(dos);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

@@ -171,36 +171,6 @@ public void setObjectLocation(List<Vector3Double> pObjectLocation)
 public List<Vector3Double> getObjectLocation()
 { return objectLocation; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       objectID.marshal(dos);
-       referencedObjectID.marshal(dos);
-       dos.writeShort( (short)updateNumber);
-       dos.writeByte( (byte)forceID);
-       dos.writeByte( (byte)modifications);
-       objectType.marshal(dos);
-       objectAppearance.marshal(dos);
-       dos.writeShort( (short)objectLocation.size());
-       requesterID.marshal(dos);
-       receivingID.marshal(dos);
-
-       for(int idx = 0; idx < objectLocation.size(); idx++)
-       {
-            Vector3Double aVector3Double = objectLocation.get(idx);
-            aVector3Double.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

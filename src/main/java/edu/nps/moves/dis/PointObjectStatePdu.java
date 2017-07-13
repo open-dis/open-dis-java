@@ -177,30 +177,6 @@ public long getPad2()
 { return pad2; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       objectID.marshal(dos);
-       referencedObjectID.marshal(dos);
-       dos.writeShort( (short)updateNumber);
-       dos.writeByte( (byte)forceID);
-       dos.writeByte( (byte)modifications);
-       objectType.marshal(dos);
-       objectLocation.marshal(dos);
-       objectOrientation.marshal(dos);
-       dos.writeDouble( (double)objectAppearance);
-       requesterID.marshal(dos);
-       receivingID.marshal(dos);
-       dos.writeInt( (int)pad2);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

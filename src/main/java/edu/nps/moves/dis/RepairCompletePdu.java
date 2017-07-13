@@ -81,23 +81,6 @@ public short getPadding2()
 { return padding2; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       receivingEntityID.marshal(dos);
-       repairingEntityID.marshal(dos);
-       dos.writeShort( (short)repair);
-       dos.writeShort( (short)padding2);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

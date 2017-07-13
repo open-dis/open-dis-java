@@ -93,23 +93,6 @@ public long getRequestID()
 { return requestID; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       realWorldTime.marshal(dos);
-       dos.writeByte( (byte)reason);
-       dos.writeByte( (byte)frozenBehavior);
-       dos.writeShort( (short)padding1);
-       dos.writeInt( (int)requestID);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small
