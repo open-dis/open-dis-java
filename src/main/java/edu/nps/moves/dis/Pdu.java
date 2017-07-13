@@ -133,7 +133,7 @@ public short getPadding()
 { return padding; 
 }
 
-private long shiftBytes(int[] fourBytes)
+private static long shiftBytes(int[] fourBytes)
 {
    long value = 0;
    value  = ((long) (fourBytes[0] << 24
@@ -145,7 +145,7 @@ private long shiftBytes(int[] fourBytes)
    return value;
 }
     
-public long readUnsignedInt(DataInputStream dis)
+public static long readUnsignedInt(DataInputStream dis)
 {
     int fourBytes[] = new int[4];
         
@@ -161,28 +161,37 @@ public long readUnsignedInt(DataInputStream dis)
         System.out.println(e);
     }
         
-    return this.shiftBytes(fourBytes);
+    return shiftBytes(fourBytes);
 }
     
-public long readUnsignedInt(java.nio.ByteBuffer buff)
+public static long readUnsignedInt(java.nio.ByteBuffer buff)
 {
         int fourBytes[] = new int[4];
         
         try
         {
-            fourBytes[0] = ((int)buff.get()) & 0xff;
-            fourBytes[1] = ((int)buff.get()) & 0xff;
-            fourBytes[2] = ((int)buff.get()) & 0xff;
-            fourBytes[3] = ((int)buff.get()) & 0xff;
+            fourBytes[0] = toUnsignedInt(buff.get());
+            fourBytes[1] = toUnsignedInt(buff.get());
+            fourBytes[2] = toUnsignedInt(buff.get());
+            fourBytes[3] = toUnsignedInt(buff.get());
         }
         catch(Exception e)
         {
             System.out.println(e);
         }
         
-        return this.shiftBytes(fourBytes);
+        return shiftBytes(fourBytes);
     }
-    
+
+// TODO: replace with Byte#toUnsignedInt once Java 8 is new baseline.
+public static int toUnsignedInt(byte b) {
+    return b & 0xff;
+}
+
+// TODO: replace with Short#toUnsignedInt once Java 8 is new baseline.
+public static int toUnsignedInt(short s) {
+    return s & 0xffff;
+}
 
 public void marshal(DataOutputStream dos)
 {
@@ -241,12 +250,12 @@ public void marshal(java.nio.ByteBuffer buff)
  */
 public void unmarshal(java.nio.ByteBuffer buff)
 {
-       protocolVersion = (short)(buff.get() & 0xFF);
-       exerciseID = (short)(buff.get() & 0xFF);
-       pduType = (short)(buff.get() & 0xFF);
-       protocolFamily = (short)(buff.get() & 0xFF);
+       protocolVersion = (short)(toUnsignedInt(buff.get()));
+       exerciseID = (short)(toUnsignedInt(buff.get()));
+       pduType = (short)(toUnsignedInt(buff.get()));
+       protocolFamily = (short)(toUnsignedInt(buff.get()));
        timestamp = buff.getInt();
-       pduLength = (int)(buff.getShort() & 0xFFFF);
+       pduLength = toUnsignedInt(buff.getShort());
        padding = buff.getShort();
  } // end of unmarshal method 
 
