@@ -168,17 +168,10 @@ public static long readUnsignedInt(java.nio.ByteBuffer buff)
 {
         int fourBytes[] = new int[4];
         
-        try
-        {
-            fourBytes[0] = toUnsignedInt(buff.get());
-            fourBytes[1] = toUnsignedInt(buff.get());
-            fourBytes[2] = toUnsignedInt(buff.get());
-            fourBytes[3] = toUnsignedInt(buff.get());
-        }
-        catch(Exception e)
-        {
-            System.out.println(e);
-        }
+        fourBytes[0] = toUnsignedInt(buff.get());
+        fourBytes[1] = toUnsignedInt(buff.get());
+        fourBytes[2] = toUnsignedInt(buff.get());
+        fourBytes[3] = toUnsignedInt(buff.get());
         
         return shiftBytes(fourBytes);
     }
