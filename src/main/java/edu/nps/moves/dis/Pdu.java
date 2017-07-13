@@ -170,10 +170,10 @@ public long readUnsignedInt(java.nio.ByteBuffer buff)
         
         try
         {
-            fourBytes[0] = ((int)buff.get()) & 0xff;
-            fourBytes[1] = ((int)buff.get()) & 0xff;
-            fourBytes[2] = ((int)buff.get()) & 0xff;
-            fourBytes[3] = ((int)buff.get()) & 0xff;
+            fourBytes[0] = Byte.toUnsignedInt(buff.get());
+            fourBytes[1] = Byte.toUnsignedInt(buff.get());
+            fourBytes[2] = Byte.toUnsignedInt(buff.get());
+            fourBytes[3] = Byte.toUnsignedInt(buff.get());
         }
         catch(Exception e)
         {
@@ -241,12 +241,12 @@ public void marshal(java.nio.ByteBuffer buff)
  */
 public void unmarshal(java.nio.ByteBuffer buff)
 {
-       protocolVersion = (short)(buff.get() & 0xFF);
-       exerciseID = (short)(buff.get() & 0xFF);
-       pduType = (short)(buff.get() & 0xFF);
-       protocolFamily = (short)(buff.get() & 0xFF);
+       protocolVersion = (short) Byte.toUnsignedInt(buff.get());
+       exerciseID = (short) Byte.toUnsignedInt(buff.get());
+       pduType = (short) Byte.toUnsignedInt(buff.get());
+       protocolFamily = (short) Byte.toUnsignedInt(buff.get());
        timestamp = buff.getInt();
-       pduLength = (int)(buff.getShort() & 0xFFFF);
+       pduLength = Short.toUnsignedInt(buff.getShort());
        padding = buff.getShort();
  } // end of unmarshal method 
 
