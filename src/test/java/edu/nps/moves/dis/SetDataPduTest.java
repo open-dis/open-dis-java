@@ -45,6 +45,15 @@ public class SetDataPduTest {
         byte[] datumValue = vd.getVariableData();
         assertEquals("allunits", new String(datumValue));
     }
+    
+    @Test
+    public void unmarshal_multi_variable_datums() throws IOException {
+        PduFactory factory = new PduFactory();
+        Pdu pdu = factory.createPdu(PduFileLoader.load("SetDataPdu-multi-variable-datums.raw"));
+        
+        SetDataPdu sdpdu = (SetDataPdu) pdu;
+        assertEquals(3, sdpdu.getVariableDatums().size());
+    }
 
     @Test
     public void marshal() {
