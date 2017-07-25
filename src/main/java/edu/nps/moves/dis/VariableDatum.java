@@ -101,6 +101,7 @@ public void unmarshal(DataInputStream dis)
        final int dataLengthBytes = (int)variableDatumLength / Byte.SIZE;
        variableData = new byte[dataLengthBytes];
        dis.read(variableData);
+       dis.skip(calculatePaddingSize(dataLengthBytes)); // skip padding
     } // end try 
    catch(Exception e)
     { 
@@ -143,6 +144,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
        final int dataLengthBytes = (int)variableDatumLength / Byte.SIZE;
        variableData = new byte[dataLengthBytes];
        buff.get(variableData);
+       buff.position(buff.position() + calculatePaddingSize(dataLengthBytes)); // skip padding
 
  } // end of unmarshal method 
 
@@ -192,9 +194,13 @@ public void unmarshal(java.nio.ByteBuffer buff)
     
     // "This field shall be padded at the end to make the length a multiple of 64-bits."
     private int datumPaddingSize() {
+        return calculatePaddingSize(variableData.length);
+    }
+    
+    private static int calculatePaddingSize(int datumLength) {
         final int BYTES_IN_64_BITS = 8;
         int padding = 0;
-        final int remainder = (int)variableData.length % BYTES_IN_64_BITS;
+        final int remainder = datumLength % BYTES_IN_64_BITS;
         if (remainder != 0) {
             padding = BYTES_IN_64_BITS - remainder;
         }
