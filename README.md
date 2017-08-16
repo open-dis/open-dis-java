@@ -29,7 +29,6 @@ Add the following to your `pom.xml`.
 ### Ant
 
 Include the `open-dis-<version-number>.jar` file in your project, along with the supporting jar files in the `lib` directory.
-(The `xmlpg.jar` file is not needed.)
 
 ## Release Notes
 
