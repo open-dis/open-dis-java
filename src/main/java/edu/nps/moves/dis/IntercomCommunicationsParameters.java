@@ -70,35 +70,6 @@ public byte[] getParameterValues()
 { return parameterValues; }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeShort( (short)recordType);
-       dos.writeShort( (short)parameterValues.length);
-       dos.write(parameterValues);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       recordType = (int)dis.readUnsignedShort();
-       recordLength = (int)dis.readUnsignedShort();
-       parameterValues = new byte[recordLength];
-       dis.read(parameterValues);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

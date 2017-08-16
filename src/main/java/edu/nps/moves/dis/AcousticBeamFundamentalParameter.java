@@ -104,40 +104,6 @@ public float getDeBeamwidth()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeShort( (short)activeEmissionParameterIndex);
-       dos.writeShort( (short)scanPattern);
-       dos.writeFloat( (float)beamCenterAzimuth);
-       dos.writeFloat( (float)azimuthalBeamwidth);
-       dos.writeFloat( (float)beamCenterDE);
-       dos.writeFloat( (float)deBeamwidth);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       activeEmissionParameterIndex = (int)dis.readUnsignedShort();
-       scanPattern = (int)dis.readUnsignedShort();
-       beamCenterAzimuth = dis.readFloat();
-       azimuthalBeamwidth = dis.readFloat();
-       beamCenterDE = dis.readFloat();
-       deBeamwidth = dis.readFloat();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

@@ -110,52 +110,6 @@ public List<ElectronicEmissionBeamData> getBeamDataRecords()
 { return beamDataRecords; }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeByte( (byte)systemDataLength);
-       dos.writeByte( (byte)beamDataRecords.size());
-       dos.writeShort( (short)emissionsPadding2);
-       emitterSystem.marshal(dos);
-       location.marshal(dos);
-
-       for(int idx = 0; idx < beamDataRecords.size(); idx++)
-       {
-            ElectronicEmissionBeamData aElectronicEmissionBeamData = beamDataRecords.get(idx);
-            aElectronicEmissionBeamData.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       systemDataLength = (short)dis.readUnsignedByte();
-       numberOfBeams = (short)dis.readUnsignedByte();
-       emissionsPadding2 = (int)dis.readUnsignedShort();
-       emitterSystem.unmarshal(dis);
-       location.unmarshal(dis);
-       for(int idx = 0; idx < numberOfBeams; idx++)
-       {
-           ElectronicEmissionBeamData anX = new ElectronicEmissionBeamData();
-           anX.unmarshal(dis);
-           beamDataRecords.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

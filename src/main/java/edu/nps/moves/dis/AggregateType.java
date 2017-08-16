@@ -115,42 +115,6 @@ public short getExtra()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeByte( (byte)aggregateKind);
-       dos.writeByte( (byte)domain);
-       dos.writeShort( (short)country);
-       dos.writeByte( (byte)category);
-       dos.writeByte( (byte)subcategory);
-       dos.writeByte( (byte)specificInfo);
-       dos.writeByte( (byte)extra);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       aggregateKind = (short)dis.readUnsignedByte();
-       domain = (short)dis.readUnsignedByte();
-       country = (int)dis.readUnsignedShort();
-       category = (short)dis.readUnsignedByte();
-       subcategory = (short)dis.readUnsignedByte();
-       specificInfo = (short)dis.readUnsignedByte();
-       extra = (short)dis.readUnsignedByte();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

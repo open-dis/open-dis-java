@@ -56,32 +56,6 @@ public long getTimePastHour()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeInt( (int)hour);
-       dos.writeInt( (int)timePastHour);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       hour = dis.readInt();
-       timePastHour = dis.readInt();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

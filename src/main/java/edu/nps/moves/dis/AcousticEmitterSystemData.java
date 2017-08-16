@@ -110,52 +110,6 @@ public List<AcousticBeamData> getBeamRecords()
 { return beamRecords; }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeByte( (byte)emitterSystemDataLength);
-       dos.writeByte( (byte)beamRecords.size());
-       dos.writeShort( (short)pad2);
-       acousticEmitterSystem.marshal(dos);
-       emitterLocation.marshal(dos);
-
-       for(int idx = 0; idx < beamRecords.size(); idx++)
-       {
-            AcousticBeamData aAcousticBeamData = beamRecords.get(idx);
-            aAcousticBeamData.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       emitterSystemDataLength = (short)dis.readUnsignedByte();
-       numberOfBeams = (short)dis.readUnsignedByte();
-       pad2 = (int)dis.readUnsignedShort();
-       acousticEmitterSystem.unmarshal(dis);
-       emitterLocation.unmarshal(dis);
-       for(int idx = 0; idx < numberOfBeams; idx++)
-       {
-           AcousticBeamData anX = new AcousticBeamData();
-           anX.unmarshal(dis);
-           beamRecords.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

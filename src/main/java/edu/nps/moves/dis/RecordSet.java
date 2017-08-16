@@ -104,40 +104,6 @@ public short getPad4()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeInt( (int)recordID);
-       dos.writeInt( (int)recordSetSerialNumber);
-       dos.writeShort( (short)recordLength);
-       dos.writeShort( (short)recordCount);
-       dos.writeShort( (short)recordValues);
-       dos.writeByte( (byte)pad4);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       recordID = dis.readInt();
-       recordSetSerialNumber = dis.readInt();
-       recordLength = (int)dis.readUnsignedShort();
-       recordCount = (int)dis.readUnsignedShort();
-       recordValues = (int)dis.readUnsignedShort();
-       pad4 = (short)dis.readUnsignedByte();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

@@ -68,34 +68,6 @@ public short getBeamID()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       trackJam.marshal(dos);
-       dos.writeByte( (byte)emitterID);
-       dos.writeByte( (byte)beamID);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       trackJam.unmarshal(dis);
-       emitterID = (short)dis.readUnsignedByte();
-       beamID = (short)dis.readUnsignedByte();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

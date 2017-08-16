@@ -43,38 +43,6 @@ public byte[] getOtherParameters()
 { return otherParameters; }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-
-       for(int idx = 0; idx < otherParameters.length; idx++)
-       {
-           dos.writeByte(otherParameters[idx]);
-       } // end of array marshaling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       for(int idx = 0; idx < otherParameters.length; idx++)
-       {
-                otherParameters[idx] = dis.readByte();
-       } // end of array unmarshaling
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

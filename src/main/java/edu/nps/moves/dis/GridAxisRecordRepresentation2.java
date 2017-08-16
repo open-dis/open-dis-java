@@ -63,47 +63,6 @@ public List<FourByteChunk> getDataValues()
 { return dataValues; }
 
 
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       dos.writeShort( (short)dataValues.size());
-
-       for(int idx = 0; idx < dataValues.size(); idx++)
-       {
-            FourByteChunk aFourByteChunk = dataValues.get(idx);
-            aFourByteChunk.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       numberOfValues = (int)dis.readUnsignedShort();
-       for(int idx = 0; idx < numberOfValues; idx++)
-       {
-           FourByteChunk anX = new FourByteChunk();
-           anX.unmarshal(dis);
-           dataValues.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

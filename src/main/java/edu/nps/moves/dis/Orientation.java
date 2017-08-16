@@ -65,34 +65,6 @@ public float getPhi()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeFloat( (float)psi);
-       dos.writeFloat( (float)theta);
-       dos.writeFloat( (float)phi);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       psi = dis.readFloat();
-       theta = dis.readFloat();
-       phi = dis.readFloat();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

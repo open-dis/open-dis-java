@@ -55,40 +55,6 @@ public byte[] getCharacters()
 { return characters; }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeByte( (byte)characterSet);
-
-       for(int idx = 0; idx < characters.length; idx++)
-       {
-           dos.writeByte(characters[idx]);
-       } // end of array marshaling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       characterSet = (short)dis.readUnsignedByte();
-       for(int idx = 0; idx < characters.length; idx++)
-       {
-                characters[idx] = dis.readByte();
-       } // end of array unmarshaling
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

@@ -92,38 +92,6 @@ public int getRate()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       munition.marshal(dos);
-       dos.writeShort( (short)warhead);
-       dos.writeShort( (short)fuse);
-       dos.writeShort( (short)quantity);
-       dos.writeShort( (short)rate);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       munition.unmarshal(dis);
-       warhead = (int)dis.readUnsignedShort();
-       fuse = (int)dis.readUnsignedShort();
-       quantity = (int)dis.readUnsignedShort();
-       rate = (int)dis.readUnsignedShort();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

@@ -149,49 +149,7 @@ public void setBeamSweepSync(float pBeamSweepSync)
 
 public float getBeamSweepSync()
 { return beamSweepSync; 
-}
-
-
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeFloat( (float)frequency);
-       dos.writeFloat( (float)frequencyRange);
-       dos.writeFloat( (float)effectiveRadiatedPower);
-       dos.writeFloat( (float)pulseRepetitionFrequency);
-       dos.writeFloat( (float)pulseWidth);
-       dos.writeFloat( (float)beamAzimuthCenter);
-       dos.writeFloat( (float)beamAzimuthSweep);
-       dos.writeFloat( (float)beamElevationCenter);
-       dos.writeFloat( (float)beamElevationSweep);
-       dos.writeFloat( (float)beamSweepSync);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       frequency = dis.readFloat();
-       frequencyRange = dis.readFloat();
-       effectiveRadiatedPower = dis.readFloat();
-       pulseRepetitionFrequency = dis.readFloat();
-       pulseWidth = dis.readFloat();
-       beamAzimuthCenter = dis.readFloat();
-       beamAzimuthSweep = dis.readFloat();
-       beamElevationCenter = dis.readFloat();
-       beamElevationSweep = dis.readFloat();
-       beamSweepSync = dis.readFloat();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
+} 
 
 
 /**

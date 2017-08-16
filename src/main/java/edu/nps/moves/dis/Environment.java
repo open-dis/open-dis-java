@@ -104,40 +104,6 @@ public short getPadding2()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeInt( (int)environmentType);
-       dos.writeByte( (byte)length);
-       dos.writeByte( (byte)recordIndex);
-       dos.writeByte( (byte)padding1);
-       dos.writeByte( (byte)geometry);
-       dos.writeByte( (byte)padding2);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       environmentType = dis.readInt();
-       length = (short)dis.readUnsignedByte();
-       recordIndex = (short)dis.readUnsignedByte();
-       padding1 = (short)dis.readUnsignedByte();
-       geometry = (short)dis.readUnsignedByte();
-       padding2 = (short)dis.readUnsignedByte();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

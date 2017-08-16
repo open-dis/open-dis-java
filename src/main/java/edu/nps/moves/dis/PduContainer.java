@@ -62,44 +62,6 @@ public List<Pdu> getPdus()
 { return pdus; }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeInt( (int)pdus.size());
-
-       for(int idx = 0; idx < pdus.size(); idx++)
-       {
-            Pdu aPdu = pdus.get(idx);
-            aPdu.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       numberOfPdus = dis.readInt();
-       for(int idx = 0; idx < numberOfPdus; idx++)
-       {
-           Pdu anX = new Pdu();
-           anX.unmarshal(dis);
-           pdus.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

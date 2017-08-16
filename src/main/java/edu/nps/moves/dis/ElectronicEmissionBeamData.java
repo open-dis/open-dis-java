@@ -158,60 +158,6 @@ public List<TrackJamTarget> getTrackJamTargets()
 { return trackJamTargets; }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeByte( (byte)beamDataLength);
-       dos.writeByte( (byte)beamIDNumber);
-       dos.writeShort( (short)beamParameterIndex);
-       fundamentalParameterData.marshal(dos);
-       dos.writeByte( (byte)beamFunction);
-       dos.writeByte( (byte)trackJamTargets.size());
-       dos.writeByte( (byte)highDensityTrackJam);
-       dos.writeByte( (byte)pad4);
-       dos.writeInt( (int)jammingModeSequence);
-
-       for(int idx = 0; idx < trackJamTargets.size(); idx++)
-       {
-            TrackJamTarget aTrackJamTarget = trackJamTargets.get(idx);
-            aTrackJamTarget.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       beamDataLength = (short)dis.readUnsignedByte();
-       beamIDNumber = (short)dis.readUnsignedByte();
-       beamParameterIndex = (int)dis.readUnsignedShort();
-       fundamentalParameterData.unmarshal(dis);
-       beamFunction = (short)dis.readUnsignedByte();
-       numberOfTrackJamTargets = (short)dis.readUnsignedByte();
-       highDensityTrackJam = (short)dis.readUnsignedByte();
-       pad4 = (short)dis.readUnsignedByte();
-       jammingModeSequence = dis.readInt();
-       for(int idx = 0; idx < numberOfTrackJamTargets; idx++)
-       {
-           TrackJamTarget anX = new TrackJamTarget();
-           anX.unmarshal(dis);
-           trackJamTargets.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

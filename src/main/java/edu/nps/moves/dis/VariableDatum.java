@@ -73,43 +73,6 @@ public byte[] getVariableData()
 { return variableData; }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeInt( (int)variableDatumID);
-       dos.writeInt( (int)getVariableDatumLength());
-       dos.write(variableData);
-
-        // Add padding.
-        for (int i = 0; i < datumPaddingSize(); i++) {
-            dos.write((byte) 0);
-        }
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       variableDatumID = dis.readInt();
-       variableDatumLength = dis.readInt();
-       final int dataLengthBytes = (int)variableDatumLength / Byte.SIZE;
-       variableData = new byte[dataLengthBytes];
-       dis.read(variableData);
-       dis.skip(calculatePaddingSize(dataLengthBytes)); // skip padding
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

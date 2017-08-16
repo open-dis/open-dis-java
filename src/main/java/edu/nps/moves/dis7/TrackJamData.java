@@ -68,34 +68,6 @@ public short getBeamNumber()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       entityID.marshal(dos);
-       dos.writeByte( (byte)emitterNumber);
-       dos.writeByte( (byte)beamNumber);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       entityID.unmarshal(dis);
-       emitterNumber = (short)dis.readUnsignedByte();
-       beamNumber = (short)dis.readUnsignedByte();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

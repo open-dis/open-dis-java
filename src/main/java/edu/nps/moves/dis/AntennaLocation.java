@@ -56,32 +56,6 @@ public Vector3Float getRelativeAntennaLocation()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       antennaLocation.marshal(dos);
-       relativeAntennaLocation.marshal(dos);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       antennaLocation.unmarshal(dis);
-       relativeAntennaLocation.unmarshal(dis);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

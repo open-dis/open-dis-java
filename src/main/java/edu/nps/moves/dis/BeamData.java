@@ -92,38 +92,6 @@ public float getBeamSweepSync()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeFloat( (float)beamAzimuthCenter);
-       dos.writeFloat( (float)beamAzimuthSweep);
-       dos.writeFloat( (float)beamElevationCenter);
-       dos.writeFloat( (float)beamElevationSweep);
-       dos.writeFloat( (float)beamSweepSync);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       beamAzimuthCenter = dis.readFloat();
-       beamAzimuthSweep = dis.readFloat();
-       beamElevationCenter = dis.readFloat();
-       beamElevationSweep = dis.readFloat();
-       beamSweepSync = dis.readFloat();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

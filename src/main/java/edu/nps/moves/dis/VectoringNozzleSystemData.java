@@ -56,32 +56,6 @@ public float getVerticalDeflectionAngle()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeFloat( (float)horizontalDeflectionAngle);
-       dos.writeFloat( (float)verticalDeflectionAngle);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       horizontalDeflectionAngle = dis.readFloat();
-       verticalDeflectionAngle = dis.readFloat();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

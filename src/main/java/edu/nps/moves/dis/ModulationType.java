@@ -80,36 +80,6 @@ public int getSystem()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeShort( (short)spreadSpectrum);
-       dos.writeShort( (short)major);
-       dos.writeShort( (short)detail);
-       dos.writeShort( (short)system);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       spreadSpectrum = (int)dis.readUnsignedShort();
-       major = (int)dis.readUnsignedShort();
-       detail = (int)dis.readUnsignedShort();
-       system = (int)dis.readUnsignedShort();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

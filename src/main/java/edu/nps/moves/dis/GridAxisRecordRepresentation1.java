@@ -87,51 +87,6 @@ public List<TwoByteChunk> getDataValues()
 { return dataValues; }
 
 
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       dos.writeFloat( (float)fieldScale);
-       dos.writeFloat( (float)fieldOffset);
-       dos.writeShort( (short)dataValues.size());
-
-       for(int idx = 0; idx < dataValues.size(); idx++)
-       {
-            TwoByteChunk aTwoByteChunk = dataValues.get(idx);
-            aTwoByteChunk.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       fieldScale = dis.readFloat();
-       fieldOffset = dis.readFloat();
-       numberOfValues = (int)dis.readUnsignedShort();
-       for(int idx = 0; idx < numberOfValues; idx++)
-       {
-           TwoByteChunk anX = new TwoByteChunk();
-           anX.unmarshal(dis);
-           dataValues.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

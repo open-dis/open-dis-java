@@ -68,34 +68,6 @@ public int getLength()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeByte( (byte)layerNumber);
-       dos.writeByte( (byte)layerSpecificInformaiton);
-       dos.writeShort( (short)length);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       layerNumber = (short)dis.readUnsignedByte();
-       layerSpecificInformaiton = (short)dis.readUnsignedByte();
-       length = (int)dis.readUnsignedShort();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

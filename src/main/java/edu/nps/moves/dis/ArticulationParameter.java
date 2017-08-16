@@ -87,38 +87,6 @@ public double getParameterValue()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeByte( (byte)parameterTypeDesignator);
-       dos.writeByte( (byte)changeIndicator);
-       dos.writeShort( (short)partAttachedTo);
-       dos.writeInt( (int)parameterType);
-       dos.writeDouble( (double)parameterValue);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       parameterTypeDesignator = (short)dis.readUnsignedByte();
-       changeIndicator = (short)dis.readUnsignedByte();
-       partAttachedTo = (int)dis.readUnsignedShort();
-       parameterType = dis.readInt();
-       parameterValue = dis.readDouble();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

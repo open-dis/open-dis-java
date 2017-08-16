@@ -77,38 +77,7 @@ public void setFundamentalDataParameters(AcousticBeamFundamentalParameter pFunda
 
 public AcousticBeamFundamentalParameter getFundamentalDataParameters()
 { return fundamentalDataParameters; 
-}
-
-
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeShort( (short)beamDataLength);
-       dos.writeByte( (byte)beamIDNumber);
-       dos.writeShort( (short)pad2);
-       fundamentalDataParameters.marshal(dos);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       beamDataLength = (int)dis.readUnsignedShort();
-       beamIDNumber = (short)dis.readUnsignedByte();
-       pad2 = (int)dis.readUnsignedShort();
-       fundamentalDataParameters.unmarshal(dis);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
+} 
 
 /**
  * Packs a Pdu into the ByteBuffer.

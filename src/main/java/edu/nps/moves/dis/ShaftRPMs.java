@@ -68,34 +68,6 @@ public float getShaftRPMRateOfChange()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeShort( (short)currentShaftRPMs);
-       dos.writeShort( (short)orderedShaftRPMs);
-       dos.writeFloat( (float)shaftRPMRateOfChange);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       currentShaftRPMs = dis.readShort();
-       orderedShaftRPMs = dis.readShort();
-       shaftRPMRateOfChange = dis.readFloat();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

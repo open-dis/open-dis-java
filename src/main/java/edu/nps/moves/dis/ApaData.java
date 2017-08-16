@@ -53,33 +53,7 @@ public void setParameterValue(short pParameterValue)
 
 public short getParameterValue()
 { return parameterValue; 
-}
-
-
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeShort( (short)parameterIndex);
-       dos.writeShort( (short)parameterValue);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       parameterIndex = (int)dis.readUnsignedShort();
-       parameterValue = dis.readShort();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
+} 
 
 
 /**

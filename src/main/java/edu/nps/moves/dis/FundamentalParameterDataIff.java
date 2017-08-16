@@ -128,44 +128,6 @@ public short getPad3()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeFloat( (float)erp);
-       dos.writeFloat( (float)frequency);
-       dos.writeFloat( (float)pgrf);
-       dos.writeFloat( (float)pulseWidth);
-       dos.writeInt( (int)burstLength);
-       dos.writeByte( (byte)applicableModes);
-       dos.writeShort( (short)pad2);
-       dos.writeByte( (byte)pad3);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       erp = dis.readFloat();
-       frequency = dis.readFloat();
-       pgrf = dis.readFloat();
-       pulseWidth = dis.readFloat();
-       burstLength = dis.readInt();
-       applicableModes = (short)dis.readUnsignedByte();
-       pad2 = (int)dis.readUnsignedShort();
-       pad3 = (short)dis.readUnsignedByte();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

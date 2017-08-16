@@ -135,46 +135,6 @@ public float getPhase()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       beamDirection.marshal(dos);
-       dos.writeFloat( (float)azimuthBeamwidth);
-       dos.writeFloat( (float)elevationBeamwidth);
-       dos.writeFloat( (float)referenceSystem);
-       dos.writeShort( (short)padding1);
-       dos.writeByte( (byte)padding2);
-       dos.writeFloat( (float)ez);
-       dos.writeFloat( (float)ex);
-       dos.writeFloat( (float)phase);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       beamDirection.unmarshal(dis);
-       azimuthBeamwidth = dis.readFloat();
-       elevationBeamwidth = dis.readFloat();
-       referenceSystem = dis.readFloat();
-       padding1 = dis.readShort();
-       padding2 = dis.readByte();
-       ez = dis.readFloat();
-       ex = dis.readFloat();
-       phase = dis.readFloat();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

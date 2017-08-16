@@ -68,34 +68,6 @@ public short getAcousticID()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeShort( (short)acousticName);
-       dos.writeByte( (byte)acousticFunction);
-       dos.writeByte( (byte)acousticID);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       acousticName = (int)dis.readUnsignedShort();
-       acousticFunction = (short)dis.readUnsignedByte();
-       acousticID = (short)dis.readUnsignedByte();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

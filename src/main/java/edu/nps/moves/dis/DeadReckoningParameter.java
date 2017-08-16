@@ -79,44 +79,6 @@ public Vector3Float getEntityAngularVelocity()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeByte( (byte)deadReckoningAlgorithm);
-
-       for(int idx = 0; idx < otherParameters.length; idx++)
-       {
-           dos.writeByte(otherParameters[idx]);
-       } // end of array marshaling
-
-       entityLinearAcceleration.marshal(dos);
-       entityAngularVelocity.marshal(dos);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       deadReckoningAlgorithm = (short)dis.readUnsignedByte();
-       for(int idx = 0; idx < otherParameters.length; idx++)
-       {
-                otherParameters[idx] = dis.readByte();
-       } // end of array unmarshaling
-       entityLinearAcceleration.unmarshal(dis);
-       entityAngularVelocity.unmarshal(dis);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

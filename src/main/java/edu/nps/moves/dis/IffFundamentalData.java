@@ -152,48 +152,6 @@ public int getParameter6()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeByte( (byte)systemStatus);
-       dos.writeByte( (byte)alternateParameter4);
-       dos.writeByte( (byte)informationLayers);
-       dos.writeByte( (byte)modifier);
-       dos.writeShort( (short)parameter1);
-       dos.writeShort( (short)parameter2);
-       dos.writeShort( (short)parameter3);
-       dos.writeShort( (short)parameter4);
-       dos.writeShort( (short)parameter5);
-       dos.writeShort( (short)parameter6);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       systemStatus = (short)dis.readUnsignedByte();
-       alternateParameter4 = (short)dis.readUnsignedByte();
-       informationLayers = (short)dis.readUnsignedByte();
-       modifier = (short)dis.readUnsignedByte();
-       parameter1 = (int)dis.readUnsignedShort();
-       parameter2 = (int)dis.readUnsignedShort();
-       parameter3 = (int)dis.readUnsignedShort();
-       parameter4 = (int)dis.readUnsignedShort();
-       parameter5 = (int)dis.readUnsignedShort();
-       parameter6 = (int)dis.readUnsignedShort();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

@@ -140,46 +140,6 @@ public long getPad1()
 }
 
 
-public void marshal(DataOutputStream dos)
-{
-    try 
-    {
-       dos.writeByte( (byte)segmentNumber);
-       segmentAppearance.marshal(dos);
-       location.marshal(dos);
-       orientation.marshal(dos);
-       dos.writeShort( (short)segmentLength);
-       dos.writeShort( (short)segmentWidth);
-       dos.writeShort( (short)segmentHeight);
-       dos.writeShort( (short)segmentDepth);
-       dos.writeInt( (int)pad1);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-    try 
-    {
-       segmentNumber = (short)dis.readUnsignedByte();
-       segmentAppearance.unmarshal(dis);
-       location.unmarshal(dis);
-       orientation.unmarshal(dis);
-       segmentLength = (int)dis.readUnsignedShort();
-       segmentWidth = (int)dis.readUnsignedShort();
-       segmentHeight = (int)dis.readUnsignedShort();
-       segmentDepth = (int)dis.readUnsignedShort();
-       pad1 = dis.readInt();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small
