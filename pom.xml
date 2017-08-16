@@ -4,7 +4,7 @@
     <artifactId>open-dis</artifactId>
     <packaging>jar</packaging>
     <name>Open-DIS</name>
-    <version>4.16-SNAPSHOT</version>
+    <version>5.0-SNAPSHOT</version>
     <description>An open source implementation of the Distributed Interactive Simulation (DIS) IEEE-1278 protocol</description>
     <url>http://open-dis.sourceforge.net</url>
     <licenses>
@@ -28,12 +28,12 @@
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <version>9</version>
     </parent>
     <scm>
-        <url>http://svn.code.sf.net/p/open-dis/code</url>
-        <connection>scm:svn:svn://svn.code.sf.net/p/open-dis/code</connection>
-        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/open-dis/code</developerConnection>
+        <url>https://github.com/open-dis/open-dis-java</url>
+        <connection>scm:git:git@github.com:open-dis/open-dis-java.git</connection>
+        <developerConnection>scm:git:git@github.com:open-dis/open-dis-java.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
     <dependencies>
@@ -72,23 +72,19 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.4.1</version>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
                 <configuration>
-                    <localCheckout>true</localCheckout>
+                    <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
-                <!-- Help 'mvn release:perform' find the pom when it does a checkout -->
-                <executions>
-                    <execution>
-                        <id>default</id>
-                        <goals>
-                            <goal>perform</goal>
-                        </goals>
-                        <configuration>
-                            <pomFileName>languages/java/trunk/pom.xml</pomFileName>
-                        </configuration>
-                    </execution>
-                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                </configuration>
             </plugin>
         </plugins>
     </build>
