@@ -4,6 +4,9 @@ import java.util.*;
 import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
+import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -479,70 +482,6 @@ public void setEntityAppearance_camouflageType(int val)
     aVal = (int)(val << 17);
     this.entityAppearance = (int)(this.entityAppearance | aVal);
 }
-
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       entityID.marshal(dos);
-       dos.writeByte( (byte)forceId);
-       dos.writeByte( (byte)articulationParameters.size());
-       entityType.marshal(dos);
-       alternativeEntityType.marshal(dos);
-       entityLinearVelocity.marshal(dos);
-       entityLocation.marshal(dos);
-       entityOrientation.marshal(dos);
-       dos.writeInt( (int)entityAppearance);
-       deadReckoningParameters.marshal(dos);
-       marking.marshal(dos);
-       dos.writeInt( (int)capabilities);
-
-       for(int idx = 0; idx < articulationParameters.size(); idx++)
-       {
-            ArticulationParameter aArticulationParameter = articulationParameters.get(idx);
-            aArticulationParameter.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       entityID.unmarshal(dis);
-       forceId = (short)dis.readUnsignedByte();
-       numberOfArticulationParameters = dis.readByte();
-       entityType.unmarshal(dis);
-       alternativeEntityType.unmarshal(dis);
-       entityLinearVelocity.unmarshal(dis);
-       entityLocation.unmarshal(dis);
-       entityOrientation.unmarshal(dis);
-       entityAppearance = dis.readInt();
-       deadReckoningParameters.unmarshal(dis);
-       marking.unmarshal(dis);
-       capabilities = dis.readInt();
-       for(int idx = 0; idx < numberOfArticulationParameters; idx++)
-       {
-           ArticulationParameter anX = new ArticulationParameter();
-           anX.unmarshal(dis);
-           articulationParameters.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
 
 /**
  * Packs a Pdu into the ByteBuffer.

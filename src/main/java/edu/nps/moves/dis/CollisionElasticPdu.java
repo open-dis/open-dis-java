@@ -214,62 +214,6 @@ public float getCoefficientOfRestitution()
 { return coefficientOfRestitution; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       issuingEntityID.marshal(dos);
-       collidingEntityID.marshal(dos);
-       collisionEventID.marshal(dos);
-       dos.writeShort( (short)pad);
-       contactVelocity.marshal(dos);
-       dos.writeFloat( (float)mass);
-       location.marshal(dos);
-       dos.writeFloat( (float)collisionResultXX);
-       dos.writeFloat( (float)collisionResultXY);
-       dos.writeFloat( (float)collisionResultXZ);
-       dos.writeFloat( (float)collisionResultYY);
-       dos.writeFloat( (float)collisionResultYZ);
-       dos.writeFloat( (float)collisionResultZZ);
-       unitSurfaceNormal.marshal(dos);
-       dos.writeFloat( (float)coefficientOfRestitution);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       issuingEntityID.unmarshal(dis);
-       collidingEntityID.unmarshal(dis);
-       collisionEventID.unmarshal(dis);
-       pad = dis.readShort();
-       contactVelocity.unmarshal(dis);
-       mass = dis.readFloat();
-       location.unmarshal(dis);
-       collisionResultXX = dis.readFloat();
-       collisionResultXY = dis.readFloat();
-       collisionResultXZ = dis.readFloat();
-       collisionResultYY = dis.readFloat();
-       collisionResultYZ = dis.readFloat();
-       collisionResultZZ = dis.readFloat();
-       unitSurfaceNormal.unmarshal(dis);
-       coefficientOfRestitution = dis.readFloat();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

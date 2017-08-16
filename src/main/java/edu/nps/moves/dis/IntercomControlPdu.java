@@ -183,68 +183,6 @@ public void setIntercomParameters(List<IntercomCommunicationsParameters> pInterc
 public List<IntercomCommunicationsParameters> getIntercomParameters()
 { return intercomParameters; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       dos.writeByte( (byte)controlType);
-       dos.writeByte( (byte)communicationsChannelType);
-       sourceEntityID.marshal(dos);
-       dos.writeByte( (byte)sourceCommunicationsDeviceID);
-       dos.writeByte( (byte)sourceLineID);
-       dos.writeByte( (byte)transmitPriority);
-       dos.writeByte( (byte)transmitLineState);
-       dos.writeByte( (byte)command);
-       masterEntityID.marshal(dos);
-       dos.writeShort( (short)masterCommunicationsDeviceID);
-       dos.writeInt( (int)intercomParameters.size());
-
-       for(int idx = 0; idx < intercomParameters.size(); idx++)
-       {
-            IntercomCommunicationsParameters aIntercomCommunicationsParameters = intercomParameters.get(idx);
-            aIntercomCommunicationsParameters.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       controlType = (short)dis.readUnsignedByte();
-       communicationsChannelType = (short)dis.readUnsignedByte();
-       sourceEntityID.unmarshal(dis);
-       sourceCommunicationsDeviceID = (short)dis.readUnsignedByte();
-       sourceLineID = (short)dis.readUnsignedByte();
-       transmitPriority = (short)dis.readUnsignedByte();
-       transmitLineState = (short)dis.readUnsignedByte();
-       command = (short)dis.readUnsignedByte();
-       masterEntityID.unmarshal(dis);
-       masterCommunicationsDeviceID = (int)dis.readUnsignedShort();
-       intercomParametersLength = dis.readInt();
-       for(int idx = 0; idx < intercomParametersLength; idx++)
-       {
-           IntercomCommunicationsParameters anX = new IntercomCommunicationsParameters();
-           anX.unmarshal(dis);
-           intercomParameters.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

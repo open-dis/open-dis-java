@@ -105,44 +105,6 @@ public IffFundamentalData getFundamentalParameters()
 { return fundamentalParameters; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       emittingEntityId.marshal(dos);
-       eventID.marshal(dos);
-       location.marshal(dos);
-       systemID.marshal(dos);
-       dos.writeShort( (short)pad2);
-       fundamentalParameters.marshal(dos);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       emittingEntityId.unmarshal(dis);
-       eventID.unmarshal(dis);
-       location.unmarshal(dis);
-       systemID.unmarshal(dis);
-       pad2 = (int)dis.readUnsignedShort();
-       fundamentalParameters.unmarshal(dis);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

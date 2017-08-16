@@ -85,7 +85,7 @@ public class PduFactory {
             return null;                    // Else return null
         }   // end if: buffer too short
         buff.position(pos + 2);             // Advance to third byte
-        int pduType = buff.get() & 0xFF;    // Read Pdu type
+        final int pduType = Pdu.toUnsignedInt(buff.get());    // Read Pdu type
         buff.position(pos);                 // Reset buffer
 
         // Do a lookup to get the enumeration instance that corresponds to this value.

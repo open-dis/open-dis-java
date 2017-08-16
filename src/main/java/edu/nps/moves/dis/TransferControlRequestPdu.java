@@ -135,60 +135,6 @@ public void setRecordSets(List<RecordSet> pRecordSets)
 public List<RecordSet> getRecordSets()
 { return recordSets; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       orginatingEntityID.marshal(dos);
-       recevingEntityID.marshal(dos);
-       dos.writeInt( (int)requestID);
-       dos.writeByte( (byte)requiredReliabilityService);
-       dos.writeByte( (byte)tranferType);
-       transferEntityID.marshal(dos);
-       dos.writeByte( (byte)recordSets.size());
-
-       for(int idx = 0; idx < recordSets.size(); idx++)
-       {
-            RecordSet aRecordSet = recordSets.get(idx);
-            aRecordSet.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       orginatingEntityID.unmarshal(dis);
-       recevingEntityID.unmarshal(dis);
-       requestID = dis.readInt();
-       requiredReliabilityService = (short)dis.readUnsignedByte();
-       tranferType = (short)dis.readUnsignedByte();
-       transferEntityID.unmarshal(dis);
-       numberOfRecordSets = (short)dis.readUnsignedByte();
-       for(int idx = 0; idx < numberOfRecordSets; idx++)
-       {
-           RecordSet anX = new RecordSet();
-           anX.unmarshal(dis);
-           recordSets.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

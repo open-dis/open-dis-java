@@ -177,56 +177,6 @@ public Vector3Float getEntityLinearAcceleration()
 { return entityLinearAcceleration; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       designatingEntityID.marshal(dos);
-       dos.writeShort( (short)codeName);
-       designatedEntityID.marshal(dos);
-       dos.writeShort( (short)designatorCode);
-       dos.writeFloat( (float)designatorPower);
-       dos.writeFloat( (float)designatorWavelength);
-       designatorSpotWrtDesignated.marshal(dos);
-       designatorSpotLocation.marshal(dos);
-       dos.writeByte( (byte)deadReckoningAlgorithm);
-       dos.writeShort( (short)padding1);
-       dos.writeByte( (byte)padding2);
-       entityLinearAcceleration.marshal(dos);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       designatingEntityID.unmarshal(dis);
-       codeName = (int)dis.readUnsignedShort();
-       designatedEntityID.unmarshal(dis);
-       designatorCode = (int)dis.readUnsignedShort();
-       designatorPower = dis.readFloat();
-       designatorWavelength = dis.readFloat();
-       designatorSpotWrtDesignated.unmarshal(dis);
-       designatorSpotLocation.unmarshal(dis);
-       deadReckoningAlgorithm = dis.readByte();
-       padding1 = (int)dis.readUnsignedShort();
-       padding2 = dis.readByte();
-       entityLinearAcceleration.unmarshal(dis);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

@@ -4,6 +4,9 @@ import java.util.*;
 import java.io.*;
 import edu.nps.moves.disenum.*;
 import edu.nps.moves.disutil.*;
+import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -130,50 +133,6 @@ public void setData(byte[] pData)
 
 public byte[] getData()
 { return data; }
-
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       entityId.marshal(dos);
-       dos.writeShort( (short)radioId);
-       dos.writeShort( (short)encodingScheme);
-       dos.writeShort( (short)tdlType);
-       dos.writeInt( (int)sampleRate);
-       dos.writeShort( (short)dataLength);
-       dos.writeShort( (short)samples);
-       dos.write(data);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       entityId.unmarshal(dis);
-       radioId = (int)dis.readUnsignedShort();
-       encodingScheme = (int)dis.readUnsignedShort();
-       tdlType = (int)dis.readUnsignedShort();
-       sampleRate = dis.readInt();
-       dataLength = (int)dis.readUnsignedShort();
-       samples = (int)dis.readUnsignedShort();
-       final int dataLengthBytes = dataLength / Byte.SIZE;
-       data = new byte[dataLengthBytes];
-       dis.read(data);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
 
 /**
  * Packs a Pdu into the ByteBuffer.

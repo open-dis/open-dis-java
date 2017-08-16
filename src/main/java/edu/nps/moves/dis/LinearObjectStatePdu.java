@@ -147,62 +147,6 @@ public void setLinearSegmentParameters(List<LinearSegmentParameter> pLinearSegme
 public List<LinearSegmentParameter> getLinearSegmentParameters()
 { return linearSegmentParameters; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       objectID.marshal(dos);
-       referencedObjectID.marshal(dos);
-       dos.writeShort( (short)updateNumber);
-       dos.writeByte( (byte)forceID);
-       dos.writeByte( (byte)linearSegmentParameters.size());
-       requesterID.marshal(dos);
-       receivingID.marshal(dos);
-       objectType.marshal(dos);
-
-       for(int idx = 0; idx < linearSegmentParameters.size(); idx++)
-       {
-            LinearSegmentParameter aLinearSegmentParameter = linearSegmentParameters.get(idx);
-            aLinearSegmentParameter.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       objectID.unmarshal(dis);
-       referencedObjectID.unmarshal(dis);
-       updateNumber = (int)dis.readUnsignedShort();
-       forceID = (short)dis.readUnsignedByte();
-       numberOfSegments = (short)dis.readUnsignedByte();
-       requesterID.unmarshal(dis);
-       receivingID.unmarshal(dis);
-       objectType.unmarshal(dis);
-       for(int idx = 0; idx < numberOfSegments; idx++)
-       {
-           LinearSegmentParameter anX = new LinearSegmentParameter();
-           anX.unmarshal(dis);
-           linearSegmentParameters.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

@@ -117,68 +117,6 @@ public void setVariableDatums(List<UnsignedIntegerWrapper> pVariableDatums)
 public List<UnsignedIntegerWrapper> getVariableDatums()
 { return variableDatums; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       dos.writeInt( (int)requestID);
-       dos.writeInt( (int)timeInterval);
-       dos.writeInt( (int)fixedDatums.size());
-       dos.writeInt( (int)variableDatums.size());
-
-       for(int idx = 0; idx < fixedDatums.size(); idx++)
-       {
-            UnsignedIntegerWrapper aUnsignedIntegerWrapper = fixedDatums.get(idx);
-            aUnsignedIntegerWrapper.marshal(dos);
-       } // end of list marshalling
-
-
-       for(int idx = 0; idx < variableDatums.size(); idx++)
-       {
-            UnsignedIntegerWrapper aUnsignedIntegerWrapper = variableDatums.get(idx);
-            aUnsignedIntegerWrapper.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       requestID = dis.readInt();
-       timeInterval = dis.readInt();
-       numberOfFixedDatumRecords = dis.readInt();
-       numberOfVariableDatumRecords = dis.readInt();
-       for(int idx = 0; idx < numberOfFixedDatumRecords; idx++)
-       {
-           UnsignedIntegerWrapper anX = new UnsignedIntegerWrapper();
-           anX.unmarshal(dis);
-           fixedDatums.add(anX);
-       }
-
-       for(int idx = 0; idx < numberOfVariableDatumRecords; idx++)
-       {
-           UnsignedIntegerWrapper anX = new UnsignedIntegerWrapper();
-           anX.unmarshal(dis);
-           variableDatums.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

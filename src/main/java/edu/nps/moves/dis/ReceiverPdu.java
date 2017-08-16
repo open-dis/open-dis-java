@@ -117,46 +117,6 @@ public int getTransmitterRadioId()
 { return transmitterRadioId; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       entityId.marshal(dos);
-       dos.writeShort( (short)radioId);
-       dos.writeShort( (short)receiverState);
-       dos.writeShort( (short)padding1);
-       dos.writeFloat( (float)receivedPower);
-       transmitterEntityId.marshal(dos);
-       dos.writeShort( (short)transmitterRadioId);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       entityId.unmarshal(dis);
-       radioId = (int)dis.readUnsignedShort();
-       receiverState = (int)dis.readUnsignedShort();
-       padding1 = (int)dis.readUnsignedShort();
-       receivedPower = dis.readFloat();
-       transmitterEntityId.unmarshal(dis);
-       transmitterRadioId = (int)dis.readUnsignedShort();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

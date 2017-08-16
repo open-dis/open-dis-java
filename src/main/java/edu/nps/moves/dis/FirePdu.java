@@ -116,46 +116,6 @@ public float getRangeToTarget()
 { return rangeToTarget; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       munitionID.marshal(dos);
-       eventID.marshal(dos);
-       dos.writeInt( (int)fireMissionIndex);
-       locationInWorldCoordinates.marshal(dos);
-       burstDescriptor.marshal(dos);
-       velocity.marshal(dos);
-       dos.writeFloat( (float)rangeToTarget);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       munitionID.unmarshal(dis);
-       eventID.unmarshal(dis);
-       fireMissionIndex = dis.readInt();
-       locationInWorldCoordinates.unmarshal(dis);
-       burstDescriptor.unmarshal(dis);
-       velocity.unmarshal(dis);
-       rangeToTarget = dis.readFloat();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

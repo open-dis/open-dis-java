@@ -82,52 +82,6 @@ public void setFundamentalIffParameters(List<FundamentalParameterDataIff> pFunda
 public List<FundamentalParameterDataIff> getFundamentalIffParameters()
 { return fundamentalIffParameters; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       layerHeader.marshal(dos);
-       beamData.marshal(dos);
-       secondaryOperationalData.marshal(dos);
-
-       for(int idx = 0; idx < fundamentalIffParameters.size(); idx++)
-       {
-            FundamentalParameterDataIff aFundamentalParameterDataIff = fundamentalIffParameters.get(idx);
-            aFundamentalParameterDataIff.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       layerHeader.unmarshal(dis);
-       beamData.unmarshal(dis);
-       secondaryOperationalData.unmarshal(dis);
-       for(int idx = 0; idx < pad2; idx++)
-       {
-           FundamentalParameterDataIff anX = new FundamentalParameterDataIff();
-           anX.unmarshal(dis);
-           fundamentalIffParameters.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

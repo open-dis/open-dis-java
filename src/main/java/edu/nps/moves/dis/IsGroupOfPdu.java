@@ -123,58 +123,6 @@ public void setGroupedEntityDescriptions(List<VariableDatum> pGroupedEntityDescr
 public List<VariableDatum> getGroupedEntityDescriptions()
 { return groupedEntityDescriptions; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       groupEntityID.marshal(dos);
-       dos.writeByte( (byte)groupedEntityCategory);
-       dos.writeByte( (byte)groupedEntityDescriptions.size());
-       dos.writeInt( (int)pad2);
-       dos.writeDouble( (double)latitude);
-       dos.writeDouble( (double)longitude);
-
-       for(int idx = 0; idx < groupedEntityDescriptions.size(); idx++)
-       {
-            VariableDatum aVariableDatum = groupedEntityDescriptions.get(idx);
-            aVariableDatum.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       groupEntityID.unmarshal(dis);
-       groupedEntityCategory = (short)dis.readUnsignedByte();
-       numberOfGroupedEntities = (short)dis.readUnsignedByte();
-       pad2 = dis.readInt();
-       latitude = dis.readDouble();
-       longitude = dis.readDouble();
-       for(int idx = 0; idx < numberOfGroupedEntities; idx++)
-       {
-           VariableDatum anX = new VariableDatum();
-           anX.unmarshal(dis);
-           groupedEntityDescriptions.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

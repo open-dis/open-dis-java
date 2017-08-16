@@ -105,44 +105,6 @@ public EntityType getPartEntityType()
 { return partEntityType; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       orginatingEntityID.marshal(dos);
-       receivingEntityID.marshal(dos);
-       relationship.marshal(dos);
-       partLocation.marshal(dos);
-       namedLocationID.marshal(dos);
-       partEntityType.marshal(dos);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       orginatingEntityID.unmarshal(dis);
-       receivingEntityID.unmarshal(dis);
-       relationship.unmarshal(dis);
-       partLocation.unmarshal(dis);
-       namedLocationID.unmarshal(dis);
-       partEntityType.unmarshal(dis);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

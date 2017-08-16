@@ -81,40 +81,6 @@ public long getRequestID()
 { return requestID; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       dos.writeByte( (byte)requiredReliabilityService);
-       dos.writeShort( (short)pad1);
-       dos.writeByte( (byte)pad2);
-       dos.writeInt( (int)requestID);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       requiredReliabilityService = (short)dis.readUnsignedByte();
-       pad1 = (int)dis.readUnsignedShort();
-       pad2 = (short)dis.readUnsignedByte();
-       requestID = dis.readInt();
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

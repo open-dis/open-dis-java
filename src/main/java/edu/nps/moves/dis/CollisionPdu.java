@@ -130,48 +130,6 @@ public Vector3Float getLocation()
 { return location; 
 }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       issuingEntityID.marshal(dos);
-       collidingEntityID.marshal(dos);
-       eventID.marshal(dos);
-       dos.writeByte( (byte)collisionType);
-       dos.writeByte( (byte)pad);
-       velocity.marshal(dos);
-       dos.writeFloat( (float)mass);
-       location.marshal(dos);
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       issuingEntityID.unmarshal(dis);
-       collidingEntityID.unmarshal(dis);
-       eventID.unmarshal(dis);
-       collisionType = (short)dis.readUnsignedByte();
-       pad = dis.readByte();
-       velocity.unmarshal(dis);
-       mass = dis.readFloat();
-       location.unmarshal(dis);
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small

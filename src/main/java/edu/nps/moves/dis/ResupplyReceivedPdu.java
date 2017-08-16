@@ -110,56 +110,6 @@ public void setSupplies(List<SupplyQuantity> pSupplies)
 public List<SupplyQuantity> getSupplies()
 { return supplies; }
 
-
-public void marshal(DataOutputStream dos)
-{
-    super.marshal(dos);
-    try 
-    {
-       receivingEntityID.marshal(dos);
-       supplyingEntityID.marshal(dos);
-       dos.writeByte( (byte)supplies.size());
-       dos.writeShort( (short)padding1);
-       dos.writeByte( (byte)padding2);
-
-       for(int idx = 0; idx < supplies.size(); idx++)
-       {
-            SupplyQuantity aSupplyQuantity = supplies.get(idx);
-            aSupplyQuantity.marshal(dos);
-       } // end of list marshalling
-
-    } // end try 
-    catch(Exception e)
-    { 
-      System.out.println(e);}
-    } // end of marshal method
-
-public void unmarshal(DataInputStream dis)
-{
-     super.unmarshal(dis);
-
-    try 
-    {
-       receivingEntityID.unmarshal(dis);
-       supplyingEntityID.unmarshal(dis);
-       numberOfSupplyTypes = (short)dis.readUnsignedByte();
-       padding1 = dis.readShort();
-       padding2 = dis.readByte();
-       for(int idx = 0; idx < numberOfSupplyTypes; idx++)
-       {
-           SupplyQuantity anX = new SupplyQuantity();
-           anX.unmarshal(dis);
-           supplies.add(anX);
-       }
-
-    } // end try 
-   catch(Exception e)
-    { 
-      System.out.println(e); 
-    }
- } // end of unmarshal method 
-
-
 /**
  * Packs a Pdu into the ByteBuffer.
  * @throws java.nio.BufferOverflowException if buff is too small
