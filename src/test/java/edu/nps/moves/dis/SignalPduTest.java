@@ -2,8 +2,6 @@ package edu.nps.moves.dis;
 
 import edu.nps.moves.disutil.PduFactory;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

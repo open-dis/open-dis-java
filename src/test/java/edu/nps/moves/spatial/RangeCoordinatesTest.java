@@ -8,9 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import SRM.*;               // Sedris Spatial Reference Model, v. 4.4
 import edu.nps.moves.dis.*;
-import edu.nps.moves.disutil.*;
 
 /**
  *

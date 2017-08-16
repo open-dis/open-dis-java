@@ -2,11 +2,6 @@ package edu.nps.moves.dis;
 
 import java.util.*;
 import java.io.*;
-import edu.nps.moves.disenum.*;
-import edu.nps.moves.disutil.*;
-import java.nio.ByteBuffer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**

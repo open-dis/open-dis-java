@@ -1,8 +1,6 @@
 package edu.nps.moves.examples;
 
 import java.net.*;
-import java.io.*;
-import java.util.*;
 
 import edu.nps.moves.dis.*;
 import edu.nps.moves.disutil.PduFactory;

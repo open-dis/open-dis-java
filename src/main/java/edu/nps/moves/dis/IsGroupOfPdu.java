@@ -2,8 +2,6 @@ package edu.nps.moves.dis;
 
 import java.util.*;
 import java.io.*;
-import edu.nps.moves.disenum.*;
-import edu.nps.moves.disutil.*;
 
 
 /**

@@ -7,7 +7,6 @@ import java.util.*;
 import javax.xml.bind.*;
 
 import edu.nps.moves.dis.*;
-import edu.nps.moves.disutil.*;
 
 /**
  * Reads from the log files, replaying the data on a multicast group.

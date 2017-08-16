@@ -35,8 +35,6 @@ import edu.nps.moves.dis.EventReportReliablePdu;
 import edu.nps.moves.dis.FastEntityStatePdu;
 import edu.nps.moves.dis.FirePdu;
 import edu.nps.moves.dis.GriddedDataPdu;
-import edu.nps.moves.dis.IffAtcNavAidsLayer1Pdu;
-import edu.nps.moves.dis.IffAtcNavAidsLayer2Pdu;
 import edu.nps.moves.dis.IntercomControlPdu;
 import edu.nps.moves.dis.IntercomSignalPdu;
 import edu.nps.moves.dis.IsGroupOfPdu;

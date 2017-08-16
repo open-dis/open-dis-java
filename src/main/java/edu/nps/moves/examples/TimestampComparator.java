@@ -1,6 +1,5 @@
 package edu.nps.moves.examples;
 
-import java.util.*;
 import edu.nps.moves.dis.*;
 
 /**

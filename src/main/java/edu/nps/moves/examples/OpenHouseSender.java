@@ -2,10 +2,8 @@ package edu.nps.moves.examples;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 import edu.nps.moves.dis.*;
-import java.nio.ByteBuffer;
 
 /**
  * Creates and sends ESPDUs in IEEE binary format. 
