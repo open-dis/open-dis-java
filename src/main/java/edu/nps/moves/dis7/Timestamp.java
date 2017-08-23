@@ -68,8 +68,8 @@ public void setTimestamp_timestampType(int val)
  */
 public int getTimestamp_timestampValue()
 {
-    long val = (long)(this.timestamp   & (long)0xFE);
-    return (int)(val >> 1);
+    long val = timestamp & 0xFFFFFFFFL;
+    return (int)(val >>> 1);
 }
 
 
