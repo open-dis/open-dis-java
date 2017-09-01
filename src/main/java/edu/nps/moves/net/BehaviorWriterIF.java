@@ -63,7 +63,7 @@ public interface BehaviorWriterIF {
 
     /**
      * Write PDU information to the default destination.  The user must clear
-     * the buffer if it is desired to be reused.</p>
+     * the buffer if it is desired to be reused.
      *
      * @param buffer the DIS PDU infomation to be written
      */
