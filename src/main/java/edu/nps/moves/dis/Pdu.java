@@ -144,25 +144,6 @@ private static long shiftBytes(int[] fourBytes)
    return value;
 }
     
-public static long readUnsignedInt(DataInputStream dis)
-{
-    int fourBytes[] = new int[4];
-        
-    try
-    {
-       fourBytes[0] = dis.readUnsignedByte();
-       fourBytes[1] = dis.readUnsignedByte();
-       fourBytes[2] = dis.readUnsignedByte();
-       fourBytes[3] = dis.readUnsignedByte();
-    }
-    catch(Exception e)
-    {
-        System.out.println(e);
-    }
-        
-    return shiftBytes(fourBytes);
-}
-    
 public static long readUnsignedInt(java.nio.ByteBuffer buff)
 {
         int fourBytes[] = new int[4];
