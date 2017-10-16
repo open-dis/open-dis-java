@@ -72,7 +72,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
    protected short  padding3 = (short)0;
 
    /** variable length list of modulation parameters */
-   protected List< ModulationType > modulationParametersList = new ArrayList< ModulationType >(); 
+   protected List< Short > modulationParametersList = new ArrayList< Short >();
    /** variable length list of antenna pattern records */
    protected List< BeamAntennaPattern > antennaPatternList = new ArrayList< BeamAntennaPattern >(); 
 
@@ -106,11 +106,8 @@ public int getMarshalledSize()
    marshalSize = marshalSize + 1;  // modulationParameterCount
    marshalSize = marshalSize + 2;  // padding2
    marshalSize = marshalSize + 1;  // padding3
-   for(int idx=0; idx < modulationParametersList.size(); idx++)
-   {
-        ModulationType listElement = modulationParametersList.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
+   marshalSize = marshalSize + (modulationParametersList.size() * 2);
+
    for(int idx=0; idx < antennaPatternList.size(); idx++)
    {
         BeamAntennaPattern listElement = antennaPatternList.get(idx);
@@ -254,7 +251,7 @@ public int getCryptoKeyId()
 }
 
 public short getModulationParameterCount()
-{ return (short)modulationParametersList.size();
+{ return modulationParameterCount;
 }
 
 /** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
@@ -281,11 +278,11 @@ public short getPadding3()
 { return padding3; 
 }
 
-public void setModulationParametersList(List<ModulationType> pModulationParametersList)
+public void setModulationParametersList(List<Short> pModulationParametersList)
 { modulationParametersList = pModulationParametersList;
 }
 
-public List<ModulationType> getModulationParametersList()
+public List<Short> getModulationParametersList()
 { return modulationParametersList; }
 
 public void setAntennaPatternList(List<BeamAntennaPattern> pAntennaPatternList)
@@ -322,14 +319,14 @@ public void marshal(java.nio.ByteBuffer buff)
        modulationType.marshal(buff);
        buff.putShort( (short)cryptoSystem);
        buff.putShort( (short)cryptoKeyId);
-       buff.put( (byte)modulationParametersList.size());
+       buff.put( (byte)(modulationParameterCount));
        buff.putShort( (short)padding2);
        buff.put( (byte)padding3);
 
        for(int idx = 0; idx < modulationParametersList.size(); idx++)
        {
-            ModulationType aModulationType = (ModulationType)modulationParametersList.get(idx);
-            aModulationType.marshal(buff);
+            Short modulationParameter = modulationParametersList.get(idx);
+            buff.putShort(modulationParameter);
        } // end of list marshalling
 
 
@@ -371,11 +368,14 @@ public void unmarshal(java.nio.ByteBuffer buff)
        modulationParameterCount = (short)(buff.get() & 0xFF);
        padding2 = (int)(buff.getShort() & 0xFFFF);
        padding3 = (short)(buff.get() & 0xFF);
-       for(int idx = 0; idx < modulationParameterCount; idx++)
+
+       // The count is measured in octets, but each parameter is two octets (16 bytes)
+       final int modulationParameters = modulationParameterCount / 2;
+
+       for(int idx = 0; idx < modulationParameters; idx++)
        {
-            ModulationType anX = new ModulationType();
-            anX.unmarshal(buff);
-            modulationParametersList.add(anX);
+            Short modulationParameter = buff.getShort();
+            modulationParametersList.add(modulationParameter);
        }
 
        for(int idx = 0; idx < antennaPatternCount; idx++)
