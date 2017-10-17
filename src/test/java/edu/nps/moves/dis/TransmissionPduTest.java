@@ -41,4 +41,22 @@ public class TransmissionPduTest {
 
         assertEquals(buffer.length, tpdu.getLength());
     }
+
+    @Test
+    public void unmarshal_HAVEQUICK() throws IOException {
+        PduFactory factory = new PduFactory();
+        Pdu aPdu = factory.createPdu(PduFileLoader.load("TransmitterPdu-HAVEQUICK.raw"));
+
+        TransmitterPdu tpdu = (TransmitterPdu) aPdu;
+
+        assertEquals(1, tpdu.getModulationType().getSpreadSpectrum());
+        assertEquals(1, tpdu.getModulationType().getMajor());
+        assertEquals(2, tpdu.getModulationType().getDetail());
+        assertEquals(2, tpdu.getModulationType().getSystem());
+
+        assertEquals(16, tpdu.getModulationParameterCount());
+        assertEquals(8, tpdu.getModulationParametersList().size());
+        assertEquals(316, (int)tpdu.getModulationParametersList().get(0));
+        assertEquals(301, (int)tpdu.getModulationParametersList().get(1));
+    }
 }
