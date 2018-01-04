@@ -1,5 +1,6 @@
 package edu.nps.moves.dis;
 
+import edu.nps.moves.disutil.BasicHaveQuickMpRecord;
 import edu.nps.moves.disutil.PduFactory;
 import java.io.IOException;
 import org.junit.Test;
@@ -54,9 +55,35 @@ public class TransmissionPduTest {
         assertEquals(2, tpdu.getModulationType().getDetail());
         assertEquals(2, tpdu.getModulationType().getSystem());
 
+        assertEquals(312500000, tpdu.getFrequency());
+
         assertEquals(16, tpdu.getModulationParameterCount());
         assertEquals(8, tpdu.getModulationParametersList().size());
-        assertEquals(316, (int)tpdu.getModulationParametersList().get(0));
-        assertEquals(301, (int)tpdu.getModulationParametersList().get(1));
+
+        BasicHaveQuickMpRecord hq = new BasicHaveQuickMpRecord();
+        hq.unmarshal(tpdu.getModulationParametersList());
+
+        assertEquals(316, hq.getNetIdNetNumber());
+        assertEquals(0, hq.getNetIdFrequencyTable());
+        assertEquals(0, hq.getNetIdMode());
+        assertEquals(301, hq.getMwodIndex());
+        assertEquals(1, hq.getTimeOfDay());
+    }
+
+    @Test
+    public void marshal_HAVEQUICK() {
+        TransmitterPdu tpdu = new TransmitterPdu();
+
+        BasicHaveQuickMpRecord hq = new BasicHaveQuickMpRecord();
+        hq.setMwodIndex((short) 301);
+        hq.setTimeOfDay(1);
+        hq.setNetIdNetNumber(316);
+
+        tpdu.setModulationParametersList(hq.marshal());
+        tpdu.setModulationParameterCount((short) hq.getMarshalledSize());
+
+        byte[] buffer = tpdu.marshal();
+
+        assertEquals(buffer.length, tpdu.getLength());
     }
 }
