@@ -39,13 +39,12 @@ public static void main(String args[])
     /** an entity state pdu */
     EntityStatePdu espdu = new EntityStatePdu();
     MulticastSocket socket = null; // must be initialized, even if null
-    DisTime disTime = DisTime.getInstance();
+    DisTime disTime = DisTime.getInstance(); // TODO explain
     int alternator = -1;
     
     // ICBM coordinates for my office
     double lat = 36.595517; 
     double lon = -121.877000;
-
     
     // Default settings. These are used if no system properties are set. 
     // If system properties are passed in, these are over ridden.
@@ -75,7 +74,6 @@ public static void main(String args[])
     // Network mode: unicast, multicast, broadcast
     String networkModeString = systemProperties.getProperty("networkMode"); // unicast or multicast or broadcast
         
-
     // Set up a socket to send information
     try
     {
@@ -108,7 +106,6 @@ public static void main(String args[])
                 }
                 
                 socket.joinGroup(destinationIp);
-                
             }
         } // end networkModeString
     }
@@ -128,10 +125,10 @@ public static void main(String args[])
     // The EID is the unique identifier for objects in the world. This 
     // EID should match up with the ID for the object specified in the 
     // VMRL/x3d/virtual world.
-    EntityID eid = espdu.getEntityID();
-    eid.setSite(1);  // 0 is apparently not a valid site number, per the spec
-    eid.setApplication(1); 
-    eid.setEntity(2); 
+    EntityID entityID = espdu.getEntityID();
+    entityID.setSite(1);  // 0 is apparently not a valid site number, per the spec
+    entityID.setApplication(1); 
+    entityID.setEntity(2); 
     
     // Set the entity type. SISO has a big list of enumerations, so that by
     // specifying various numbers we can say this is an M1A2 American tank,
@@ -177,8 +174,8 @@ public static void main(String args[])
 
             // An alterative approach: actually follow the standard. It's a crazy concept,
             // but it might just work.
-            int ts = disTime.getDisAbsoluteTimestamp();
-            espdu.setTimestamp(ts);
+            int timestamp = disTime.getDisAbsoluteTimestamp();
+            espdu.setTimestamp(timestamp);
             
             // Set the position of the entity in the world. DIS uses a cartesian 
             // coordinate system with the origin at the center of the earth, the x
@@ -255,7 +252,7 @@ public static void main(String args[])
 
             location = espdu.getEntityLocation();
             
-            System.out.println("Espdu #" + idx + " EID=[" + eid.getSite() + "," + eid.getApplication() + "," + eid.getEntity() + "]");
+            System.out.println("Espdu #" + idx + " EID=[" + entityID.getSite() + "," + entityID.getApplication() + "," + entityID.getEntity() + "]");
             System.out.println(" DIS coordinates location=[" + location.getX() + "," + location.getY() + "," + location.getZ() + "]");
             double c[] = {location.getX(), location.getY(), location.getZ()};
             double lla[] = CoordinateConversions.xyzToLatLonDegrees(c);
