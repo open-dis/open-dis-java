@@ -92,6 +92,7 @@ public static void main(String args[])
         }
 
         // Type of transport: unicast, broadcast, or multicast
+		// TODO convert to String constants
         if(networkModeString != null)
         {
             if(networkModeString.equalsIgnoreCase("unicast"))
