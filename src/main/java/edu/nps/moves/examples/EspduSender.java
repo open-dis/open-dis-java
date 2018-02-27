@@ -19,18 +19,18 @@ public class EspduSender
 
     public enum NetworkMode{UNICAST, MULTICAST, BROADCAST};
 
-    /** default multicast group we send on */
+    /** Default multicast group address we send on */
     public static final String DEFAULT_MULTICAST_GROUP="239.1.2.3";
    
-    /** Port we send on */
+    /** Default port we send on */
     public static final int    DIS_DESTINATION_PORT = 3000;
     
 /** Possible system properties, passed in via -Dattr=val
      * networkMode: unicast, broadcast, multicast
-     * destinationIp: where to send the packet. If in multicast mode, this can be mcast.
-     *                To determine bcast destination IP, use an online bcast address
-     *                caclulator, for example http://www.remotemonitoringsystems.ca/broadcast.php
-     *                If in mcast mode, a join() will be done on the mcast address.
+     * destinationIp: where to send the packet. If in multicast mode, this can be multicast.
+     *                To determine broadcast destination IP, use an online broadcast address
+     *                calculator, for example http://www.remotemonitoringsystems.ca/broadcast.php
+     *                If in multicast mode, a join() will be done on the multicast address.
      * port: port used for both source and destination.
      * @param args 
      */
@@ -38,7 +38,7 @@ public static void main(String args[])
 {
     /** an entity state pdu */
     EntityStatePdu espdu = new EntityStatePdu();
-    MulticastSocket socket = null;
+    MulticastSocket socket = null; // must be initialized, even if null
     DisTime disTime = DisTime.getInstance();
     int alternator = -1;
     
@@ -51,13 +51,13 @@ public static void main(String args[])
     // If system properties are passed in, these are over ridden.
     int port = DIS_DESTINATION_PORT;
     NetworkMode mode = NetworkMode.BROADCAST;
-    InetAddress destinationIp = null;
+    InetAddress destinationIp = null; // must be initialized, even if null
     
     try
     {
         destinationIp = InetAddress.getByName(DEFAULT_MULTICAST_GROUP);
     }
-    catch(Exception e)
+    catch(UnknownHostException e)
     {
         System.out.println(e + " Cannot create multicast address");
         System.exit(0);
@@ -112,7 +112,7 @@ public static void main(String args[])
             }
         } // end networkModeString
     }
-    catch(Exception e)
+    catch(IOException | RuntimeException e)
     {
         System.out.println("Unable to initialize networking. Exiting.");
         System.out.println(e);
@@ -148,7 +148,7 @@ public static void main(String args[])
     entityType.setSpec((short)3);            // M1A2 Abrams
     
 
-    Set<InetAddress> bcastAddresses = getBroadcastAddresses();
+    Set<InetAddress> broadcastAddresses;
     // Loop through sending N ESPDUs
     try
     {
@@ -237,16 +237,17 @@ public static void main(String args[])
             // datagram and send it.
             byte[] data = baos.toByteArray();
 
-            bcastAddresses = getBroadcastAddresses();
-            Iterator it = bcastAddresses.iterator();
+            broadcastAddresses = getBroadcastAddresses();
+            Iterator it = broadcastAddresses.iterator();
             while(it.hasNext())
             {
-               InetAddress bcast = (InetAddress)it.next();
-               System.out.println("Sending bcast to " + bcast);
-               DatagramPacket packet = new DatagramPacket(data, data.length, bcast, 3000);
+               InetAddress broadcast = (InetAddress)it.next();
+               System.out.println("Sending broadcast datagram packet to " + broadcast);
+               DatagramPacket packet = new DatagramPacket(data, data.length, broadcast, 3000);
                socket.send(packet);
-               packet = new DatagramPacket(fireArray, fireArray.length, bcast, 3000);
-               //socket.send(packet);
+			   // TODO experiment with these!  8)
+               packet = new DatagramPacket(fireArray, fireArray.length, broadcast, 3000); // alternate
+               socket.send(packet);
             }
             
             // Send every 1 sec. Otherwise this will be all over in a fraction of a second.
@@ -262,7 +263,7 @@ public static void main(String args[])
 
         }
     }
-    catch(Exception e)
+    catch(IOException | InterruptedException e)
     {
         System.out.println(e);
     }
@@ -270,20 +271,20 @@ public static void main(String args[])
 }
 
  /**
-    * A number of sites get all snippy about using 255.255.255.255 for a bcast
+    * A number of sites get all snippy about using 255.255.255.255 for a broadcast
     * address; it trips their security software and they kick you off their 
-    * network. (Comcast, NPS.) This determines the bcast address for all
+    * network. (Comcast, NPS.) This determines the broadcast address for all
     * connected interfaces, based on the IP and subnet mask. If you have
-    * a dual-homed host it will return a bcast address for both. If you have
+    * a dual-homed host it will return a broadcast address for both. If you have
     * some VMs running on your host this will pick up the addresses for those
     * as well--eg running VMWare on your laptop with a local IP this will
     * also pick up a 192.168 address assigned to the VM by the host OS.
     * 
-    * @return set of all bcast addresses
+    * @return set of all broadcast addresses
     */
    public static Set<InetAddress> getBroadcastAddresses()
    {
-       Set<InetAddress> bcastAddresses = new HashSet<InetAddress>();
+       Set<InetAddress> broadcastAddresses = new HashSet<>();
        Enumeration interfaces;
        
        try
@@ -303,22 +304,22 @@ public static void main(String args[])
                        if((anAddress == null || anAddress.getAddress().isLinkLocalAddress()))
                            continue;
                        
-                       //System.out.println("Getting bcast address for " + anAddress);
-                       InetAddress abcast = anAddress.getBroadcast();
-                       if(abcast != null)
-                        bcastAddresses.add(abcast);
+                       //System.out.println("Getting broadcast address for " + anAddress);
+                       InetAddress broadcastAddress = anAddress.getBroadcast();
+                       if(broadcastAddress != null)
+                          broadcastAddresses.add(broadcastAddress);
                    }
                }
            }
            
        }
-       catch(Exception e)
+       catch(SocketException e)
        {
            e.printStackTrace();
            System.out.println(e);
        }
        
-       return bcastAddresses;   
+       return broadcastAddresses;   
    }
 
 }
