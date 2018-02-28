@@ -29,14 +29,15 @@ public class PduSender {
             if (!multicastAddress.isMulticastAddress()) {
                 System.out.println("Not a multicast address: " + multicast);
             }
-        } catch (Exception e) {
-            System.out.println("Unable to open socket");
+        } 
+		catch (UnknownHostException e) {
+            System.out.println("Unable to open socket: " + e);
         }
     }
 
     public void run() {
         try {
-            List<Pdu> generatedPdus = new ArrayList<Pdu>();
+            List<Pdu> generatedPdus = new ArrayList<>();
 
             // Loop through all the enumerated PDU types, create a PDU for each type,
             // and add that PDU to a list.
@@ -148,7 +149,7 @@ public class PduSender {
             //PduContainer container = new PduContainer();
             //container.setPdus(generatedPdus);
             //container.marshallToXml("examplePdus.xml");
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
