@@ -159,7 +159,10 @@ public class PduSender {
             PduSender sender = new PduSender(Integer.parseInt(args[0]), args[1]);
             sender.run();
         } else {
-            System.out.println("Usage: PduSender <port> <multicast group>");
+            System.out.println("Usage:   PduSender <port> <multicast group>");
+            System.out.println("Default: PduSender  " + PORT + "   " + MULTICAST_ADDRESS);
+            PduSender sender = new  PduSender(PORT, MULTICAST_ADDRESS);
+            sender.run();
         }
     }
 }
