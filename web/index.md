@@ -41,19 +41,7 @@ point forward.
 
 Also not implemented are enumerations, the arbitrary numbers that give
 PDU contents semantic meaning. Finite state machines that follow the
-rules of the protocol are also not provided.<br>
-
-The generated DIS source code can be downloaded from sourceforge.net at
-
-http://sourceforge.net/project/showfiles.php?group_id=193363
-
-The project description page is at 
-
-http://open-dis.sourceforge.net
-
-and the main project page is at 
-
-http://sourceforge.net/projects/open-dis
+rules of the protocol are also not provided.
 
 ### Delta3D
 
