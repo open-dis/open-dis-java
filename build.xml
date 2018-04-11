@@ -42,8 +42,6 @@
         <echo message="Be sure to bring in the git submodule for DISDescription with git submodule init; git submodule update"/>
         <property name="xmlSourceFile" value="DISDescription/DIS6.xml"/>
         <property name="xmlpg.generatedSourceDir" value="${src}"/>
-        <property name="xmlpg.useHibernate" value="false"/>
-        <property name="xmlpg.useJaxb" value="false"/>
         <property name="xmlpg.package" value="edu.nps.moves.dis"/>
         <property name="product" value="dis"/>
         <echo message="Generating DIS source code for java desktop"/>
@@ -57,8 +55,6 @@
         <echo message="Generating DIS 7 desktop version"/>
         <property name="xmlSourceFile" value="DISDescription/DIS7.xml"/>
         <property name="javadir" value="${src}"/>
-        <property name="xmlpg.useHibernate" value="false"/>
-        <property name="xmlpg.useJaxb" value="false"/>
         <property name="xmlpg.package" value="edu.nps.moves.dis7"/>
         <property name="product" value="dis7"/>
         <property name="xmlpg.generatedSourceDir" value="${src}"/>
@@ -84,8 +80,6 @@
             <arg value="${xmlSourceFile}"/>
             <arg value="java"/>
             <sysproperty key="xmlpg.generatedSourceDir" value="${src}"/>
-            <sysproperty key="xmlpg.useJaxb" value="${xmlpg.useJaxb}"/>
-            <sysproperty key="xmlpg.useHibernate" value="${xmlpg.useHibernate}"/>
             <sysproperty key="xmlpg.package" value="${xmlpg.package}"/>
         </java>
 
