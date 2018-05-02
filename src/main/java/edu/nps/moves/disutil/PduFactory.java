@@ -426,6 +426,7 @@ public class PduFactory {
             catch(Exception e)
             {
                 System.out.println("Problems decoding multiple PDUs in datagram; decoded as may as possible");
+                break;
             }
         } // end while
 
