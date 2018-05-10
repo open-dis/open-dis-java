@@ -18,6 +18,33 @@ The library also provides supporting classes that read and write PDUs from the n
 
 ### Maven
 
+There are two repositories where Open DIS can be gotten; JitPack and Maven Central. Read below before making a choice.
+
+#### JitPack
+
+[JitPack](https://jitpack.io/) is a terrific service that allows you to choose any snapshot of the library you want and include that as a Maven dependency in your project. The most typical use case is someone who wants the latest and greatest snapshot because it contains a fix they want. Just pick a sha1 from the commit history and place that in the `<version>` field below and JitPack will take care of building and serving the dependency artifact to you.
+
+Add this to your `pom.xml`.
+
+    <repositories>
+	    <repository>
+	        <id>jitpack.io</id>
+	        <url>https://www.jitpack.io</url>
+	    </repository>
+    </repositories>
+
+And then add this to your `<depenencies>` section. 
+
+    <dependency>
+        <groupId>com.github.open-dis</groupId>
+        <artifactId>open-dis-java</artifactId>
+        <version>d3c2b19aed8e80c5e7ef938dc0982f5ad0282ae6</version> <!-- replace with any git sha1 -->
+    </dependency>
+
+#### Maven Central
+
+Official releases published by the Open DIS maintainers can be found on Maven Central. These are less frequent.
+
 Add the following to your `pom.xml`.
 
     <dependency>
@@ -32,7 +59,7 @@ Include the `open-dis-<version-number>.jar` file in your project, along with the
 
 ## Release Notes
 
-### 5.0 release highlights
+### 5.0 release highlights (not yet released)
 
 * Dropped Hibernate and JAXB support (i.e. the annotations were removed from PDU classes), consequently the `dismobile` and `dis7mobile` packages became redundant and  were removed.
 * `PDUFactory` has gained support for more PDU's; `EventPDU`, `SignalPDU`, `TransmitterPDU` and `ReceiverPDU`.
