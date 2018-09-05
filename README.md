@@ -33,7 +33,7 @@ Add this to your `pom.xml`.
 	    </repository>
     </repositories>
 
-And then add this to your `<depenencies>` section. 
+And then add this to your `<dependencies>` section. 
 
     <dependency>
         <groupId>com.github.open-dis</groupId>
