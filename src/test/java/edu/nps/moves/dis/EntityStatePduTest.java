@@ -136,7 +136,6 @@ public class EntityStatePduTest
         // Expected field values were determined from Wireshark: Decode As -> DIS.
         EntityStatePdu espdu = (EntityStatePdu) pdu;
 
-        // Articulation Parameters
         assertEquals(16, espdu.getArticulationParameters().size());
 
         ArticulationParameter ap = espdu.getArticulationParameters().get(0);
@@ -146,6 +145,8 @@ public class EntityStatePduTest
         assertEquals(0, ap.getPartAttachedTo());
         assertEquals(4108, ap.getParameterType());
         assertEquals(2147483648f, ap.getParameterValueFirstSubfield(), 0.0);
+
+        // There are 15 more parameters. Could be checking those, but aren't.
     }
 
     @Test
