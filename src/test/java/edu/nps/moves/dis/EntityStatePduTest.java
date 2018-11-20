@@ -138,15 +138,29 @@ public class EntityStatePduTest
 
         assertEquals(16, espdu.getArticulationParameters().size());
 
-        ArticulationParameter ap = espdu.getArticulationParameters().get(0);
+        // We are only checking 2 out of 16 parameters below, ones I cared about:
+        // Primary Turret Azimuth and Primary Gun Elevation
+        ArticulationParameter ap1 = espdu.getArticulationParameters().get(1);
 
-        assertEquals(0, ap.getParameterTypeDesignator());
-        assertEquals(0, ap.getChangeIndicator());
-        assertEquals(0, ap.getPartAttachedTo());
-        assertEquals(4108, ap.getParameterType());
-        assertEquals(2147483648f, ap.getParameterValueFirstSubfield(), 0.0);
+        assertEquals(0, ap1.getParameterTypeDesignator());
+        assertEquals(0, ap1.getChangeIndicator());
+        assertEquals(0, ap1.getPartAttachedTo()); // 0 means attached directly to entity
+        assertEquals(4107, ap1.getParameterType()); // raw
+        assertEquals(4096, ap1.getArticulatedPartIndex()); // Primary turret #1
+        assertEquals(11, ap1.getParameterTypeMetric()); // 11 is Azimuth
+        assertEquals(128, ap1.getParameterTypeClass()); // 128 is model-specific station ID
+        assertEquals(3217376024f, ap1.getParameterValueFirstSubfield(), 0.0);
 
-        // There are 15 more parameters. Could be checking those, but aren't.
+        ArticulationParameter ap7 = espdu.getArticulationParameters().get(7);
+
+        assertEquals(0, ap7.getParameterTypeDesignator());
+        assertEquals(0, ap7.getChangeIndicator());
+        assertEquals(1, ap7.getPartAttachedTo()); // 1 means attached to parameter 1 (aka Primary turret above)
+        assertEquals(4429, ap7.getParameterType()); // raw
+        assertEquals(4416, ap7.getArticulatedPartIndex()); // Primary gun #1
+        assertEquals(13, ap7.getParameterTypeMetric()); // 13 is Elevation
+        assertEquals(138, ap7.getParameterTypeClass()); // 138 is model-specific station ID
+        assertEquals(1033894888f, ap7.getParameterValueFirstSubfield(), 0.0);
     }
 
     @Test
