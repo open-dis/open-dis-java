@@ -129,6 +129,26 @@ public class EntityStatePduTest
     }
 
     @Test
+    public void unmarshal_articulated_params() throws IOException {
+        PduFactory factory = new PduFactory();
+        Pdu pdu = factory.createPdu(PduFileLoader.load("EntityStatePdu-vbs-articulated-parameters.raw"));
+
+        // Expected field values were determined from Wireshark: Decode As -> DIS.
+        EntityStatePdu espdu = (EntityStatePdu) pdu;
+
+        // Articulation Parameters
+        assertEquals(16, espdu.getArticulationParameters().size());
+
+        ArticulationParameter ap = espdu.getArticulationParameters().get(0);
+
+        assertEquals(0, ap.getParameterTypeDesignator());
+        assertEquals(0, ap.getChangeIndicator());
+        assertEquals(0, ap.getPartAttachedTo());
+        assertEquals(4108, ap.getParameterType());
+        assertEquals(2147483648f, ap.getParameterValueFirstSubfield(), 0.0);
+    }
+
+    @Test
     public void marshal() {
         EntityStatePdu espdu = new EntityStatePdu();
 
