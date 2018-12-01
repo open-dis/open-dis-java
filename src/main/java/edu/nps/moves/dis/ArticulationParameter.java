@@ -83,6 +83,33 @@ public double getParameterValue()
 { return parameterValue; 
 }
 
+// From the spec DIS IEEE Std 1278.1-199
+//
+// A.2.1.8 Parameter Value field
+// The 64-bit Parameter Value field is divided into two 32-bit subfields. The most-significant 32-bit subfield
+// represents a 32-bit floating point number. The interpretation of this subfield depends on the value of type
+// metric as specified in A.2.1.4. The least significant 32-bit subfield shall be zero.
+public float getParameterValueFirstSubfield() {
+    return Double.doubleToLongBits(getParameterValue()) >>> 32;
+}
+
+// From the spec DIS IEEE Std 1278.1-199
+//
+//An articulated parameter type consists of two components (figure A.1). The first component, consisting of
+//the least significant 5 bits of the Parameter Type field, defines the type metric. The type metric determines
+//which of the transformations described in A.2.1.4 are specified by this parameter type. The second component,
+//consisting of the next 27 bits of the Parameter Type field, defines the type class.
+public int getParameterTypeMetric() {
+    return getParameterType() & 0x1f;
+}
+
+public int getParameterTypeClass() {
+    return getParameterType() >>> 5;
+}
+
+public int getArticulatedPartIndex() {
+    return getParameterType() - getParameterTypeMetric();
+}
 
 /**
  * Packs a Pdu into the ByteBuffer.
