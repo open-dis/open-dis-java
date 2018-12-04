@@ -149,7 +149,7 @@ public class EntityStatePduTest
         assertEquals(4096, ap1.getArticulatedPartIndex()); // Primary turret #1
         assertEquals(11, ap1.getParameterTypeMetric()); // 11 is Azimuth
         assertEquals(128, ap1.getParameterTypeClass()); // 128 is model-specific station ID
-        assertEquals(3217376024f, ap1.getParameterValueFirstSubfield(), 0.0);
+        assertEquals(-1.541110, ap1.getParameterValueFirstSubfield(), 0.000001); // Radians
 
         ArticulationParameter ap7 = espdu.getArticulationParameters().get(7);
 
@@ -160,7 +160,7 @@ public class EntityStatePduTest
         assertEquals(4416, ap7.getArticulatedPartIndex()); // Primary gun #1
         assertEquals(13, ap7.getParameterTypeMetric()); // 13 is Elevation
         assertEquals(138, ap7.getParameterTypeClass()); // 138 is model-specific station ID
-        assertEquals(1033894888f, ap7.getParameterValueFirstSubfield(), 0.0);
+        assertEquals(0.078117, ap7.getParameterValueFirstSubfield(), 0.000001); // Radians
     }
 
     @Test

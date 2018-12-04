@@ -90,7 +90,7 @@ public double getParameterValue()
 // represents a 32-bit floating point number. The interpretation of this subfield depends on the value of type
 // metric as specified in A.2.1.4. The least significant 32-bit subfield shall be zero.
 public float getParameterValueFirstSubfield() {
-    return Double.doubleToLongBits(getParameterValue()) >>> 32;
+    return Float.intBitsToFloat((int) (Double.doubleToRawLongBits(getParameterValue()) >>> 32));
 }
 
 // From the spec DIS IEEE Std 1278.1-199
