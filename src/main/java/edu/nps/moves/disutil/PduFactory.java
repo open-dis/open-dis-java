@@ -359,7 +359,9 @@ public class PduFactory {
         }   // end switch
 
         if (aPdu != null) {
+            pos = buff.position();      // Save buffer's position
             aPdu.unmarshal(buff);
+            buff.position(pos);         // Reset buffer
         }
         return aPdu;
     }
