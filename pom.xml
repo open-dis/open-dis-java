@@ -22,7 +22,17 @@
         <developer>
             <id>mcgredo</id>
             <name>Don McGregor</name>
-            <email>mcgredo@nps.edu</email>
+            <email>mcgredo@hotmail.com</email>
+        </developer>
+        <developer>
+            <id>leif81</id>
+            <name>Leif Gruenwoldt</name>
+            <email>leif82@GitHub.com</email>
+        </developer>
+        <developer>
+            <id>brutzman</id>
+            <name>Don Brutzman</name>
+            <email>brutzman@nps.edu</email>
         </developer>
     </developers>
     <parent>
