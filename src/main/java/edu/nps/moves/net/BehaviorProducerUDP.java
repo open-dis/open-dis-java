@@ -70,18 +70,11 @@ public class BehaviorProducerUDP implements BehaviorProducerIF, // Listener patt
     private Vector<BehaviorConsumerIF> behaviorConsumerListeners;
 
     /**
-     * Whether listeners are given unique copies of PDUs, or a single shared
-     * copy.
-     */
-    private boolean useCopies = true;
-
-    /**
      * Socket (multicast or unicast) that sends and receives data
      */
     private final DatagramSocket socket;
     private DatagramPacket packet;
     private Pdu pdu;
-    private Pdu copyPdu;
     private PduFactory pduf;
     
     /** An allocated receive only buffer */
@@ -140,10 +133,6 @@ public class BehaviorProducerUDP implements BehaviorProducerIF, // Listener patt
         }
     }
 
-    public void setUseCopies(boolean shouldCreateCopy) {
-        useCopies = shouldCreateCopy;
-    }
-
     /** Entry point for thread */
     public void run() {        
         
@@ -157,15 +146,7 @@ public class BehaviorProducerUDP implements BehaviorProducerIF, // Listener patt
                     pdu = pduf.createPdu(buffer);
                     if (pdu != null) {
                         for (BehaviorConsumerIF consumer : behaviorConsumerListeners) {
-
-                            // Use a copy of the received PDU for more safety, or send a single
-                            // copy of the object to multiple listeners for better performance.
-                            if (useCopies) {
-                                copyPdu = pduf.createPdu(buffer);
-                                consumer.receivePdu(copyPdu);
-                            } else {
-                                consumer.receivePdu(pdu);
-                            }
+                            consumer.receivePdu(pdu);
                         }
                     }
                 }

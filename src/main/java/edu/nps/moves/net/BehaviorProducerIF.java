@@ -62,22 +62,5 @@ package edu.nps.moves.net;
     * @param consumer to be removed from the notification list
     */
    void removeListener(BehaviorConsumerIF consumer);
-   
-   /**
-    * This is a performance option. When a PDU arrives we want to distribute
-    * it to all listeners. If we use a single copy of the object distributed
-    * to all listeners this may cause problems if one listener modifies the
-    * object and undermines the expectations of another listener. to avoid this
-    * we can create a new copy of the PDU and hand off a new, unique copy of
-    * the object to each listener. But this may cause some performance problems,
-    * since it takes a while to allocate a new object.<p>
-    *
-    * The default behavior should be to distribute a new, unqiue copy to each
-    * listener. this allows the user to override this behavior for better
-    * performance.
-    *
-    * @param shouldCreateCopy true to create a new copy for each listener, false for a shared copy for each listener
-    */
-    void setUseCopies(boolean shouldCreateCopy);
-    
+
  }
