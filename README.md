@@ -18,7 +18,7 @@ The library also provides supporting classes that read and write PDUs from the n
 
 ### Maven
 
-There are two repositories where Open DIS can be gotten; JitPack and Maven Central. Read below before making a choice.
+There are two repositories where Open DIS can be found; JitPack and Maven Central. Read below before making a choice.
 
 #### JitPack
 
