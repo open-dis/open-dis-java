@@ -87,7 +87,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>edu.nps.moves.open-dis</Automatic-Module-Name>
+                            <Automatic-Module-Name>edu.nps.moves.dis</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
