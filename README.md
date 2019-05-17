@@ -14,6 +14,12 @@ Many of the classes were automatically generated via [XMLPG](http://github.com/o
 
 The library also provides supporting classes that read and write PDUs from the network, log PDUs to a file, and more.
 
+## Documentation
+
+Javadocs for the current and previous artifact versions can be found on [javadoc.io](https://www.javadoc.io/doc/edu.nps.moves/open-dis/).
+
+To generate javadocs yourself run `mvn javadoc:javadoc`.
+
 ## Using the Java Library
 
 ### Maven
