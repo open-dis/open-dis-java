@@ -17,8 +17,9 @@ The library also provides supporting classes that read and write PDUs from the n
 ## Documentation
 
 Javadocs for the current and previous artifact versions can be found on [javadoc.io](https://www.javadoc.io/doc/edu.nps.moves/open-dis/).
+Or to generate javadocs yourself run `mvn javadoc:javadoc`.
 
-To generate javadocs yourself run `mvn javadoc:javadoc`.
+Example code can be found in the [repository](src/main/java/edu/nps/moves/examples/).
 
 ## Using the Java Library
 
