@@ -1,10 +1,7 @@
 <?xml version="1.0"  encoding="UTF-8"?>
 
-<!-- to upload to the sourceforge project web site, "sftp myUserName,open-dis@web.sourceforge.net",
-     ie your sourceforge login name, a comma, and the group name. To transfer files you can do 
-     something like scp -r aLocalDirectory myUserName,open-dis@web.sourceforge.net:/home/groups/o/op/open-dis/htdocs
-     though the location of the directory on the sourceforge side may change over time.
--->
+<!-- This is NOT used to build the open-dis-java project. The Maven pom.xml is used for that. 
+     This file was for auto-generating some of the code. You should not need to run this. -->
 
 <project name="open-dis codebase" basedir=".">
     <property name="src" location="src/main/java"/>
@@ -24,9 +21,8 @@
       <antcall target="generateJavaDis7SourceCode"/>
     </target>    
 
-    <!-- Generate the desktop Java code. This relies on the jar file xmlpg.jar, from 
-         a separate project in the trunk that is included in the lib directory of this project. You
-         must run patch after this to apply known manual fixes to the source code generated.
+    <!-- Generate the desktop Java code. This relies on the jar file xmlpg.jar, from a separate project.
+          You must run patch after this to apply known manual fixes to the source code generated.
      
          Some source code generation properties are set in the XML file, such as the directory location.
          These may be overridden by command line options that set java system properties via
