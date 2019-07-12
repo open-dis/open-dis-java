@@ -10,7 +10,7 @@ This repository contains a Java implementation of the Distributed Interactive Si
 
 The library consists of classes that represent Protocol Data Units (PDUs).
 These classes have fields, getters, and setters, and are able to marshal and unmarshal themselves to and from the DIS binary format.
-Many of the classes were automatically generated via [XMLPG](http://github.com/open-dis/xmlpg). More on that below.
+Many of the classes were initially generated with [XMLPG](http://github.com/open-dis/xmlpg).
 
 The library also provides supporting classes that read and write PDUs from the network, log PDUs to a file, and more.
 
@@ -105,16 +105,6 @@ All code is BSD license. See `License.txt`.
 
 This section is useful for developers who may be contributing to the library.
 This contains info about "how the hotdog is made".
-
-### XML Description File
-
-The `DISXXXX.xml` files are an abstract description of the protocol.
-These are processed by XMLPG to generate the Java protocol code in `edu.nps.moves.dis`.
-
-To generate the Java code from scratch, type `ant generateJavaDisSourceCode`.
-
-The idea is to use the XMLPG tool to get the final product "close", and then manually modify the source code to tweak the last bit.
-To this end there is a "patches" directory, which uses the Unix `patch` utility to modify the generated code via patch files.
 
 ### Software release process
 
