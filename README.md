@@ -29,40 +29,48 @@ There are two repositories where Open DIS can be found; JitPack and Maven Centra
 
 #### JitPack
 
-[JitPack](https://jitpack.io/) is a terrific service that allows you to choose any snapshot of the library you want and include that as a Maven dependency in your project. The most typical use case is someone who wants the latest and greatest snapshot because it contains a fix they want. Just pick a sha1 from the commit history and place that in the `<version>` field below and JitPack will take care of building and serving the dependency artifact to you.
+[JitPack](https://jitpack.io/) is a terrific service that enables you to include any development snapshot of the Open DIS java library as a Maven dependency in your project. A common use case is someone who wants to try the latest code because it contains a fix that was recently merged in. To use this service do the following: 
 
-Add this to your `pom.xml`.
+1. Add the jitpack repository to your project `pom.xml`.
 
-    <repositories>
-	    <repository>
-	        <id>jitpack.io</id>
-	        <url>https://www.jitpack.io</url>
-	    </repository>
-    </repositories>
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://www.jitpack.io</url>
+    </repository>
+</repositories>
+```
 
-And then add this to your `<dependencies>` section. 
+2. And this to your `<dependencies>` section, replacing the `<version>` value with any SHA1 from this library you wish.
 
-    <dependency>
-        <groupId>com.github.open-dis</groupId>
-        <artifactId>open-dis-java</artifactId>
-        <version>d3c2b19aed8e80c5e7ef938dc0982f5ad0282ae6</version> <!-- replace with any git sha1 -->
-    </dependency>
+```xml
+<dependency>
+    <groupId>com.github.open-dis</groupId>
+    <artifactId>open-dis-java</artifactId>
+    <version>d3c2b19aed8e80c5e7ef938dc0982f5ad0282ae6</version> <!-- replace with any git SHA1 -->
+</dependency>
+```
+
+Note: When you use the JitPack service for the first time it is common your project build will time out and then fail. This is because your request likely has triggered a new build that no one else has and the JitPack servers are busy doing that for you. If this happens, retry you project build 5-10 minutes later and it should succeed this time. Future builds of your project will be much faster because the library artifact will have been cached on jitpack servers and be stored locally on your disk.
 
 #### Maven Central
 
-Official releases published by the Open DIS maintainers can be found on Maven Central. These are less frequent.
+Official releases published by the Open DIS maintainers can be found on Maven Central. These are less frequent, but can be more stable because they are conciously released.
 
 Add the following to your `pom.xml`.
 
-    <dependency>
-        <groupId>edu.nps.moves</groupId>
-        <artifactId>open-dis</artifactId>
-        <version>4.08</version>
-    </dependency>
+```xml
+<dependency>
+    <groupId>edu.nps.moves</groupId>
+    <artifactId>open-dis</artifactId>
+    <version>4.08</version>
+</dependency>
+```
 
 ### Ant
 
-Include the `open-dis-<version-number>.jar` file in your project, along with the supporting jar files in the `lib` directory.
+Include the `open-dis-<version-number>.jar` file in your project, found on the [releases](https://github.com/open-dis/open-dis-java/releases) page of this GitHub project.
 
 ## Release Notes
 
@@ -99,7 +107,7 @@ Include the `open-dis-<version-number>.jar` file in your project, along with the
 
 ## License
 
-All code is BSD license. See `License.txt`.
+All code is BSD license. See `LICENSE.md`.
 
 ## For Contributors
 
