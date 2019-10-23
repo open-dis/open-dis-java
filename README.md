@@ -89,19 +89,11 @@ Include the `open-dis-<version-number>.jar` file in your project, found on the [
 
 ### 3.x release highlights
 
-* CSharp implementation from Peter Smith. He wrote a new xmlpg class to generate CSharp code.
-
-* Automated patch application. The Unix patch utility is used to modify the auotmatically generated code. See the patch directory in the open-dis directory. Patches are applied via the ant task "patch". Windows users; need to install cygwin utilities to be able to use patch, and make some minor changes to the ant build.xml file.
-
 * Robert Harder has reworked the Java marshal and unmarshal code to use much more memory efficient NIO classes, which dramatically reduce the amount of temporary object memory generated.
 
 * Sheldon Snyder has contributed dead reckoning algorithms in Java, available in the `edu.nps.moves.deadreckoning` package.
 
-* Tariq Rashid has contributed an xplane gateway, which reads xplane flight simulator UDP packets and converts them to DIS. He's also implemented a KML gateway, which allows low-resolution updates to markers on Google Earth. This code is a bit rough right now--it needs to be cleaned up. There's no guarantee it works. This is available in the xplane directory of open-dis.
-
-* xmlpg, which generates the source code, is now included in the open-dis lib directory. This allows code to be generated completly withing the open-dis directory, rather than trying to do cross-directory builds. See the `generateDisSourceCode` ant target.
-
-* Enumerations. The SISO EBV XML document was used to generate Java enumeration classes. This can be extended as the EBV XML document is completed. A C++ enumerations project would be a useful project for some developer. The enumerations are used in several places in the open-dis code, notably the PduFactory.
+* Enumerations. The SISO EBV XML document was used to generate Java enumeration classes. This can be extended as the EBV XML document is completed. The enumerations are used in several places in the open-dis code, notably the PduFactory.
 
 * Unit tests. The Java code has added some JUnit 4.4 unit tests, primarily to test that post-processing source code patches have been applied correctly. These can be extended to provide more complete test coverage.
 
