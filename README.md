@@ -72,31 +72,6 @@ Add the following to your `pom.xml`.
 
 Include the `open-dis-<version-number>.jar` file in your project, found on the [releases](https://github.com/open-dis/open-dis-java/releases) page of this GitHub project.
 
-## Release Notes
-
-### 5.0 release highlights (not yet released)
-
-* Dropped Hibernate and JAXB support (i.e. the annotations were removed from PDU classes), consequently the `dismobile` and `dis7mobile` packages became redundant and  were removed.
-* `PDUFactory` has gained support for more PDU's; `EventPDU`, `SignalPDU`, `TransmitterPDU` and `ReceiverPDU`.
-* Added more JUnit tests.
-* Migrated to GitHub and extracted Java library into own repository.
-
-### 4.x release highlights
-
-* SQL support.
-* Modified & rationalized repository layout.
-* Added mobile support in addition to desktop support.
-
-### 3.x release highlights
-
-* Robert Harder has reworked the Java marshal and unmarshal code to use much more memory efficient NIO classes, which dramatically reduce the amount of temporary object memory generated.
-
-* Sheldon Snyder has contributed dead reckoning algorithms in Java, available in the `edu.nps.moves.deadreckoning` package.
-
-* Enumerations. The SISO EBV XML document was used to generate Java enumeration classes. This can be extended as the EBV XML document is completed. The enumerations are used in several places in the open-dis code, notably the PduFactory.
-
-* Unit tests. The Java code has added some JUnit 4.4 unit tests, primarily to test that post-processing source code patches have been applied correctly. These can be extended to provide more complete test coverage.
-
 ## License
 
 All code is BSD license. See `LICENSE.md`.
