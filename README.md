@@ -76,10 +76,9 @@ Include the `open-dis-<version-number>.jar` file in your project, found on the [
 
 All code is BSD license. See `LICENSE.md`.
 
-## For Contributors
+## For Maintainers
 
-This section is useful for developers who may be contributing to the library.
-This contains info about "how the hotdog is made".
+This section is useful for maintainers of the library only.
 
 ### Software release process
 
