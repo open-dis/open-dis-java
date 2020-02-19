@@ -84,275 +84,279 @@ public class PduFactory {
         final int pduType = Pdu.toUnsignedInt(buff.get());    // Read Pdu type
         buff.position(pos);                 // Reset buffer
 
-        // Do a lookup to get the enumeration instance that corresponds to this value.
-        PduType pduTypeEnum = PduType.lookup[pduType];
         Pdu aPdu = null;
-
-        switch (pduTypeEnum) {
-        // NOTE: OTHER is a valid pduTypeEnum, but has no corresponding object
-
-        case ENTITY_STATE:
-            // if the user has created the factory requesting that he get fast espdus back, give him those.
-            if (useFastPdu) {
-                aPdu = new FastEntityStatePdu();
-            } else {
-                aPdu = new EntityStatePdu();
-            }
-            break;
-
-        case FIRE:
-            aPdu = new FirePdu();
-            break;
-
-        case DETONATION:
-            aPdu = new DetonationPdu();
-            break;
-
-        case COLLISION:
-            aPdu = new CollisionPdu();
-            break;
-
-        case SERVICE_REQUEST:
-            aPdu = new ServiceRequestPdu();
-            break;
-
-        case RESUPPLY_OFFER:
-            aPdu = new ResupplyOfferPdu();
-            break;
-
-        case RESUPPLY_RECEIVED:
-            aPdu = new ResupplyReceivedPdu();
-            break;
-
-        case RESUPPLY_CANCEL:
-            aPdu = new ResupplyCancelPdu();
-            break;
-
-        case REPAIR_COMPLETE:
-            aPdu = new RepairCompletePdu();
-            break;
-
-        case REPAIR_RESPONSE:
-            aPdu = new RepairResponsePdu();
-            break;
-
-        case CREATE_ENTITY:
-            aPdu = new CreateEntityPdu();
-            break;
-
-        case REMOVE_ENTITY:
-            aPdu = new RemoveEntityPdu();
-            break;
-
-        case START_RESUME:
-            aPdu = new StartResumePdu();
-            break;
-
-        case STOP_FREEZE:
-            aPdu = new StopFreezePdu();
-            break;
-
-        case ACKNOWLEDGE:
-            aPdu = new AcknowledgePdu();
-            break;
-
-        case ACTION_REQUEST:
-            aPdu = new ActionRequestPdu();
-            break;
-
-        case ACTION_RESPONSE:
-            aPdu = new ActionResponsePdu();
-            break;
-
-        case DATA_QUERY:
-            aPdu = new DataQueryPdu();
-            break;
-
-        case SET_DATA:
-            aPdu = new SetDataPdu();
-            break;
-
-        case DATA:
-            aPdu = new DataPdu();
-            break;
-
-        case EVENT_REPORT:
-            aPdu = new EventReportPdu();
-            break;
-
-        case COMMENT:
-            aPdu = new CommentPdu();
-            break;
-
-        case ELECTROMAGNETIC_EMISSION:
-            aPdu = new ElectronicEmissionsPdu();
-            break;
-
-        case DESIGNATOR:
-            aPdu = new DesignatorPdu();
-            break;
-
-        case TRANSMITTER:
-            aPdu = new TransmitterPdu();
-            break;
-
-        case SIGNAL:
-            aPdu = new SignalPdu();
-            break;
-
-        case RECEIVER:
-            aPdu = new ReceiverPdu();
-            break;
-
-        // FIXME: IFF_ATC_NAVAIDS (28)
-            
-        case UNDERWATER_ACOUSTIC:
-            aPdu = new UaPdu();
-            break;
-            
-        case SUPPLEMENTAL_EMISSION_ENTITY_STATE:
-            aPdu = new SeesPdu();
-            break;
-
-        case INTERCOM_SIGNAL:
-            aPdu = new IntercomSignalPdu();
-            break;
-
-        case INTERCOM_CONTROL:
-            aPdu = new IntercomControlPdu();
-            break;
-
-        case AGGREGATE_STATE:
-            aPdu = new AggregateStatePdu();
-            break;
-
-        case ISGROUPOF:
-            aPdu = new IsGroupOfPdu();
-            break;
-
-        case TRANSFER_CONTROL:
-            aPdu = new TransferControlRequestPdu();
-            break;
-
-        case ISPARTOF:
-            aPdu = new IsPartOfPdu();
-            break;
-
-        case MINEFIELD_STATE:
-            aPdu = new MinefieldStatePdu();
-            break;
-
-        case MINEFIELD_QUERY:
-            aPdu = new MinefieldQueryPdu();
-            break;
-
-        case MINEFIELD_DATA:
-            aPdu = new MinefieldDataPdu();
-            break;
-
-        case MINEFIELD_RESPONSE_NAK:
-            aPdu = new MinefieldResponseNackPdu();
-            break;
-
-        case ENVIRONMENTAL_PROCESS:
-            aPdu = new EnvironmentalProcessPdu();
-            break;
-
-        case GRIDDED_DATA:
-            aPdu = new GriddedDataPdu();
-            break;
-
-        case POINT_OBJECT_STATE:
-            aPdu = new PointObjectStatePdu();
-            break;
-
-        case LINEAR_OBJECT_STATE:
-            aPdu = new LinearObjectStatePdu();
-            break;
-
-        case AREAL_OBJECT_STATE:
-            aPdu = new ArealObjectStatePdu();
-            break;
-
-            // FIXME: case TSPI: (46)
-            // FIXME: case APPEARANCE: (47)
-            // FIXME: case ARTICULATED_PARTS: (48)
-            // FIXME: case LE_FIRE: (49)
-            // FIXME: case LE_DETONATION: (50)
-
-        case CREATE_ENTITY_R:
-            aPdu = new CreateEntityReliablePdu();
-            break;
-
-        case REMOVE_ENTITY_R:
-            aPdu = new RemoveEntityReliablePdu();
-            break;
-
-        case START_RESUME_R:
-            aPdu = new StartResumeReliablePdu();
-            break;
-
-        case STOP_FREEZE_R:
-            aPdu = new StopFreezeReliablePdu();
-            break;
-
-        case ACKNOWLEDGE_R:
-            aPdu = new AcknowledgeReliablePdu();
-            break;
-
-        case ACTION_REQUEST_R:
-            aPdu = new ActionRequestReliablePdu();
-            break;
-
-        case ACTION_RESPONSE_R:
-            aPdu = new ActionResponseReliablePdu();
-            break;
-
-        case DATA_QUERY_R:
-            aPdu = new DataQueryReliablePdu();
-            break;
-
-        case SET_DATA_R:
-            aPdu = new SetDataReliablePdu();
-            break;
-
-        case DATA_R:
-            aPdu = new DataReliablePdu();
-            break;
-
-        case EVENT_REPORT_R:
-            aPdu = new EventReportReliablePdu();
-            break;
-
-        case COMMENT_R:
-            aPdu = new CommentReliablePdu();
-            break;
-
-            // FIXME: case RECORD_R: (63)
-
-        case SET_RECORD_R:
-            aPdu = new SetRecordReliablePdu();
-            break;
-
-        case RECORD_QUERY_R:
-            aPdu = new RecordQueryReliablePdu();
-            break;
-
-        case COLLISION_ELASTIC:
-            aPdu = new CollisionElasticPdu();
-            break;
-
-        case ENTITY_STATE_UPDATE:
-            aPdu = new EntityStateUpdatePdu();
-            break;
-
-        default:
-            logger.log(Level.INFO, "PDU not implemented. Type = " + pduType + "\n");
-            if (pduTypeEnum != null) {
-                logger.log(Level.INFO, "  PDU  name is: " + pduTypeEnum.getDescription());
-            }
-
-        }   // end switch
+        
+        if (pduType < 129) {
+            // Normal pdu type code range is 0..128 inclusive.
+            final PduType pduTypeEnum = PduType.lookup[pduType];
+ 
+            switch (pduTypeEnum) {
+                // NOTE: OTHER is a valid pduTypeEnum, but has no corresponding object
+
+                case ENTITY_STATE:
+                    // if the user has created the factory requesting that he get fast espdus back, give him those.
+                    if (useFastPdu) {
+                        aPdu = new FastEntityStatePdu();
+                    } else {
+                        aPdu = new EntityStatePdu();
+                    }
+                    break;
+
+                case FIRE:
+                    aPdu = new FirePdu();
+                    break;
+
+                case DETONATION:
+                    aPdu = new DetonationPdu();
+                    break;
+
+                case COLLISION:
+                    aPdu = new CollisionPdu();
+                    break;
+
+                case SERVICE_REQUEST:
+                    aPdu = new ServiceRequestPdu();
+                    break;
+
+                case RESUPPLY_OFFER:
+                    aPdu = new ResupplyOfferPdu();
+                    break;
+
+                case RESUPPLY_RECEIVED:
+                    aPdu = new ResupplyReceivedPdu();
+                    break;
+
+                case RESUPPLY_CANCEL:
+                    aPdu = new ResupplyCancelPdu();
+                    break;
+
+                case REPAIR_COMPLETE:
+                    aPdu = new RepairCompletePdu();
+                    break;
+
+                case REPAIR_RESPONSE:
+                    aPdu = new RepairResponsePdu();
+                    break;
+
+                case CREATE_ENTITY:
+                    aPdu = new CreateEntityPdu();
+                    break;
+
+                case REMOVE_ENTITY:
+                    aPdu = new RemoveEntityPdu();
+                    break;
+
+                case START_RESUME:
+                    aPdu = new StartResumePdu();
+                    break;
+
+                case STOP_FREEZE:
+                    aPdu = new StopFreezePdu();
+                    break;
+
+                case ACKNOWLEDGE:
+                    aPdu = new AcknowledgePdu();
+                    break;
+
+                case ACTION_REQUEST:
+                    aPdu = new ActionRequestPdu();
+                    break;
+
+                case ACTION_RESPONSE:
+                    aPdu = new ActionResponsePdu();
+                    break;
+
+                case DATA_QUERY:
+                    aPdu = new DataQueryPdu();
+                    break;
+
+                case SET_DATA:
+                    aPdu = new SetDataPdu();
+                    break;
+
+                case DATA:
+                    aPdu = new DataPdu();
+                    break;
+
+                case EVENT_REPORT:
+                    aPdu = new EventReportPdu();
+                    break;
+
+                case COMMENT:
+                    aPdu = new CommentPdu();
+                    break;
+
+                case ELECTROMAGNETIC_EMISSION:
+                    aPdu = new ElectronicEmissionsPdu();
+                    break;
+
+                case DESIGNATOR:
+                    aPdu = new DesignatorPdu();
+                    break;
+
+                case TRANSMITTER:
+                    aPdu = new TransmitterPdu();
+                    break;
+
+                case SIGNAL:
+                    aPdu = new SignalPdu();
+                    break;
+
+                case RECEIVER:
+                    aPdu = new ReceiverPdu();
+                    break;
+
+                // FIXME: IFF_ATC_NAVAIDS (28)
+                case UNDERWATER_ACOUSTIC:
+                    aPdu = new UaPdu();
+                    break;
+
+                case SUPPLEMENTAL_EMISSION_ENTITY_STATE:
+                    aPdu = new SeesPdu();
+                    break;
+
+                case INTERCOM_SIGNAL:
+                    aPdu = new IntercomSignalPdu();
+                    break;
+
+                case INTERCOM_CONTROL:
+                    aPdu = new IntercomControlPdu();
+                    break;
+
+                case AGGREGATE_STATE:
+                    aPdu = new AggregateStatePdu();
+                    break;
+
+                case ISGROUPOF:
+                    aPdu = new IsGroupOfPdu();
+                    break;
+
+                case TRANSFER_CONTROL:
+                    aPdu = new TransferControlRequestPdu();
+                    break;
+
+                case ISPARTOF:
+                    aPdu = new IsPartOfPdu();
+                    break;
+
+                case MINEFIELD_STATE:
+                    aPdu = new MinefieldStatePdu();
+                    break;
+
+                case MINEFIELD_QUERY:
+                    aPdu = new MinefieldQueryPdu();
+                    break;
+
+                case MINEFIELD_DATA:
+                    aPdu = new MinefieldDataPdu();
+                    break;
+
+                case MINEFIELD_RESPONSE_NAK:
+                    aPdu = new MinefieldResponseNackPdu();
+                    break;
+
+                case ENVIRONMENTAL_PROCESS:
+                    aPdu = new EnvironmentalProcessPdu();
+                    break;
+
+                case GRIDDED_DATA:
+                    aPdu = new GriddedDataPdu();
+                    break;
+
+                case POINT_OBJECT_STATE:
+                    aPdu = new PointObjectStatePdu();
+                    break;
+
+                case LINEAR_OBJECT_STATE:
+                    aPdu = new LinearObjectStatePdu();
+                    break;
+
+                case AREAL_OBJECT_STATE:
+                    aPdu = new ArealObjectStatePdu();
+                    break;
+
+                // FIXME: case TSPI: (46)
+                // FIXME: case APPEARANCE: (47)
+                // FIXME: case ARTICULATED_PARTS: (48)
+                // FIXME: case LE_FIRE: (49)
+                // FIXME: case LE_DETONATION: (50)
+                case CREATE_ENTITY_R:
+                    aPdu = new CreateEntityReliablePdu();
+                    break;
+
+                case REMOVE_ENTITY_R:
+                    aPdu = new RemoveEntityReliablePdu();
+                    break;
+
+                case START_RESUME_R:
+                    aPdu = new StartResumeReliablePdu();
+                    break;
+
+                case STOP_FREEZE_R:
+                    aPdu = new StopFreezeReliablePdu();
+                    break;
+
+                case ACKNOWLEDGE_R:
+                    aPdu = new AcknowledgeReliablePdu();
+                    break;
+
+                case ACTION_REQUEST_R:
+                    aPdu = new ActionRequestReliablePdu();
+                    break;
+
+                case ACTION_RESPONSE_R:
+                    aPdu = new ActionResponseReliablePdu();
+                    break;
+
+                case DATA_QUERY_R:
+                    aPdu = new DataQueryReliablePdu();
+                    break;
+
+                case SET_DATA_R:
+                    aPdu = new SetDataReliablePdu();
+                    break;
+
+                case DATA_R:
+                    aPdu = new DataReliablePdu();
+                    break;
+
+                case EVENT_REPORT_R:
+                    aPdu = new EventReportReliablePdu();
+                    break;
+
+                case COMMENT_R:
+                    aPdu = new CommentReliablePdu();
+                    break;
+
+                // FIXME: case RECORD_R: (63)
+                case SET_RECORD_R:
+                    aPdu = new SetRecordReliablePdu();
+                    break;
+
+                case RECORD_QUERY_R:
+                    aPdu = new RecordQueryReliablePdu();
+                    break;
+
+                case COLLISION_ELASTIC:
+                    aPdu = new CollisionElasticPdu();
+                    break;
+
+                case ENTITY_STATE_UPDATE:
+                    aPdu = new EntityStateUpdatePdu();
+                    break;
+
+                default:
+                    logger.log(Level.INFO, "PDU not implemented. Type = " + pduType + "\n");
+                    if (pduTypeEnum != null) {
+                        logger.log(Level.INFO, "  PDU  name is: " + pduTypeEnum.getDescription());
+                    }
+
+            }   // end switch
+        } else {
+            // Received an experimental pdu type. Type 129..255.
+            logger.log(Level.INFO, "Received experimental PDU Type " + pduType + ". Not supported.");
+            aPdu = new ExperimentalPdu();
+        }
 
         if (aPdu != null) {
             pos = buff.position();      // Save buffer's position

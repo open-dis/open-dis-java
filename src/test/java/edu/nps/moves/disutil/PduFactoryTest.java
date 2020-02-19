@@ -44,6 +44,8 @@ import edu.nps.moves.dis.MinefieldDataPdu;
 import edu.nps.moves.dis.MinefieldQueryPdu;
 import edu.nps.moves.dis.MinefieldResponseNackPdu;
 import edu.nps.moves.dis.MinefieldStatePdu;
+import edu.nps.moves.dis.Pdu;
+import edu.nps.moves.dis.PduFileLoader;
 import edu.nps.moves.dis.PointObjectStatePdu;
 import edu.nps.moves.dis.ReceiverPdu;
 import edu.nps.moves.dis.RecordQueryReliablePdu;
@@ -66,6 +68,7 @@ import edu.nps.moves.dis.StopFreezePdu;
 import edu.nps.moves.dis.StopFreezeReliablePdu;
 import edu.nps.moves.dis.TransferControlRequestPdu;
 import edu.nps.moves.dis.TransmitterPdu;
+import java.io.IOException;
 
 public class PduFactoryTest {
 
@@ -168,4 +171,15 @@ public class PduFactoryTest {
         assertTrue(pduFactory.createPdu(new FastEntityStatePdu().marshal()) instanceof FastEntityStatePdu);
     }
     
+    @Test
+    public void testUnsupportedPduType() throws IOException {
+        PduFactory factory = new PduFactory();
+        Pdu p = factory.createPdu(PduFileLoader.load("OrgStateV2Pdu-Type137-JCATS.bin")); // // Pdu type 137 sent by JCATS 14.  
+        assertEquals(p.getPduType(), 137); // Org State V2
+        assertEquals(p.getProtocolFamily(), 130); // Experimental family.
+        assertEquals(p.getProtocolVersion(), 6);
+        assertEquals(p.getPduLength(), 280);
+        ExperimentalPdu e = (ExperimentalPdu)p;
+        assertEquals(e.getBody().length, 268);
+    }
 }
