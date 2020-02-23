@@ -108,6 +108,39 @@
                     <goals>deploy</goals>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.10</version>
+                <configuration>
+                    <programs>
+                        <program>
+                            <mainClass>edu.nps.moves.logger.DisLogger</mainClass>
+                            <id>DisLogger</id>
+                            <!-- Run this as: ConcatenatedDisPdus.bat <properties file> -->
+                        </program>
+                        <program>
+                            <mainClass>edu.nps.moves.examples.EspduReceiver</mainClass>
+                            <id>EspduReceiver</id>
+                        </program>
+                        <program>
+                            <mainClass>edu.nps.moves.examples.EspduSender</mainClass>
+                            <id>EspduSender</id>
+                            <!-- Run this as: EspduSender.bat -DnetworkMode=broadcast -DdestinationIp=255.255.255.255 -Dport=3001 -->
+                        </program>
+                        <program>
+                            <mainClass>edu.nps.moves.examples.PduSender</mainClass>
+                            <id>PduSender</id>
+                            <!-- Run this as: PduSender.bat <port> <multicast address> -->
+                        </program>
+                        <program>
+                            <mainClass>edu.nps.moves.disutil.ConcatenatedDisPdus</mainClass>
+                            <id>ConcatenatedDisPdus</id>
+                            <!-- Run this as: ConcatenatedDisPdus.bat <dispackets binary file> -->
+                        </program>
+                    </programs>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <profiles>
