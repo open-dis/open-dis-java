@@ -70,7 +70,7 @@ Add the following to your `pom.xml`.
 
 ### Ant
 
-Include the `open-dis-<version-number>.jar` file in your project, found on the [releases](https://github.com/open-dis/open-dis-java/releases) page of this GitHub project.
+Include the `open-dis` `jar` in your project and all it's dependencies (i.e. `dis-enums`, `srm`, `commons-math3`). The exact versions of these jars can easily be identified by viewing the open-dis relase `pom.xml` on [Maven Central](https://maven-badges.herokuapp.com/maven-central/edu.nps.moves/open-dis) and then downloading these jars manually from Maven Central.
 
 ## License
 
