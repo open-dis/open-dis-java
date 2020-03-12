@@ -33,9 +33,6 @@ public class Pdu extends Object implements Serializable
    /** Timestamp value */
    protected long  timestamp;
 
-   /** Length, in bytes, of the PDU. Changed name from length to avoid use of Hibernate QL reserved word */
-   protected int  pduLength;
-
    /** zero-filled array of padding */
    protected short  padding = (short)0;
 
@@ -116,12 +113,16 @@ public long getTimestamp()
 { return timestamp; 
 }
 
+/** @deprecated PDU length is determined by the PDU type and content and cannot be set directly */
+@Deprecated
 public void setPduLength(int pPduLength)
-{ pduLength = pPduLength;
+{
 }
 
+/** @deprecated Use {@link #getMarshalledSize()} */
+@Deprecated
 public int getPduLength()
-{ return pduLength; 
+{ return getMarshalledSize(); 
 }
 
 public void setPadding(short pPadding)
@@ -182,7 +183,7 @@ public void unmarshal(DataInputStream dis)
         byte[] header = new byte[12];
         dis.mark(header.length);
         dis.read(header, 0, header.length);
-        pduLength = (int) ByteBuffer.wrap(header).getShort(8);
+        int pduLength = ByteBuffer.wrap(header).getShort(8);
         dis.reset();
         
         // Now allocate enough space for full pdu
@@ -228,7 +229,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
        pduType = (short)(toUnsignedInt(buff.get()));
        protocolFamily = (short)(toUnsignedInt(buff.get()));
        timestamp = buff.getInt();
-       pduLength = toUnsignedInt(buff.getShort());
+       int pduLength = toUnsignedInt(buff.getShort());
        padding = buff.getShort();
  } // end of unmarshal method 
 
@@ -369,7 +370,7 @@ public byte[] marshal()
      if( ! (pduType == rhs.pduType)) ivarsEqual = false;
      if( ! (protocolFamily == rhs.protocolFamily)) ivarsEqual = false;
      if( ! (timestamp == rhs.timestamp)) ivarsEqual = false;
-     if( ! (pduLength == rhs.pduLength)) ivarsEqual = false;
+     if( ! (getMarshalledSize() == rhs.getMarshalledSize())) ivarsEqual = false;
      if( ! (padding == rhs.padding)) ivarsEqual = false;
 
     return ivarsEqual;
