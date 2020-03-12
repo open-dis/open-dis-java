@@ -47,6 +47,11 @@ public class ExperimentalPdu extends Pdu {
     }
 
     @Override
+	public int getMarshalledSize() {
+		return super.getMarshalledSize() + body.length;
+	}
+
+	@Override
     public void marshal(java.nio.ByteBuffer buff) {
         super.marshal(buff);
 
