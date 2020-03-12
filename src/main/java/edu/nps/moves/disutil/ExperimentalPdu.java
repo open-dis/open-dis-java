@@ -49,7 +49,7 @@ public class ExperimentalPdu extends Pdu {
     @Override
 	public void setPduLength(int pPduLength) {
 		super.setPduLength(pPduLength);
-		body = new byte[pPduLength = super.getMarshalledSize()];
+		body = new byte[pPduLength - super.getMarshalledSize()];
 	}
 
 	@Override
