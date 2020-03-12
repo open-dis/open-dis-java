@@ -184,6 +184,7 @@ public void unmarshal(DataInputStream dis)
         dis.mark(header.length);
         dis.read(header, 0, header.length);
         int pduLength = ByteBuffer.wrap(header).getShort(8);
+        setPduLength(pduLength);
         dis.reset();
         
         // Now allocate enough space for full pdu
@@ -230,6 +231,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
        protocolFamily = (short)(toUnsignedInt(buff.get()));
        timestamp = buff.getInt();
        int pduLength = toUnsignedInt(buff.getShort());
+       setPduLength(pduLength);
        padding = buff.getShort();
  } // end of unmarshal method 
 
