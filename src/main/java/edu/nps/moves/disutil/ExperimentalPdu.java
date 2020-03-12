@@ -47,6 +47,12 @@ public class ExperimentalPdu extends Pdu {
     }
 
     @Override
+	public void setPduLength(int pPduLength) {
+		super.setPduLength(pPduLength);
+		body = new byte[pPduLength = super.getMarshalledSize()];
+	}
+
+	@Override
 	public int getMarshalledSize() {
 		return super.getMarshalledSize() + body.length;
 	}
@@ -62,7 +68,8 @@ public class ExperimentalPdu extends Pdu {
     public void unmarshal(java.nio.ByteBuffer buff) {
         super.unmarshal(buff);
 
-        body = new byte[this.getPduLength() - 12]; // 12 is size of the pdu header.
+		// abutler - The body is now initialized in the setPduLength() call
+		// body = new byte[this.getPduLength() - 12]; // 12 is size of the pdu header.
         buff.get(body);
     }
 }
