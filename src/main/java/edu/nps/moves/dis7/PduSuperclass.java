@@ -28,9 +28,6 @@ public class PduSuperclass extends Object implements Serializable
    /** Timestamp value */
    protected long  timestamp;
 
-   /** Length, in bytes, of the PDU */
-   protected int  length;
-
 
 /** Constructor */
  public PduSuperclass()
@@ -92,12 +89,16 @@ public long getTimestamp()
 { return timestamp; 
 }
 
+/** @deprecated PDU length is determined by the PDU type and content and cannot be set directly */
+@Deprecated
 public void setLength(int pLength)
-{ length = pLength;
+{
 }
 
+/** @deprecated Use {@link #getMarshalledSize()} */
+@Deprecated
 public int getLength()
-{ return length; 
+{ return getMarshalledSize(); 
 }
 
 
@@ -110,7 +111,7 @@ public void marshal(DataOutputStream dos)
        dos.writeByte( (byte)pduType);
        dos.writeByte( (byte)protocolFamily);
        dos.writeInt( (int)timestamp);
-       dos.writeShort( (short)length);
+       dos.writeShort( (short)getMarshalledSize());
     } // end try 
     catch(Exception e)
     { 
@@ -126,7 +127,7 @@ public void unmarshal(DataInputStream dis)
        pduType = (short)dis.readUnsignedByte();
        protocolFamily = (short)dis.readUnsignedByte();
        timestamp = dis.readInt();
-       length = (int)dis.readUnsignedShort();
+       int length = (int)dis.readUnsignedShort();
     } // end try 
    catch(Exception e)
     { 
@@ -150,7 +151,7 @@ public void marshal(java.nio.ByteBuffer buff)
        buff.put( (byte)pduType);
        buff.put( (byte)protocolFamily);
        buff.putInt( (int)timestamp);
-       buff.putShort( (short)length);
+       buff.putShort( (short)getMarshalledSize());
     } // end of marshal method
 
 /**
@@ -167,7 +168,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
        pduType = (short)(buff.get() & 0xFF);
        protocolFamily = (short)(buff.get() & 0xFF);
        timestamp = buff.getInt();
-       length = (int)(buff.getShort() & 0xFFFF);
+       int length = (int)(buff.getShort() & 0xFFFF);
  } // end of unmarshal method 
 
 
@@ -212,7 +213,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
      if( ! (pduType == rhs.pduType)) ivarsEqual = false;
      if( ! (protocolFamily == rhs.protocolFamily)) ivarsEqual = false;
      if( ! (timestamp == rhs.timestamp)) ivarsEqual = false;
-     if( ! (length == rhs.length)) ivarsEqual = false;
+     if( ! (getMarshalledSize() == rhs.getMarshalledSize())) ivarsEqual = false;
 
     return ivarsEqual;
  }
