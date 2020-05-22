@@ -7,8 +7,8 @@ public class CoordinateConversionsTest {
 
     final double DELTA = 0.1; // acceptable amount of error
 
-    double[] xyz = {1071401.9738714, -4450059.11156203, 4427050.83344532};
-    double[] latlonheightDegrees = {44.2368804, -76.4630307, 91};
+    double[] xyz = {4153622.0304340417, -4153622.030434041, -2476719.3300588187};
+    double[] latlonheightDegrees = {-23, -45, 0};
     double[] latlonheightRadians;
 
     public CoordinateConversionsTest() {
