@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class CoordinateConversionsTest {
 
-    final double DELTA = 0.1; // acceptable amount of error
+    final double DELTA = 0.1; // acceptable amount of error.
 
     double[] xyz = {4153622.0304340417, -4153622.030434041, -2476719.3300588187};
     double[] latlonheightDegrees = {-23, -45, 0};
