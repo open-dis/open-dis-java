@@ -53,7 +53,6 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
     protected Vector3Float location = new Vector3Float();
 
     /** Electronic emmissions systems THIS IS WRONG. It has the WRONG class type and will cause problems in any marshalling. */
-    protected List<Vector3Float> systems = new ArrayList<>();
     protected Beam beam = new Beam();
 
     /** Constructor */
@@ -115,7 +114,7 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
 
     public short getNumberOfSystems()
     {
-        return (short) systems.size();
+        return numberOfSystems;
     }
 
     public Beam getBeam()
@@ -188,15 +187,6 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         location = pLocation;
     }
 
-    public List<Vector3Float> getSystems()
-    {
-        return systems;
-    }
-
-    public void setSystems(List<Vector3Float> pSystems)
-    {
-        systems = pSystems;
-    }
 
     public void marshal(DataOutputStream dos)
     {
@@ -205,7 +195,7 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
             emittingEntityID.marshal(dos);
             eventID.marshal(dos);
             dos.writeByte((byte) stateUpdateIndicator);
-            dos.writeByte((byte) systems.size());
+            dos.writeByte((byte) numberOfSystems);
             dos.writeShort((short) paddingForEmissionsPdu);
             dos.writeByte((byte) systemDataLength);
             dos.writeByte((byte) numberOfBeams);
@@ -256,7 +246,7 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         emittingEntityID.marshal(buff);
         eventID.marshal(buff);
         buff.put((byte) stateUpdateIndicator);
-        buff.put((byte) systems.size());
+        buff.put((byte) numberOfSystems);
         buff.putShort((short) paddingForEmissionsPdu);
         buff.put((byte) systemDataLength);
         buff.put((byte) numberOfBeams);
@@ -352,12 +342,10 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         if (!( location.equals(rhs.location) )) {
             ivarsEqual = false;
         }
-
-        for (int idx = 0; idx < systems.size(); idx++) {
-            if (!( systems.get(idx).equals(rhs.systems.get(idx)) )) {
-                ivarsEqual = false;
-            }
+        if (!( beam.equals(rhs.beam) )) {
+            ivarsEqual = false;
         }
+
 
 
         return ivarsEqual && super.equalsImpl(rhs);
