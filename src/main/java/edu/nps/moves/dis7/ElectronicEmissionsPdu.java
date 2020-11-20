@@ -4,8 +4,6 @@ package edu.nps.moves.dis7;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -52,8 +50,8 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
      */
     protected Vector3Float location = new Vector3Float();
 
-    /** Electronic emmissions systems THIS IS WRONG. It has the WRONG class type and will cause problems in any marshalling. */
-    protected Beam beam = new Beam();
+    /** Electronic emmissions systems */
+    protected ElectronicEmissisionBeamData electronicEmissisionBeamData = new ElectronicEmissisionBeamData();
 
     /** Constructor */
     public ElectronicEmissionsPdu()
@@ -77,7 +75,7 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         marshalSize = marshalSize + 2;  // paddingForEmissionsPdu
         marshalSize = marshalSize + emitterSystem.getMarshalledSize();  // emitterSystem
         marshalSize = marshalSize + location.getMarshalledSize();  // location
-        marshalSize = marshalSize + beam.getMarshalledSize(); // beam
+        marshalSize = marshalSize + electronicEmissisionBeamData.getMarshalledSize(); // electronicEmissisionBeamData
 
         return marshalSize;
     }
@@ -117,14 +115,14 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         return numberOfSystems;
     }
 
-    public Beam getBeam()
+    public ElectronicEmissisionBeamData getElectronicEmissionBeamData()
     {
-        return beam;
+        return electronicEmissisionBeamData;
     }
 
-    public void setBeam(Beam beam)
+    public void setElectronicEmissionBeamData(ElectronicEmissisionBeamData electronicEmissisionBeamData)
     {
-        this.beam = beam;
+        this.electronicEmissisionBeamData = electronicEmissisionBeamData;
     }
 
     /**
@@ -201,7 +199,7 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
             dos.writeByte((byte) numberOfBeams);
             emitterSystem.marshal(dos);
             location.marshal(dos);
-            beam.marshal(dos);
+            electronicEmissisionBeamData.marshal(dos);
 
         } // end try
         catch (Exception e) {
@@ -223,7 +221,7 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
             numberOfBeams = (short) dis.readUnsignedByte();
             emitterSystem.unmarshal(dis);
             location.unmarshal(dis);
-            beam.unmarshal(dis);
+            electronicEmissisionBeamData.unmarshal(dis);
 
         } // end try
         catch (Exception e) {
@@ -252,7 +250,7 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         buff.put((byte) numberOfBeams);
         emitterSystem.marshal(buff);
         location.marshal(buff);
-        beam.marshal(buff);
+        electronicEmissisionBeamData.marshal(buff);
 
     } // end of marshal method
 
@@ -277,7 +275,7 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         buff.getShort(); // remove padding
         emitterSystem.unmarshal(buff);
         location.unmarshal(buff);
-        beam.unmarshal(buff);
+        electronicEmissisionBeamData.unmarshal(buff);
 
     } // end of unmarshal method
 
@@ -342,7 +340,7 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         if (!( location.equals(rhs.location) )) {
             ivarsEqual = false;
         }
-        if (!( beam.equals(rhs.beam) )) {
+        if (!( electronicEmissisionBeamData.equals(rhs.electronicEmissisionBeamData) )) {
             ivarsEqual = false;
         }
 

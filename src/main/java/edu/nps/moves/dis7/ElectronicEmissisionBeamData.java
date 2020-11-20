@@ -8,23 +8,23 @@ import java.util.Objects;
 
 
 /**
- * This field shall specify information about a particular active beam. Section 7.6.2.
+ * This field shall specify information about a particular active electronicEmissisionBeamData. Section 7.6.2.
  *
  * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved. This work is licensed under the BSD open source
  * license, available at https://www.movesinstitute.org/licenses/bsd.html
  * @author DMcG
  */
-public class Beam extends Object implements Serializable
+public class ElectronicEmissisionBeamData extends Object implements Serializable
 {
-    /** Specifies the length of this beam's data, 8 bit unsigned int */
+    /** Specifies the length of this electronicEmissisionBeamData's data, 8 bit unsigned int */
     protected short beamDataLength;
 
-    /** unique beam number, 8 bit unsigned int */
+    /** unique electronicEmissisionBeamData number, 8 bit unsigned int */
     protected short beamNumber;
 
     /**
      * Used in conjunction with the Emitter Name field as a database primary key, this field shall specify a number by which receiving
-     * entities reference stored database parameters required to regenerate the beam., 16 bit unsigned int
+     * entities reference stored database parameters required to regenerate the electronicEmissisionBeamData., 16 bit unsigned int
      */
     protected int beamParameterIndex;
 
@@ -34,32 +34,32 @@ public class Beam extends Object implements Serializable
     protected EEFundamentalParameterData fundamentalParameterData = new EEFundamentalParameterData();
 
     /**
-     * specify parameters of the beam and shall be represented by a Beam Data record (see 6.2.11)
+     * specify parameters of the electronicEmissisionBeamData and shall be represented by a ElectronicEmissisionBeamData Data record (see 6.2.11)
      */
     protected BeamData beamData = new BeamData();
 
     /**
-     * specify the intended use of a particular beam. Typical functions include search, acquisition, tracking, illumination, jamming, and so
-     * on. This field is intended to help receiving entities determine the emission mode represented by the beam. This field shall be
+     * specify the intended use of a particular electronicEmissisionBeamData. Typical functions include search, acquisition, tracking, illumination, jamming, and so
+     * on. This field is intended to help receiving entities determine the emission mode represented by the electronicEmissisionBeamData. This field shall be
      * represented by an 8-bit enumeration
      */
     protected short beamFunction;
 
     /**
-     * This field, in conjunction with the High-Density Track/Jam field, shall identify, for the current PDU and emitter beam, the number of
-     * entities tracked or under illumination (as appropriate for an emitter beam’s function) or the number of targeted emitter beams (for
+     * This field, in conjunction with the High-Density Track/Jam field, shall identify, for the current PDU and emitter electronicEmissisionBeamData, the number of
+     * entities tracked or under illumination (as appropriate for an emitter electronicEmissisionBeamData’s function) or the number of targeted emitter beams (for
      * jammers). This field shall be represented by an 8-bit unsigned integer.
      */
     protected short numberOfTargets;
 
     /**
      * This field shall be used to indicate that receiving simulation applications can assume that all viable targets in the field of regard
-     * specified by the beam data are being tracked or jammed. This field shall be represented by an 8-bit enumeration
+     * specified by the electronicEmissisionBeamData data are being tracked or jammed. This field shall be represented by an 8-bit enumeration
      */
     protected short highDensityTrackJam;
 
     /**
-     * This field shall indicate the status of the beam (e.g., the beam is active or deactivated) and shall be represented by the Beam
+     * This field shall indicate the status of the electronicEmissisionBeamData (e.g., the electronicEmissisionBeamData is active or deactivated) and shall be represented by the ElectronicEmissisionBeamData
      * Status record (see 6.2.12)
      */
     protected BeamStatus beamStatus = new BeamStatus();
@@ -71,13 +71,13 @@ public class Beam extends Object implements Serializable
     protected JammingTechnique jammingTechnique = new JammingTechnique();
 
     /**
-     * This field is optional for any given beam. Rules for inclusion and use are provided in 5.7.3.3, 5.7.3.7, and 5.7.3.8. When included,
+     * This field is optional for any given electronicEmissisionBeamData. Rules for inclusion and use are provided in 5.7.3.3, 5.7.3.7, and 5.7.3.8. When included,
      * this field shall be represented by a series of Track/Jam Data records (see 6.2.90).
      */
     protected TrackJamData trackJamData = new TrackJamData();
 
     /** Constructor */
-    public Beam()
+    public ElectronicEmissisionBeamData()
     {
     }
 
@@ -315,18 +315,18 @@ public class Beam extends Object implements Serializable
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Beam beam = (Beam) o;
-        return beamDataLength == beam.beamDataLength &&
-                   beamNumber == beam.beamNumber &&
-                   beamParameterIndex == beam.beamParameterIndex &&
-                   beamFunction == beam.beamFunction &&
-                   numberOfTargets == beam.numberOfTargets &&
-                   highDensityTrackJam == beam.highDensityTrackJam &&
-                   Objects.equals(fundamentalParameterData, beam.fundamentalParameterData) &&
-                   Objects.equals(beamData, beam.beamData) &&
-                   Objects.equals(beamStatus, beam.beamStatus) &&
-                   Objects.equals(jammingTechnique, beam.jammingTechnique) &&
-                   Objects.equals(trackJamData, beam.trackJamData);
+        ElectronicEmissisionBeamData electronicEmissisionBeamData = (ElectronicEmissisionBeamData) o;
+        return beamDataLength == electronicEmissisionBeamData.beamDataLength &&
+                   beamNumber == electronicEmissisionBeamData.beamNumber &&
+                   beamParameterIndex == electronicEmissisionBeamData.beamParameterIndex &&
+                   beamFunction == electronicEmissisionBeamData.beamFunction &&
+                   numberOfTargets == electronicEmissisionBeamData.numberOfTargets &&
+                   highDensityTrackJam == electronicEmissisionBeamData.highDensityTrackJam &&
+                   Objects.equals(fundamentalParameterData, electronicEmissisionBeamData.fundamentalParameterData) &&
+                   Objects.equals(beamData, electronicEmissisionBeamData.beamData) &&
+                   Objects.equals(beamStatus, electronicEmissisionBeamData.beamStatus) &&
+                   Objects.equals(jammingTechnique, electronicEmissisionBeamData.jammingTechnique) &&
+                   Objects.equals(trackJamData, electronicEmissisionBeamData.trackJamData);
     }
 
     @Override

@@ -86,27 +86,27 @@ public class ElectronicEmissionsPduTest
         assertEquals(0.0, espdu.getLocation().getZ(), 0.0001);
 
         // Beam
-        assertEquals(13, espdu.getBeam().getBeamDataLength());
-        assertEquals(1, espdu.getBeam().getBeamNumber());
-        assertEquals(1, espdu.getBeam().getBeamParameterIndex());
-        assertEquals(14000000000.0, espdu.getBeam().getFundamentalParameterData().getFrequency(), 0.000001);
-        assertEquals(6000000000.0, espdu.getBeam().getFundamentalParameterData().getFrequencyRange(), 0.000001);
-        assertEquals(55.0, espdu.getBeam().getFundamentalParameterData().getEffectiveRadiatedPower(), 0.000001);
-        assertEquals(600.0, espdu.getBeam().getFundamentalParameterData().getPulseRepetitionFrequency(), 0.000001);
-        assertEquals(3.0, espdu.getBeam().getFundamentalParameterData().getPulseWidth(), 0.000001);
-        assertEquals(0, espdu.getBeam().getBeamData().getBeamAzimuthCenter(), 0.000001);
-        assertEquals(0.698132, espdu.getBeam().getBeamData().getBeamAzimuthSweep(), 0.000001);
-        assertEquals(0.436332, espdu.getBeam().getBeamData().getBeamElevationCenter(), 0.000001);
-        assertEquals(0.436332, espdu.getBeam().getBeamData().getBeamElevationSweep(), 0.000001);
-        assertEquals(90.4001, espdu.getBeam().getBeamData().getBeamSweepSync(), 0.000001);
-        assertEquals(7, espdu.getBeam().getBeamFunction());
-        assertEquals(0, espdu.getBeam().getNumberOfTargets());
-        assertEquals(0, espdu.getBeam().getHighDensityTrackJam());
-        assertEquals(0, espdu.getBeam().getBeamStatus().getBeamState());
-        assertEquals(0, espdu.getBeam().getJammingTechnique().getCategory());
-        assertEquals(0, espdu.getBeam().getJammingTechnique().getKind());
-        assertEquals(0, espdu.getBeam().getJammingTechnique().getSpecific());
-        assertEquals(0, espdu.getBeam().getJammingTechnique().getCategory());
+        assertEquals(13, espdu.getElectronicEmissionBeamData().getBeamDataLength());
+        assertEquals(1, espdu.getElectronicEmissionBeamData().getBeamNumber());
+        assertEquals(1, espdu.getElectronicEmissionBeamData().getBeamParameterIndex());
+        assertEquals(14000000000.0, espdu.getElectronicEmissionBeamData().getFundamentalParameterData().getFrequency(), 0.000001);
+        assertEquals(6000000000.0, espdu.getElectronicEmissionBeamData().getFundamentalParameterData().getFrequencyRange(), 0.000001);
+        assertEquals(55.0, espdu.getElectronicEmissionBeamData().getFundamentalParameterData().getEffectiveRadiatedPower(), 0.000001);
+        assertEquals(600.0, espdu.getElectronicEmissionBeamData().getFundamentalParameterData().getPulseRepetitionFrequency(), 0.000001);
+        assertEquals(3.0, espdu.getElectronicEmissionBeamData().getFundamentalParameterData().getPulseWidth(), 0.000001);
+        assertEquals(0, espdu.getElectronicEmissionBeamData().getBeamData().getBeamAzimuthCenter(), 0.000001);
+        assertEquals(0.698132, espdu.getElectronicEmissionBeamData().getBeamData().getBeamAzimuthSweep(), 0.000001);
+        assertEquals(0.436332, espdu.getElectronicEmissionBeamData().getBeamData().getBeamElevationCenter(), 0.000001);
+        assertEquals(0.436332, espdu.getElectronicEmissionBeamData().getBeamData().getBeamElevationSweep(), 0.000001);
+        assertEquals(90.4001, espdu.getElectronicEmissionBeamData().getBeamData().getBeamSweepSync(), 0.000001);
+        assertEquals(7, espdu.getElectronicEmissionBeamData().getBeamFunction());
+        assertEquals(0, espdu.getElectronicEmissionBeamData().getNumberOfTargets());
+        assertEquals(0, espdu.getElectronicEmissionBeamData().getHighDensityTrackJam());
+        assertEquals(0, espdu.getElectronicEmissionBeamData().getBeamStatus().getBeamState());
+        assertEquals(0, espdu.getElectronicEmissionBeamData().getJammingTechnique().getCategory());
+        assertEquals(0, espdu.getElectronicEmissionBeamData().getJammingTechnique().getKind());
+        assertEquals(0, espdu.getElectronicEmissionBeamData().getJammingTechnique().getSpecific());
+        assertEquals(0, espdu.getElectronicEmissionBeamData().getJammingTechnique().getCategory());
 
 
     }
