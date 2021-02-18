@@ -123,7 +123,7 @@ public class EulerConversions
     }
 
     /**
-     * Gets the Euler Theta value (in radians) from position and Tait-Brayn yaw and roll angles
+     * Gets the Euler Theta value (in radians) from position and Tait-Brayn yaw and pitch angles
      * @param lat Entity's latitude,    IN RADIANS
      * @param lon Entity's longitude,   IN RADIANS
      * @param yaw   entity's yaw angle (also know as the entity's bearing or heading angle), in degrees
@@ -143,7 +143,7 @@ public class EulerConversions
     }
 
     /**
-     * Gets the Euler Psi value (in radians) from position and Tait-Brayn yaw and roll angles
+     * Gets the Euler Psi value (in radians) from position and Tait-Brayn yaw and pitch angles
      * @param lat Entity's latitude,    IN RADIANS
      * @param lon Entity's longitude,   IN RADIANS
      * @param yaw   ettity's yaw angle (also know as the entity's bearing or heading angle), in degrees
