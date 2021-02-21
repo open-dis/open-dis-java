@@ -301,8 +301,9 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      if( ! (variableDatumID == rhs.variableDatumID)) ivarsEqual = false;
      if( ! (variableDatumLength == rhs.variableDatumLength)) ivarsEqual = false;
-     if( ! (Arrays.equals(variableData, rhs.variableData))) ivarsEqual = false;
-
+     if(! (Arrays.equals(payload, rhs.payload))) ivarsEqual = false;
+     if(! (Arrays.equals(padding, rhs.padding))) ivarsEqual = false;
+     
     return ivarsEqual;
  }
     
