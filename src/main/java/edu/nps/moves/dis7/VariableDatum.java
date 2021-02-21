@@ -2,7 +2,7 @@ package edu.nps.moves.dis7;
 
 import java.util.*;
 import java.io.*;
-
+import java.nio.charset.Charset;
 
 /**
  * the variable datum type, the datum length, and the value for that variable datum type. NOT COMPLETE. Section 6.2.93
@@ -20,21 +20,50 @@ public class VariableDatum extends Object implements Serializable
    /** Length, IN BITS, of the variable datum. */
    protected long  variableDatumLength;
 
-   /** Variable length data class */
-   protected byte[] variableDatumData = new byte[0];
+    /**
+     * The data payload
+     */
+    private byte[] payload = EMPTY;
+    /**
+     * The padding required to 64 bit boundary
+     */
+    private byte[] padding = EMPTY;
+    private static final byte[] EMPTY = new byte[0];
 
 /** Constructor */
  public VariableDatum()
  {
  }
 
+    // additional constructors + payload setting
+    public VariableDatum(long id, double d) {
+        this.variableDatumID = id;
+        setPayload(d);
+    }
+
+    public VariableDatum(long id, long l) {
+        this.variableDatumID = id;
+        setPayload(l);
+    }
+    
+    public VariableDatum(long id, String s) {
+        this.variableDatumID = id;
+        setPayload(s);
+    }
+
+    public VariableDatum(long id, byte[] payload) {
+        this.variableDatumID = id;
+        setPayload(payload);
+    }
 public int getMarshalledSize()
 {
    int marshalSize = 0; 
 
    marshalSize = marshalSize + 4;  // variableDatumID
    marshalSize = marshalSize + 4;  // variableDatumLength
-   marshalSize = marshalSize + variableDatumData.length;
+   marshalSize = marshalSize + payload.length; // payload length
+   marshalSize = marshalSize + padding.length; // padding
+
 
    return marshalSize;
 }
@@ -48,8 +77,9 @@ public long getVariableDatumID()
 { return variableDatumID; 
 }
 
-public long getVariableDatumLength()
-{ return (long)variableDatumData.length;
+/** Return length of the variable datum, in bytes. Does not account for padding */
+public long getVariableDatumLength() {
+    return (long) variableDatumLength;       // * Byte.SIZE;
 }
 
 /** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
@@ -60,21 +90,145 @@ public void setVariableDatumLength(long pVariableDatumLength)
 { variableDatumLength = pVariableDatumLength;
 }
 
-public void setVariableDatumData(byte[] pVariableDatumData)
-{ variableDatumData = pVariableDatumData;
+public void setVariableData(byte[] pVariableData)
+{ 
+   setPayload(pVariableData);
 }
 
-public byte[] getVariableDatumData()
-{ return variableDatumData; }
+public byte[] getVariableData()
+{ 
+   return getPayload(); 
+}
 
+public double getPayloadAsDouble() {
+    return Double.longBitsToDouble(getPayloadAsLong());
+}
+
+public long getPayloadAsLong() {
+    return (((long) payload[0] << 56)
+            + ((long) (payload[1] & 255) << 48)
+            + ((long) (payload[2] & 255) << 40)
+            + ((long) (payload[3] & 255) << 32)
+            + ((long) (payload[4] & 255) << 24)
+            + ((payload[5] & 255) << 16)
+            + ((payload[6] & 255) << 8)
+            + (payload[7] & 255));
+}
+
+public String getPayloadAsString() {
+    return new String(payload);
+}
+
+public byte[] getPayload() {
+    return payload;
+}
+/**
+ * Sets the payload as a double
+ *
+ * @param d
+ * @return True if valid, False otherwise
+ */
+public final boolean setPayload(double d) {
+    return setPayload(Double.doubleToRawLongBits(d));
+}
+
+/**
+ * Sets the payload as a long
+ *
+ * @param l
+ * @return True if valid, False otherwise
+ */
+public final boolean setPayload(long l) {
+    byte[] bytes = new byte[8];
+
+    bytes[0] = (byte) (l >>> 56);
+    bytes[1] = (byte) (l >>> 48);
+    bytes[2] = (byte) (l >>> 40);
+    bytes[3] = (byte) (l >>> 32);
+    bytes[4] = (byte) (l >>> 24);
+    bytes[5] = (byte) (l >>> 16);
+    bytes[6] = (byte) (l >>> 8);
+    bytes[7] = (byte) (l);
+
+    return setPayload(bytes);
+}
+
+/**
+ * Sets the payload as a String
+ *
+ * @param s
+ * @return True if valid, False otherwise
+ */
+public final boolean setPayload(String s) {
+    if (s != null) {
+        return setPayload(s.getBytes(Charset.forName("US-ASCII")));
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Sets the payload
+ *
+ * @param payload
+ * @return True if valid, False otherwise
+ */
+public final boolean setPayload(byte[] payload) {
+    if (payload != null) {
+        return setPayload(payload, payload.length * 8);
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Sets the payload
+ *
+ * @param payload
+ * @param lengthBits
+ * @return True if valid, False otherwise
+ */
+public final boolean setPayload(byte[] payload, long lengthBits) {
+    if (payload != null) {
+        int payloadBits = payload.length * 8;
+
+        if (lengthBits >= 0 && lengthBits <= payloadBits && lengthBits > payloadBits - 8) {
+            this.payload = payload;
+            this.variableDatumLength = lengthBits;
+
+            padding = createPadding(payload.length);
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Creates a byte array of padding based on the input
+ *
+ * @param payloadBytes
+ * @return The proper padding array
+ */
+private static byte[] createPadding(int payloadBytes) {
+    int mod = payloadBytes % 8;
+
+    if (mod != 0) {
+        return new byte[8 - mod];
+    } else {
+        return EMPTY;
+    }
+}
 
 public void marshal(DataOutputStream dos)
 {
     try 
     {
        dos.writeInt( (int)variableDatumID);
-       dos.writeInt( (int)variableDatumData.length);
-       dos.write(variableDatumData);
+       dos.writeInt( (int)getVariableDatumLength());
+       dos.write(payload);
+       dos.write(padding);
     } // end try 
     catch(Exception e)
     { 
@@ -87,8 +241,14 @@ public void unmarshal(DataInputStream dis)
     {
        variableDatumID = dis.readInt();
        variableDatumLength = dis.readInt();
-       variableDatumData = new byte[(int) variableDatumLength];
-       dis.read(variableDatumData);
+
+       int payloadBytes = (int) (variableDatumLength / 8);
+       payload = new byte[payloadBytes];
+       dis.read(payload);
+
+       padding = createPadding(payloadBytes);
+       dis.read(padding);
+
     } // end try 
    catch(Exception e)
     { 
@@ -108,8 +268,10 @@ public void unmarshal(DataInputStream dis)
 public void marshal(java.nio.ByteBuffer buff)
 {
        buff.putInt( (int)variableDatumID);
-       buff.putInt( (int)variableDatumData.length);
-       buff.put(variableDatumData);
+       buff.putInt( (int)getVariableDatumLength());
+
+       buff.put(payload);
+       buff.put(padding);
     } // end of marshal method
 
 /**
@@ -123,8 +285,17 @@ public void unmarshal(java.nio.ByteBuffer buff)
 {
        variableDatumID = buff.getInt();
        variableDatumLength = buff.getInt();
-       variableDatumData = new byte[(int) variableDatumLength];
-       buff.get(variableDatumData);
+       int payloadBytes = (int) (variableDatumLength / 8);
+
+       if (variableDatumLength % 8 > 0) {
+          payloadBytes++;
+       }
+
+       payload = new byte[payloadBytes];
+       buff.get(payload);
+
+       padding = createPadding(payloadBytes);
+       buff.get(padding);
  } // end of unmarshal method 
 
 
@@ -166,7 +337,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
      if( ! (variableDatumID == rhs.variableDatumID)) ivarsEqual = false;
      if( ! (variableDatumLength == rhs.variableDatumLength)) ivarsEqual = false;
-     if( ! (Arrays.equals(variableDatumData, rhs.variableDatumData))) ivarsEqual = false;
+     if(! (Arrays.equals(payload, rhs.payload))) ivarsEqual = false;
+     if(! (Arrays.equals(padding, rhs.padding))) ivarsEqual = false;
 
     return ivarsEqual;
  }
