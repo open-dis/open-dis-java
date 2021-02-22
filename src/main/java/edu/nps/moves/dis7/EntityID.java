@@ -1,6 +1,7 @@
 package edu.nps.moves.dis7;
 
 import java.io.*;
+import java.util.Objects;
 
 
 /**
@@ -165,4 +166,10 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
     return ivarsEqual;
  }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(siteID, applicationID, entityID);
+    }
 } // end of class
