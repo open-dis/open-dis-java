@@ -661,7 +661,7 @@ public abstract class DIS_DeadReckoning implements Runnable
 
     /**
      * Set the timestamp
-     * @param timestamp
+     * @param initTimestamp
      */
     public void setInitTimestamp(long initTimestamp) {
         this.initTimestamp = initTimestamp;

@@ -14,7 +14,7 @@ package edu.nps.moves.disutil;
  * Note: latitude and longitude are also expressed in radians.
  * 
  *
- * @author loyaj & bhughes
+ * @author loyaj and bhughes
  *
  */
 

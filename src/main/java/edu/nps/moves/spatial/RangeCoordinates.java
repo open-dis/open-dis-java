@@ -42,7 +42,7 @@ import edu.nps.moves.dis.*;
  * We can also convert between these coordinate systems using standard libraries
  * in the SRM. <p>
  *
- * See User’s Manual for SRM Orientation, Velocity, & Acceleration
+ * See User’s Manual for SRM Orientation, Velocity, and Acceleration
  * Transformations Version 2.0, 18 Nov 2009, available with the
  * sedris Java SDK download.
  * 
