@@ -5,7 +5,9 @@ package edu.nps.moves.deadreckoning;
  * (PRIMARY Methods group) Fixed, Rate of Position, World || Constant Linear motion
  * 
  * @author Sheldon L. Snyder
+ * @deprecated Use {@link DeadReckoner} instead.
  */
+@Deprecated(since = "5.1", forRemoval = true)
 public class DIS_DR_FPW_02 extends DIS_DeadReckoning
 {
 

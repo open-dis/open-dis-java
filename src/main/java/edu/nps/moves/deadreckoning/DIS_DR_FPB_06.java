@@ -8,7 +8,9 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  * Linear motion without rotation
  * 
  * @author Sheldon L. Snyder
+ * @deprecated Use {@link DeadReckoner} instead.
  */
+@Deprecated(since = "5.1", forRemoval = true)
 public class DIS_DR_FPB_06 extends DIS_DeadReckoning
 {     
     /**

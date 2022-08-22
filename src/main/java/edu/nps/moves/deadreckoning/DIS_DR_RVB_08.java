@@ -14,7 +14,9 @@ import org.apache.commons.math3.linear.RealVector;
  * Linear motion with Rotation
  * 
  * @author Sheldon L. Snyder
+ * @deprecated Use {@link DeadReckoner} instead.
  */
+@Deprecated(since = "5.1", forRemoval = true)
 public class DIS_DR_RVB_08 extends DIS_DeadReckoning
 {
     // put these in main abstract class...?

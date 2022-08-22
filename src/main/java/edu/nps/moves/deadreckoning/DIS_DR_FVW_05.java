@@ -5,7 +5,9 @@ package edu.nps.moves.deadreckoning;
  * Acceleration but no rotation
  * 
  * @author Sheldon L. Snyder
+ * @deprecated Use {@link DeadReckoner} instead.
  */
+@Deprecated(since = "5.1", forRemoval = true)
 public class DIS_DR_FVW_05 extends DIS_DeadReckoning
 {
     /**
