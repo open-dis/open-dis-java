@@ -298,6 +298,8 @@ public class DeadReckoner {
                             break;
                         case 11:  // azimuth
                         case 13:  // elevation
+                                // turret azimuth & gun elevation does not require "dead-reckoning"
+                                break;
                         case 15:  // elevation
                             thisVal.setParameterValue(thisVal.getParameterValue() +
                                     thisRate.getParameterValue() * deltaTime);
