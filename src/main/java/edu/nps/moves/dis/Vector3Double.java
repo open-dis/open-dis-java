@@ -138,13 +138,17 @@ public void unmarshal(java.nio.ByteBuffer buff)
 
     return ivarsEqual;
  }
+ 
+    public double[] toArray() {
+        return new double[]{x, y, z};
+    }
     
     /**
      * Assuming that the x,y,z values of this Vector3Double are x=latitude,
      * y=longitude, (in degrees) and z=altitude (in meters), converts them
      * to DIS coordinates<p>
      *
-     * Vector3Double is very often ued for setting the entity position. This is a
+     * Vector3Double is very often used for setting the entity position. This is a
      * convienience method that allows the programmer to set a latitude, longitude,
      * and altitude, and have it  converted to the DIS coordiinate system<p>
      *
@@ -160,12 +164,11 @@ public void unmarshal(java.nio.ByteBuffer buff)
      * earth's surface you use. This uses the WGS84 elipsoid model, and may not be
      * accurate around the poles.<p>
      */
-    
     public void convertLatitudeLongitudeAltitudeToDis()
     {
         double radiansLat;
         double radiansLon;
-        double xyz[] = new double[3];
+        double xyz[];
         
         radiansLat = (Math.PI * x) / 180.0;
         radiansLon = (Math.PI * y) / 180.0;
@@ -178,6 +181,7 @@ public void unmarshal(java.nio.ByteBuffer buff)
         this.setY(xyz[1]);
         this.setZ(xyz[2]);
     }
+
     
     /**
      * Assuming that the Vector3Double contains DIS coordinate system values, converts
@@ -187,15 +191,8 @@ public void unmarshal(java.nio.ByteBuffer buff)
      */
     public void convertDisToLatitudeLongitudeAltitude()
     {
-        Vector3Double location = new Vector3Double();
-        double[] xyz = new double[3];
-        double[] result;
-        
-        xyz[0] = x;
-        xyz[1] = y;
-        xyz[2] = z;
-        
-        result = CoordinateConversions.xyzToLatLonRadians(xyz);
+        double[] xyz = toArray();
+        double[] result = CoordinateConversions.xyzToLatLonRadians(xyz);
         
         // Convert radians in the result to degrees
         result[0] = (result[0] * 180.0)/Math.PI; // latitude
