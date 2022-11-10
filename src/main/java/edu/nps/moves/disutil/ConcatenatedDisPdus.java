@@ -31,6 +31,7 @@ import edu.nps.moves.dis.*;
  * 
  * @author DMcG
  */
+@Deprecated(since = "5.1", forRemoval = true)
 public class ConcatenatedDisPdus
 {
     private InputStream is;

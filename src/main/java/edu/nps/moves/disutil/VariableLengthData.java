@@ -14,6 +14,7 @@ import java.io.*;
  * 
  * @author DMcG
  */
+@Deprecated(since = "5.1", forRemoval = true)
 public class VariableLengthData 
 {
     

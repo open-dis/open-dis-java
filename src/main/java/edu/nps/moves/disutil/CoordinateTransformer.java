@@ -19,6 +19,7 @@ import edu.nps.moves.dis.Vector3Float;
  * 
  * @author DMcG
  */
+@Deprecated(since = "5.1", forRemoval = true)
 public abstract class CoordinateTransformer
 {
     /** Changes the coordinate system of the input coordinates to the target. 
