@@ -8,28 +8,33 @@ import edu.nps.moves.dis.*;
 import edu.nps.moves.disenum.PduType;
 
 /**
- * Simple factory for PDUs. When bytes are received on the wire, they're passed off to us
- * and the correct constructor called to return the correct PDU type.<p>
+ * Simple factory for PDUs. When bytes are received on the wire, they're passed
+ * off to us and the correct constructor called to return the correct PDU
+ * type.<p>
  *
  * @author DMcG
  */
 public class PduFactory {
 
-    /** whether we should use return flattened, "fast" espdus with fewer objects */
+    /**
+     * whether we should use return flattened, "fast" espdus with fewer objects
+     */
     private boolean useFastPdu = false;
 
     private Logger logger;
 
-
-    /** Creates a new instance of PduFactory */
+    /**
+     * Creates a new instance of PduFactory
+     */
     public PduFactory() {
         this(false);
     }
 
-    /** 
-     * Create a new PDU factory; if true is passed in, we use "fast PDUs",
-     * which minimize the memory garbage generated at the cost of being
-     * somewhat less pleasant to work with.
+    /**
+     * Create a new PDU factory; if true is passed in, we use "fast PDUs", which
+     * minimize the memory garbage generated at the cost of being somewhat less
+     * pleasant to work with.
+     *
      * @param useFastPdu
      */
     public PduFactory(boolean useFastPdu) {
@@ -51,16 +56,17 @@ public class PduFactory {
 
     /**
      * Set the logging level that will be printed, typically to Level.INFO
-     * @param loggingLevel 
+     *
+     * @param loggingLevel
      */
-    public void setLoggingLevel(Level loggingLevel)
-    {
+    public void setLoggingLevel(Level loggingLevel) {
         logger.setLevel(loggingLevel);
     }
 
-    /** 
+    /**
      * PDU factory. Pass in an array of bytes, get the correct type of pdu back,
      * based on the PDU type field contained in the byte array.
+     *
      * @param data
      * @return A PDU of the appropriate concrete subclass of PDU
      */
@@ -71,11 +77,12 @@ public class PduFactory {
     /**
      * PDU factory. Pass in an array of bytes, get the correct type of pdu back,
      * based on the PDU type field contained in the byte buffer.
+     *
      * @param buff
      * @return null if there was an error creating the Pdu
      */
     public Pdu createPdu(java.nio.ByteBuffer buff) {
-        
+
         int pos = buff.position();          // Save buffer's position
         if (pos + 2 > buff.limit()) {       // Make sure there's enough space in buffer
             return null;                    // Else return null
@@ -85,11 +92,11 @@ public class PduFactory {
         buff.position(pos);                 // Reset buffer
 
         Pdu aPdu = null;
-        
+
         if (pduType < 129) {
             // Normal pdu type code range is 0..128 inclusive.
             final PduType pduTypeEnum = PduType.lookup[pduType];
- 
+
             switch (pduTypeEnum) {
                 // NOTE: OTHER is a valid pduTypeEnum, but has no corresponding object
 
@@ -368,46 +375,40 @@ public class PduFactory {
 
     /**
      * Decodes datagram contents with bundled PDUs. As a performance hack DIS
-     * may include several PDUs in one datagram. Typically the max datagram 
-     * size is 8K (above that it runs into some issues with the default 
-     * incoming socket buffer size) but it may be more. The PDUs may be of
-     * multiple types and different lengths, so we have to step through the
-     * buffer and depend on the reported PDU length in the header. There's
-     * a lot that can go wrong. If something blows up, we return all the decoded
-     * PDUs we can.<p>
-     * 
+     * may include several PDUs in one datagram. Typically the max datagram size
+     * is 8K (above that it runs into some issues with the default incoming
+     * socket buffer size) but it may be more. The PDUs may be of multiple types
+     * and different lengths, so we have to step through the buffer and depend
+     * on the reported PDU length in the header. There's a lot that can go
+     * wrong. If something blows up, we return all the decoded PDUs we can.<p>
+     *
      * @param data
      * @return List of PDUs decoded
      */
-    public List<Pdu> getPdusFromBundle(byte data[])
-    {
+    public List<Pdu> getPdusFromBundle(byte data[]) {
         // All the PDUs in this bundle we were able to decode
         ArrayList<Pdu> pdus = new ArrayList<Pdu>();
         // The start point of a PDU in the data. We advance this by the size
         // of each PDU as we read it.
         int pduStartPointInData = 0;
 
-        while(true)
-        {
+        while (true) {
             // This is inefficient, but screw it. Give the GC a workout. Create a new
             // data array from where the last PDU left off to the end of the original
             // data array. This lets us reuse a bunch of old code.
 
             byte remaining[] = Arrays.copyOfRange(data, pduStartPointInData, data.length);
 
-            try
-            {
+            try {
                 // Decode one PDU
                 Pdu pdu = this.createPdu(remaining);
 
                 // If the read is muffed somehow, give up on decoding the rest of
                 // the data
-                if(pdu == null)
-                {
+                if (pdu == null) {
                     //System.out.println("Stopped reading bundled PDU due to bad PDU");
                     break;
-                }
-                else // otherwise add it to the list of PDUs we have decoded from this UDP packet
+                } else // otherwise add it to the list of PDUs we have decoded from this UDP packet
                 {
                     pdus.add(pdu);
                 }
@@ -418,15 +419,12 @@ public class PduFactory {
 
                 //System.out.println("PDUStartPOint:" + pduStartPointInData + " data: " + data.length);
                 // Have we read all the data?
-                if(pduStartPointInData >= data.length)
-                {
+                if (pduStartPointInData >= data.length) {
                     //System.out.println("Out of data to read" + pduStartPointInData + " data length:" + data.length);
                     break;
                 }
 
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 System.out.println("Problems decoding multiple PDUs in datagram; decoded as may as possible");
                 break;
             }
