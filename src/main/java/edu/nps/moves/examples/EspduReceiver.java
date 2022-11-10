@@ -1,11 +1,9 @@
 package edu.nps.moves.examples;
 
 import java.net.*;
-import java.util.*;
-
 import edu.nps.moves.disutil.*;
-
 import edu.nps.moves.dis.*;
+import java.io.IOException;
 
 /**
  * Receives PDUs from the network in IEEE format.
@@ -15,59 +13,43 @@ import edu.nps.moves.dis.*;
  */
 public class EspduReceiver {
 
-    /** Max size of a PDU in binary format that we can receive. This is actually
-     * somewhat outdated--PDUs can be larger--but this is a reasonable starting point
+    /**
+     * Max size of a PDU in binary format that we can receive. This is actually
+     * somewhat outdated--PDUs can be larger--but this is a reasonable starting
+     * point
      */
     public static final int MAX_PDU_SIZE = 8192;
 
-    public static void main(String args[]) {
+    public static final int DIS_PORT = 3000;
+
+    public static void main(String args[]) throws IOException {
         MulticastSocket socket;
         DatagramPacket packet;
         InetAddress address;
         PduFactory pduFactory = new PduFactory();
 
-        try {
-            // Specify the socket to receive data
-            socket = new MulticastSocket(3001);
-            socket.setBroadcast(true);
-       
-            //address = InetAddress.getByName(EspduSender.DEFAULT_MULTICAST_GROUP);
-            //socket.joinGroup(address);
+        socket = new MulticastSocket(DIS_PORT);
+        address = InetAddress.getByName(EspduSender.DEFAULT_MULTICAST_GROUP);
+        socket.joinGroup(address);
 
-            // Loop infinitely, receiving datagrams
-            while (true) {
-                byte buffer[] = new byte[MAX_PDU_SIZE];
-                packet = new DatagramPacket(buffer, buffer.length);
+        // Loop infinitely, receiving datagrams
+        while (true) {
+            byte buffer[] = new byte[MAX_PDU_SIZE];
+            packet = new DatagramPacket(buffer, buffer.length);
+            socket.receive(packet);
 
-                socket.receive(packet);
+            Pdu aPdu = pduFactory.createPdu(packet.getData());
 
-                List<Pdu> pduBundle = pduFactory.getPdusFromBundle(packet.getData());
-                System.out.println("Bundle size is " + pduBundle.size());
-                
-                Iterator it = pduBundle.iterator();
+            System.out.println("Received PDU of type: " + aPdu.getClass().getName());
+            if (aPdu instanceof EntityStatePdu) {
+                EntityID eid = ((EntityStatePdu) aPdu).getEntityID();
+                Vector3Double position = ((EntityStatePdu) aPdu).getEntityLocation();
+                System.out.println(" Site,App,Id:[" + eid.getSite() + ", " + eid.getApplication() + ", " + eid.getEntity() + "] ");
+                System.out.println(" Location in DIS coordinates: [" + position.getX() + ", " + position.getY() + ", " + position.getZ() + "]");
 
-                while(it.hasNext())
-                {
-                    Pdu aPdu = (Pdu)it.next();
-                
-                    System.out.print("got PDU of type: " + aPdu.getClass().getName());
-                    if(aPdu instanceof EntityStatePdu)
-                    {
-                        EntityID eid = ((EntityStatePdu)aPdu).getEntityID();
-                        Vector3Double position = ((EntityStatePdu)aPdu).getEntityLocation();
-                        System.out.print(" EID:[" + eid.getSite() + ", " + eid.getApplication() + ", " + eid.getEntity() + "] ");
-                        System.out.print(" Location in DIS coordinates: [" + position.getX() + ", " + position.getY() + ", " + position.getZ() + "]");
-                    }
-                    System.out.println();
-                } // end trop through PDU bundle
-
-            } // end while
-        } // End try
-        catch (Exception e) {
-
-            System.out.println(e);
+                final double[] latlon = CoordinateConversions.xyzToLatLonDegrees(position.toArray());
+                System.out.println(" Location in Latitude Longitude Elevation: [" + latlon[0] + ", " + latlon[1] + ", " + latlon[2] + "]");
+            }
         }
-
-
-    } // end main
-} // end class
+    }
+}
