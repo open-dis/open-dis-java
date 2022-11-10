@@ -1,4 +1,6 @@
-package edu.nps.moves.examples;
+package edu.nps.moves.disutil;
+
+
 
 import edu.nps.moves.dis.*;
 
