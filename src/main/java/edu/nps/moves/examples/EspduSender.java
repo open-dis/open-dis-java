@@ -2,12 +2,10 @@ package edu.nps.moves.examples;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 import edu.nps.moves.dis.*;
 import edu.nps.moves.disutil.CoordinateConversions;
 import edu.nps.moves.disutil.DisTime;
-import static edu.nps.moves.examples.EspduSender.NUMBER_TO_SEND;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,92 +15,21 @@ import java.util.concurrent.TimeUnit;
  */
 public class EspduSender {
 
-    public static final int NUMBER_TO_SEND = 5000;
+    public static final int NUMBER_TO_SEND = 100;
 
-    public enum NetworkMode {
-        UNICAST, MULTICAST, BROADCAST
-    };
-
-    /**
-     * Default multicast group address we send on
-     */
     public static final String DEFAULT_MULTICAST_GROUP = "239.1.2.3";
 
-    /**
-     * Default port we send on
-     */
     public static final int DIS_DESTINATION_PORT = 3000;
-    
+
     public static final int DIS_HEARTBEAT_SECS = 10;
 
-    /**
-     * Possible system properties, passed in via -Dattr=val networkMode:
-     * unicast, broadcast, multicast destinationIp: where to send the packet. If
-     * in multicast mode, this can be multicast. To determine broadcast
-     * destination IP, use an online broadcast address calculator, for example
-     * http://www.remotemonitoringsystems.ca/broadcast.php If in multicast mode,
-     * a join() will be done on the multicast address. port: port used for both
-     * source and destination.
-     *
-     * @param args
-     */
     public static void main(String args[]) throws UnknownHostException, IOException, RuntimeException, InterruptedException {
 
-        MulticastSocket socket = null; // must be initialized, even if null
-        Set<InetAddress> broadcastAddresses;
+        InetAddress destinationIp = InetAddress.getByName(DEFAULT_MULTICAST_GROUP);
 
-        // Default settings. These are used if no system properties are set. 
-        // If system properties are passed in, these are over ridden.
-        int port = DIS_DESTINATION_PORT;
-        NetworkMode mode = NetworkMode.MULTICAST;
-        InetAddress destinationIp = null; // must be initialized, even if null
+        MulticastSocket socket = new MulticastSocket(DIS_DESTINATION_PORT);
+        socket.joinGroup(destinationIp);
 
-        destinationIp = InetAddress.getByName(DEFAULT_MULTICAST_GROUP);
-
-        // All system properties, passed in on the command line via -Dattribute=value
-        final Properties systemProperties = System.getProperties();
-
-        // IP address we send to
-        final String destinationIpString = systemProperties.getProperty("destinationIp");
-
-        // Port we send to, and local port we open the socket on
-        final String portString = systemProperties.getProperty("port");
-
-        // Network mode: unicast, multicast, broadcast
-        final String networkModeString = systemProperties.getProperty("networkMode"); // unicast or multicast or broadcast
-
-        // Set up a socket to send information
-        // Port we send to
-        if (portString != null) {
-            port = Integer.parseInt(portString);
-        }
-
-        // Where we send packets to, the destination IP address
-        if (destinationIpString != null) {
-            destinationIp = InetAddress.getByName(destinationIpString);
-        }
-
-        // Type of transport: unicast, broadcast, or multicast
-        // TODO convert to String constants
-        if (networkModeString != null) {
-            if (networkModeString.equalsIgnoreCase("unicast")) {
-                mode = NetworkMode.UNICAST;
-            } else if (networkModeString.equalsIgnoreCase("broadcast")) {
-                mode = NetworkMode.BROADCAST;
-            } else if (networkModeString.equalsIgnoreCase("multicast")) {
-                mode = NetworkMode.MULTICAST;
-            }
-        }
-
-        if (mode == NetworkMode.MULTICAST) {
-            if (!destinationIp.isMulticastAddress()) {
-                throw new RuntimeException("Sending to multicast address, but destination address " + destinationIp.toString() + "is not multicast");
-            }
-            socket = new MulticastSocket(port);
-            socket.joinGroup(destinationIp);
-        }
-
-        
         EntityStatePdu espdu = new EntityStatePdu();
 
         // Initialize values in the Entity State PDU object. The exercise ID is 
@@ -133,16 +60,13 @@ public class EspduSender {
         entityType.setSubcategory((short) 1);     // M1 Abrams
         entityType.setSpec((short) 3);            // M1A2 Abrams
 
-        
         DisTime disTime = DisTime.getInstance(); // TODO explain
 
         // ICBM coordinates for my office
         double lat = 36.595517;
         double lon = -121.877000;
 
-        
         // Loop through sending N ESPDUs
-
         System.out.println("Sending " + NUMBER_TO_SEND + " ESPDU packets to " + destinationIp.toString() + ". One packet every " + DIS_HEARTBEAT_SECS + " seconds.");
         for (int idx = 0; idx < NUMBER_TO_SEND; idx++) {
             // DIS time is a pain in the ass. DIS time units are 2^31-1 units per
@@ -194,9 +118,9 @@ public class EspduSender {
             // The byte array here is the packet in DIS format. We put that into a 
             // datagram and send it.
             byte[] data = baos.toByteArray();
- 
-            DatagramPacket packet = new DatagramPacket(data,data.length, destinationIp, 3000);
-            socket.send(packet);            
+
+            DatagramPacket packet = new DatagramPacket(data, data.length, destinationIp, socket.getLocalPort());
+            socket.send(packet);
 
             location = espdu.getEntityLocation();
 
@@ -209,52 +133,4 @@ public class EspduSender {
             Thread.sleep(TimeUnit.SECONDS.toMillis(DIS_HEARTBEAT_SECS));
         }
     }
-
-    /**
-     * A number of sites get all snippy about using 255.255.255.255 for a
-     * broadcast address; it trips their security software and they kick you off
-     * their network. (Comcast, NPS.) This determines the broadcast address for
-     * all connected interfaces, based on the IP and subnet mask. If you have a
-     * dual-homed host it will return a broadcast address for both. If you have
-     * some VMs running on your host this will pick up the addresses for those
-     * as well--eg running VMWare on your laptop with a local IP this will also
-     * pick up a 192.168 address assigned to the VM by the host OS.
-     *
-     * @return set of all broadcast addresses
-     */
-    public static Set<InetAddress> getBroadcastAddresses() {
-        Set<InetAddress> broadcastAddresses = new HashSet<>();
-        Enumeration interfaces;
-
-        try {
-            interfaces = NetworkInterface.getNetworkInterfaces();
-
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface anInterface = (NetworkInterface) interfaces.nextElement();
-
-                if (anInterface.isUp()) {
-                    Iterator it = anInterface.getInterfaceAddresses().iterator();
-                    while (it.hasNext()) {
-                        InterfaceAddress anAddress = (InterfaceAddress) it.next();
-                        if ((anAddress == null || anAddress.getAddress().isLinkLocalAddress())) {
-                            continue;
-                        }
-
-                        //System.out.println("Getting broadcast address for " + anAddress);
-                        InetAddress broadcastAddress = anAddress.getBroadcast();
-                        if (broadcastAddress != null) {
-                            broadcastAddresses.add(broadcastAddress);
-                        }
-                    }
-                }
-            }
-
-        } catch (SocketException e) {
-            e.printStackTrace();
-            System.out.println(e);
-        }
-
-        return broadcastAddresses;
-    }
-
 }

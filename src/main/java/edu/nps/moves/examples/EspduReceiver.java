@@ -13,24 +13,18 @@ import java.io.IOException;
  */
 public class EspduReceiver {
 
-    /**
-     * Max size of a PDU in binary format that we can receive. This is actually
-     * somewhat outdated--PDUs can be larger--but this is a reasonable starting
-     * point
-     */
-    public static final int MAX_PDU_SIZE = 8192;
+    public static final int MAX_PDU_SIZE = 16384;
 
     public static final int DIS_PORT = 3000;
 
     public static void main(String args[]) throws IOException {
-        MulticastSocket socket;
-        DatagramPacket packet;
-        InetAddress address;
-        PduFactory pduFactory = new PduFactory();
 
-        socket = new MulticastSocket(DIS_PORT);
-        address = InetAddress.getByName(EspduSender.DEFAULT_MULTICAST_GROUP);
+        MulticastSocket socket = new MulticastSocket(DIS_PORT);
+        InetAddress address = InetAddress.getByName(EspduSender.DEFAULT_MULTICAST_GROUP);
         socket.joinGroup(address);
+
+        DatagramPacket packet;
+        PduFactory pduFactory = new PduFactory();
 
         // Loop infinitely, receiving datagrams
         while (true) {
