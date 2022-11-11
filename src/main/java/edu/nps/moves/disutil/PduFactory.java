@@ -83,13 +83,10 @@ public class PduFactory {
      */
     public Pdu createPdu(java.nio.ByteBuffer buff) {
 
-        int pos = buff.position();          // Save buffer's position
-        if (pos + 2 > buff.limit()) {       // Make sure there's enough space in buffer
-            return null;                    // Else return null
-        }   // end if: buffer too short
-        buff.position(pos + 2);             // Advance to third byte
-        final int pduType = Pdu.toUnsignedInt(buff.get());    // Read Pdu type
-        buff.position(pos);                 // Reset buffer
+        final int pduType = peekAtPduType(buff);
+        if (pduType == -1) {
+            return null;
+        }
 
         Pdu aPdu = null;
 
@@ -366,9 +363,7 @@ public class PduFactory {
         }
 
         if (aPdu != null) {
-            pos = buff.position();      // Save buffer's position
             aPdu.unmarshal(buff);
-            buff.position(pos);         // Reset buffer
         }
         return aPdu;
     }
@@ -431,5 +426,19 @@ public class PduFactory {
         } // end while
 
         return pdus;
+    }
+
+    /**
+     * For checking the pdu type within the buffer before unmarshalling.
+     */
+    private static int peekAtPduType(java.nio.ByteBuffer buff) {
+        int pos = buff.position();          // Save buffer's position
+        if (pos + 2 > buff.limit()) {       // Make sure there's enough space in buffer
+            return -1;                    // Else return
+        }   // end if: buffer too short
+        buff.position(pos + 2);             // Advance to third byte
+        final int pduType = Pdu.toUnsignedInt(buff.get());    // Read Pdu type
+        buff.position(pos);                 // Reset buffer
+        return pduType;
     }
 }
