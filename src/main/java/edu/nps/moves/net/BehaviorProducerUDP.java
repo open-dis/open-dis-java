@@ -58,6 +58,7 @@ import java.nio.Buffer;
  *
  * @author DMcG
  */
+@Deprecated(since = "5.1", forRemoval = true)
 public class BehaviorProducerUDP implements BehaviorProducerIF, // Listener pattern for pdus
                                             BehaviorWriterIF, // IF for writing DIS pdus
                                             Runnable // Threaded object
