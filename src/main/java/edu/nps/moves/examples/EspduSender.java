@@ -109,17 +109,8 @@ public class EspduSender {
             // You can set other ESPDU values here, such as the velocity, acceleration,
             // and so on.
             
-            // Marshal out the espdu object to a byte array, then send a datagram
-            // packet with that data in it.
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(baos);
-            espdu.marshal(dos);
 
-            // The byte array here is the packet in DIS format. We put that into a 
-            // datagram and send it.
-            byte[] data = baos.toByteArray();
-
-            DatagramPacket packet = new DatagramPacket(data, data.length, destinationIp, socket.getLocalPort());
+            DatagramPacket packet = new DatagramPacket(espdu.marshal(), espdu.getLength(), destinationIp, socket.getLocalPort());
             socket.send(packet);
 
             location = espdu.getEntityLocation();
