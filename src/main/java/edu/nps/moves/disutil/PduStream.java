@@ -1,5 +1,6 @@
-package edu.nps.moves.dis;
+package edu.nps.moves.disutil;
 
+import edu.nps.moves.dis.Pdu;
 import java.util.*;
 import java.io.*;
 

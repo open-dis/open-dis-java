@@ -1,6 +1,7 @@
 
 package edu.nps.moves.logger;
 
+import edu.nps.moves.disutil.PduContainer;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -94,8 +95,7 @@ public class LogReplay
                 }
                 fileName = exerciseName + "/" + fileName;
                 
-                        JAXBContext context = JAXBContext.newInstance(
-                edu.nps.moves.dis.MinefieldStatePdu.class,
+                        JAXBContext context = JAXBContext.newInstance(edu.nps.moves.dis.MinefieldStatePdu.class,
                 edu.nps.moves.dis.AcknowledgeReliablePdu.class,
                 edu.nps.moves.dis.SyntheticEnvironmentFamilyPdu.class,
                 edu.nps.moves.dis.DesignatorPdu.class,
@@ -205,7 +205,7 @@ public class LogReplay
                 edu.nps.moves.dis.AcknowledgePdu.class,
                 edu.nps.moves.dis.EntityStatePdu.class,
                 edu.nps.moves.dis.RemoveEntityPdu.class,
-                edu.nps.moves.dis.PduContainer.class,
+                edu.nps.moves.disutil.PduContainer.class,
                 edu.nps.moves.dis.GriddedDataPdu.class,
                 edu.nps.moves.dis.VectoringNozzleSystemData.class,
                 edu.nps.moves.dis.DataPdu.class,
