@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  * @author Robert Harder
  * @since ??
  */
+@Deprecated(since = "5.1", forRemoval = true)
 public class PduNioMulticastReceiver extends NioServer {
 
     private final static Logger LOGGER = Logger.getLogger(PduNioMulticastReceiver.class.getName());

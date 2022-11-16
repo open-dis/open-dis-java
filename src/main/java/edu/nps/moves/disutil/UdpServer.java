@@ -81,6 +81,7 @@ import java.util.LinkedList;
  * @see Event
  * @see Listener
  */
+@Deprecated(since = "5.1", forRemoval = true)
 public class UdpServer {
 
     private final static Logger LOGGER = Logger.getLogger(UdpServer.class.getName());
