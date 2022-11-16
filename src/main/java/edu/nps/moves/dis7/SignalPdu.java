@@ -14,6 +14,7 @@ import java.io.*;
  */
 public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializable
 {
+   protected RadioCommsHeader header = new RadioCommsHeader();
    /** encoding scheme used, and enumeration */
    protected int  encodingScheme;
 
@@ -51,6 +52,17 @@ public int getMarshalledSize()
    marshalSize = marshalSize + data.length;
 
    return marshalSize;
+}
+
+public SignalPdu setHeader(RadioCommsHeader pHeader)
+{
+    header = pHeader;
+    return this;
+}
+
+public RadioCommsHeader getHeader()
+{
+    return header;
 }
 
 
