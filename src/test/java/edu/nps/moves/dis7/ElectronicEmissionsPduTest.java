@@ -1,7 +1,7 @@
 package edu.nps.moves.dis7;
 
 
-import edu.nps.moves.dis.PduFileLoader;
+import edu.nps.moves.disutil.PduFileLoader;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
