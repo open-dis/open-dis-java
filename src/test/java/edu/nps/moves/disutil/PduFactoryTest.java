@@ -45,6 +45,7 @@ import edu.nps.moves.dis.MinefieldQueryPdu;
 import edu.nps.moves.dis.MinefieldResponseNackPdu;
 import edu.nps.moves.dis.MinefieldStatePdu;
 import edu.nps.moves.dis.Pdu;
+import edu.nps.moves.dis.PduFileLoader;
 import edu.nps.moves.dis.PointObjectStatePdu;
 import edu.nps.moves.dis.ReceiverPdu;
 import edu.nps.moves.dis.RecordQueryReliablePdu;

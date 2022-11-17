@@ -1,6 +1,5 @@
 package edu.nps.moves.dis;
 
-import edu.nps.moves.disutil.PduFileLoader;
 import edu.nps.moves.disutil.BasicHaveQuickMpRecord;
 import edu.nps.moves.disutil.PduFactory;
 import java.io.IOException;
