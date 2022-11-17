@@ -1,6 +1,5 @@
 package edu.nps.moves.dis7;
 
-
 import edu.nps.moves.dis7.AcknowledgePdu;
 import edu.nps.moves.dis7.AcknowledgeReliablePdu;
 import edu.nps.moves.dis7.ActionRequestPdu;
@@ -63,47 +62,39 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+public class PduFactory {
 
-public class PduFactory
-{
     private boolean useFastPdu;
     private Logger logger;
 
-    public PduFactory()
-    {
+    public PduFactory() {
         this(false);
     }
 
-    public PduFactory(boolean useFastPdu)
-    {
+    public PduFactory(boolean useFastPdu) {
         this.useFastPdu = false;
         this.useFastPdu = useFastPdu;
         this.logger = Logger.getLogger(edu.nps.moves.disutil.PduFactory.class.getName());
         this.logger.setLevel(Level.OFF);
     }
 
-    public boolean getUseFastPdu()
-    {
+    public boolean getUseFastPdu() {
         return this.useFastPdu;
     }
 
-    public void setUseFastPdu(boolean use)
-    {
+    public void setUseFastPdu(boolean use) {
         this.useFastPdu = use;
     }
 
-    public void setLoggingLevel(Level loggingLevel)
-    {
+    public void setLoggingLevel(Level loggingLevel) {
         this.logger.setLevel(loggingLevel);
     }
 
-    public Pdu createPdu(byte[] data)
-    {
+    public Pdu createPdu(byte[] data) {
         return this.createPdu(ByteBuffer.wrap(data));
     }
 
-    public Pdu createPdu(ByteBuffer buff)
-    {
+    public Pdu createPdu(ByteBuffer buff) {
         int pos = buff.position();
         if (pos + 2 > buff.limit()) {
             return null;
@@ -279,15 +270,14 @@ public class PduFactory
             }
 
             if (aPdu != null) {
-                ( (Pdu) aPdu ).unmarshal(buff);
+                ((Pdu) aPdu).unmarshal(buff);
             }
 
             return (Pdu) aPdu;
         }
     }
 
-    public List<Pdu> getPdusFromBundle(byte[] data)
-    {
+    public List<Pdu> getPdusFromBundle(byte[] data) {
         ArrayList<Pdu> pdus = new ArrayList();
         int pduStartPointInData = 0;
 

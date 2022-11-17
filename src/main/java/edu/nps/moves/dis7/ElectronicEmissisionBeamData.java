@@ -1,88 +1,111 @@
 package edu.nps.moves.dis7;
 
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.util.Objects;
 
-
 /**
- * This field shall specify information about a particular active electronicEmissisionBeamData. Section 7.6.2.
+ * This field shall specify information about a particular active
+ * electronicEmissisionBeamData. Section 7.6.2.
  *
- * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved. This work is licensed under the BSD open source
- * license, available at https://www.movesinstitute.org/licenses/bsd.html
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All
+ * rights reserved. This work is licensed under the BSD open source license,
+ * available at https://www.movesinstitute.org/licenses/bsd.html
+ *
  * @author DMcG
  */
-public class ElectronicEmissisionBeamData extends Object implements Serializable
-{
-    /** Specifies the length of this electronicEmissisionBeamData's data, 8 bit unsigned int */
+public class ElectronicEmissisionBeamData extends Object implements Serializable {
+
+    /**
+     * Specifies the length of this electronicEmissisionBeamData's data, 8 bit
+     * unsigned int
+     */
     protected short beamDataLength;
 
-    /** unique electronicEmissisionBeamData number, 8 bit unsigned int */
+    /**
+     * unique electronicEmissisionBeamData number, 8 bit unsigned int
+     */
     protected short beamNumber;
 
     /**
-     * Used in conjunction with the Emitter Name field as a database primary key, this field shall specify a number by which receiving
-     * entities reference stored database parameters required to regenerate the electronicEmissisionBeamData., 16 bit unsigned int
+     * Used in conjunction with the Emitter Name field as a database primary
+     * key, this field shall specify a number by which receiving entities
+     * reference stored database parameters required to regenerate the
+     * electronicEmissisionBeamData., 16 bit unsigned int
      */
     protected int beamParameterIndex;
 
     /**
-     * specify dynamic parameters of the emitter and shall be represented by an EE Fundamental Parameter Data record (see 6.2.22).
+     * specify dynamic parameters of the emitter and shall be represented by an
+     * EE Fundamental Parameter Data record (see 6.2.22).
      */
     protected EEFundamentalParameterData fundamentalParameterData = new EEFundamentalParameterData();
 
     /**
-     * specify parameters of the electronicEmissisionBeamData and shall be represented by a ElectronicEmissisionBeamData Data record (see 6.2.11)
+     * specify parameters of the electronicEmissisionBeamData and shall be
+     * represented by a ElectronicEmissisionBeamData Data record (see 6.2.11)
      */
     protected BeamData beamData = new BeamData();
 
     /**
-     * specify the intended use of a particular electronicEmissisionBeamData. Typical functions include search, acquisition, tracking, illumination, jamming, and so
-     * on. This field is intended to help receiving entities determine the emission mode represented by the electronicEmissisionBeamData. This field shall be
-     * represented by an 8-bit enumeration
+     * specify the intended use of a particular electronicEmissisionBeamData.
+     * Typical functions include search, acquisition, tracking, illumination,
+     * jamming, and so on. This field is intended to help receiving entities
+     * determine the emission mode represented by the
+     * electronicEmissisionBeamData. This field shall be represented by an 8-bit
+     * enumeration
      */
     protected short beamFunction;
 
     /**
-     * This field, in conjunction with the High-Density Track/Jam field, shall identify, for the current PDU and emitter electronicEmissisionBeamData, the number of
-     * entities tracked or under illumination (as appropriate for an emitter electronicEmissisionBeamData’s function) or the number of targeted emitter beams (for
-     * jammers). This field shall be represented by an 8-bit unsigned integer.
+     * This field, in conjunction with the High-Density Track/Jam field, shall
+     * identify, for the current PDU and emitter electronicEmissisionBeamData,
+     * the number of entities tracked or under illumination (as appropriate for
+     * an emitter electronicEmissisionBeamData’s function) or the number of
+     * targeted emitter beams (for jammers). This field shall be represented by
+     * an 8-bit unsigned integer.
      */
     protected short numberOfTargets;
 
     /**
-     * This field shall be used to indicate that receiving simulation applications can assume that all viable targets in the field of regard
-     * specified by the electronicEmissisionBeamData data are being tracked or jammed. This field shall be represented by an 8-bit enumeration
+     * This field shall be used to indicate that receiving simulation
+     * applications can assume that all viable targets in the field of regard
+     * specified by the electronicEmissisionBeamData data are being tracked or
+     * jammed. This field shall be represented by an 8-bit enumeration
      */
     protected short highDensityTrackJam;
 
     /**
-     * This field shall indicate the status of the electronicEmissisionBeamData (e.g., the electronicEmissisionBeamData is active or deactivated) and shall be represented by the ElectronicEmissisionBeamData
-     * Status record (see 6.2.12)
+     * This field shall indicate the status of the electronicEmissisionBeamData
+     * (e.g., the electronicEmissisionBeamData is active or deactivated) and
+     * shall be represented by the ElectronicEmissisionBeamData Status record
+     * (see 6.2.12)
      */
     protected BeamStatus beamStatus = new BeamStatus();
 
     /**
-     * Jamming Technique. This field shall be used to identify the jamming method or methods and shall be represented by a Jamming Technique
-     * record (see 6.2.49).
+     * Jamming Technique. This field shall be used to identify the jamming
+     * method or methods and shall be represented by a Jamming Technique record
+     * (see 6.2.49).
      */
     protected JammingTechnique jammingTechnique = new JammingTechnique();
 
     /**
-     * This field is optional for any given electronicEmissisionBeamData. Rules for inclusion and use are provided in 5.7.3.3, 5.7.3.7, and 5.7.3.8. When included,
-     * this field shall be represented by a series of Track/Jam Data records (see 6.2.90).
+     * This field is optional for any given electronicEmissisionBeamData. Rules
+     * for inclusion and use are provided in 5.7.3.3, 5.7.3.7, and 5.7.3.8. When
+     * included, this field shall be represented by a series of Track/Jam Data
+     * records (see 6.2.90).
      */
     protected TrackJamData trackJamData = new TrackJamData();
 
-    /** Constructor */
-    public ElectronicEmissisionBeamData()
-    {
+    /**
+     * Constructor
+     */
+    public ElectronicEmissisionBeamData() {
     }
 
-    public int getMarshalledSize()
-    {
+    public int getMarshalledSize() {
         int marshalSize = 0;
 
         marshalSize = marshalSize + 1;  // beamDataLength
@@ -102,118 +125,95 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
         return marshalSize;
     }
 
-    public EEFundamentalParameterData getFundamentalParameterData()
-    {
+    public EEFundamentalParameterData getFundamentalParameterData() {
         return fundamentalParameterData;
     }
 
-    public void setFundamentalParameterData(EEFundamentalParameterData fundamentalParameterData)
-    {
+    public void setFundamentalParameterData(EEFundamentalParameterData fundamentalParameterData) {
         this.fundamentalParameterData = fundamentalParameterData;
     }
 
-    public BeamData getBeamData()
-    {
+    public BeamData getBeamData() {
         return beamData;
     }
 
-    public void setBeamData(BeamData beamData)
-    {
+    public void setBeamData(BeamData beamData) {
         this.beamData = beamData;
     }
 
-    public short getBeamFunction()
-    {
+    public short getBeamFunction() {
         return beamFunction;
     }
 
-    public void setBeamFunction(short beamFunction)
-    {
+    public void setBeamFunction(short beamFunction) {
         this.beamFunction = beamFunction;
     }
 
-    public short getNumberOfTargets()
-    {
+    public short getNumberOfTargets() {
         return numberOfTargets;
     }
 
-    public void setNumberOfTargets(short numberOfTargets)
-    {
+    public void setNumberOfTargets(short numberOfTargets) {
         this.numberOfTargets = numberOfTargets;
     }
 
-    public short getHighDensityTrackJam()
-    {
+    public short getHighDensityTrackJam() {
         return highDensityTrackJam;
     }
 
-    public void setHighDensityTrackJam(short highDensityTrackJam)
-    {
+    public void setHighDensityTrackJam(short highDensityTrackJam) {
         this.highDensityTrackJam = highDensityTrackJam;
     }
 
-    public BeamStatus getBeamStatus()
-    {
+    public BeamStatus getBeamStatus() {
         return beamStatus;
     }
 
-    public void setBeamStatus(BeamStatus beamStatus)
-    {
+    public void setBeamStatus(BeamStatus beamStatus) {
         this.beamStatus = beamStatus;
     }
 
-    public JammingTechnique getJammingTechnique()
-    {
+    public JammingTechnique getJammingTechnique() {
         return jammingTechnique;
     }
 
-    public void setJammingTechnique(JammingTechnique jammingTechnique)
-    {
+    public void setJammingTechnique(JammingTechnique jammingTechnique) {
         this.jammingTechnique = jammingTechnique;
     }
 
-    public TrackJamData getTrackJamData()
-    {
+    public TrackJamData getTrackJamData() {
         return trackJamData;
     }
 
-    public void setTrackJamData(TrackJamData trackJamData)
-    {
+    public void setTrackJamData(TrackJamData trackJamData) {
         this.trackJamData = trackJamData;
     }
 
-    public int getBeamDataLength()
-    {
+    public int getBeamDataLength() {
         return beamDataLength;
     }
 
-    public void setBeamDataLength(short beamDataLength)
-    {
+    public void setBeamDataLength(short beamDataLength) {
         this.beamDataLength = beamDataLength;
     }
 
-    public short getBeamNumber()
-    {
+    public short getBeamNumber() {
         return beamNumber;
     }
 
-    public void setBeamNumber(short pEmitterFunction)
-    {
+    public void setBeamNumber(short pEmitterFunction) {
         beamNumber = pEmitterFunction;
     }
 
-    public int getBeamParameterIndex()
-    {
+    public int getBeamParameterIndex() {
         return beamParameterIndex;
     }
 
-    public void setBeamParameterIndex(short pEmitterIDNumber)
-    {
+    public void setBeamParameterIndex(short pEmitterIDNumber) {
         beamParameterIndex = pEmitterIDNumber;
     }
 
-    public void marshal(DataOutputStream dos)
-    {
+    public void marshal(DataOutputStream dos) {
         try {
             dos.writeByte((byte) beamDataLength);
             dos.writeByte((byte) beamNumber);
@@ -236,14 +236,14 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
 
     /**
      * Packs a Pdu into the ByteBuffer.
+     *
      * @param buff The ByteBuffer at the position to begin writing
      * @throws java.nio.BufferOverflowException if buff is too small
      * @throws java.nio.ReadOnlyBufferException if buff is read only
      * @see java.nio.ByteBuffer
      * @since ??
      */
-    public void marshal(java.nio.ByteBuffer buff)
-    {
+    public void marshal(java.nio.ByteBuffer buff) {
         buff.put((byte) beamDataLength);
         buff.put((byte) beamNumber);
         buff.putShort((short) beamParameterIndex);
@@ -259,8 +259,7 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
         }
     } // end of marshal method
 
-    public void unmarshal(DataInputStream dis)
-    {
+    public void unmarshal(DataInputStream dis) {
         try {
             beamDataLength = (short) dis.readUnsignedByte();
             beamNumber = (short) dis.readUnsignedByte();
@@ -284,21 +283,21 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
 
     /**
      * Unpacks a Pdu from the underlying data.
+     *
      * @param buff The ByteBuffer at the position to begin reading
      * @throws java.nio.BufferUnderflowException if buff is too small
      * @see java.nio.ByteBuffer
      * @since ??
      */
-    public void unmarshal(java.nio.ByteBuffer buff)
-    {
-        beamDataLength = (short) ( buff.get() & 0xFF );
-        beamNumber = (short) ( buff.get() & 0xFF );
-        beamParameterIndex = ( buff.getShort() & 0xFFFF );
+    public void unmarshal(java.nio.ByteBuffer buff) {
+        beamDataLength = (short) (buff.get() & 0xFF);
+        beamNumber = (short) (buff.get() & 0xFF);
+        beamParameterIndex = (buff.getShort() & 0xFFFF);
         fundamentalParameterData.unmarshal(buff);
         beamData.unmarshal(buff);
-        beamFunction = (short) ( buff.get() & 0xFF );
-        numberOfTargets = (short) ( buff.get() & 0xFF );
-        highDensityTrackJam = (short) ( buff.get() & 0xFF );
+        beamFunction = (short) (buff.get() & 0xFF);
+        numberOfTargets = (short) (buff.get() & 0xFF);
+        highDensityTrackJam = (short) (buff.get() & 0xFF);
         beamStatus.unmarshal(buff);
         jammingTechnique.unmarshal(buff);
         if (numberOfTargets != 0) { //When the Number of Targets value is zero, this field shall be omitted
@@ -307,8 +306,7 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
     } // end of unmarshal method
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -316,24 +314,23 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
             return false;
         }
         ElectronicEmissisionBeamData electronicEmissisionBeamData = (ElectronicEmissisionBeamData) o;
-        return beamDataLength == electronicEmissisionBeamData.beamDataLength &&
-                   beamNumber == electronicEmissisionBeamData.beamNumber &&
-                   beamParameterIndex == electronicEmissisionBeamData.beamParameterIndex &&
-                   beamFunction == electronicEmissisionBeamData.beamFunction &&
-                   numberOfTargets == electronicEmissisionBeamData.numberOfTargets &&
-                   highDensityTrackJam == electronicEmissisionBeamData.highDensityTrackJam &&
-                   Objects.equals(fundamentalParameterData, electronicEmissisionBeamData.fundamentalParameterData) &&
-                   Objects.equals(beamData, electronicEmissisionBeamData.beamData) &&
-                   Objects.equals(beamStatus, electronicEmissisionBeamData.beamStatus) &&
-                   Objects.equals(jammingTechnique, electronicEmissisionBeamData.jammingTechnique) &&
-                   Objects.equals(trackJamData, electronicEmissisionBeamData.trackJamData);
+        return beamDataLength == electronicEmissisionBeamData.beamDataLength
+                && beamNumber == electronicEmissisionBeamData.beamNumber
+                && beamParameterIndex == electronicEmissisionBeamData.beamParameterIndex
+                && beamFunction == electronicEmissisionBeamData.beamFunction
+                && numberOfTargets == electronicEmissisionBeamData.numberOfTargets
+                && highDensityTrackJam == electronicEmissisionBeamData.highDensityTrackJam
+                && Objects.equals(fundamentalParameterData, electronicEmissisionBeamData.fundamentalParameterData)
+                && Objects.equals(beamData, electronicEmissisionBeamData.beamData)
+                && Objects.equals(beamStatus, electronicEmissisionBeamData.beamStatus)
+                && Objects.equals(jammingTechnique, electronicEmissisionBeamData.jammingTechnique)
+                && Objects.equals(trackJamData, electronicEmissisionBeamData.trackJamData);
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects
-                   .hash(beamDataLength, beamNumber, beamParameterIndex, fundamentalParameterData, beamData, beamFunction, numberOfTargets, highDensityTrackJam, beamStatus, jammingTechnique, trackJamData);
+                .hash(beamDataLength, beamNumber, beamParameterIndex, fundamentalParameterData, beamData, beamFunction, numberOfTargets, highDensityTrackJam, beamStatus, jammingTechnique, trackJamData);
     }
 
 } // end of class
