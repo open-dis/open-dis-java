@@ -2,244 +2,289 @@ package edu.nps.moves.dis;
 
 import java.io.*;
 
-
 /**
- * Section 5.2.22. Contains electromagnetic emmision regineratin parameters that are        variable throughout a scenario dependent on the actions of the participants in the simulation. Also provides basic parametric data that may be used to support low-fidelity simulations.
+ * Section 5.2.22. Contains electromagnetic emmision regineratin parameters that
+ * are variable throughout a scenario dependent on the actions of the
+ * participants in the simulation. Also provides basic parametric data that may
+ * be used to support low-fidelity simulations.
  *
- * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
- * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All
+ * rights reserved. This work is licensed under the BSD open source license,
+ * available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
  */
-public class FundamentalParameterData extends Object implements Serializable
-{
-   /** center frequency of the emission in hertz. */
-   protected float  frequency;
+public class FundamentalParameterData extends Object implements Serializable {
 
-   /** Bandwidth of the frequencies corresponding to the fequency field. */
-   protected float  frequencyRange;
+    /**
+     * center frequency of the emission in hertz.
+     */
+    protected float frequency;
 
-   /** Effective radiated power for the emission in DdBm. For a      radar noise jammer, indicates the peak of the transmitted power. */
-   protected float  effectiveRadiatedPower;
+    /**
+     * Bandwidth of the frequencies corresponding to the fequency field.
+     */
+    protected float frequencyRange;
 
-   /** Average repetition frequency of the emission in hertz. */
-   protected float  pulseRepetitionFrequency;
+    /**
+     * Effective radiated power for the emission in DdBm. For a radar noise
+     * jammer, indicates the peak of the transmitted power.
+     */
+    protected float effectiveRadiatedPower;
 
-   /** Average pulse width  of the emission in microseconds. */
-   protected float  pulseWidth;
+    /**
+     * Average repetition frequency of the emission in hertz.
+     */
+    protected float pulseRepetitionFrequency;
 
-   /** Specifies the beam azimuth an elevation centers and corresponding half-angles     to describe the scan volume */
-   protected float  beamAzimuthCenter;
+    /**
+     * Average pulse width of the emission in microseconds.
+     */
+    protected float pulseWidth;
 
-   /** Specifies the beam azimuth sweep to determine scan volume */
-   protected float  beamAzimuthSweep;
+    /**
+     * Specifies the beam azimuth an elevation centers and corresponding
+     * half-angles to describe the scan volume
+     */
+    protected float beamAzimuthCenter;
 
-   /** Specifies the beam elevation center to determine scan volume */
-   protected float  beamElevationCenter;
+    /**
+     * Specifies the beam azimuth sweep to determine scan volume
+     */
+    protected float beamAzimuthSweep;
 
-   /** Specifies the beam elevation sweep to determine scan volume */
-   protected float  beamElevationSweep;
+    /**
+     * Specifies the beam elevation center to determine scan volume
+     */
+    protected float beamElevationCenter;
 
-   /** allows receiver to synchronize its regenerated scan pattern to     that of the emmitter. Specifies the percentage of time a scan is through its pattern from its origion. */
-   protected float  beamSweepSync;
+    /**
+     * Specifies the beam elevation sweep to determine scan volume
+     */
+    protected float beamElevationSweep;
 
+    /**
+     * allows receiver to synchronize its regenerated scan pattern to that of
+     * the emmitter. Specifies the percentage of time a scan is through its
+     * pattern from its origion.
+     */
+    protected float beamSweepSync;
 
-/** Constructor */
- public FundamentalParameterData()
- {
- }
+    /**
+     * Constructor
+     */
+    public FundamentalParameterData() {
+    }
 
-public int getMarshalledSize()
-{
-   int marshalSize = 0; 
+    public int getMarshalledSize() {
+        int marshalSize = 0;
 
-   marshalSize = marshalSize + 4;  // frequency
-   marshalSize = marshalSize + 4;  // frequencyRange
-   marshalSize = marshalSize + 4;  // effectiveRadiatedPower
-   marshalSize = marshalSize + 4;  // pulseRepetitionFrequency
-   marshalSize = marshalSize + 4;  // pulseWidth
-   marshalSize = marshalSize + 4;  // beamAzimuthCenter
-   marshalSize = marshalSize + 4;  // beamAzimuthSweep
-   marshalSize = marshalSize + 4;  // beamElevationCenter
-   marshalSize = marshalSize + 4;  // beamElevationSweep
-   marshalSize = marshalSize + 4;  // beamSweepSync
+        marshalSize = marshalSize + 4;  // frequency
+        marshalSize = marshalSize + 4;  // frequencyRange
+        marshalSize = marshalSize + 4;  // effectiveRadiatedPower
+        marshalSize = marshalSize + 4;  // pulseRepetitionFrequency
+        marshalSize = marshalSize + 4;  // pulseWidth
+        marshalSize = marshalSize + 4;  // beamAzimuthCenter
+        marshalSize = marshalSize + 4;  // beamAzimuthSweep
+        marshalSize = marshalSize + 4;  // beamElevationCenter
+        marshalSize = marshalSize + 4;  // beamElevationSweep
+        marshalSize = marshalSize + 4;  // beamSweepSync
 
-   return marshalSize;
-}
+        return marshalSize;
+    }
 
+    public void setFrequency(float pFrequency) {
+        frequency = pFrequency;
+    }
 
-public void setFrequency(float pFrequency)
-{ frequency = pFrequency;
-}
+    public float getFrequency() {
+        return frequency;
+    }
 
-public float getFrequency()
-{ return frequency; 
-}
+    public void setFrequencyRange(float pFrequencyRange) {
+        frequencyRange = pFrequencyRange;
+    }
 
-public void setFrequencyRange(float pFrequencyRange)
-{ frequencyRange = pFrequencyRange;
-}
+    public float getFrequencyRange() {
+        return frequencyRange;
+    }
 
-public float getFrequencyRange()
-{ return frequencyRange; 
-}
+    public void setEffectiveRadiatedPower(float pEffectiveRadiatedPower) {
+        effectiveRadiatedPower = pEffectiveRadiatedPower;
+    }
 
-public void setEffectiveRadiatedPower(float pEffectiveRadiatedPower)
-{ effectiveRadiatedPower = pEffectiveRadiatedPower;
-}
+    public float getEffectiveRadiatedPower() {
+        return effectiveRadiatedPower;
+    }
 
-public float getEffectiveRadiatedPower()
-{ return effectiveRadiatedPower; 
-}
+    public void setPulseRepetitionFrequency(float pPulseRepetitionFrequency) {
+        pulseRepetitionFrequency = pPulseRepetitionFrequency;
+    }
 
-public void setPulseRepetitionFrequency(float pPulseRepetitionFrequency)
-{ pulseRepetitionFrequency = pPulseRepetitionFrequency;
-}
+    public float getPulseRepetitionFrequency() {
+        return pulseRepetitionFrequency;
+    }
 
-public float getPulseRepetitionFrequency()
-{ return pulseRepetitionFrequency; 
-}
+    public void setPulseWidth(float pPulseWidth) {
+        pulseWidth = pPulseWidth;
+    }
 
-public void setPulseWidth(float pPulseWidth)
-{ pulseWidth = pPulseWidth;
-}
+    public float getPulseWidth() {
+        return pulseWidth;
+    }
 
-public float getPulseWidth()
-{ return pulseWidth; 
-}
+    public void setBeamAzimuthCenter(float pBeamAzimuthCenter) {
+        beamAzimuthCenter = pBeamAzimuthCenter;
+    }
 
-public void setBeamAzimuthCenter(float pBeamAzimuthCenter)
-{ beamAzimuthCenter = pBeamAzimuthCenter;
-}
+    public float getBeamAzimuthCenter() {
+        return beamAzimuthCenter;
+    }
 
-public float getBeamAzimuthCenter()
-{ return beamAzimuthCenter; 
-}
+    public void setBeamAzimuthSweep(float pBeamAzimuthSweep) {
+        beamAzimuthSweep = pBeamAzimuthSweep;
+    }
 
-public void setBeamAzimuthSweep(float pBeamAzimuthSweep)
-{ beamAzimuthSweep = pBeamAzimuthSweep;
-}
+    public float getBeamAzimuthSweep() {
+        return beamAzimuthSweep;
+    }
 
-public float getBeamAzimuthSweep()
-{ return beamAzimuthSweep; 
-}
+    public void setBeamElevationCenter(float pBeamElevationCenter) {
+        beamElevationCenter = pBeamElevationCenter;
+    }
 
-public void setBeamElevationCenter(float pBeamElevationCenter)
-{ beamElevationCenter = pBeamElevationCenter;
-}
+    public float getBeamElevationCenter() {
+        return beamElevationCenter;
+    }
 
-public float getBeamElevationCenter()
-{ return beamElevationCenter; 
-}
+    public void setBeamElevationSweep(float pBeamElevationSweep) {
+        beamElevationSweep = pBeamElevationSweep;
+    }
 
-public void setBeamElevationSweep(float pBeamElevationSweep)
-{ beamElevationSweep = pBeamElevationSweep;
-}
+    public float getBeamElevationSweep() {
+        return beamElevationSweep;
+    }
 
-public float getBeamElevationSweep()
-{ return beamElevationSweep; 
-}
+    public void setBeamSweepSync(float pBeamSweepSync) {
+        beamSweepSync = pBeamSweepSync;
+    }
 
-public void setBeamSweepSync(float pBeamSweepSync)
-{ beamSweepSync = pBeamSweepSync;
-}
+    public float getBeamSweepSync() {
+        return beamSweepSync;
+    }
 
-public float getBeamSweepSync()
-{ return beamSweepSync; 
-} 
-
-
-/**
- * Packs a Pdu into the ByteBuffer.
- * @throws java.nio.BufferOverflowException if buff is too small
- * @throws java.nio.ReadOnlyBufferException if buff is read only
- * @see java.nio.ByteBuffer
- * @param buff The ByteBuffer at the position to begin writing
- * @since ??
- */
-public void marshal(java.nio.ByteBuffer buff)
-{
-       buff.putFloat( (float)frequency);
-       buff.putFloat( (float)frequencyRange);
-       buff.putFloat( (float)effectiveRadiatedPower);
-       buff.putFloat( (float)pulseRepetitionFrequency);
-       buff.putFloat( (float)pulseWidth);
-       buff.putFloat( (float)beamAzimuthCenter);
-       buff.putFloat( (float)beamAzimuthSweep);
-       buff.putFloat( (float)beamElevationCenter);
-       buff.putFloat( (float)beamElevationSweep);
-       buff.putFloat( (float)beamSweepSync);
+    /**
+     * Packs a Pdu into the ByteBuffer.
+     *
+     * @throws java.nio.BufferOverflowException if buff is too small
+     * @throws java.nio.ReadOnlyBufferException if buff is read only
+     * @see java.nio.ByteBuffer
+     * @param buff The ByteBuffer at the position to begin writing
+     * @since ??
+     */
+    public void marshal(java.nio.ByteBuffer buff) {
+        buff.putFloat((float) frequency);
+        buff.putFloat((float) frequencyRange);
+        buff.putFloat((float) effectiveRadiatedPower);
+        buff.putFloat((float) pulseRepetitionFrequency);
+        buff.putFloat((float) pulseWidth);
+        buff.putFloat((float) beamAzimuthCenter);
+        buff.putFloat((float) beamAzimuthSweep);
+        buff.putFloat((float) beamElevationCenter);
+        buff.putFloat((float) beamElevationSweep);
+        buff.putFloat((float) beamSweepSync);
     } // end of marshal method
 
-/**
- * Unpacks a Pdu from the underlying data.
- * @throws java.nio.BufferUnderflowException if buff is too small
- * @see java.nio.ByteBuffer
- * @param buff The ByteBuffer at the position to begin reading
- * @since ??
- */
-public void unmarshal(java.nio.ByteBuffer buff)
-{
-       frequency = buff.getFloat();
-       frequencyRange = buff.getFloat();
-       effectiveRadiatedPower = buff.getFloat();
-       pulseRepetitionFrequency = buff.getFloat();
-       pulseWidth = buff.getFloat();
-       beamAzimuthCenter = buff.getFloat();
-       beamAzimuthSweep = buff.getFloat();
-       beamElevationCenter = buff.getFloat();
-       beamElevationSweep = buff.getFloat();
-       beamSweepSync = buff.getFloat();
- } // end of unmarshal method 
+    /**
+     * Unpacks a Pdu from the underlying data.
+     *
+     * @throws java.nio.BufferUnderflowException if buff is too small
+     * @see java.nio.ByteBuffer
+     * @param buff The ByteBuffer at the position to begin reading
+     * @since ??
+     */
+    public void unmarshal(java.nio.ByteBuffer buff) {
+        frequency = buff.getFloat();
+        frequencyRange = buff.getFloat();
+        effectiveRadiatedPower = buff.getFloat();
+        pulseRepetitionFrequency = buff.getFloat();
+        pulseWidth = buff.getFloat();
+        beamAzimuthCenter = buff.getFloat();
+        beamAzimuthSweep = buff.getFloat();
+        beamElevationCenter = buff.getFloat();
+        beamElevationSweep = buff.getFloat();
+        beamSweepSync = buff.getFloat();
+    } // end of unmarshal method 
 
 
- /*
+    /*
   * The equals method doesn't always work--mostly it works only on classes that consist only of primitives. Be careful.
-  */
-@Override
- public boolean equals(Object obj)
- {
+     */
+    @Override
+    public boolean equals(Object obj) {
 
-    if(this == obj){
-      return true;
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        return equalsImpl(obj);
     }
 
-    if(obj == null){
-       return false;
+    /**
+     * Compare all fields that contribute to the state, ignoring transient and
+     * static fields, for <code>this</code> and the supplied object
+     *
+     * @param obj the object to compare to
+     * @return true if the objects are equal, false otherwise.
+     */
+    public boolean equalsImpl(Object obj) {
+        boolean ivarsEqual = true;
+
+        if (!(obj instanceof FundamentalParameterData)) {
+            return false;
+        }
+
+        final FundamentalParameterData rhs = (FundamentalParameterData) obj;
+
+        if (!(frequency == rhs.frequency)) {
+            ivarsEqual = false;
+        }
+        if (!(frequencyRange == rhs.frequencyRange)) {
+            ivarsEqual = false;
+        }
+        if (!(effectiveRadiatedPower == rhs.effectiveRadiatedPower)) {
+            ivarsEqual = false;
+        }
+        if (!(pulseRepetitionFrequency == rhs.pulseRepetitionFrequency)) {
+            ivarsEqual = false;
+        }
+        if (!(pulseWidth == rhs.pulseWidth)) {
+            ivarsEqual = false;
+        }
+        if (!(beamAzimuthCenter == rhs.beamAzimuthCenter)) {
+            ivarsEqual = false;
+        }
+        if (!(beamAzimuthSweep == rhs.beamAzimuthSweep)) {
+            ivarsEqual = false;
+        }
+        if (!(beamElevationCenter == rhs.beamElevationCenter)) {
+            ivarsEqual = false;
+        }
+        if (!(beamElevationSweep == rhs.beamElevationSweep)) {
+            ivarsEqual = false;
+        }
+        if (!(beamSweepSync == rhs.beamSweepSync)) {
+            ivarsEqual = false;
+        }
+
+        return ivarsEqual;
     }
-
-    if(getClass() != obj.getClass())
-        return false;
-
-    return equalsImpl(obj);
- }
-
- /**
-  * Compare all fields that contribute to the state, ignoring
- transient and static fields, for <code>this</code> and the supplied object
-  * @param obj the object to compare to
-  * @return true if the objects are equal, false otherwise.
-  */
- public boolean equalsImpl(Object obj)
- {
-     boolean ivarsEqual = true;
-
-    if(!(obj instanceof FundamentalParameterData))
-        return false;
-
-     final FundamentalParameterData rhs = (FundamentalParameterData)obj;
-
-     if( ! (frequency == rhs.frequency)) ivarsEqual = false;
-     if( ! (frequencyRange == rhs.frequencyRange)) ivarsEqual = false;
-     if( ! (effectiveRadiatedPower == rhs.effectiveRadiatedPower)) ivarsEqual = false;
-     if( ! (pulseRepetitionFrequency == rhs.pulseRepetitionFrequency)) ivarsEqual = false;
-     if( ! (pulseWidth == rhs.pulseWidth)) ivarsEqual = false;
-     if( ! (beamAzimuthCenter == rhs.beamAzimuthCenter)) ivarsEqual = false;
-     if( ! (beamAzimuthSweep == rhs.beamAzimuthSweep)) ivarsEqual = false;
-     if( ! (beamElevationCenter == rhs.beamElevationCenter)) ivarsEqual = false;
-     if( ! (beamElevationSweep == rhs.beamElevationSweep)) ivarsEqual = false;
-     if( ! (beamSweepSync == rhs.beamSweepSync)) ivarsEqual = false;
-
-    return ivarsEqual;
- }
 } // end of class

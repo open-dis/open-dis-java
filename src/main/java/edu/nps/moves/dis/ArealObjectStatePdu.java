@@ -3,281 +3,325 @@ package edu.nps.moves.dis;
 import java.util.*;
 import java.io.*;
 
-
 /**
- * Section 5.3.11.5: Information about the addition/modification of an oobject that is geometrically      achored to the terrain with a set of three or more points that come to a closure. COMPLETE
+ * Section 5.3.11.5: Information about the addition/modification of an oobject
+ * that is geometrically achored to the terrain with a set of three or more
+ * points that come to a closure. COMPLETE
  *
- * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All rights reserved.
- * This work is licensed under the BSD open source license, available at https://www.movesinstitute.org/licenses/bsd.html
+ * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All
+ * rights reserved. This work is licensed under the BSD open source license,
+ * available at https://www.movesinstitute.org/licenses/bsd.html
  *
  * @author DMcG
  */
-public class ArealObjectStatePdu extends SyntheticEnvironmentFamilyPdu implements Serializable
-{
-   /** Object in synthetic environment */
-   protected EntityID  objectID = new EntityID(); 
+public class ArealObjectStatePdu extends SyntheticEnvironmentFamilyPdu implements Serializable {
 
-   /** Object with which this point object is associated */
-   protected EntityID  referencedObjectID = new EntityID(); 
+    /**
+     * Object in synthetic environment
+     */
+    protected EntityID objectID = new EntityID();
 
-   /** unique update number of each state transition of an object */
-   protected int  updateNumber;
+    /**
+     * Object with which this point object is associated
+     */
+    protected EntityID referencedObjectID = new EntityID();
 
-   /** force ID */
-   protected short  forceID;
+    /**
+     * unique update number of each state transition of an object
+     */
+    protected int updateNumber;
 
-   /** modifications enumeration */
-   protected short  modifications;
+    /**
+     * force ID
+     */
+    protected short forceID;
 
-   /** Object type */
-   protected EntityType  objectType = new EntityType(); 
+    /**
+     * modifications enumeration
+     */
+    protected short modifications;
 
-   /** Object appearance */
-   protected SixByteChunk  objectAppearance = new SixByteChunk(); 
+    /**
+     * Object type
+     */
+    protected EntityType objectType = new EntityType();
 
-   /** Number of points */
-   protected int  numberOfPoints;
+    /**
+     * Object appearance
+     */
+    protected SixByteChunk objectAppearance = new SixByteChunk();
 
-   /** requesterID */
-   protected SimulationAddress  requesterID = new SimulationAddress(); 
+    /**
+     * Number of points
+     */
+    protected int numberOfPoints;
 
-   /** receiver ID */
-   protected SimulationAddress  receivingID = new SimulationAddress(); 
+    /**
+     * requesterID
+     */
+    protected SimulationAddress requesterID = new SimulationAddress();
 
-   /** location of object */
-   protected List< Vector3Double > objectLocation = new ArrayList< Vector3Double >(); 
+    /**
+     * receiver ID
+     */
+    protected SimulationAddress receivingID = new SimulationAddress();
 
-/** Constructor */
- public ArealObjectStatePdu()
- {
-    setPduType( (short)45 );
- }
+    /**
+     * location of object
+     */
+    protected List< Vector3Double> objectLocation = new ArrayList< Vector3Double>();
 
-public int getMarshalledSize()
-{
-   int marshalSize = 0; 
+    /**
+     * Constructor
+     */
+    public ArealObjectStatePdu() {
+        setPduType((short) 45);
+    }
 
-   marshalSize = super.getMarshalledSize();
-   marshalSize = marshalSize + objectID.getMarshalledSize();  // objectID
-   marshalSize = marshalSize + referencedObjectID.getMarshalledSize();  // referencedObjectID
-   marshalSize = marshalSize + 2;  // updateNumber
-   marshalSize = marshalSize + 1;  // forceID
-   marshalSize = marshalSize + 1;  // modifications
-   marshalSize = marshalSize + objectType.getMarshalledSize();  // objectType
-   marshalSize = marshalSize + objectAppearance.getMarshalledSize();  // objectAppearance
-   marshalSize = marshalSize + 2;  // numberOfPoints
-   marshalSize = marshalSize + requesterID.getMarshalledSize();  // requesterID
-   marshalSize = marshalSize + receivingID.getMarshalledSize();  // receivingID
-   for(int idx=0; idx < objectLocation.size(); idx++)
-   {
-        Vector3Double listElement = objectLocation.get(idx);
-        marshalSize = marshalSize + listElement.getMarshalledSize();
-   }
+    public int getMarshalledSize() {
+        int marshalSize = 0;
 
-   return marshalSize;
-}
+        marshalSize = super.getMarshalledSize();
+        marshalSize = marshalSize + objectID.getMarshalledSize();  // objectID
+        marshalSize = marshalSize + referencedObjectID.getMarshalledSize();  // referencedObjectID
+        marshalSize = marshalSize + 2;  // updateNumber
+        marshalSize = marshalSize + 1;  // forceID
+        marshalSize = marshalSize + 1;  // modifications
+        marshalSize = marshalSize + objectType.getMarshalledSize();  // objectType
+        marshalSize = marshalSize + objectAppearance.getMarshalledSize();  // objectAppearance
+        marshalSize = marshalSize + 2;  // numberOfPoints
+        marshalSize = marshalSize + requesterID.getMarshalledSize();  // requesterID
+        marshalSize = marshalSize + receivingID.getMarshalledSize();  // receivingID
+        for (int idx = 0; idx < objectLocation.size(); idx++) {
+            Vector3Double listElement = objectLocation.get(idx);
+            marshalSize = marshalSize + listElement.getMarshalledSize();
+        }
 
+        return marshalSize;
+    }
 
-public void setObjectID(EntityID pObjectID)
-{ objectID = pObjectID;
-}
+    public void setObjectID(EntityID pObjectID) {
+        objectID = pObjectID;
+    }
 
-public EntityID getObjectID()
-{ return objectID; 
-}
+    public EntityID getObjectID() {
+        return objectID;
+    }
 
-public void setReferencedObjectID(EntityID pReferencedObjectID)
-{ referencedObjectID = pReferencedObjectID;
-}
+    public void setReferencedObjectID(EntityID pReferencedObjectID) {
+        referencedObjectID = pReferencedObjectID;
+    }
 
-public EntityID getReferencedObjectID()
-{ return referencedObjectID; 
-}
+    public EntityID getReferencedObjectID() {
+        return referencedObjectID;
+    }
 
-public void setUpdateNumber(int pUpdateNumber)
-{ updateNumber = pUpdateNumber;
-}
+    public void setUpdateNumber(int pUpdateNumber) {
+        updateNumber = pUpdateNumber;
+    }
 
-public int getUpdateNumber()
-{ return updateNumber; 
-}
+    public int getUpdateNumber() {
+        return updateNumber;
+    }
 
-public void setForceID(short pForceID)
-{ forceID = pForceID;
-}
+    public void setForceID(short pForceID) {
+        forceID = pForceID;
+    }
 
-public short getForceID()
-{ return forceID; 
-}
+    public short getForceID() {
+        return forceID;
+    }
 
-public void setModifications(short pModifications)
-{ modifications = pModifications;
-}
+    public void setModifications(short pModifications) {
+        modifications = pModifications;
+    }
 
-public short getModifications()
-{ return modifications; 
-}
+    public short getModifications() {
+        return modifications;
+    }
 
-public void setObjectType(EntityType pObjectType)
-{ objectType = pObjectType;
-}
+    public void setObjectType(EntityType pObjectType) {
+        objectType = pObjectType;
+    }
 
-public EntityType getObjectType()
-{ return objectType; 
-}
+    public EntityType getObjectType() {
+        return objectType;
+    }
 
-public void setObjectAppearance(SixByteChunk pObjectAppearance)
-{ objectAppearance = pObjectAppearance;
-}
+    public void setObjectAppearance(SixByteChunk pObjectAppearance) {
+        objectAppearance = pObjectAppearance;
+    }
 
-public SixByteChunk getObjectAppearance()
-{ return objectAppearance; 
-}
+    public SixByteChunk getObjectAppearance() {
+        return objectAppearance;
+    }
 
-public int getNumberOfPoints()
-{ return (int)objectLocation.size();
-}
+    public int getNumberOfPoints() {
+        return (int) objectLocation.size();
+    }
 
-/** Note that setting this value will not change the marshalled value. The list whose length this describes is used for that purpose.
- * The getnumberOfPoints method will also be based on the actual list length rather than this value. 
- * The method is simply here for java bean completeness.
- */
-public void setNumberOfPoints(int pNumberOfPoints)
-{ numberOfPoints = pNumberOfPoints;
-}
+    /**
+     * Note that setting this value will not change the marshalled value. The
+     * list whose length this describes is used for that purpose. The
+     * getnumberOfPoints method will also be based on the actual list length
+     * rather than this value. The method is simply here for java bean
+     * completeness.
+     */
+    public void setNumberOfPoints(int pNumberOfPoints) {
+        numberOfPoints = pNumberOfPoints;
+    }
 
-public void setRequesterID(SimulationAddress pRequesterID)
-{ requesterID = pRequesterID;
-}
+    public void setRequesterID(SimulationAddress pRequesterID) {
+        requesterID = pRequesterID;
+    }
 
-public SimulationAddress getRequesterID()
-{ return requesterID; 
-}
+    public SimulationAddress getRequesterID() {
+        return requesterID;
+    }
 
-public void setReceivingID(SimulationAddress pReceivingID)
-{ receivingID = pReceivingID;
-}
+    public void setReceivingID(SimulationAddress pReceivingID) {
+        receivingID = pReceivingID;
+    }
 
-public SimulationAddress getReceivingID()
-{ return receivingID; 
-}
+    public SimulationAddress getReceivingID() {
+        return receivingID;
+    }
 
-public void setObjectLocation(List<Vector3Double> pObjectLocation)
-{ objectLocation = pObjectLocation;
-}
+    public void setObjectLocation(List<Vector3Double> pObjectLocation) {
+        objectLocation = pObjectLocation;
+    }
 
-public List<Vector3Double> getObjectLocation()
-{ return objectLocation; }
+    public List<Vector3Double> getObjectLocation() {
+        return objectLocation;
+    }
 
-/**
- * Packs a Pdu into the ByteBuffer.
- * @throws java.nio.BufferOverflowException if buff is too small
- * @throws java.nio.ReadOnlyBufferException if buff is read only
- * @see java.nio.ByteBuffer
- * @param buff The ByteBuffer at the position to begin writing
- * @since ??
- */
-public void marshal(java.nio.ByteBuffer buff)
-{
-       super.marshal(buff);
-       objectID.marshal(buff);
-       referencedObjectID.marshal(buff);
-       buff.putShort( (short)updateNumber);
-       buff.put( (byte)forceID);
-       buff.put( (byte)modifications);
-       objectType.marshal(buff);
-       objectAppearance.marshal(buff);
-       buff.putShort( (short)objectLocation.size());
-       requesterID.marshal(buff);
-       receivingID.marshal(buff);
+    /**
+     * Packs a Pdu into the ByteBuffer.
+     *
+     * @throws java.nio.BufferOverflowException if buff is too small
+     * @throws java.nio.ReadOnlyBufferException if buff is read only
+     * @see java.nio.ByteBuffer
+     * @param buff The ByteBuffer at the position to begin writing
+     * @since ??
+     */
+    public void marshal(java.nio.ByteBuffer buff) {
+        super.marshal(buff);
+        objectID.marshal(buff);
+        referencedObjectID.marshal(buff);
+        buff.putShort((short) updateNumber);
+        buff.put((byte) forceID);
+        buff.put((byte) modifications);
+        objectType.marshal(buff);
+        objectAppearance.marshal(buff);
+        buff.putShort((short) objectLocation.size());
+        requesterID.marshal(buff);
+        receivingID.marshal(buff);
 
-       for(int idx = 0; idx < objectLocation.size(); idx++)
-       {
-            Vector3Double aVector3Double = (Vector3Double)objectLocation.get(idx);
+        for (int idx = 0; idx < objectLocation.size(); idx++) {
+            Vector3Double aVector3Double = (Vector3Double) objectLocation.get(idx);
             aVector3Double.marshal(buff);
-       } // end of list marshalling
+        } // end of list marshalling
 
     } // end of marshal method
 
-/**
- * Unpacks a Pdu from the underlying data.
- * @throws java.nio.BufferUnderflowException if buff is too small
- * @see java.nio.ByteBuffer
- * @param buff The ByteBuffer at the position to begin reading
- * @since ??
- */
-public void unmarshal(java.nio.ByteBuffer buff)
-{
-       super.unmarshal(buff);
+    /**
+     * Unpacks a Pdu from the underlying data.
+     *
+     * @throws java.nio.BufferUnderflowException if buff is too small
+     * @see java.nio.ByteBuffer
+     * @param buff The ByteBuffer at the position to begin reading
+     * @since ??
+     */
+    public void unmarshal(java.nio.ByteBuffer buff) {
+        super.unmarshal(buff);
 
-       objectID.unmarshal(buff);
-       referencedObjectID.unmarshal(buff);
-       updateNumber = (int)(buff.getShort() & 0xFFFF);
-       forceID = (short)(buff.get() & 0xFF);
-       modifications = (short)(buff.get() & 0xFF);
-       objectType.unmarshal(buff);
-       objectAppearance.unmarshal(buff);
-       numberOfPoints = (int)(buff.getShort() & 0xFFFF);
-       requesterID.unmarshal(buff);
-       receivingID.unmarshal(buff);
-       for(int idx = 0; idx < numberOfPoints; idx++)
-       {
+        objectID.unmarshal(buff);
+        referencedObjectID.unmarshal(buff);
+        updateNumber = (int) (buff.getShort() & 0xFFFF);
+        forceID = (short) (buff.get() & 0xFF);
+        modifications = (short) (buff.get() & 0xFF);
+        objectType.unmarshal(buff);
+        objectAppearance.unmarshal(buff);
+        numberOfPoints = (int) (buff.getShort() & 0xFFFF);
+        requesterID.unmarshal(buff);
+        receivingID.unmarshal(buff);
+        for (int idx = 0; idx < numberOfPoints; idx++) {
             Vector3Double anX = new Vector3Double();
             anX.unmarshal(buff);
             objectLocation.add(anX);
-       }
+        }
 
- } // end of unmarshal method 
+    } // end of unmarshal method 
 
 
- /*
+    /*
   * The equals method doesn't always work--mostly it works only on classes that consist only of primitives. Be careful.
-  */
-@Override
- public boolean equals(Object obj)
- {
+     */
+    @Override
+    public boolean equals(Object obj) {
 
-    if(this == obj){
-      return true;
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        return equalsImpl(obj);
     }
 
-    if(obj == null){
-       return false;
+    @Override
+    public boolean equalsImpl(Object obj) {
+        boolean ivarsEqual = true;
+
+        if (!(obj instanceof ArealObjectStatePdu)) {
+            return false;
+        }
+
+        final ArealObjectStatePdu rhs = (ArealObjectStatePdu) obj;
+
+        if (!(objectID.equals(rhs.objectID))) {
+            ivarsEqual = false;
+        }
+        if (!(referencedObjectID.equals(rhs.referencedObjectID))) {
+            ivarsEqual = false;
+        }
+        if (!(updateNumber == rhs.updateNumber)) {
+            ivarsEqual = false;
+        }
+        if (!(forceID == rhs.forceID)) {
+            ivarsEqual = false;
+        }
+        if (!(modifications == rhs.modifications)) {
+            ivarsEqual = false;
+        }
+        if (!(objectType.equals(rhs.objectType))) {
+            ivarsEqual = false;
+        }
+        if (!(objectAppearance.equals(rhs.objectAppearance))) {
+            ivarsEqual = false;
+        }
+        if (!(numberOfPoints == rhs.numberOfPoints)) {
+            ivarsEqual = false;
+        }
+        if (!(requesterID.equals(rhs.requesterID))) {
+            ivarsEqual = false;
+        }
+        if (!(receivingID.equals(rhs.receivingID))) {
+            ivarsEqual = false;
+        }
+
+        for (int idx = 0; idx < objectLocation.size(); idx++) {
+            if (!(objectLocation.get(idx).equals(rhs.objectLocation.get(idx)))) {
+                ivarsEqual = false;
+            }
+        }
+
+        return ivarsEqual && super.equalsImpl(rhs);
     }
-
-    if(getClass() != obj.getClass())
-        return false;
-
-    return equalsImpl(obj);
- }
-
-@Override
- public boolean equalsImpl(Object obj)
- {
-     boolean ivarsEqual = true;
-
-    if(!(obj instanceof ArealObjectStatePdu))
-        return false;
-
-     final ArealObjectStatePdu rhs = (ArealObjectStatePdu)obj;
-
-     if( ! (objectID.equals( rhs.objectID) )) ivarsEqual = false;
-     if( ! (referencedObjectID.equals( rhs.referencedObjectID) )) ivarsEqual = false;
-     if( ! (updateNumber == rhs.updateNumber)) ivarsEqual = false;
-     if( ! (forceID == rhs.forceID)) ivarsEqual = false;
-     if( ! (modifications == rhs.modifications)) ivarsEqual = false;
-     if( ! (objectType.equals( rhs.objectType) )) ivarsEqual = false;
-     if( ! (objectAppearance.equals( rhs.objectAppearance) )) ivarsEqual = false;
-     if( ! (numberOfPoints == rhs.numberOfPoints)) ivarsEqual = false;
-     if( ! (requesterID.equals( rhs.requesterID) )) ivarsEqual = false;
-     if( ! (receivingID.equals( rhs.receivingID) )) ivarsEqual = false;
-
-     for(int idx = 0; idx < objectLocation.size(); idx++)
-     {
-        if( ! ( objectLocation.get(idx).equals(rhs.objectLocation.get(idx)))) ivarsEqual = false;
-     }
-
-
-    return ivarsEqual && super.equalsImpl(rhs);
- }
 } // end of class
