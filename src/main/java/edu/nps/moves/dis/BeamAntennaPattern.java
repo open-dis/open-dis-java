@@ -27,7 +27,7 @@ public class BeamAntennaPattern extends Object implements Serializable {
 
     protected float elevationBeamwidth = (float) 0;
 
-    protected float referenceSystem = (float) 0;
+    protected byte referenceSystem = (byte) 0;
 
     protected short padding1 = (short) 0;
 
@@ -62,7 +62,7 @@ public class BeamAntennaPattern extends Object implements Serializable {
         marshalSize = marshalSize + beamDirection.getMarshalledSize();  // beamDirection
         marshalSize = marshalSize + 4;  // azimuthBeamwidth
         marshalSize = marshalSize + 4;  // elevationBeamwidth
-        marshalSize = marshalSize + 4;  // referenceSystem
+        marshalSize = marshalSize + 1;  // referenceSystem
         marshalSize = marshalSize + 2;  // padding1
         marshalSize = marshalSize + 1;  // padding2
         marshalSize = marshalSize + 4;  // ez
@@ -96,11 +96,11 @@ public class BeamAntennaPattern extends Object implements Serializable {
         return elevationBeamwidth;
     }
 
-    public void setReferenceSystem(float pReferenceSystem) {
+    public void setReferenceSystem(byte pReferenceSystem) {
         referenceSystem = pReferenceSystem;
     }
 
-    public float getReferenceSystem() {
+    public byte getReferenceSystem() {
         return referenceSystem;
     }
 
@@ -157,7 +157,7 @@ public class BeamAntennaPattern extends Object implements Serializable {
         beamDirection.marshal(buff);
         buff.putFloat((float) azimuthBeamwidth);
         buff.putFloat((float) elevationBeamwidth);
-        buff.putFloat((float) referenceSystem);
+        buff.put(referenceSystem);
         buff.putShort((short) padding1);
         buff.put((byte) padding2);
         buff.putFloat((float) ez);
@@ -177,7 +177,7 @@ public class BeamAntennaPattern extends Object implements Serializable {
         beamDirection.unmarshal(buff);
         azimuthBeamwidth = buff.getFloat();
         elevationBeamwidth = buff.getFloat();
-        referenceSystem = buff.getFloat();
+        referenceSystem = buff.get();
         padding1 = buff.getShort();
         padding2 = buff.get();
         ez = buff.getFloat();
