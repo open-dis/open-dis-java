@@ -46,7 +46,7 @@ package edu.nps.moves.net;
  * @author DMcG
  * @version $Id:$
  */ 
-@Deprecated(since = "5.1", forRemoval = true)
+@Deprecated
  public interface BehaviorProducerIF {
 
    /**

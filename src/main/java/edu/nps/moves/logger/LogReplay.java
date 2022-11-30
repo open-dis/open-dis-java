@@ -1,11 +1,9 @@
 
 package edu.nps.moves.logger;
 
-import edu.nps.moves.disutil.PduContainer;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import edu.nps.moves.dis.*;
 
 /**
  * Reads from the log files, replaying the data on a multicast group.

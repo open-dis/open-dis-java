@@ -24,7 +24,7 @@ import edu.nps.moves.dis.*;
  * 
  * @author DMcG
  */
-@Deprecated(since = "5.1", forRemoval = true)
+@Deprecated
 public class DisMarshaller
 {
     /** The various formats we can use for the timestamp format in the PDU header when marshalled */

@@ -44,7 +44,7 @@ import edu.nps.moves.dis.Pdu;
  * @author DMcG
  * @version $Id:$
  */
-@Deprecated(since = "5.1", forRemoval = true)
+@Deprecated
 public interface BehaviorConsumerIF {
 
     /**
