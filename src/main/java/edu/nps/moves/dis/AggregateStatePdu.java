@@ -106,11 +106,11 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
     /**
      * silent entity types
      */
-    protected List< EntityType> silentAggregateSystemList = new ArrayList< EntityType>();
+    protected List< SilentAggregateSystem> silentAggregateSystemList = new ArrayList< SilentAggregateSystem>();
     /**
      * silent entity types
      */
-    protected List< EntityType> silentEntitySystemList = new ArrayList< EntityType>();
+    protected List< SilentEntitySystem> silentEntitySystemList = new ArrayList< SilentEntitySystem>();
     /**
      * number of variable datum records
      */
@@ -154,13 +154,13 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
             EntityID listElement = entityIDList.get(idx);
             marshalSize = marshalSize + listElement.getMarshalledSize();
         }
-        marshalSize = marshalSize + 1;  // pad2
+        marshalSize = marshalSize + (getPad2Bits() / 8);  // pad2
         for (int idx = 0; idx < silentAggregateSystemList.size(); idx++) {
-            EntityType listElement = silentAggregateSystemList.get(idx);
+            SilentAggregateSystem listElement = silentAggregateSystemList.get(idx);
             marshalSize = marshalSize + listElement.getMarshalledSize();
         }
         for (int idx = 0; idx < silentEntitySystemList.size(); idx++) {
-            EntityType listElement = silentEntitySystemList.get(idx);
+            SilentEntitySystem listElement = silentEntitySystemList.get(idx);
             marshalSize = marshalSize + listElement.getMarshalledSize();
         }
         marshalSize = marshalSize + 4;  // numberOfVariableDatumRecords
@@ -336,19 +336,29 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
         return pad2;
     }
 
-    public void setSilentAggregateSystemList(List<EntityType> pSilentAggregateSystemList) {
+    /**
+     * This function returns the number of padding bits dependendant on´how many Aggregate and Entity ID's
+     * are in ID lists
+     *  
+     */
+    public short getPad2Bits() {
+        int val = 16 * ((aggregateIDList.size() + entityIDList.size()) % 2);
+        return (short) val;
+    }
+
+    public void setSilentAggregateSystemList(List<SilentAggregateSystem> pSilentAggregateSystemList) {
         silentAggregateSystemList = pSilentAggregateSystemList;
     }
 
-    public List<EntityType> getSilentAggregateSystemList() {
+    public List<SilentAggregateSystem> getSilentAggregateSystemList() {
         return silentAggregateSystemList;
     }
 
-    public void setSilentEntitySystemList(List<EntityType> pSilentEntitySystemList) {
+    public void setSilentEntitySystemList(List<SilentEntitySystem> pSilentEntitySystemList) {
         silentEntitySystemList = pSilentEntitySystemList;
     }
 
-    public List<EntityType> getSilentEntitySystemList() {
+    public List<SilentEntitySystem> getSilentEntitySystemList() {
         return silentEntitySystemList;
     }
 
@@ -411,16 +421,18 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
             aEntityID.marshal(buff);
         } // end of list marshalling
 
-        buff.put((byte) pad2);
+        if ((getPad2Bits() / 8) == 2) {
+            buff.putShort(pad2);
+        }
 
         for (int idx = 0; idx < silentAggregateSystemList.size(); idx++) {
-            EntityType aEntityType = (EntityType) silentAggregateSystemList.get(idx);
-            aEntityType.marshal(buff);
+            SilentAggregateSystem aSilentAggregateSystem = (SilentAggregateSystem) silentAggregateSystemList.get(idx);
+            aSilentAggregateSystem.marshal(buff);
         } // end of list marshalling
 
         for (int idx = 0; idx < silentEntitySystemList.size(); idx++) {
-            EntityType aEntityType = (EntityType) silentEntitySystemList.get(idx);
-            aEntityType.marshal(buff);
+            SilentEntitySystem aSilentEntitySystem = (SilentEntitySystem) silentEntitySystemList.get(idx);
+            aSilentEntitySystem.marshal(buff);
         } // end of list marshalling
 
         buff.putInt((int) variableDatumList.size());
@@ -468,16 +480,19 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
             anX.unmarshal(buff);
             entityIDList.add(anX);
         }
-
-        pad2 = (short) (buff.get() & 0xFF);
+        //Determine if pad2 is present
+        int padBits = 16 * ((numberOfDisAggregates + numberOfDisEntities) % 2);
+        if ((padBits / 8) == 2) {
+            pad2 = buff.getShort();
+        }
         for (int idx = 0; idx < numberOfSilentAggregateTypes; idx++) {
-            EntityType anX = new EntityType();
+            SilentAggregateSystem anX = new SilentAggregateSystem();
             anX.unmarshal(buff);
             silentAggregateSystemList.add(anX);
         }
 
         for (int idx = 0; idx < numberOfSilentEntityTypes; idx++) {
-            EntityType anX = new EntityType();
+            SilentEntitySystem anX = new SilentEntitySystem();
             anX.unmarshal(buff);
             silentEntitySystemList.add(anX);
         }
