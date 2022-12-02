@@ -16,7 +16,7 @@ import edu.nps.moves.dis.*;
  *
  * @author DMcG
  */
-@Deprecated(since = "5.1", forRemoval = true)
+@Deprecated
 public class BehaviorConsumerThreaded implements BehaviorConsumerIF, Runnable {
 
     private Vector<Pdu> receivedPdus;

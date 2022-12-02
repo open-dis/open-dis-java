@@ -1,49 +1,46 @@
 package edu.nps.moves.examples;
 
-import java.net.*;
 import edu.nps.moves.disutil.*;
 import edu.nps.moves.dis.*;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Receives PDUs from the network in IEEE format.
- *
- * @author DMcG
- * @version $Id:$
+ * Example code that receives ESPDUs from the network in IEEE format.
  */
 public class EspduReceiver {
 
-    public static final int MAX_PDU_SIZE = 16384;
+    public static void main(String args[]) throws IOException, InterruptedException {
 
-    public static final int DIS_PORT = 3000;
+        DisConnection con = new DisConnection(EspduSender.DEFAULT_MULTICAST_GROUP, EspduSender.DIS_PORT);
+        new Thread(con).start(); // In this thread we receive pdu's from the network and put them into a queue
 
-    public static void main(String args[]) throws IOException {
+        // In this thread we take pdu's off the queue and process them.
+        new Runnable() {
 
-        MulticastSocket socket = new MulticastSocket(DIS_PORT);
-        InetAddress address = InetAddress.getByName(EspduSender.DEFAULT_MULTICAST_GROUP);
-        socket.joinGroup(address);
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) {
+                    try {
+                        Pdu pdu = con.getNext();
+                        if (pdu != null) {
+                            System.out.println("Received PDU of type: " + pdu.getClass().getName());
+                            if (pdu instanceof EntityStatePdu) {
+                                EntityID eid = ((EntityStatePdu) pdu).getEntityID();
+                                Vector3Double position = ((EntityStatePdu) pdu).getEntityLocation();
+                                System.out.println(" Site,App,Id:[" + eid.getSite() + ", " + eid.getApplication() + ", " + eid.getEntity() + "] ");
+                                System.out.println(" Location in DIS coordinates: [" + position.getX() + ", " + position.getY() + ", " + position.getZ() + "]");
 
-        DatagramPacket packet;
-        PduFactory pduFactory = new PduFactory();
-
-        // Loop infinitely, receiving datagrams
-        while (true) {
-            byte buffer[] = new byte[MAX_PDU_SIZE];
-            packet = new DatagramPacket(buffer, buffer.length);
-            socket.receive(packet);
-
-            Pdu aPdu = pduFactory.createPdu(packet.getData());
-
-            System.out.println("Received PDU of type: " + aPdu.getClass().getName());
-            if (aPdu instanceof EntityStatePdu) {
-                EntityID eid = ((EntityStatePdu) aPdu).getEntityID();
-                Vector3Double position = ((EntityStatePdu) aPdu).getEntityLocation();
-                System.out.println(" Site,App,Id:[" + eid.getSite() + ", " + eid.getApplication() + ", " + eid.getEntity() + "] ");
-                System.out.println(" Location in DIS coordinates: [" + position.getX() + ", " + position.getY() + ", " + position.getZ() + "]");
-
-                final double[] latlon = CoordinateConversions.xyzToLatLonDegrees(position.toArray());
-                System.out.println(" Location in Latitude Longitude Elevation: [" + latlon[0] + ", " + latlon[1] + ", " + latlon[2] + "]");
+                                final double[] latlon = CoordinateConversions.xyzToLatLonDegrees(position.toArray());
+                                System.out.println(" Location in Latitude Longitude Elevation: [" + latlon[0] + ", " + latlon[1] + ", " + latlon[2] + "]");
+                            }
+                        }
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(DisConnection.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
-        }
+        }.run();
     }
 }

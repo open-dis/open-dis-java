@@ -16,7 +16,7 @@ import org.apache.commons.math3.linear.RealVector;
  * @author Sheldon L. Snyder
  * @deprecated Use {@link DeadReckoner} instead.
  */
-@Deprecated(since = "5.1", forRemoval = true)
+@Deprecated
 public class DIS_DR_RVB_08 extends DIS_DeadReckoning
 {
     // put these in main abstract class...?

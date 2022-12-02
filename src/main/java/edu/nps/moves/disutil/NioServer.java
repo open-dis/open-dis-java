@@ -89,7 +89,7 @@ import java.lang.reflect.Method;
  * @see Event
  * @see Listener
  */
-@Deprecated(since = "5.1", forRemoval = true)
+@Deprecated
 public class NioServer {
 
     /** Standard Java logger. */

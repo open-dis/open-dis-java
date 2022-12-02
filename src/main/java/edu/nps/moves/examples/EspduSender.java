@@ -5,6 +5,7 @@ import java.net.*;
 
 import edu.nps.moves.dis.*;
 import edu.nps.moves.disutil.CoordinateConversions;
+import edu.nps.moves.disutil.DisConnection;
 import edu.nps.moves.disutil.DisTime;
 import java.util.concurrent.TimeUnit;
 
@@ -19,16 +20,13 @@ public class EspduSender {
 
     public static final String DEFAULT_MULTICAST_GROUP = "239.1.2.3";
 
-    public static final int DIS_DESTINATION_PORT = 3000;
+    public static final int DIS_PORT = 3000;
 
     public static final int DIS_HEARTBEAT_SECS = 10;
 
     public static void main(String args[]) throws UnknownHostException, IOException, RuntimeException, InterruptedException {
 
-        InetAddress destinationIp = InetAddress.getByName(DEFAULT_MULTICAST_GROUP);
-
-        MulticastSocket socket = new MulticastSocket(DIS_DESTINATION_PORT);
-        socket.joinGroup(destinationIp);
+        DisConnection con = new DisConnection(DEFAULT_MULTICAST_GROUP, DIS_PORT);
 
         EntityStatePdu espdu = new EntityStatePdu();
 
@@ -67,7 +65,7 @@ public class EspduSender {
         double lon = -121.877000;
 
         // Loop through sending N ESPDUs
-        System.out.println("Sending " + NUMBER_TO_SEND + " ESPDU packets to " + destinationIp.toString() + ". One packet every " + DIS_HEARTBEAT_SECS + " seconds.");
+        System.out.println("Sending " + NUMBER_TO_SEND + " ESPDU packets to " + DEFAULT_MULTICAST_GROUP + ". One packet every " + DIS_HEARTBEAT_SECS + " seconds.");
         for (int idx = 0; idx < NUMBER_TO_SEND; idx++) {
             // DIS time is a pain in the ass. DIS time units are 2^31-1 units per
             // hour, and time is set to DIS time units from the top of the hour. 
@@ -109,9 +107,7 @@ public class EspduSender {
             // You can set other ESPDU values here, such as the velocity, acceleration,
             // and so on.
             
-
-            DatagramPacket packet = new DatagramPacket(espdu.marshal(), espdu.getLength(), destinationIp, socket.getLocalPort());
-            socket.send(packet);
+            con.send(espdu);
 
             location = espdu.getEntityLocation();
 

@@ -47,7 +47,7 @@ import java.nio.ByteBuffer;
  * @author DMcG
  * @version $Id:$
  */
-@Deprecated(since = "5.1", forRemoval = true)
+@Deprecated
 public interface BehaviorWriterIF {
 
     /** The (rough) size of an ethernet frame */

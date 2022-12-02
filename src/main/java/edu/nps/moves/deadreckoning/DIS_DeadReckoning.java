@@ -335,7 +335,7 @@ Current State of this Entity:
  * @author Sheldon L. Snyder
  * @deprecated Use {@link DeadReckoner} instead.
  */
-@Deprecated(since = "5.1", forRemoval = true)
+@Deprecated
 public abstract class DIS_DeadReckoning implements Runnable
 {
     /**

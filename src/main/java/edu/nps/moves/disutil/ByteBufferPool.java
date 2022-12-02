@@ -23,7 +23,7 @@ import java.util.*;
  * 
  * @author DMcG
  */
-@Deprecated(since = "5.1", forRemoval = true)
+@Deprecated
 public class ByteBufferPool
 {
 

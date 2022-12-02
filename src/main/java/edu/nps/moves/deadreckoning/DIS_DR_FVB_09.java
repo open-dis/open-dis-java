@@ -9,7 +9,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  * @author Sheldon L. Snyder
  * @deprecated Use {@link DeadReckoner} instead.
  */
-@Deprecated(since = "5.1", forRemoval = true)
+@Deprecated
 public class DIS_DR_FVB_09 extends DIS_DeadReckoning
 {
 
