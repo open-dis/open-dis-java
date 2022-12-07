@@ -46,9 +46,24 @@ public class AggregateMarking extends Object implements Serializable {
     public short getCharacterSet() {
         return characterSet;
     }
-
+    
+    /**
+     * Ensure what is set does not go over 31 characters, and anything under 31
+     * characters zero-fills. post-processing patch
+     *
+     * @param pCharacters an array of characters to set
+     */
     public void setCharacters(byte[] pCharacters) {
-        characters = pCharacters;
+        if (pCharacters.length >= characters.length) {
+            System.arraycopy(pCharacters, 0, characters, 0, characters.length);
+        } else {
+            int pCharactersLength = pCharacters.length;
+            System.arraycopy(pCharacters, 0, characters, 0, pCharactersLength);
+            for (int ix = pCharactersLength; ix < characters.length; ix++) {
+                // Ensure all zeros in unfilled fields
+                characters[ix] = 0;
+            }
+        }
     }
 
     public byte[] getCharacters() {
