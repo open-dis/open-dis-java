@@ -33,6 +33,15 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     protected int encodingScheme;
 
     /**
+     * encoding class: bits 14 - 15 of encodingScheme
+     */
+    protected int encodingClass = 0;
+
+    /**
+     * encoding type or number of TDL messages: bits 0 - 13 of encodingScheme
+     */
+    protected int encodingType = 0;
+    /**
      * tdl type
      */
     protected int tdlType;
@@ -75,9 +84,22 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         marshalSize = marshalSize + 2;  // tdlType
         marshalSize = marshalSize + 4;  // sampleRate
         marshalSize = marshalSize + 2;  // dataLength
-        marshalSize = marshalSize + 2;  // samples   
+        marshalSize = marshalSize + 2;  // samples  
         marshalSize = marshalSize + data.length;
 
+        switch (data.length % 4) {
+            case 0:
+                break;//No padding needed
+            case 1:
+                marshalSize = marshalSize + 3;
+                break;//adding 3 byte padding
+            case 2:
+                marshalSize = marshalSize + 2;
+                break;//adding 2 byte padding
+            case 3:
+                marshalSize = marshalSize + 1;
+                break;//adding 1 byte padding
+        }
         return marshalSize;
     }
 
@@ -103,6 +125,55 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
 
     public int getEncodingScheme() {
         return encodingScheme;
+    }
+
+    public void setEncodingClass(int pEncodingClass) {
+        int newEncodingClass = 0;
+        int newEncodingScheme = 0;
+        // Save encoding class and create the encoding scheme
+        encodingClass = pEncodingClass;
+        newEncodingClass = pEncodingClass << 14;                 // Move bits 0 - 1 to bit position 14 - 15
+        newEncodingScheme = newEncodingClass | this.getEncodingType();
+        this.setEncodingScheme(newEncodingScheme);
+    }
+
+    public int getEncodingClass() {
+        int extractEncodingClass = 0;
+        extractEncodingClass = this.getEncodingScheme() & 0xC000;  // Lose bits 0 - 13
+        extractEncodingClass = extractEncodingClass >>> 14;                // Move bits 14 - 15 to bit position 0 - 1
+        return extractEncodingClass;
+    }
+
+    public void setEncodingType(int pEncodingType) {
+        int newEncodingScheme = 0;
+        // Save encoding type and create the encoding scheme
+        encodingType = pEncodingType;
+        newEncodingScheme = this.getEncodingScheme() & 0xC000;
+        newEncodingScheme = newEncodingScheme | pEncodingType;
+        this.setEncodingScheme(newEncodingScheme);  //
+    }
+
+    public int getEncodingType() {
+        int extractEncodingType = 0;
+        extractEncodingType = this.getEncodingScheme() & 0x3FFF; // Lose bits 14 - 15
+        return extractEncodingType;
+    }
+
+    public void setNumberofTDLMessages(int pEncodingType) {
+        int newEncodingScheme = 0;
+        // Save number of TDLs and create the encoding scheme
+        encodingType = pEncodingType;
+        newEncodingScheme = this.getEncodingScheme() & 0xC000; // Lose bits 0 - 13
+        newEncodingScheme = newEncodingScheme | pEncodingType;
+        this.setEncodingScheme(newEncodingScheme); //
+
+    }
+
+    public int getNumberofTDLMessages() {
+        int extractEncodingType = 0;
+        extractEncodingType = this.getEncodingScheme() & 0x3FFF; // Lose bits 14 - 15
+        return extractEncodingType;
+
     }
 
     public void setTdlType(int pTdlType) {
@@ -169,7 +240,25 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         buff.putInt((int) sampleRate);
         buff.putShort((short) dataLength);
         buff.putShort((short) samples);
+        int nrOfBytes = 0;
+        nrOfBytes = dataLength / Byte.SIZE;
+
         buff.put(data);
+        int paddingBytes = nrOfBytes % 4;//Padding to hit 32 bit boundry
+        switch (paddingBytes) {
+            case 0:
+                break;//No padding needed
+            case 1:
+                buff.put((byte) 0);
+                buff.putShort((short) 0);
+                break;//adding 3 byte padding
+            case 2:
+                buff.putShort((short) 0);
+                break;//adding 2 byte padding
+            case 3:
+                buff.put((byte) 0);
+                break;//adding 1 byte padding
+        }
     } // end of marshal method
 
     /**
