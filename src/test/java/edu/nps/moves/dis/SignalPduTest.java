@@ -28,6 +28,8 @@ public class SignalPduTest {
         assertEquals(169, spdu.getEntityId().getEntity());
         assertEquals(1, spdu.getRadioId());
         assertEquals(4, spdu.getEncodingScheme());
+        assertEquals(0, spdu.getEncodingClass());
+        assertEquals(4, spdu.getEncodingType());
         assertEquals(0, spdu.getTdlType());
         assertEquals(22050, spdu.getSampleRate());
         assertEquals(8192, spdu.getDataLength());
@@ -49,5 +51,35 @@ public class SignalPduTest {
         byte[] buffer = spdu.marshal();
 
         assertEquals(buffer.length, spdu.getLength());
+    }
+    
+       @Test
+    public void unmarshalVrF() throws IOException {
+        PduFactory factory = new PduFactory();
+        Pdu aPdu = factory.createPdu(PduFileLoader.load("SignalPDIVrForces.raw"));
+
+        // Expected field values were determined from Wireshark: Decode As -> DIS.
+        assertEquals(6, aPdu.getProtocolVersion());
+        assertEquals(1, aPdu.getExerciseID());
+        assertEquals(26, aPdu.getPduType());
+        assertEquals(4, aPdu.getProtocolFamily());
+        //FIXME is timestamp wrong? assertEquals((long) 0.001000000, aPdu.getTimestamp());
+        assertEquals(156, aPdu.getLength());
+        assertEquals(0, aPdu.getPadding());
+
+        SignalPdu spdu = (SignalPdu) aPdu;
+
+        assertEquals(1, spdu.getEntityId().getSite());
+        assertEquals(3001, spdu.getEntityId().getApplication());
+        assertEquals(1, spdu.getEntityId().getEntity());
+        assertEquals(0, spdu.getRadioId());
+        assertEquals(32768, spdu.getEncodingScheme());
+        assertEquals(2, spdu.getEncodingClass());
+        assertEquals(0, spdu.getEncodingType());
+        assertEquals(0, spdu.getTdlType());
+        assertEquals(1000000, spdu.getSampleRate());
+        assertEquals(984, spdu.getDataLength());
+        assertEquals(0, spdu.getSamples());
+        assertEquals(984 / Byte.SIZE, spdu.getData().length);
     }
 }
