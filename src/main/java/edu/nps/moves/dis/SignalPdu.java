@@ -33,15 +33,6 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     protected int encodingScheme;
 
     /**
-     * encoding class: bits 14 - 15 of encodingScheme
-     */
-    protected int encodingClass = 0;
-
-    /**
-     * encoding type or number of TDL messages: bits 0 - 13 of encodingScheme
-     */
-    protected int encodingType = 0;
-    /**
      * tdl type
      */
     protected int tdlType;
@@ -131,7 +122,6 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         int newEncodingClass = 0;
         int newEncodingScheme = 0;
         // Save encoding class and create the encoding scheme
-        encodingClass = pEncodingClass;
         newEncodingClass = pEncodingClass << 14;                 // Move bits 0 - 1 to bit position 14 - 15
         newEncodingScheme = newEncodingClass | this.getEncodingType();
         this.setEncodingScheme(newEncodingScheme);
@@ -147,7 +137,6 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     public void setEncodingType(int pEncodingType) {
         int newEncodingScheme = 0;
         // Save encoding type and create the encoding scheme
-        encodingType = pEncodingType;
         newEncodingScheme = this.getEncodingScheme() & 0xC000;
         newEncodingScheme = newEncodingScheme | pEncodingType;
         this.setEncodingScheme(newEncodingScheme);  //
@@ -162,7 +151,6 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     public void setNumberofTDLMessages(int pEncodingType) {
         int newEncodingScheme = 0;
         // Save number of TDLs and create the encoding scheme
-        encodingType = pEncodingType;
         newEncodingScheme = this.getEncodingScheme() & 0xC000; // Lose bits 0 - 13
         newEncodingScheme = newEncodingScheme | pEncodingType;
         this.setEncodingScheme(newEncodingScheme); //
