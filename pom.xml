@@ -33,7 +33,9 @@
     <contributors>
         <contributor>
             <name>Don McGregor</name>
-            <email>mcgredo@hotmail.com</email>
+            <email>mcgredo@nps.edu</email>
+            <organization>MOVES Institute</organization>
+            <organizationUrl>https://movesinstitute.nps.edu/</organizationUrl>
         </contributor>
     </contributors>
     <distributionManagement>
