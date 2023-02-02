@@ -69,12 +69,19 @@ public class ElectronicEmissionSystemData extends Object implements Serializable
         return marshalSize;
     }
 
-    public void setSystemDataLength(short pSystemDataLength) {
-        systemDataLength = pSystemDataLength;
-    }
-
     public short getSystemDataLength() {
         return systemDataLength;
+    }
+
+    private short calculateSystemDataLength() {
+        //systemdata length = 13*beamCount + SUM(beamsCount)2*track/jamTargets
+        short size = 5;
+        for (int i = 0; i < beamDataRecords.size(); i++) {
+            ElectronicEmissionBeamData bd = beamDataRecords.get(i);
+            size += bd.calculateBeamDataLength();
+
+        }
+        return size;
     }
 
     public short getNumberOfBeams() {
@@ -134,7 +141,7 @@ public class ElectronicEmissionSystemData extends Object implements Serializable
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
-        buff.put((byte) systemDataLength);
+        buff.put((byte) calculateSystemDataLength());
         buff.put((byte) beamDataRecords.size());
         buff.putShort((short) emissionsPadding2);
         emitterSystem.marshal(buff);
