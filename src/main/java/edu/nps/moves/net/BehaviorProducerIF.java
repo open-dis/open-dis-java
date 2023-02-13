@@ -36,12 +36,12 @@ package edu.nps.moves.net;
 /**
  * The BehaviorProducer interface describes a class that listens
  * in its own thread for PDUs, then notifies any listeners when
- * they arrive.<p>
+ * they arrive.
  *
  * This implements a listener pattern. Those interested in hearing
  * from the BehaviorProducerIF register with the object. When the BehaviorProducerIF
  * gets (or produces) a PDU, it notifies all listeners. Note that there is
- * no attempt to limit which listeners/consumers receive the PDU.<p>
+ * no attempt to limit which listeners/consumers receive the PDU.
  *
  * @author DMcG
  * @version $Id:$
