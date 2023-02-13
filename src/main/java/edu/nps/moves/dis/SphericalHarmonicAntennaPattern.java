@@ -1,6 +1,8 @@
 package edu.nps.moves.dis;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Section 5.2.4.3. Used when the antenna pattern type in the transmitter pdu is
@@ -18,6 +20,10 @@ public class SphericalHarmonicAntennaPattern extends Object implements Serializa
 
     protected byte harmonicOrder;
 
+    protected List<FourByteChunk> coefficients = new ArrayList<FourByteChunk>();
+
+    protected short referenceSystem;
+
     /**
      * Constructor
      */
@@ -28,7 +34,11 @@ public class SphericalHarmonicAntennaPattern extends Object implements Serializa
         int marshalSize = 0;
 
         marshalSize = marshalSize + 1;  // harmonicOrder
-
+        for (int idx = 0; idx < coefficients.size(); idx++) {  // coefficients
+            FourByteChunk listElement = coefficients.get(idx); // 32-bit coefficient
+            marshalSize = marshalSize + listElement.getMarshalledSize();
+        }
+        marshalSize = marshalSize + 1;  // referenceSystem
         return marshalSize;
     }
 
@@ -38,6 +48,22 @@ public class SphericalHarmonicAntennaPattern extends Object implements Serializa
 
     public byte getHarmonicOrder() {
         return harmonicOrder;
+    }
+
+    public void setCoefficientsList(List<FourByteChunk> pCoefficients) {
+        coefficients = pCoefficients;
+    }
+
+    public List<FourByteChunk> getCoefficientsList() {
+        return coefficients;
+    }
+
+    public void setReferenceSystem(short pReferenceSystem) {
+        referenceSystem = pReferenceSystem;
+    }
+
+    public short getReferenceSystem() {
+        return referenceSystem;
     }
 
     /**
@@ -51,6 +77,11 @@ public class SphericalHarmonicAntennaPattern extends Object implements Serializa
      */
     public void marshal(java.nio.ByteBuffer buff) {
         buff.put((byte) harmonicOrder);
+        for (int idx = 0; idx < coefficients.size(); idx++) {
+            FourByteChunk aFourByteChunk = coefficients.get(idx);
+            aFourByteChunk.marshal(buff);
+        }
+        buff.put((byte) referenceSystem);
     } // end of marshal method
 
     /**
@@ -63,6 +94,13 @@ public class SphericalHarmonicAntennaPattern extends Object implements Serializa
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
         harmonicOrder = buff.get();
+        int coeffientCount = (harmonicOrder * harmonicOrder + 2 * harmonicOrder + 1); // Total of N^2+2N+1 coefficients for an order of N
+        for (int idx = 0; idx < coeffientCount; idx++) {
+            FourByteChunk anX = new FourByteChunk();
+            anX.unmarshal(buff);
+            coefficients.add(anX);
+        }
+        referenceSystem = (short) (buff.get() & 0xFF);
     } // end of unmarshal method 
 
 
@@ -106,7 +144,14 @@ public class SphericalHarmonicAntennaPattern extends Object implements Serializa
         if (!(harmonicOrder == rhs.harmonicOrder)) {
             ivarsEqual = false;
         }
-
+        for (int idx = 0; idx < coefficients.size(); idx++) {
+            if (!(coefficients.get(idx).equals(rhs.coefficients.get(idx)))) {
+                ivarsEqual = false;
+            }
+        }
+        if (!(referenceSystem == rhs.referenceSystem)) {
+            ivarsEqual = false;
+        }
         return ivarsEqual;
     }
 } // end of class
