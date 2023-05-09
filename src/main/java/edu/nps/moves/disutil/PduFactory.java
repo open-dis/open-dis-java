@@ -348,7 +348,9 @@ public class PduFactory {
                 case ENTITY_STATE_UPDATE:
                     aPdu = new EntityStateUpdatePdu();
                     break;
-
+                case IFF_ATC_NAVAIDS:
+                        aPdu = new IffAtcNavAidsLayer1Pdu();
+                    break;
                 default:
                     logger.log(Level.INFO, "PDU not implemented. Type = " + pduType + "\n");
                     if (pduTypeEnum != null) {
