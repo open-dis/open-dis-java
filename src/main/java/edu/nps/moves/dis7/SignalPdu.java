@@ -17,6 +17,11 @@ import java.io.*;
 public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializable {
 
     /**
+     * radio number and entity ID
+     */
+    protected RadioIdentifier radioIdentifier = new RadioIdentifier();
+
+    /**
      * encoding scheme used, and enumeration
      */
     protected int encodingScheme;
@@ -57,14 +62,23 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         int marshalSize = 0;
 
         marshalSize = super.getMarshalledSize();
-        marshalSize = marshalSize + 2;  // encodingScheme
-        marshalSize = marshalSize + 2;  // tdlType
-        marshalSize = marshalSize + 4;  // sampleRate
-        marshalSize = marshalSize + 2;  // dataLength
-        marshalSize = marshalSize + 2;  // samples
+        marshalSize = marshalSize + radioIdentifier.getMarshalledSize();
+        marshalSize = marshalSize + 2; // encodingScheme
+        marshalSize = marshalSize + 2; // tdlType
+        marshalSize = marshalSize + 4; // sampleRate
+        marshalSize = marshalSize + 2; // dataLength
+        marshalSize = marshalSize + 2; // samples
         marshalSize = marshalSize + data.length;
 
         return marshalSize;
+    }
+
+    public void setRadioIdentifier(RadioIdentifier pRadioIdentifier) {
+        radioIdentifier = pRadioIdentifier;
+    }
+
+    public RadioIdentifier getRadioIdentifier() {
+        return radioIdentifier;
     }
 
     public void setEncodingScheme(int pEncodingScheme) {
@@ -124,13 +138,14 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     public void marshal(DataOutputStream dos) {
         super.marshal(dos);
         try {
+            radioIdentifier.marshal(dos);
             dos.writeShort((short) encodingScheme);
             dos.writeShort((short) tdlType);
             dos.writeInt((int) sampleRate);
             dos.writeShort((short) data.length);
             dos.writeShort((short) samples);
             dos.write(data);
-        } // end try 
+        } // end try
         catch (Exception e) {
             System.out.println(e);
         }
@@ -140,6 +155,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         super.unmarshal(dis);
 
         try {
+            radioIdentifier.unmarshal(dis);
             encodingScheme = (int) dis.readUnsignedShort();
             tdlType = (int) dis.readUnsignedShort();
             sampleRate = dis.readInt();
@@ -147,11 +163,11 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
             samples = dis.readShort();
             data = new byte[dataLength];
             dis.read(data);
-        } // end try 
+        } // end try
         catch (Exception e) {
             System.out.println(e);
         }
-    } // end of unmarshal method 
+    } // end of unmarshal method
 
     /**
      * Packs a Pdu into the ByteBuffer.
@@ -164,6 +180,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
      */
     public void marshal(java.nio.ByteBuffer buff) {
         super.marshal(buff);
+        radioIdentifier.marshal(buff);
         buff.putShort((short) encodingScheme);
         buff.putShort((short) tdlType);
         buff.putInt((int) sampleRate);
@@ -182,7 +199,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
         super.unmarshal(buff);
-
+        radioIdentifier.unmarshal(buff);
         encodingScheme = (int) (buff.getShort() & 0xFFFF);
         tdlType = (int) (buff.getShort() & 0xFFFF);
         sampleRate = buff.getInt();
@@ -190,11 +207,11 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         samples = buff.getShort();
         data = new byte[dataLength];
         buff.get(data);
-    } // end of unmarshal method 
-
+    } // end of unmarshal method
 
     /*
-  * The equals method doesn't always work--mostly it works only on classes that consist only of primitives. Be careful.
+     * The equals method doesn't always work--mostly it works only on classes that
+     * consist only of primitives. Be careful.
      */
     @Override
     public boolean equals(Object obj) {
@@ -224,6 +241,9 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
 
         final SignalPdu rhs = (SignalPdu) obj;
 
+        if (!(radioIdentifier == rhs.radioIdentifier)) {
+            ivarsEqual = false;
+        }
         if (!(encodingScheme == rhs.encodingScheme)) {
             ivarsEqual = false;
         }
