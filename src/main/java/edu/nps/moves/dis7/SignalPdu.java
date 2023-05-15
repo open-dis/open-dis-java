@@ -241,7 +241,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
 
         final SignalPdu rhs = (SignalPdu) obj;
 
-        if (!(radioIdentifier == rhs.radioIdentifier)) {
+        if (!(radioIdentifier.equals(rhs.radioIdentifier))) {
             ivarsEqual = false;
         }
         if (!(encodingScheme == rhs.encodingScheme)) {
