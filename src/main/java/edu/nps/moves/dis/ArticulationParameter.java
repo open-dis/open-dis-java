@@ -26,6 +26,12 @@ public class ArticulationParameter extends Object implements Serializable {
 
     protected double parameterValue;
 
+    protected EntityType entityType;
+
+    protected final int ARTICULATED_PART = 0;
+
+    protected final int ATTACHED_PART = 1;
+
     /**
      * Constructor
      */
@@ -84,6 +90,14 @@ public class ArticulationParameter extends Object implements Serializable {
         return parameterValue;
     }
 
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
+    }
+
 // From the spec DIS IEEE Std 1278.1-199
 //
 // A.2.1.8 Parameter Value field
@@ -91,7 +105,7 @@ public class ArticulationParameter extends Object implements Serializable {
 // represents a 32-bit floating point number. The interpretation of this subfield depends on the value of type
 // metric as specified in A.2.1.4. The least significant 32-bit subfield shall be zero.
     public float getParameterValueFirstSubfield() {
-        return Float.intBitsToFloat((int) (Double.doubleToRawLongBits(getParameterValue()) >>> 32));
+        return (float) getParameterValue();
     }
 
 // From the spec DIS IEEE Std 1278.1-199
@@ -126,7 +140,13 @@ public class ArticulationParameter extends Object implements Serializable {
         buff.put((byte) changeIndicator);
         buff.putShort((short) partAttachedTo);
         buff.putInt((int) parameterType);
-        buff.putDouble((double) parameterValue);
+        if (parameterTypeDesignator == ARTICULATED_PART) {
+            buff.putFloat((float) parameterValue);
+            buff.putFloat((float) 0);
+        } else if (parameterTypeDesignator == ATTACHED_PART) {
+            entityType.marshal(buff);
+        }
+
     } // end of marshal method
 
     /**
@@ -142,7 +162,12 @@ public class ArticulationParameter extends Object implements Serializable {
         changeIndicator = (short) (buff.get() & 0xFF);
         partAttachedTo = (int) (buff.getShort() & 0xFFFF);
         parameterType = buff.getInt();
-        parameterValue = buff.getDouble();
+        if (parameterTypeDesignator == ARTICULATED_PART) {
+            parameterValue = buff.getFloat();
+            buff.getFloat();
+        } else if (parameterTypeDesignator == ATTACHED_PART) {
+            entityType.unmarshal(buff);
+        }
     } // end of unmarshal method 
 
 
@@ -196,6 +221,10 @@ public class ArticulationParameter extends Object implements Serializable {
             ivarsEqual = false;
         }
         if (!(parameterValue == rhs.parameterValue)) {
+            ivarsEqual = false;
+        }
+
+        if (!(entityType.equalsImpl(rhs.getEntityType()))) {
             ivarsEqual = false;
         }
 

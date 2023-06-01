@@ -5,7 +5,7 @@ import edu.nps.moves.dis.*;
 
 /**
  * Marhsalls a Java object PDU to IEEE DIS, optionally changing coordinate systems
- * of some PDUs to conform to the desired coordinate system.<p>
+ * of some PDUs to conform to the desired coordinate system.
  *
  * DIS has a standard coordiante system; its origin is a the center of the
  * earth and it is cartesian. It's very difficult for casual programmers to work
@@ -13,14 +13,14 @@ import edu.nps.moves.dis.*;
  * or (x,y) offset from some position on the surface of the earth. Also, the timestamp
  * updates are not always easy to work with. In short, there are some fields in the
  * PDUs whose values are not easily set, but that nonetheless need to be correctly
- * specified. This class accoplishes that.<p>
+ * specified. This class accoplishes that.
  *
  * The class can rewrite the coordinates used for position in PDUs to conform to
  * the DIS standard, or someother agreed-upon standard. Fields such as the
  * timestamp or exercise ID can also be set--in short, it can look over the
  * shoulder of the programmer and set the fields correctly even if the programmer
  * doesn't. As with any effort of this type, the line betwen being helpful and
- * being annoying is a fine one.<p>
+ * being annoying is a fine one.
  * 
  * @author DMcG
  */

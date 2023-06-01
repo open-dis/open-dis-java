@@ -13,6 +13,9 @@ import java.io.*;
  */
 public class IffAtcNavAidsLayer1Pdu extends DistributedEmissionsFamilyPdu implements Serializable {
 
+    private static final int LAYER_PRESENT = 4;
+
+    private static final int LAYER_NOT_PRESENT = 0;
     /**
      * ID of the entity that is the source of the emissions
      */
@@ -42,7 +45,17 @@ public class IffAtcNavAidsLayer1Pdu extends DistributedEmissionsFamilyPdu implem
     /**
      * fundamental parameters
      */
-    protected IffFundamentalData fundamentalParameters = new IffFundamentalData();
+    protected IffFundamentalData fundamentalData = new IffFundamentalData();
+
+    /**
+     * layer 2 value: 0 = not present, 1 = present
+     */
+    protected int layer2Value = 0;
+
+    /**
+     * layer 2 part of an IFF/ATC/NAVAIDS PDU
+     */
+    protected IffAtcNavAidsLayer2Pdu layer2 = null;
 
     /**
      * Constructor
@@ -60,8 +73,10 @@ public class IffAtcNavAidsLayer1Pdu extends DistributedEmissionsFamilyPdu implem
         marshalSize = marshalSize + location.getMarshalledSize();  // location
         marshalSize = marshalSize + systemID.getMarshalledSize();  // systemID
         marshalSize = marshalSize + 2;  // pad2
-        marshalSize = marshalSize + fundamentalParameters.getMarshalledSize();  // fundamentalParameters
-
+        marshalSize = marshalSize + fundamentalData.getMarshalledSize();  // fundamentalData
+        if ((this.getLayer2Value() & LAYER_PRESENT) == LAYER_PRESENT) {
+            marshalSize = marshalSize + layer2.getMarshalledSize();
+        }
         return marshalSize;
     }
 
@@ -105,12 +120,39 @@ public class IffAtcNavAidsLayer1Pdu extends DistributedEmissionsFamilyPdu implem
         return pad2;
     }
 
-    public void setFundamentalParameters(IffFundamentalData pFundamentalParameters) {
-        fundamentalParameters = pFundamentalParameters;
+    public void setFundamentalData(IffFundamentalData pFundamentalData) {
+        fundamentalData = pFundamentalData;
     }
 
-    public IffFundamentalData getFundamentalParameters() {
-        return fundamentalParameters;
+    public IffFundamentalData getFundamentalData() {
+        return fundamentalData;
+    }
+
+    public void setLayer2Value(int pLayer2Value) {
+        short newInformationLayer;
+        this.layer2Value = pLayer2Value << 2;
+        newInformationLayer = (short) (this.getFundamentalData().getInformationLayers() & 0xFB);
+        newInformationLayer = (short) (newInformationLayer | this.layer2Value);
+        this.getFundamentalData().setInformationLayers(newInformationLayer);
+    }
+
+    public int getLayer2Value() {
+        this.layer2Value = this.getFundamentalData().getInformationLayers() & 0x4;    // Mask out everything except bit 2
+        return this.layer2Value;
+    }
+
+    public void setIffAtcNavAidsLayer2(IffAtcNavAidsLayer2Pdu pLayer2) {
+        this.layer2 = pLayer2;
+        short data = getFundamentalData().getInformationLayers();
+        data = (short) (data | (1 << 2)); //set bit 2 indicating that layer 2 is present
+        getFundamentalData().setInformationLayers(data);
+
+        this.layer2.getLayerHeader().setLayerNumber((short) 2);
+        this.layer2.getLayerHeader().setLayerSpecificInformaiton((short) 0);
+    }
+
+    public IffAtcNavAidsLayer2Pdu getIffAtcNavAidsLayer2() {
+        return this.layer2;
     }
 
     /**
@@ -129,7 +171,10 @@ public class IffAtcNavAidsLayer1Pdu extends DistributedEmissionsFamilyPdu implem
         location.marshal(buff);
         systemID.marshal(buff);
         buff.putShort((short) pad2);
-        fundamentalParameters.marshal(buff);
+        fundamentalData.marshal(buff);
+        if ((this.getLayer2Value() & LAYER_PRESENT) == LAYER_PRESENT) {
+            layer2.marshal(buff);
+        }
     } // end of marshal method
 
     /**
@@ -148,7 +193,12 @@ public class IffAtcNavAidsLayer1Pdu extends DistributedEmissionsFamilyPdu implem
         location.unmarshal(buff);
         systemID.unmarshal(buff);
         pad2 = (int) (buff.getShort() & 0xFFFF);
-        fundamentalParameters.unmarshal(buff);
+        fundamentalData.unmarshal(buff);
+
+        if ((this.getLayer2Value() & LAYER_PRESENT) == LAYER_PRESENT) {
+            layer2 = new IffAtcNavAidsLayer2Pdu();
+            layer2.unmarshal(buff);
+        }
     } // end of unmarshal method 
 
 
@@ -198,8 +248,14 @@ public class IffAtcNavAidsLayer1Pdu extends DistributedEmissionsFamilyPdu implem
         if (!(pad2 == rhs.pad2)) {
             ivarsEqual = false;
         }
-        if (!(fundamentalParameters.equals(rhs.fundamentalParameters))) {
+        if (!(fundamentalData.equals(rhs.fundamentalData))) {
             ivarsEqual = false;
+        }
+
+        if ((this.getLayer2Value() & LAYER_PRESENT) == LAYER_PRESENT) {
+            if (!(layer2.equals(rhs.layer2))) {
+                ivarsEqual = false;
+            }
         }
 
         return ivarsEqual && super.equalsImpl(rhs);
