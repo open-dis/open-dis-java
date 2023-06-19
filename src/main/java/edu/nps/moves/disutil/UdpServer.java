@@ -32,7 +32,7 @@ import java.util.LinkedList;
  *
  * <p>Of course it won't be much help unless you know which port it's
  * listening on and you register as a listener
- * so you'll know when a <tt>java.net.DatagramPacket</tt> has come in:</p>
+ * so you'll know when a java.net.DatagramPacket has come in:</p>
  *
  * <pre> server.setPort(1234);
  *  server.addUdpServerListener( new UdpServer.Adapter(){
@@ -51,7 +51,7 @@ import java.util.LinkedList;
  * <p>The full 64KB allowed by the UDP standard is set aside to receive
  * the datagrams, but it's possible that your host platform may truncate that.</p>
  *
- * <p>The public methods are all synchronized on <tt>this</tt>, and great
+ * <p>The public methods are all synchronized on this, and great
  * care has been taken to avoid deadlocks and race conditions. That being said,
  * there may still be bugs (please contact the author if you find any), and
  * you certainly still have the power to introduce these problems yourself.</p>
@@ -70,7 +70,7 @@ import java.util.LinkedList;
  * to your own package and use it as you like. Enjoy.
  * Please consider leaving the following statement here in this code:</p>
  *
- * <p><em>This <tt>UdpServer</tt> class was copied to this project from its source as
+ * <p><em>This UdpServer class was copied to this project from its source as
  * found at <a href="http://iharder.net" target="_blank">iHarder.net</a>.</em></p>
  *
  * @author Robert Harder
@@ -87,7 +87,7 @@ public class UdpServer {
     private final static Logger LOGGER = Logger.getLogger(UdpServer.class.getName());
 
     /**
-     * The port property <tt>port</tt> used with
+     * The port property port used with
      * the property change listeners and the preferences,
      * if a preferences object is given.
      */
@@ -97,7 +97,7 @@ public class UdpServer {
 
 
     /**
-     * The multicast groups property <tt>groups</tt> used with
+     * The multicast groups property groups used with
      * the property change listeners and the preferences,
      * if a preferences object is given. If the multicast
      * groups is null, then no multicast groups will be joined.
@@ -608,7 +608,7 @@ public class UdpServer {
 
     /**
      * Static method to set the logging level using Java's
-     * <tt>java.util.logging</tt> package. Example:
+     * java.util.logging package. Example:
      * <code>UdpServer.setLoggingLevel(Level.OFF);</code>.
      *
      * @param level the new logging level
@@ -619,7 +619,7 @@ public class UdpServer {
 
     /**
      * Static method returning the logging level using Java's
-     * <tt>java.util.logging</tt> package.
+     * java.util.logging package.
      * @return the logging level
      */
     public static Level getLoggingLevel(){
@@ -654,7 +654,7 @@ public class UdpServer {
      * to your own package and use it as you like. Enjoy.
      * Please consider leaving the following statement here in this code:</p>
      *
-     * <p><em>This <tt>UdpServer</tt> class was copied to this project from its source as
+     * <p><em>This UdpServer class was copied to this project from its source as
      * found at <a href="http://iharder.net" target="_blank">iHarder.net</a>.</em></p>
      *
      * @author Robert Harder
@@ -710,7 +710,7 @@ public class UdpServer {
      * to your own package and use it as you like. Enjoy.
      * Please consider leaving the following statement here in this code:</p>
      *
-     * <p><em>This <tt>UdpServer</tt> class was copied to this project from its source as
+     * <p><em>This UdpServer class was copied to this project from its source as
      * found at <a href="http://iharder.net" target="_blank">iHarder.net</a>.</em></p>
      *
      * @author Robert Harder
@@ -755,7 +755,7 @@ public class UdpServer {
      * to your own package and use it as you like. Enjoy.
      * Please consider leaving the following statement here in this code:</p>
      *
-     * <p><em>This <tt>UdpServer</tt> class was copied to this project from its source as
+     * <p><em>This UdpServer class was copied to this project from its source as
      * found at <a href="http://iharder.net" target="_blank">iHarder.net</a>.</em></p>
      *
      * @author Robert Harder
@@ -778,7 +778,7 @@ public class UdpServer {
 
         /**
          * Returns the source of the event, a {@link UdpServer}.
-         * Shorthand for <tt>(UdpServer)getSource()</tt>.
+         * Shorthand for (UdpServer)getSource().
          * @return the server
          */
         public UdpServer getUdpServer(){
@@ -786,7 +786,7 @@ public class UdpServer {
         }
 
         /**
-         * Shorthand for <tt>getUdpServer().getState()</tt>.
+         * Shorthand for getUdpServer().getState().
          * @return the state of the server
          * @see UdpServer.State
          */
@@ -798,7 +798,7 @@ public class UdpServer {
         /**
          * Returns the most recent datagram packet received
          * by the {@link UdpServer}. Shorthand for
-         * <tt>getUdpServer().getPacket()</tt>.
+         * getUdpServer().getPacket().
          * @return the most recent datagram
          */
         public DatagramPacket getPacket(){

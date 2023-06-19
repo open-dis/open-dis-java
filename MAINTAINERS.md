@@ -4,19 +4,22 @@ This document is useful for maintainers of the library only.
 
 Once enough changes have been made we cut a new release and deploy it to Maven Central so that other developers can use the Open DIS library in their project.
 
-Steps:
+Pre-conditions:
 
-1. Draft the description of the new release on GitHub: https://github.com/open-dis/open-dis-java/releases
-2. Perform the steps to cut the release and deploy to Maven Central. For more info view this [guide](https://central.sonatype.org/pages/apache-maven.html).
+The maintainer performing the release will need:
 
-In a nutshell the maintainer performing the release will need:
- * A Sonatype JIRA account associated with the `edu.nps.moves` groupId.
- * Your JIRA credentials placed in your local `~/.m2/settings.xml`
- * Your GPG key published
+1. A Sonatype JIRA account associated with the `edu.nps.moves` groupId.
+2. Your Sonatype JIRA credentials placed in your local `~/.m2/settings.xml`
+3. Your GPG key published
 
-Once that's done, run the following commands to release the Open DIS library artifacts to a OSSRH staging area:
+Release-Steps:
 
-    $ mvn release:clean release:prepare
-    $ mvn release:perform
+1. Perform the Maven Release steps to cut the release and deploy to Maven Central. For more info view this [guide](https://central.sonatype.org/pages/apache-maven.html). Run the following commands to release the Open DIS library artifacts to a OSSRH staging area:
 
-Then log into the [OSSRH user interface](https://oss.sonatype.org/) to release the staged artifacts to Central. For more info view this [guide](https://central.sonatype.org/pages/releasing-the-deployment.html)
+```
+$ mvn release:clean release:prepare
+$ mvn release:perform
+```
+
+2. Then log into the [OSSRH user interface](https://oss.sonatype.org/), click "Staging Repositories", select the artifact and click "Close", then click "Release". For more info view this [guide](https://central.sonatype.org/pages/releasing-the-deployment.html)
+3. Now go to the [Releases for the GitHub project](https://github.com/open-dis/open-dis-java/releases), click "Draft a new Release" button, select the Tag name used just now for the release, click "Generate release notes", and click the "Publish Release" button.

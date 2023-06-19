@@ -10,12 +10,12 @@ import edu.nps.moves.dis.Vector3Float;
  * that specifies the location of an entity in the world, transforms it from a given
  * initial coordinate system (such as lat/lon/altitude, or x/y/altitude) to another
  * coordinate system, such as DIS earth-centered. This transformation is carried out
- * in the concrete subclass.<p>
+ * in the concrete subclass.
  *
  * Ideally you want to translate into DIS standard coordinates, but not everyone
  * actually uses that, so I'm agnostic about whether you want to follow the
  * standard. If you want to write a transform that puts lat/lon on the wire, that's
- * up to you.<p>
+ * up to you.
  * 
  * @author DMcG
  */

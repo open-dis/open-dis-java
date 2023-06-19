@@ -13,43 +13,36 @@ import static org.junit.Assert.*;
  *
  * @author mcgredo
  */
-public class EntityStatePduTest
-{
-    
-    public EntityStatePduTest()
-    {
+public class EntityStatePduTest {
+
+    public EntityStatePduTest() {
     }
-    
+
     @BeforeClass
-    public static void setUpClass()
-    {
+    public static void setUpClass() {
     }
-    
+
     @AfterClass
-    public static void tearDownClass()
-    {
+    public static void tearDownClass() {
     }
-    
+
     @Before
-    public void setUp()
-    {
+    public void setUp() {
     }
-    
+
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
     }
-    
+
     @Test
-    public void testMobility()
-    {
+    public void testMobility() {
         EntityStatePdu espdu = new EntityStatePdu();
         int mobility = espdu.getEntityAppearance_mobility();
-        assert(mobility == 0);
-        
+        assert (mobility == 0);
+
         espdu.setEntityAppearance_mobility(1);
         mobility = espdu.getEntityAppearance_mobility();
-        assert(mobility == 1);
+        assert (mobility == 1);
     }
 
     @Test
@@ -58,7 +51,6 @@ public class EntityStatePduTest
         Pdu pdu = factory.createPdu(PduFileLoader.load("EntityStatePdu-26.raw"));
 
         // Expected field values were determined from Wireshark: Decode As -> DIS.
-
         // Header
         assertEquals(6, pdu.getProtocolVersion());
         assertEquals(7, pdu.getExerciseID());
@@ -161,6 +153,41 @@ public class EntityStatePduTest
         assertEquals(13, ap7.getParameterTypeMetric()); // 13 is Elevation
         assertEquals(138, ap7.getParameterTypeClass()); // 138 is model-specific station ID
         assertEquals(0.078117, ap7.getParameterValueFirstSubfield(), 0.000001); // Radians
+    }
+
+    @Test
+    public void unmarshal_articulated_parameters() throws IOException {
+        PduFactory factory = new PduFactory();
+        Pdu pdu = factory.createPdu(PduFileLoader.load("EntityStatePdu-vrf-articulated-parameters.raw"));
+
+        // Expected field values were determined from Wireshark: Decode As -> DIS.
+        EntityStatePdu espdu = (EntityStatePdu) pdu;
+
+        assertEquals(8, espdu.getArticulationParameters().size());
+
+        // We are only checking 2 out of 16 parameters below, ones I cared about:
+        // Primary Turret Azimuth and Primary Gun Elevation
+        ArticulationParameter ap0 = espdu.getArticulationParameters().get(0);
+
+        assertEquals(0, ap0.getParameterTypeDesignator());
+        assertEquals(98, ap0.getChangeIndicator());
+        assertEquals(0, ap0.getPartAttachedTo()); // 0 means attached directly to entity
+        assertEquals(4107, ap0.getParameterType()); // raw
+        assertEquals(4096, ap0.getArticulatedPartIndex()); // Primary turret #1
+        assertEquals(11, ap0.getParameterTypeMetric()); // 11 is Azimuth
+        assertEquals(128, ap0.getParameterTypeClass()); // 128 is model-specific station ID
+        assertEquals(-0.785398, ap0.getParameterValue(), 0.000001); // Radians
+
+        ArticulationParameter ap1 = espdu.getArticulationParameters().get(4);
+
+        assertEquals(0, ap1.getParameterTypeDesignator());
+        assertEquals(0, ap1.getChangeIndicator());
+        assertEquals(1, ap1.getPartAttachedTo()); // 1 means attached to parameter 1 (aka Primary turret above)
+        assertEquals(4429, ap1.getParameterType()); // raw
+        assertEquals(4416, ap1.getArticulatedPartIndex()); // Primary gun #1
+        assertEquals(13, ap1.getParameterTypeMetric()); // 13 is Elevation
+        assertEquals(138, ap1.getParameterTypeClass()); // 138 is model-specific station ID
+        assertEquals(0, ap1.getParameterValue(), 0.000001); // Radians
     }
 
     @Test

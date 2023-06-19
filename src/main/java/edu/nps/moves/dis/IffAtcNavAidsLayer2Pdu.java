@@ -29,7 +29,7 @@ public class IffAtcNavAidsLayer2Pdu extends IffAtcNavAidsLayer1Pdu implements Se
     /**
      * Secondary operational data, 5.2.57
      */
-    protected BeamData secondaryOperationalData = new BeamData();
+    protected SecondaryOperationalData secondaryOperationalData = new SecondaryOperationalData();
 
     /**
      * variable length list of fundamental parameters. ^^^This is wrong
@@ -45,7 +45,6 @@ public class IffAtcNavAidsLayer2Pdu extends IffAtcNavAidsLayer1Pdu implements Se
     public int getMarshalledSize() {
         int marshalSize = 0;
 
-        marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + layerHeader.getMarshalledSize();  // layerHeader
         marshalSize = marshalSize + beamData.getMarshalledSize();  // beamData
         marshalSize = marshalSize + secondaryOperationalData.getMarshalledSize();  // secondaryOperationalData
@@ -73,11 +72,11 @@ public class IffAtcNavAidsLayer2Pdu extends IffAtcNavAidsLayer1Pdu implements Se
         return beamData;
     }
 
-    public void setSecondaryOperationalData(BeamData pSecondaryOperationalData) {
+    public void setSecondaryOperationalData(SecondaryOperationalData pSecondaryOperationalData) {
         secondaryOperationalData = pSecondaryOperationalData;
     }
 
-    public BeamData getSecondaryOperationalData() {
+    public SecondaryOperationalData getSecondaryOperationalData() {
         return secondaryOperationalData;
     }
 
@@ -99,9 +98,10 @@ public class IffAtcNavAidsLayer2Pdu extends IffAtcNavAidsLayer1Pdu implements Se
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
-        super.marshal(buff);
+        layerHeader.setLength(32 + (24 * fundamentalIffParameters.size()));
         layerHeader.marshal(buff);
         beamData.marshal(buff);
+        secondaryOperationalData.setNumberofFundamentalParameterDataSets(fundamentalIffParameters.size());
         secondaryOperationalData.marshal(buff);
 
         for (int idx = 0; idx < fundamentalIffParameters.size(); idx++) {
@@ -120,12 +120,11 @@ public class IffAtcNavAidsLayer2Pdu extends IffAtcNavAidsLayer1Pdu implements Se
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        super.unmarshal(buff);
 
         layerHeader.unmarshal(buff);
         beamData.unmarshal(buff);
         secondaryOperationalData.unmarshal(buff);
-        for (int idx = 0; idx < pad2; idx++) {
+        for (int idx = 0; idx < secondaryOperationalData.getNumberofFundamentalParameterDataSets(); idx++) {
             FundamentalParameterDataIff anX = new FundamentalParameterDataIff();
             anX.unmarshal(buff);
             fundamentalIffParameters.add(anX);

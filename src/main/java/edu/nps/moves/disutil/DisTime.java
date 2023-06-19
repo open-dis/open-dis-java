@@ -6,13 +6,13 @@ import java.util.*;
  * DIS time units are a pain in the ass. DIS time units are arbitrary, and set
  * equal to 2^31 - 1 time units per hour. The DIS time is set to the number of
  * time units since the start of the hour. The timestamp field in the PDU header
- * is four bytes long and is specified to be an unsigned integer value.<p>
+ * is four bytes long and is specified to be an unsigned integer value.
  *
  * There are two types of official timestamps in the PDU header: absolute time
  * and relative time. Absolute time is used when the host is sync'd to UTC, ie
  * the host has access to UTC via Network Time Protocol (NTP). This time can be
  * legitimately compared to the timestamp of packets received from other hosts,
- * since they all refer to the same universal time.<p>
+ * since they all refer to the same universal time.
  *
  * Relative timestamps are used when the host does NOT have access to NTP, and
  * hence the system time might not be coordinated with that of other hosts. This
@@ -24,14 +24,14 @@ import java.util.*;
  * Absolute timestamps have their LSB set to 1, and relative timestamps have
  * their LSB set to 0. The idea is to get the current time since the top of the
  * hour, divide by 2^31-1, shift left one bit, then set the LSB to either 0 for
- * relative timestamps or 1 for absolute timestamps.<p>
+ * relative timestamps or 1 for absolute timestamps.
  *
  * The nature of the data is such that the timestamp fields will roll over once
  * an hour, and simulations must be prepared for that. Ie, at the top of the
  * hour outgoing PDUs will have a timestamp of 1, just before the end of the
  * hour the PDUs will have a timestamp of 2^31 - 1, and then they will roll back
  * over to 1. Receiving applications should expect this behavior, and not simply
- * expect a monotonically increasing timestamp field.<p>
+ * expect a monotonically increasing timestamp field.
  *
  * The official DIS timestamps don't work all that well in our (NPS's)
  * applications, which often expect a monotonically increasing timestamp field.
@@ -39,17 +39,17 @@ import java.util.*;
  * The maximum value for this field is 3,153,600,000, which can fit into an
  * unsigned int. The resolution is good enough for most applications, and you
  * typically don't have to worry about rollover, instead getting only a
- * monotonically increasing timestamp value.<p>
+ * monotonically increasing timestamp value.
  *
  * Note that many applications in the wild have been known to completely ignore
  * the standard and to simply put the Unix time (seconds since 1970) into the
  * field.
- * <p>
+ * 
  *
  * You need to be careful with the shared instance of this class--I'm not at all
  * convinced it is thread safe. If you are using multiple threads, I suggest you
  * create a new instance of the class for each thread to prevent the values from
- * getting stomped on.<p>
+ * getting stomped on.
  *
  * @author DMcG
  */
