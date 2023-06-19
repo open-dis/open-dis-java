@@ -14,12 +14,12 @@ The maintainer performing the release will need:
 
 Release-Steps:
 
-1. Draft the description of the new release on GitHub: https://github.com/open-dis/open-dis-java/releases
-2. Perform the Maven Release steps to cut the release and deploy to Maven Central. For more info view this [guide](https://central.sonatype.org/pages/apache-maven.html). Run the following commands to release the Open DIS library artifacts to a OSSRH staging area:
+1. Perform the Maven Release steps to cut the release and deploy to Maven Central. For more info view this [guide](https://central.sonatype.org/pages/apache-maven.html). Run the following commands to release the Open DIS library artifacts to a OSSRH staging area:
 
 ```
 $ mvn release:clean release:prepare
 $ mvn release:perform
 ```
 
-3. Then log into the [OSSRH user interface](https://oss.sonatype.org/) to release the staged artifacts to Central. For more info view this [guide](https://central.sonatype.org/pages/releasing-the-deployment.html)
+2. Then log into the [OSSRH user interface](https://oss.sonatype.org/), click "Staging Repositories", select the artifact and click "Close", then click "Release". For more info view this [guide](https://central.sonatype.org/pages/releasing-the-deployment.html)
+3. Now go to the [Releases for the GitHub project](https://github.com/open-dis/open-dis-java/releases), click "Draft a new Release" button, select the Tag name used just now for the release, click "Generate release notes", and click the "Publish Release" button.

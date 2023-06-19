@@ -27,11 +27,12 @@ public class EspduReceiver {
                         if (pdu != null) {
                             System.out.println("Received PDU of type: " + pdu.getClass().getName());
                             if (pdu instanceof EntityStatePdu) {
-                                EntityID eid = ((EntityStatePdu) pdu).getEntityID();
-                                Vector3Double position = ((EntityStatePdu) pdu).getEntityLocation();
-                                System.out.println(" Site,App,Id:[" + eid.getSite() + ", " + eid.getApplication() + ", " + eid.getEntity() + "] ");
-                                System.out.println(" Location in DIS coordinates: [" + position.getX() + ", " + position.getY() + ", " + position.getZ() + "]");
-
+                                EntityStatePdu espdu = (EntityStatePdu) pdu;
+                                System.out.println(" Marking: " + espdu.getMarking().getCharactersString());
+                                EntityID eid = espdu.getEntityID();
+                                System.out.println(" Site, App, Id: [" + eid.getSite() + ", " + eid.getApplication() + ", " + eid.getEntity() + "] ");
+                                Vector3Double position = espdu.getEntityLocation();
+                                System.out.println(" Location in DIS geocentric xyz coordinates: [" + position.getX() + ", " + position.getY() + ", " + position.getZ() + "]");
                                 final double[] latlon = CoordinateConversions.xyzToLatLonDegrees(position.toArray());
                                 System.out.println(" Location in Latitude Longitude Elevation: [" + latlon[0] + ", " + latlon[1] + ", " + latlon[2] + "]");
                             }
