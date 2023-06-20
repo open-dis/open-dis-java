@@ -79,7 +79,6 @@ public class ElectronicEmissionSystemData extends Object implements Serializable
         for (int i = 0; i < beamDataRecords.size(); i++) {
             ElectronicEmissionBeamData bd = beamDataRecords.get(i);
             size += bd.calculateBeamDataLength();
-
         }
         return size;
     }
