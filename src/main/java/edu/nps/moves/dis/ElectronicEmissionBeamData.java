@@ -101,7 +101,7 @@ public class ElectronicEmissionBeamData extends Object implements Serializable {
     }
 
     short calculateBeamDataLength() {
-        //bea, length = 13 + 2*track/jamTargets
+        //beam length = 13 + 2*track/jamTargets
         return (short) ((2 * getTrackJamTargets().size()) + 13);
     }
 
