@@ -96,12 +96,13 @@ public class ElectronicEmissionBeamData extends Object implements Serializable {
         return marshalSize;
     }
 
-    public void setBeamDataLength(short pBeamDataLength) {
-        beamDataLength = pBeamDataLength;
-    }
-
     public short getBeamDataLength() {
         return beamDataLength;
+    }
+
+    short calculateBeamDataLength() {
+        //beam length = 13 + 2*track/jamTargets
+        return (short) ((2 * getTrackJamTargets().size()) + 13);
     }
 
     public void setBeamIDNumber(short pBeamIDNumber) {
@@ -193,7 +194,7 @@ public class ElectronicEmissionBeamData extends Object implements Serializable {
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
-        buff.put((byte) beamDataLength);
+        buff.put((byte) calculateBeamDataLength());
         buff.put((byte) beamIDNumber);
         buff.putShort((short) beamParameterIndex);
         fundamentalParameterData.marshal(buff);
