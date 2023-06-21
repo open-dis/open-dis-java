@@ -74,8 +74,8 @@ public class ElectronicEmissionSystemData extends Object implements Serializable
     }
 
     private short calculateSystemDataLength() {
-        //systemdata length = 13*beamCount + SUM(beamsCount)2*track/jamTargets
-        short size = 5;
+        //systemdata length = 5 + 13*beamCount + 2*track/jamTargets * nr of targets
+        short size = 5;// Sys Data Length+nr of beams + padding + emitter system record + location fields in 32 bit words
         for (int i = 0; i < beamDataRecords.size(); i++) {
             ElectronicEmissionBeamData bd = beamDataRecords.get(i);
             size += bd.calculateBeamDataLength();
