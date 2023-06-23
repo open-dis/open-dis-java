@@ -54,7 +54,7 @@ import java.lang.reflect.Method;
  * so be mindful of more than one listener being around to makes calls
  * on the data.</p>
  *
- * <p>The public methods are all synchronized on <tt>this</tt>, and great
+ * <p>The public methods are all synchronized on this, and great
  * care has been taken to avoid deadlocks and race conditions. That being said,
  * there may still be bugs (please contact the author if you find any), and
  * you certainly still have the power to introduce these problems yourself.</p>
@@ -78,7 +78,7 @@ import java.lang.reflect.Method;
  * to your own package and use it as you like. Enjoy.
  * Please consider leaving the following statement here in this code:</p>
  *
- * <p><em>This <tt>NioServer</tt> class was copied to this project from its source as
+ * <p><em>This NioServer class was copied to this project from its source as
  * found at <a href="http://iharder.net" target="_blank">iHarder.net</a>.</em></p>
  *
  * @author Robert Harder
@@ -767,7 +767,7 @@ public class NioServer {
 
     /**
      * <p><em>Experimental Hack</em> - Adds a UDP binding to the server
-     * and joins the given multicast group (if <code>group<code>
+     * and joins the given multicast group (if <code>group</code>
      * is not null and is a valid multicast group).
      * In the simplest case, you might do the following
      * to listen on port 16000 and multicast group 239.0.0.1:
@@ -1229,7 +1229,7 @@ public class NioServer {
 
     /**
      * Static method to set the logging level using Java's
-     * <tt>java.util.logging</tt> package. Example:
+     * java.util.logging package. Example:
      * <code>NioServer.setLoggingLevel(Level.OFF);</code>.
      *
      * @param level the new logging level
@@ -1240,7 +1240,7 @@ public class NioServer {
 
     /**
      * Static method returning the logging level using Java's
-     * <tt>java.util.logging</tt> package.
+     * java.util.logging package.
      * @return the logging level
      */
     public static Level getLoggingLevel(){
@@ -1272,7 +1272,7 @@ public class NioServer {
      * to your own package and use it as you like. Enjoy.
      * Please consider leaving the following statement here in this code:</p>
      *
-     * <p><em>This <tt>NioServer</tt> class was copied to this project from its source as
+     * <p><em>This NioServer class was copied to this project from its source as
      * found at <a href="http://iharder.net" target="_blank">iHarder.net</a>.</em></p>
      *
      * @author Robert Harder
@@ -1389,7 +1389,7 @@ public class NioServer {
      * to your own package and use it as you like. Enjoy.
      * Please consider leaving the following statement here in this code:</p>
      *
-     * <p><em>This <tt>NioServer</tt> class was copied to this project from its source as
+     * <p><em>This NioServer class was copied to this project from its source as
      * found at <a href="http://iharder.net" target="_blank">iHarder.net</a>.</em></p>
      *
      * @author Robert Harder
@@ -1451,7 +1451,7 @@ public class NioServer {
      * to your own package and use it as you like. Enjoy.
      * Please consider leaving the following statement here in this code:</p>
      *
-     * <p><em>This <tt>NioServer</tt> class was copied to this project from its source as
+     * <p><em>This NioServer class was copied to this project from its source as
      * found at <a href="http://iharder.net" target="_blank">iHarder.net</a>.</em></p>
      *
      * @author Robert Harder
@@ -1495,7 +1495,7 @@ public class NioServer {
 
         /**
          * Returns the source of the event, a {@link NioServer}.
-         * Shorthand for <tt>(NioServer)getSource()</tt>.
+         * Shorthand for (NioServer)getSource().
          * @return the server
          */
         public NioServer getNioServer(){
@@ -1503,7 +1503,7 @@ public class NioServer {
         }
 
         /**
-         * Shorthand for <tt>getNioServer().getState()</tt>.
+         * Shorthand for getNioServer().getState().
          * @return the state of the server
          * @see NioServer.State
          */

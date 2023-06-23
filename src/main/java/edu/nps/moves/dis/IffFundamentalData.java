@@ -178,6 +178,7 @@ public class IffFundamentalData extends Object implements Serializable {
     public void marshal(java.nio.ByteBuffer buff) {
         buff.put((byte) systemStatus);
         buff.put((byte) alternateParameter4);
+        informationLayers = (short) (informationLayers | (1 << 1)); //inform that layer 1 is present        
         buff.put((byte) informationLayers);
         buff.put((byte) modifier);
         buff.putShort((short) parameter1);

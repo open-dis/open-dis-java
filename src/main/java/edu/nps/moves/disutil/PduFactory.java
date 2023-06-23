@@ -10,7 +10,7 @@ import edu.nps.moves.disenum.PduType;
 /**
  * Simple factory for PDUs. When bytes are received on the wire, they're passed
  * off to us and the correct constructor called to return the correct PDU
- * type.<p>
+ * type.
  *
  * @author DMcG
  */
@@ -348,7 +348,9 @@ public class PduFactory {
                 case ENTITY_STATE_UPDATE:
                     aPdu = new EntityStateUpdatePdu();
                     break;
-
+                case IFF_ATC_NAVAIDS:
+                        aPdu = new IffAtcNavAidsLayer1Pdu();
+                    break;
                 default:
                     logger.log(Level.INFO, "PDU not implemented. Type = " + pduType + "\n");
                     if (pduTypeEnum != null) {

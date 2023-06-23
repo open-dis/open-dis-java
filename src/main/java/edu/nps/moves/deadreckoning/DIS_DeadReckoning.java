@@ -28,245 +28,7 @@ import org.apache.commons.math3.linear.RealMatrix;
  * the get function, which returns an array of 6 doubles 3 x location and 
  * 3 x orientation. With these 6 parameters the entity can redraw itself in an
  * updated location and orientation based on its projected path.
- * <p>
- * <hr>
- * <p>
- * <center><h2>Key notes form the IEEE DIS standard about DR</h2></center>
- * <p>
- * <center><img src="..\..\RefsImgs\formulas.jpg"/></center>
- * <P>
- * DRM notation shall consist of three elements. 
- * 
- * The First element shall indicate whether the model specifies 
- * rotation as either fixed (F) or rotating (R).
- * The second element shall specify dead reckoning rates to be held 
- * constant as either rate of position (P) or rate of velocity (V).
- * The third element shall specify the coordinate system to be used with 
- * the dead reckoning algorithm as either world coordinates (W) or body axis 
- * coordinates (B).
- * 
- * <P>
- * <hr>
- * <p>
- * <b>5.2.1 Angle representation</b><br>
- * Angles shall be specified as 32-bit floating point numbers expressed 
- * in radians.(page 55)
- * <p>
- * <b>5.2.2 Angular Velocity Vector record</b><br>
- * The angular velocity of simulated entities shall be represented by the Angular 
- * Velocity Vector record. This record shall specify the rate at which an 
- * entity's orientation is changing. The angular velocity shall be measured
- * in <u>radians per second</u> measured about each of the entity's own 
- * coordinate axes. The record shall consist of three fields. The first field 
- * shall represent velocity about the x-axis, the second about the y-axis, and 
- * the third about the z-axis [see 5.2.33 item a)]. The positive direction of 
- * the angular velocity is defined by the right-hand rule. The format of the 
- * Angular Velocity Vector record shall be shown as in table 5. (Page 55)
- * <br>
- * <center><img src="..\..\RefsImgs\angVel.jpg"/></center>
- * <p>
- * <b>5.2.17 Euler Angles record</b><br>
- * Orientation of a simulated entity shall be specified by the Euler Angles 
- * record. This record shall specify three angles as described in figure 3 and 
- * 3.1.13. These angles shall be specified with respect to the entity's 
- * coordinate system. The three angles shall each be specified by a 32-bit 
- * floating point number <u>representing radians</u>. The format of the Euler 
- * Angles record shall be as shown in table 19. (page 65)
- * <br>
- * <center><img src="..\..\RefsImgs\Eangle.jpg"></center>
- * <P>
- * <b>5.2.33 Vector record</b><br>
- * Vector values for entity coordinates, linear acceleration, and linear 
- * velocity, shall be represented using a Vector record. This record shall 
- * consist of three fields, each a 32-bit floating point number. The unit of
- * measure represented by these fields shall depend on the information 
- * represented. The values utilizing the Vector record are as follows:
- * <p>
- * a) Entity Coordinate Vector. Location with respect to a particular entity 
- * shall be specified with respect to three orthogonal axes whose origin shall 
- * be the geometric center of the bounding volume of the entity excluding its 
- * articulated and attached parts (see figure 2). The x-axis extends in the 
- * positive direction out the front of the entity. The y-axis extends in the 
- * positive direction out the right side of the entity as viewed from above, 
- * facing in the direction of the positive x-axis. The z-axis extends in the 
- * positive direction out the bottom of the entity. Each vector component 
- * shall represent meters from the origin (see figure 2).
- * <p>
- * b) Linear Acceleration Vector. Linear acceleration shall be represented as a 
- * vector with components in either world coordinate system or entity's 
- * coordinate system depending on the value in the Dead Reckoning Algorithm 
- * field. Each vector component shall represent acceleration in <u>meters per 
- * second squared</u>.
- * <P>
- * c) Linear Velocity Vector. Linear velocity shall be represented as a vector 
- * with three components in either world coordinate system or entity's 
- * coordinate system depending on the value in the Dead Reckoning Algorithm 
- * field. Each vector component shall represent velocity in <u>meters per 
- * second</u>. The format of the Vector record shall be as shown in 
- * table 30. (page 73)
- * <br>
- * <center><img src="..\..\RefsImgs\vecRec.jpg"></center>
- * <p>
- * <b>5.2.34 World Coordinates record</b><br>
- * Location of the origin of the entity's coordinate system shall be specified 
- * by a set of three coordinates: X, Y, and Z. The shape of the earth shall be 
- * specified using DMA TR 8350.2, 1987. The origin of the world coordinate 
- * system shall be the centroid of the earth, with the X-axis passing through 
- * the prime meridian at the equator, the Y-axis passing through 90° east 
- * longitude at the equator, and the Z-axis passing through the north pole 
- * (see figure 1). These coordinates shall represent meters from the centroid 
- * of the earth. A 64-bit double precision floating point number shall represent 
- * the location for each coordinate. 
- * <p>The format of the World Coordinates record shall be as shown in table 
- * 31. (page 73)
- * <br>
- * <center><img src="..\..\RefsImgs\worldCord.jpg"></center>
- * <P>
- * <B>The Dead Reckoning parameters captured from each PDU</B>
- * <center>
- * <img src="..\..\RefsImgs\drPDUinfo.jpg">
- * </center>
- * 
- * 
- * 
- * 
- * 
- * <p>
- * <hr>
- * <p> 
- * <center><h2>The IEEE specified algorithms to compute the DR for Primary 
- * Methods Group (1-5)</h2></center>
- * <p>
- * <hr>
- * <p>
- * <center><b><u>REVISED POSITION</U></B></CENTER>
- * <P>
- * <hr>
- * <p>
- *
- * The Position portion of the algorithms</b><br>
 
- * <hr>
- * <p>
- * <center><b><u>ORIENTATION SOLVER</U></B></CENTER>
- * <p>
- * Ultimately, the PSI (rotation about the y-axis), THETA (rotation about the
- * z-axis), PHI (rotation about the x-axis) need to be in the range 
- * of 0 - 2PI since the fields are in radians.
- * <P>
- * <hr>
- * <p>
- * 
- * <b><a href="..\..\RefsImgs\2_orientation.jpg">
- * The Orientation portion of the algorithms</A></b><br>
- * <center><img src="..\..\RefsImgs\2_orientation.jpg"/></center>
- * <br>
- * 
- * <p>
- * <hr>
- * <p>
- * <center><b><u>DR MATRIX SOLVER</U></B></CENTER>
- * <P>
- * <hr>
- * <p>
- * <b><a href="..\..\RefsImgs\22_drMatrix.jpg">
- * The generic DR matrix</A></b><br>
- * <center><img src="..\..\RefsImgs\22_drMatrix.jpg"/></center>
- * <br>
- * <center>
- * Graphics rotate (x,y,z) matrices
- * <br>
- * <img src="..\..\RefsImgs\rX.jpg" alt="Rotate X">
- * <img src="..\..\RefsImgs\rY.jpg" alt="Rotate Y">
- * <img src="..\..\RefsImgs\rZ.jpg" alt="Rotate Z"> = [DR]
- * <br>
- * ultimately what this is DR equation is doing but with a change of basis
- * from world to entity coordinates.
- * </center>
- * <p>
- * <b><a href="..\..\RefsImgs\23_angVelocity.jpg">
- * The angular velocity Magnitude</a></b><br>
- * <center><img src="..\..\RefsImgs\23_angVelocity.jpg"/></center>
- * <br>
- * <p>
- * 
- * <b><a href="..\..\RefsImgs\24_omegaSKEW.jpg">
- * The SKEW matrix</a></b><br>
- * <center><img src="..\..\RefsImgs\24_omegaSKEW.jpg"/></center>
- * <br>
- * 
- * <b><a href="..\..\RefsImgs\25_angVelMult.jpg">
- * The angular velocity Matrix</A></b><br>
- * <center><img src="..\..\RefsImgs\25_angVelMult.jpg"/></center>
- * <br>
- * <p>
- * NOTE - It was mentioned above that the angular velocities are contained in 
- * the Entity State PDU as body axis velocities. However, if the angular 
- * velocities are in terms of the Euler angles, then a transformation to body 
- * axis angular velocities is needed. Thus the following transformation 
- * formulas are given:
- * <p>
- * <b><a href="..\..\RefsImgs\body_world.jpg">
- * Body to Wrold Transformation</A></b><br>
- * <center><img src="..\..\RefsImgs\body_world.jpg"/></center>
- * <br>
- * <b><a href="..\..\RefsImgs\world_body.jpg">
- * World to Body Transformation</A></b><br>
- * <center><img src="..\..\RefsImgs\world_body.jpg"/></center>
- * <br>
- * <P>
- * <hr>
- * <p>
- * <center><b><u>R MATRIX SOLVER</U></B></CENTER>
- * <P>
- * <hr>
- * <p>
- * <b><a href="..\..\RefsImgs\initOrientMatrix.jpg">
- * Initial Orientation Matrix</A></b><br>
- * <center><img src="..\..\RefsImgs\initOrientMatrix.jpg"/></center>
- * <P>
- * <hr>
- * <p>
- * <center><b><u>REVISED ORIENTATION</U></B></CENTER>
- * <P>
- * <hr>
- * <p>
- * <b><a href="..\..\RefsImgs\getRevOrientation.jpg">
- * Get the Revised Orientation</A></b><br>
- * <center><img src="..\..\RefsImgs\getRevOrientation.jpg"/></center>
- * 
- * 
- * <p>
- * <hr>
- * <p> 
- * <center><h2>The IEEE specified algorithms to compute the DR for Secondary 
- * Methods Group (6-9)</h2></center>
- * <p>
- * <hr>
- * <p>
- * <i>Note: the <a href="..\..\RefsImgs\2_orientation.jpg">Rotaion formula</a>
- * where applicable is the same as that used in the Primary Methods Group (1-5), 
- * as well is the equation for getting the 
- * <a href="..\..\RefsImgs\getRevOrientation.jpg">revised orientations</a>.</i>
- * <p>
- * <b><a href="..\..\RefsImgs\pos8.jpg">
- * General position formula</A></b><br>
- * <center><img src="..\..\RefsImgs\pos8.jpg"/></center>
- *<p>
- * <b><a href="..\..\RefsImgs\r1.jpg">
- * R1 vector (though I am not sure what its really calculating)</A></b><br>
- * <center><img src="..\..\RefsImgs\r1.jpg"/></center> 
- * 
- *<p>
- * <b><a href="..\..\RefsImgs\r2.jpg">
- * R2 vector (though I am not sure what its really calculating)</A></b><br>
- * <center><img src="..\..\RefsImgs\r2.jpg"/></center> 
- * <p>
- * 
- * 
- * <p>
- * <hr>
- * <p>
  * <u>An Example:</u><br>
  * <pre>
 import DIS.DeadReckoning.*;
@@ -422,12 +184,11 @@ public abstract class DIS_DeadReckoning implements Runnable
      * How long to wait between updates
      * <P>
      *  the delta between calls...how fast an entity will be updated
-     * <ol>
-     * Assumed a desired rate of 30 fps
-     * Given from the standard that all parameters are in meters/s
-     * To move 1 meter/second with 30 increments = 1/30 Delta between updates
-     * delay in milliseconds is 1/30 * 1000 || 1000 / 30
-     * </ol>
+     * 
+     * - Assumed a desired rate of 30 fps
+     * - Given from the standard that all parameters are in meters/s
+     * - To move 1 meter/second with 30 increments = 1/30 Delta between updates
+     * - delay in milliseconds is 1/30 * 1000 || 1000 / 30
      * <p>
      * Note from Java Doc for JDK: <br>
      * Causes the currently executing thread to sleep (temporarily cease 
@@ -508,27 +269,24 @@ public abstract class DIS_DeadReckoning implements Runnable
      * some fields have been updated to the current time sample while other
      * fields still pertain to the previous time sample.
      * 
-     * <ol>
      * Assume a desired rate of 30 fps
      * All parameters are in meters/s
      * to move 1 meter/second with 30 increments = 1/30 Delta between updates
      * 
-     * <p>
      * Only returns an array of location and orientation because that
      * is all that is needed to update the location of the entity.  All other 
      * DR inputs are parameters for solving the location and orientation and so
      * are not returned, only set.
-     * <p>
+     *
      * Order of the returned array elements
-     * <ol> 
-     * entityLocation_X
-     * entityLocation_Y
-     * entityLocation_Z
-     * entityOrientation_psi
-     * entityOrientation_theta
-     * entityOrientation_phi
      * 
-     * <p>
+     * - entityLocation_X
+     * - entityLocation_Y
+     * - entityLocation_Z
+     * - entityOrientation_psi
+     * - entityOrientation_theta
+     * - entityOrientation_phi
+     * 
      * @return -  6 doubles of location and orientation
      */
     public double[] getUpdatedPositionOrientation()
@@ -576,12 +334,12 @@ public abstract class DIS_DeadReckoning implements Runnable
      * This can be the first and initialization call or update. 
      * <P>
      * The following (triples) are set with each call:
-     * <OL>
-     * <LI>Entity Location 64bit
-     * <LI>Entity Orientation 32bit
-     * Entity Linear Velocity 32bit
-     * Entity Linear Acceleration 32bit
-     * Entity Angular Velocity 32bit
+     * 
+     * - Entity Location 64bit
+     * - Entity Orientation 32bit
+     * - Entity Linear Velocity 32bit
+     * - Entity Linear Acceleration 32bit
+     * - Entity Angular Velocity 32bit
 
      * <P>
      * entityLocation_X = allDis[0];<br>
