@@ -102,6 +102,36 @@ public class TransmissionPduTest {
     }
 
     @Test
+    public void unmarshal_Beam_Antenna_Pattern() throws IOException {
+        PduFactory factory = new PduFactory();
+        Pdu aPdu = factory.createPdu(PduFileLoader.load("TransmitterPdu_AntennaPattern_Beam.raw"));
+
+        TransmitterPdu tpdu = (TransmitterPdu) aPdu;
+        commonAntennaPatternTransmitterPduTest(tpdu);
+
+        assertEquals(1, tpdu.getAntennaPatternType());
+        assertEquals(0, tpdu.getSphericalHarmonicAntennaPatternList().size());
+        BeamAntennaPattern beamAntennaPattern = tpdu.getAntennaPatternList().get(0);
+
+        assertEquals(55.5f, beamAntennaPattern.getAzimuthBeamwidth(), 0.0f);
+        Orientation ori = new Orientation();
+        ori.setPsi(1);
+        ori.setTheta(2);
+        ori.setPhi(3);
+
+        Orientation beamDirection = beamAntennaPattern.getBeamDirection();
+        assertEquals(ori.getPsi(), beamDirection.getPsi(), 0.0f);
+        assertEquals(ori.getTheta(), beamDirection.getTheta(), 0.0f);
+        assertEquals(ori.getPhi(), beamDirection.getPhi(), 0.0f);
+
+        assertEquals(54.5f, beamAntennaPattern.getElevationBeamwidth(), 0.0f);
+        assertEquals(53.5f, beamAntennaPattern.getEx(), 0.0f);
+        assertEquals(52.5f, beamAntennaPattern.getEz(), 0.0f);
+        assertEquals(51.5f, beamAntennaPattern.getPhase(), 0.0f);
+        assertEquals(2, beamAntennaPattern.getReferenceSystem());
+    }
+
+    @Test
     public void unmarshal_Spherical_Antenna_Pattern() throws IOException {
         PduFactory factory = new PduFactory();
         Pdu aPdu = factory.createPdu(PduFileLoader.load("TransmitterPdu_AntennaPattern_Spherical.raw"));
