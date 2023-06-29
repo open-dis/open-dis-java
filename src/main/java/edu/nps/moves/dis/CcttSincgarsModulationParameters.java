@@ -190,7 +190,7 @@ public class CcttSincgarsModulationParameters {
         reserved = (byte) (buff.get() & 0xFF);
         fhSynchronizationTimeOffset = (int) (buff.getInt() & 0xFFFFFFFF);
         transmissionSecurityKey = (short) (buff.getShort() & 0xFFFF);
-        clearChannel = (short) (buff.getShort() & 0xFFFF);
+        clearChannel = (short) (buff.get()  & 0xFFFF);
     }
 
     public boolean equalsImpl(Object obj) {
