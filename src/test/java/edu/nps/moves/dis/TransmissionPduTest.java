@@ -194,4 +194,41 @@ public class TransmissionPduTest {
         float f = Float.intBitsToFloat(i);
         return f;
     }
+
+    @Test
+    public void unmarshal_CCTTSINCGARS() throws IOException {
+        PduFactory factory = new PduFactory();
+        Pdu aPdu = factory.createPdu(PduFileLoader.load("TransmitterPdu_CCTTSINCGARS.raw"));
+
+        TransmitterPdu tpdu = (TransmitterPdu) aPdu;
+
+        assertEquals(2, tpdu.getCryptoSystem());
+        assertEquals(1, tpdu.getAntennaPatternType());
+
+        assertEquals(1, tpdu.getCctSincarsModulationParametersList().get(0).getFhNetId());
+        assertEquals(2, tpdu.getCctSincarsModulationParametersList().get(0).getFhSynchronizationTimeOffset());
+        assertEquals(3, tpdu.getCctSincarsModulationParametersList().get(0).getHopSetId());
+        assertEquals(4, tpdu.getCctSincarsModulationParametersList().get(0).getLockoutSetId());
+        assertEquals(5, tpdu.getCctSincarsModulationParametersList().get(0).getReserved());
+        assertEquals(6, tpdu.getCctSincarsModulationParametersList().get(0).getTransmissionSecurityKey());
+        assertEquals(1, tpdu.getCctSincarsModulationParametersList().get(0).getClearChannel());
+
+    }
+
+    @Test
+    public void unmarshal_JtidsMids() throws IOException {
+        PduFactory factory = new PduFactory();
+        Pdu aPdu = factory.createPdu(PduFileLoader.load("TransmitterPdu_JtidsMids.raw"));
+
+        TransmitterPdu tpdu = (TransmitterPdu) aPdu;
+
+        assertEquals(0, tpdu.getCryptoSystem());
+        assertEquals(0, tpdu.getAntennaPatternType());
+        assertEquals(1, tpdu.getJtidsMidsModulationParametersList().get(0).getNetworkSynchronizationID());
+        assertEquals(1, tpdu.getJtidsMidsModulationParametersList().get(0).getSynchronizationState());
+        assertEquals(1, tpdu.getJtidsMidsModulationParametersList().get(0).getTimeSlotAllocationMode());
+        assertEquals(1, tpdu.getJtidsMidsModulationParametersList().get(0).getTransmittingTerminalPrimaryMode());
+        assertEquals(1, tpdu.getJtidsMidsModulationParametersList().get(0).getTransmittingTerminalSecondaryMode());
+
+    }
 }
