@@ -73,8 +73,8 @@ Include the `open-dis` `jar` in your project and all it's dependencies (i.e. `di
 
 ## License
 
-All code is BSD license. See `LICENSE.md`.
+All code is BSD license. See [LICENSE.md](LICENSE.md).
 
 ## For Maintainers
 
-See `MAINTAINERS.md`.
+See [MAINTAINERS.md](MAINTAINERS.md).
