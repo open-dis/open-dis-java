@@ -2,6 +2,7 @@ package edu.nps.moves.dis;
 
 import java.util.*;
 import java.io.*;
+import java.nio.ByteBuffer;
 
 /**
  * Section 5.3.8.1. Detailed information about a radio transmitter. This PDU
@@ -121,6 +122,12 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
      */
     protected List< BeamAntennaPattern> antennaPatternList = new ArrayList< BeamAntennaPattern>();
 
+    protected List<SphericalHarmonicAntennaPattern> sphericalHarmonicAntennaPatternList = new ArrayList<SphericalHarmonicAntennaPattern>();
+
+    protected List<CcttSincgarsModulationParameters> cctSincarsModulationParametersList = new ArrayList<CcttSincgarsModulationParameters>();
+
+    protected List<JtidsMidsModulationParameters> jtidsMidsModulationParametersList = new ArrayList<JtidsMidsModulationParameters>();
+
     /**
      * Constructor
      */
@@ -130,7 +137,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
 
     public int getMarshalledSize() {
         int marshalSize = 0;
-
+        antennaPatternCount = 0;
         marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + entityId.getMarshalledSize();  // entityId
         marshalSize = marshalSize + 2;  // radioId
@@ -151,13 +158,92 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         marshalSize = marshalSize + 1;  // modulationParameterCount
         marshalSize = marshalSize + 2;  // padding2
         marshalSize = marshalSize + 1;  // padding3
-        marshalSize = marshalSize + (modulationParametersList.size() * 2);
 
-        for (int idx = 0; idx < antennaPatternList.size(); idx++) {
-            BeamAntennaPattern listElement = antennaPatternList.get(idx);
-            marshalSize = marshalSize + listElement.getMarshalledSize();
+        int nrOfModulationBytes = 0;
+        switch (getModulationType().getSystem()) {
+            case 6:
+                for (int idx = 0; idx < cctSincarsModulationParametersList.size(); idx++) {
+                    CcttSincgarsModulationParameters listElement = cctSincarsModulationParametersList.get(idx);
+                    marshalSize = marshalSize + listElement.getMarshalledSize();
+                    nrOfModulationBytes = nrOfModulationBytes + listElement.getMarshalledSize();
+                }
+                break;
+            case 8:
+                for (int idx = 0; idx < jtidsMidsModulationParametersList.size(); idx++) {
+                    JtidsMidsModulationParameters listElement = jtidsMidsModulationParametersList.get(idx);
+                    marshalSize = marshalSize + listElement.getMarshalledSize();
+                    nrOfModulationBytes = nrOfModulationBytes + listElement.getMarshalledSize();
+                }
+                break;
+            default:
+                marshalSize = marshalSize + (modulationParametersList.size() * 2);
+                nrOfModulationBytes = nrOfModulationBytes + (modulationParametersList.size() * 2);
+                break;
         }
 
+        if (nrOfModulationBytes % 8 > 0) {
+            int remainder = nrOfModulationBytes % 8;
+            switch (remainder) {
+                case 1:
+                    marshalSize = marshalSize + 7;
+                    break;
+                case 2:
+                    marshalSize = marshalSize + 6;
+                    break;
+                case 3:
+                    marshalSize = marshalSize + 5;
+                    break;
+                case 4:
+                    marshalSize = marshalSize + 4;
+                    break;
+                case 5:
+                    marshalSize = marshalSize + 3;
+                    break;
+                case 6:
+                    marshalSize = marshalSize + 2;
+                    break;
+                case 7:
+                    marshalSize = marshalSize + 1;
+                    break;
+            }
+        }
+        switch (antennaPatternType) {
+            case 0:
+                //Omni-directional - no entries
+                break;
+            case 1:
+                for (int idx = 0; idx < antennaPatternList.size(); idx++) {
+                    BeamAntennaPattern listElement = antennaPatternList.get(idx);
+                    marshalSize = marshalSize + listElement.getMarshalledSize();
+                    antennaPatternCount += listElement.getMarshalledSize();
+                }  // end of list marshalling
+                if ((antennaPatternList.size() & 1) != 0) {//Checking for odd number of BeamAntennaPatterns and then add padding
+                    marshalSize = marshalSize + 4;
+                    antennaPatternCount += 4;
+                }
+                break;
+            case 2:
+                int nrOf16BitBlocks = 0;
+                for (int idx = 0; idx < sphericalHarmonicAntennaPatternList.size(); idx++) {
+                    SphericalHarmonicAntennaPattern listElement = sphericalHarmonicAntennaPatternList.get(idx);
+                    marshalSize = marshalSize + listElement.getMarshalledSize();
+                    antennaPatternCount += listElement.getMarshalledSize();
+                    int n = listElement.getHarmonicOrder();
+                    nrOf16BitBlocks++;
+                    nrOf16BitBlocks = nrOf16BitBlocks + 2 * listElement.getCoefficientsList().size();
+                }
+                if (nrOf16BitBlocks % 4 == 3) {//Missing 1 16 bit block to end on 64 bit boundry
+                    marshalSize = marshalSize + 2;
+                    antennaPatternCount += 2;
+                } else if (nrOf16BitBlocks % 4 == 1) {//missing 3 16 bit blocks to end on 64 bit boundry
+                    marshalSize = marshalSize + 6;
+                    antennaPatternCount += 6;
+                } else if (nrOf16BitBlocks % 4 == 2) {//missing 2 16 bit blocks to end on 64 bit boundry
+                    marshalSize = marshalSize + 4;
+                    antennaPatternCount += 4;
+                }
+                break;
+        }
         return marshalSize;
     }
 
@@ -343,6 +429,30 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         return antennaPatternList;
     }
 
+    public void setSphericalHarmonicAntennaPatternList(List<SphericalHarmonicAntennaPattern> aSphericalHarmonicAntennaPatternList) {
+        sphericalHarmonicAntennaPatternList = aSphericalHarmonicAntennaPatternList;
+    }
+
+    public List<SphericalHarmonicAntennaPattern> getSphericalHarmonicAntennaPatternList() {
+        return sphericalHarmonicAntennaPatternList;
+    }
+
+    public List<CcttSincgarsModulationParameters> getCctSincarsModulationParametersList() {
+        return cctSincarsModulationParametersList;
+    }
+
+    public void setCctSincarsModulationParametersList(List<CcttSincgarsModulationParameters> list) {
+        cctSincarsModulationParametersList = list;
+    }
+
+    public List<JtidsMidsModulationParameters> getJtidsMidsModulationParametersList() {
+        return jtidsMidsModulationParametersList;
+    }
+
+    public void setJtidsMidsModulationParameters(List<JtidsMidsModulationParameters> list) {
+        jtidsMidsModulationParametersList = list;
+    }
+
     /**
      * Packs a Pdu into the ByteBuffer.
      *
@@ -363,7 +473,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         antennaLocation.marshal(buff);
         relativeAntennaLocation.marshal(buff);
         buff.putShort((short) antennaPatternType);
-        buff.putShort((short) antennaPatternList.size());
+        buff.putShort((short) antennaPatternCount);
         buff.putLong((long) frequency);
         buff.putFloat((float) transmitFrequencyBandwidth);
         buff.putFloat((float) power);
@@ -374,14 +484,99 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         buff.putShort((short) padding2);
         buff.put((byte) padding3);
 
-        for (int idx = 0; idx < modulationParametersList.size(); idx++) {
-            Short modulationParameter = modulationParametersList.get(idx);
-            buff.putShort(modulationParameter);
-        } // end of list marshalling
-
-        for (int idx = 0; idx < antennaPatternList.size(); idx++) {
-            BeamAntennaPattern aBeamAntennaPattern = (BeamAntennaPattern) antennaPatternList.get(idx);
-            aBeamAntennaPattern.marshal(buff);
+        int nrOfModulationBytes = 0;
+        switch (getModulationType().getSystem()) {
+            case 6:                                  // CCTT SINCGARS
+                for (int idx = 0; idx < cctSincarsModulationParametersList.size(); idx++) {
+                    CcttSincgarsModulationParameters parameterRecord = cctSincarsModulationParametersList.get(idx);
+                    parameterRecord.marshal(buff);
+                    nrOfModulationBytes = nrOfModulationBytes + parameterRecord.getMarshalledSize();
+                }
+                break;
+            case 8:                                  // JTIDS/MIDS
+                for (int idx = 0; idx < jtidsMidsModulationParametersList.size(); idx++) {
+                    JtidsMidsModulationParameters parameterRecord = jtidsMidsModulationParametersList.get(idx);
+                    parameterRecord.marshal(buff);
+                    nrOfModulationBytes = nrOfModulationBytes + parameterRecord.getMarshalledSize();
+                }
+                break;
+            case 0:                                  // Other
+            case 1:                                  // Generic
+            case 2:                                  // HQ
+            case 3:                                  // HQII
+            case 4:                                  // HQIIA
+            case 5:                                  // SINCGARS
+            case 7:                                  // EPLRS
+            default:
+                for (int idx = 0; idx < modulationParametersList.size(); idx++) {
+                    Short modulationParameter = modulationParametersList.get(idx);
+                    buff.putShort(modulationParameter);
+                    nrOfModulationBytes += 2;
+                } // end of list marshalling
+                break;
+        }
+        if (nrOfModulationBytes % 8 > 0) {
+            int remainder = nrOfModulationBytes % 8;
+            switch (remainder) {
+                case 1:
+                    buff.put((byte) 0);
+                    buff.putShort((short) 0);
+                    buff.putInt((short) 0);
+                    break;
+                case 2:
+                    buff.putShort((short) 0);
+                    buff.putInt((short) 0);
+                    break;
+                case 3:
+                    buff.put((byte) 0);
+                    buff.putInt((short) 0);
+                    break;
+                case 4:
+                    buff.putInt((short) 0);
+                    break;
+                case 5:
+                    buff.put((byte) 0);
+                    buff.putShort((short) 0);
+                    break;
+                case 6:
+                    buff.putShort((short) 0);
+                    break;
+                case 7:
+                    buff.put((byte) 0);
+                    break;
+            }
+        }
+        switch (antennaPatternType) {
+            case 0:
+                //Omni-directional - no entries
+                break;
+            case 1:
+                for (int idx = 0; idx < antennaPatternList.size(); idx++) {
+                    BeamAntennaPattern aBeamAntennaPattern = antennaPatternList.get(idx);
+                    aBeamAntennaPattern.marshal(buff);
+                } // end of list marshalling
+                if ((antennaPatternList.size() & 1) != 0) {//Checking for odd number of BeamAntennaPatterns and then add padding
+                    buff.putInt(0xFFFFFFFF);// Padding
+                }
+                break;
+            case 2:
+                int nrOf16BitBlocks = 0;
+                for (int idx = 0; idx < sphericalHarmonicAntennaPatternList.size(); idx++) {
+                    SphericalHarmonicAntennaPattern aSphericalHarmonicAntennaPattern = sphericalHarmonicAntennaPatternList.get(idx);
+                    aSphericalHarmonicAntennaPattern.marshal(buff);
+                    int n = aSphericalHarmonicAntennaPattern.getHarmonicOrder();
+                    nrOf16BitBlocks++;
+                    nrOf16BitBlocks = nrOf16BitBlocks + 2 * aSphericalHarmonicAntennaPattern.getCoefficientsList().size();
+                }
+                if (nrOf16BitBlocks % 4 == 3) {//Missing 1 16 bit block to end on 64 bit boundry
+                    buff.putShort((short) 0xFFFF);
+                } else if (nrOf16BitBlocks % 4 == 1) {//missing 3 16 bit blocks to end on 64 bit boundry
+                    buff.putShort((short) 0xFFFF);
+                    buff.putInt(0xFFFFFFFF);
+                } else if (nrOf16BitBlocks % 4 == 2) {//missing 2 16 bit blocks to end on 64 bit boundry
+                    buff.putInt(0xFFFFFFFF);
+                }
+                break;
         } // end of list marshalling
 
     } // end of marshal method
@@ -417,18 +612,96 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         padding2 = (int) (buff.getShort() & 0xFFFF);
         padding3 = (short) (buff.get() & 0xFF);
 
-        // The count is measured in octets, but each parameter is two octets (16 bytes)
-        final int modulationParameters = modulationParameterCount / 2;
+        int remainder = 0;
+        int modRecordSize = 0;
+        switch (getModulationType().getSystem()) {
+            case 6:                                  // CCTT SINCGARS
+                for (int idx = 0; idx < modulationParameterCount / 15; idx++) {
+                    CcttSincgarsModulationParameters parameterRecord = new CcttSincgarsModulationParameters();
+                    parameterRecord.unmarshal(buff);
+                    cctSincarsModulationParametersList.add(parameterRecord);
+                }
+                modRecordSize = 15;
+                break;
+            case 8:                                  // JTIDS/MIDS
+                for (int idx = 0; idx < (modulationParameterCount / 8); idx++) {
+                    JtidsMidsModulationParameters parameterRecord = new JtidsMidsModulationParameters();
+                    parameterRecord.unmarshal(buff);
+                    jtidsMidsModulationParametersList.add(parameterRecord);
+                }
+                modRecordSize = 8;
+                break;
+            case 0:                                  // Other
+            case 1:                                  // Generic
+            case 2:                                  // HQ
+            case 3:                                  // HQII
+            case 4:                                  // HQIIA
+            case 5:                                  // SINCGARS
+            case 7:                                  // EPLRS
+            default:                                 // Alternate radio system (Non-DIS specified)
+                // Read modulation parameters byte for byte
+                // The count is measured in octets, but each parameter is two octets (16 bytes)
+                final int modulationParameters = modulationParameterCount / 2;
 
-        for (int idx = 0; idx < modulationParameters; idx++) {
-            Short modulationParameter = buff.getShort();
-            modulationParametersList.add(modulationParameter);
+                for (int idx = 0; idx < modulationParameters; idx++) {
+                    Short modulationParameter = buff.getShort();
+                    modulationParametersList.add(modulationParameter);
+                }
+                modRecordSize = 8;
+                break;
         }
+        remainder = modulationParameterCount % modRecordSize;
+        if (remainder > 0) {
+            for (int i = 0; i < remainder; i++) {
+                buff.get();//Read padding bytes
+            }
+        }
+        switch (antennaPatternType) {
+            case 0:
+                break; //Omni-directional antenna pattern record
+            case 1:
+                for (int idx = 0; idx < antennaPatternCount / 36; idx++) {
+                    BeamAntennaPattern anX = new BeamAntennaPattern();
+                    anX.unmarshal(buff);
+                    antennaPatternList.add(anX);
+                }
+                break;
+            case 2:
+                byte[] tmpByteArray = new byte[antennaPatternCount];
+                for (int i = 0; i < antennaPatternCount; i++) {
+                    tmpByteArray[i] = buff.get();
+                }
+                InputStream is = new ByteArrayInputStream(tmpByteArray);
 
-        for (int idx = 0; idx < antennaPatternCount; idx++) {
-            BeamAntennaPattern anX = new BeamAntennaPattern();
-            anX.unmarshal(buff);
-            antennaPatternList.add(anX);
+                ByteBuffer buffCopy = ByteBuffer.wrap(tmpByteArray);
+
+                DataInputStream disCopy = new DataInputStream(is);
+                int recordCount = 0;
+                int fieldSizeLeftOver = antennaPatternCount;
+                boolean runLoop = true;
+                int counter = 0;
+                while (runLoop) {
+                    if (fieldSizeLeftOver > 0) {
+                        int harmonicOrder = tmpByteArray[counter];
+                        int recordSize = ((harmonicOrder * harmonicOrder + 2 * harmonicOrder + 1) * 4) + 2;// size in bytes
+                        if (fieldSizeLeftOver / recordSize >= 1 && harmonicOrder >= 0) {
+                            counter = counter + recordSize;
+                            fieldSizeLeftOver = fieldSizeLeftOver - recordSize;
+                            recordCount++;
+                        } else {
+                            runLoop = false;
+                        }
+                    } else {
+                        runLoop = false;
+                    }
+
+                }
+                for (int idx = 0; idx < recordCount; idx++) {
+                    SphericalHarmonicAntennaPattern anX = new SphericalHarmonicAntennaPattern();
+                    anX.unmarshal(buffCopy);
+                    sphericalHarmonicAntennaPatternList.add(anX);
+                }
+                break;
         }
 
     } // end of unmarshal method 
