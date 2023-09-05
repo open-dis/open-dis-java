@@ -105,16 +105,17 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         return sampleRate;
     }
 
+    /**
+     * IAW IEEE 1278.1, this field shall specify the number of **bits** of digital
+     * voice audio or digital data being sent in this Signal PDU.
+     */
     public short getDataLength() {
-        return (short) data.length;
+        if (dataLength == 0) {
+            return (short) (data.length * 8);
+        }
+        return (short) dataLength;
     }
 
-    /**
-     * Note that setting this value will not change the marshalled value. The
-     * list whose length this describes is used for that purpose. The
-     * getdataLength method will also be based on the actual list length rather
-     * than this value. The method is simply here for java bean completeness.
-     */
     public void setDataLength(short pDataLength) {
         dataLength = pDataLength;
     }
@@ -142,7 +143,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
             dos.writeShort((short) encodingScheme);
             dos.writeShort((short) tdlType);
             dos.writeInt((int) sampleRate);
-            dos.writeShort((short) data.length);
+            dos.writeShort((short) dataLength);
             dos.writeShort((short) samples);
             dos.write(data);
         } // end try
@@ -184,7 +185,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         buff.putShort((short) encodingScheme);
         buff.putShort((short) tdlType);
         buff.putInt((int) sampleRate);
-        buff.putShort((short) data.length);
+        buff.putShort((short) dataLength);
         buff.putShort((short) samples);
         buff.put(data);
     } // end of marshal method
