@@ -65,13 +65,13 @@ public class IntercomSignalPdu extends RadioCommunicationsFamilyPdu implements S
         int marshalSize = 0;
 
         marshalSize = super.getMarshalledSize();
-        marshalSize = marshalSize + entityID.getMarshalledSize();  // entityID
-        marshalSize = marshalSize + 2;  // communicationsDeviceID
-        marshalSize = marshalSize + 2;  // encodingScheme
-        marshalSize = marshalSize + 2;  // tdlType
-        marshalSize = marshalSize + 4;  // sampleRate
-        marshalSize = marshalSize + 2;  // dataLength
-        marshalSize = marshalSize + 2;  // samples
+        marshalSize = marshalSize + entityID.getMarshalledSize(); // entityID
+        marshalSize = marshalSize + 2; // communicationsDeviceID
+        marshalSize = marshalSize + 2; // encodingScheme
+        marshalSize = marshalSize + 2; // tdlType
+        marshalSize = marshalSize + 4; // sampleRate
+        marshalSize = marshalSize + 2; // dataLength
+        marshalSize = marshalSize + 2; // samples
         marshalSize = marshalSize + data.length;
 
         return marshalSize;
@@ -117,16 +117,17 @@ public class IntercomSignalPdu extends RadioCommunicationsFamilyPdu implements S
         return sampleRate;
     }
 
-    public int getDataLength() {
-        return (int) data.length;
+    /**
+     * IAW IEEE 1278.1, this field shall specify the number of **bits** of digital
+     * voice audio or digital data being sent in this Signal PDU.
+     */
+    public short getDataLength() {
+        if (dataLength == 0) {
+            return (short) (data.length * 8);
+        }
+        return (short) dataLength;
     }
 
-    /**
-     * Note that setting this value will not change the marshalled value. The
-     * list whose length this describes is used for that purpose. The
-     * getdataLength method will also be based on the actual list length rather
-     * than this value. The method is simply here for java bean completeness.
-     */
     public void setDataLength(int pDataLength) {
         dataLength = pDataLength;
     }
@@ -155,10 +156,10 @@ public class IntercomSignalPdu extends RadioCommunicationsFamilyPdu implements S
             dos.writeShort((short) encodingScheme);
             dos.writeShort((short) tdlType);
             dos.writeInt((int) sampleRate);
-            dos.writeShort((short) data.length);
+            dos.writeShort((short) dataLength);
             dos.writeShort((short) samples);
             dos.write(data);
-        } // end try 
+        } // end try
         catch (Exception e) {
             System.out.println(e);
         }
@@ -177,11 +178,11 @@ public class IntercomSignalPdu extends RadioCommunicationsFamilyPdu implements S
             samples = (int) dis.readUnsignedShort();
             data = new byte[dataLength];
             dis.read(data);
-        } // end try 
+        } // end try
         catch (Exception e) {
             System.out.println(e);
         }
-    } // end of unmarshal method 
+    } // end of unmarshal method
 
     /**
      * Packs a Pdu into the ByteBuffer.
@@ -199,7 +200,7 @@ public class IntercomSignalPdu extends RadioCommunicationsFamilyPdu implements S
         buff.putShort((short) encodingScheme);
         buff.putShort((short) tdlType);
         buff.putInt((int) sampleRate);
-        buff.putShort((short) data.length);
+        buff.putShort((short) dataLength);
         buff.putShort((short) samples);
         buff.put(data);
     } // end of marshal method
@@ -224,11 +225,11 @@ public class IntercomSignalPdu extends RadioCommunicationsFamilyPdu implements S
         samples = (int) (buff.getShort() & 0xFFFF);
         data = new byte[dataLength];
         buff.get(data);
-    } // end of unmarshal method 
-
+    } // end of unmarshal method
 
     /*
-  * The equals method doesn't always work--mostly it works only on classes that consist only of primitives. Be careful.
+     * The equals method doesn't always work--mostly it works only on classes that
+     * consist only of primitives. Be careful.
      */
     @Override
     public boolean equals(Object obj) {
