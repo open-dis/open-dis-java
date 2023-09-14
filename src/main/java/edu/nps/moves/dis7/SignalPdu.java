@@ -37,7 +37,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     protected long sampleRate;
 
     /**
-     * length od data
+     * length of data in bits
      */
     protected short dataLength;
 
@@ -70,6 +70,19 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         marshalSize = marshalSize + 2; // samples
         marshalSize = marshalSize + data.length;
 
+        switch (data.length % 4) {
+            case 0:
+                break;// No padding needed
+            case 1:
+                marshalSize = marshalSize + 3;
+                break;// adding 3 byte padding
+            case 2:
+                marshalSize = marshalSize + 2;
+                break;// adding 2 byte padding
+            case 3:
+                marshalSize = marshalSize + 1;
+                break;// adding 1 byte padding
+        }
         return marshalSize;
     }
 
@@ -110,9 +123,6 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
      * voice audio or digital data being sent in this Signal PDU.
      */
     public short getDataLength() {
-        if (dataLength == 0) {
-            return (short) (data.length * 8);
-        }
         return (short) dataLength;
     }
 
@@ -146,6 +156,23 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
             dos.writeShort((short) dataLength);
             dos.writeShort((short) samples);
             dos.write(data);
+
+            int nrOfBytes = dataLength / Byte.SIZE;
+            int paddingBytes = nrOfBytes % 4;// Padding to hit 32 bit boundry
+            switch (paddingBytes) {
+                case 0:
+                    break;// No padding needed
+                case 1:
+                    dos.write((byte) 0);
+                    dos.writeShort((short) 0);
+                    break;// adding 3 byte padding
+                case 2:
+                    dos.writeShort((short) 0);
+                    break;// adding 2 byte padding
+                case 3:
+                    dos.write((byte) 0);
+                    break;// adding 1 byte padding
+            }
         } // end try
         catch (Exception e) {
             System.out.println(e);
@@ -162,7 +189,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
             sampleRate = dis.readInt();
             dataLength = dis.readShort();
             samples = dis.readShort();
-            data = new byte[dataLength];
+            data = new byte[dataLength / Byte.SIZE];
             dis.read(data);
         } // end try
         catch (Exception e) {
@@ -188,6 +215,23 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         buff.putShort((short) dataLength);
         buff.putShort((short) samples);
         buff.put(data);
+
+        int nrOfBytes = dataLength / Byte.SIZE;
+        int paddingBytes = nrOfBytes % 4;// Padding to hit 32 bit boundry
+        switch (paddingBytes) {
+            case 0:
+                break;// No padding needed
+            case 1:
+                buff.put((byte) 0);
+                buff.putShort((short) 0);
+                break;// adding 3 byte padding
+            case 2:
+                buff.putShort((short) 0);
+                break;// adding 2 byte padding
+            case 3:
+                buff.put((byte) 0);
+                break;// adding 1 byte padding
+        }
     } // end of marshal method
 
     /**
@@ -206,7 +250,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         sampleRate = buff.getInt();
         dataLength = buff.getShort();
         samples = buff.getShort();
-        data = new byte[dataLength];
+        data = new byte[dataLength / Byte.SIZE];
         buff.get(data);
     } // end of unmarshal method
 
