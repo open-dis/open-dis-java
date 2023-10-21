@@ -18,6 +18,8 @@ import static org.junit.Assert.*;
  */
 public class AggregateStatePduTest {
 
+    private static final int MARKING_STRING_LENGTH = 31;
+    
     public AggregateStatePduTest() {
     }
 
@@ -169,5 +171,25 @@ public class AggregateStatePduTest {
         byte[] buffer = aspdu.marshal();
 
         assertEquals(buffer.length, aspdu.getLength());
+    }
+    
+    @Test
+    public void AggregateMarkingToLongTest() {
+        AggregateStatePdu aspdu = new AggregateStatePdu();
+        AggregateMarking marking = aspdu.getAggregateMarking();
+        final String s = new String("This is a marking that is much, much too loong");
+        marking.setCharacters(s.getBytes());
+        byte[] buff = marking.getCharacters();
+        assertEquals(buff.length, MARKING_STRING_LENGTH);
+    }
+
+    @Test
+    public void AggregateMarkingToShortTest() {
+        AggregateStatePdu aspdu = new AggregateStatePdu();
+        AggregateMarking marking = aspdu.getAggregateMarking();
+        final String s = new String("short");
+        marking.setCharacters(s.getBytes());
+        byte[] buff = marking.getCharacters();
+        assertEquals(buff.length, MARKING_STRING_LENGTH);
     }
 }

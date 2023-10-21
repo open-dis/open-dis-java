@@ -4,16 +4,20 @@ import edu.nps.moves.disutil.PduFactory;
 import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author mcgredo
  */
 public class EntityStatePduTest {
+    
+    private static final int MARKING_STRING_LENGTH = 11;
 
     public EntityStatePduTest() {
     }
@@ -197,5 +201,79 @@ public class EntityStatePduTest {
         byte[] buffer = espdu.marshal();
 
         assertEquals(buffer.length, espdu.getLength());
+    }
+
+    /**
+     * Tests to make sure the PDU length is being placed in the PDU whenever the
+     * PDU is marshalled, automatically. This tests to make sure a patch has
+     * been correctly applied.
+     */
+    @Test
+    public void pduLengthTest() {
+        EntityStatePdu espdu = new EntityStatePdu();
+        byte[] buffer = espdu.marshal();
+        PduFactory factory = new PduFactory();
+        Pdu aPdu = factory.createPdu(buffer);
+        assertEquals(aPdu.getLength(), 144);
+    }
+
+    /**
+     * Make sure the timestamp has been set in marshalled PDUs
+     */
+    @Test
+    public void pduTimestampNpsTest() {
+        EntityStatePdu espdu = new EntityStatePdu();
+        byte[] buffer = espdu.marshalWithNpsTimestamp();
+        PduFactory factory = new PduFactory();
+        Pdu aPdu = factory.createPdu(buffer);
+        assertFalse(aPdu.getTimestamp() == 0);
+    }
+
+    /**
+     * Make sure the timestamp has NOT been set when marshalled with this method
+     *
+     */
+    @Test
+    @Ignore
+    public void pduTimestampTest() {
+        /*
+        EntityStatePdu espdu = new EntityStatePdu();
+
+        espdu.setTimestamp(0xffffffffL);
+        assertEquals(espdu.getTimestamp(), 0xffffffffL);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+        espdu.marshal(dos);
+        byte[] buffer = baos.toByteArray();
+
+        PduFactory factory = new PduFactory();
+        Pdu aPdu = factory.createPdu(buffer);
+        assertEquals(aPdu.getTimestamp(),  0xFFFFFFFFL);
+    
+        buffer = aPdu.marshal();
+        aPdu = factory.createPdu(buffer);
+        assertEquals(aPdu.getTimestamp(), (long)0xffffffffL); // make sure no rollover
+         */
+    }
+
+    @Test
+    public void MarkingToLongTest() {
+        EntityStatePdu espdu = new EntityStatePdu();
+        Marking marking = espdu.getMarking();
+        final String s = new String("This is a marking that exceeds the maximum length and will be truncated.");
+        marking.setCharacters(s.getBytes());
+        byte[] buff = marking.getCharacters();
+        assertEquals(buff.length, MARKING_STRING_LENGTH);
+    }
+
+    @Test
+    public void MarkingToShortTest() {
+        EntityStatePdu espdu = new EntityStatePdu();
+        Marking marking = espdu.getMarking();
+        final String s = new String("short");
+        marking.setCharacters(s.getBytes());
+        byte[] buff = marking.getCharacters();
+        assertEquals(buff.length, MARKING_STRING_LENGTH);
     }
 }
