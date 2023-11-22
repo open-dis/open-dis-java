@@ -11,12 +11,7 @@ import java.io.*;
  *
  * @author DMcG
  */
-public class EntityTypeVP extends Object implements Serializable {
-
-    /**
-     * the identification of the Variable Parameter record. Enumeration from EBV
-     */
-    protected short recordType = (short) 3;
+public class EntityTypeVP extends VariableParameter implements Serializable {
 
     /**
      * Indicates if this VP has changed since last issuance
@@ -41,26 +36,19 @@ public class EntityTypeVP extends Object implements Serializable {
      * Constructor
      */
     public EntityTypeVP() {
+        recordType = (short) 3;
     }
 
     public int getMarshalledSize() {
         int marshalSize = 0;
 
-        marshalSize = marshalSize + 1;  // recordType
+        marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + 1;  // changeIndicator
         marshalSize = marshalSize + entityType.getMarshalledSize();  // entityType
         marshalSize = marshalSize + 2;  // padding
         marshalSize = marshalSize + 4;  // padding1
 
         return marshalSize;
-    }
-
-    public void setRecordType(short pRecordType) {
-        recordType = pRecordType;
-    }
-
-    public short getRecordType() {
-        return recordType;
     }
 
     public void setChangeIndicator(short pChangeIndicator) {
@@ -97,7 +85,7 @@ public class EntityTypeVP extends Object implements Serializable {
 
     public void marshal(DataOutputStream dos) {
         try {
-            dos.writeByte((byte) recordType);
+           super.marshal(dos);
             dos.writeByte((byte) changeIndicator);
             entityType.marshal(dos);
             dos.writeShort((short) padding);
@@ -110,7 +98,7 @@ public class EntityTypeVP extends Object implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
-            recordType = (short) dis.readUnsignedByte();
+            super.unmarshal(dis);
             changeIndicator = (short) dis.readUnsignedByte();
             entityType.unmarshal(dis);
             padding = (int) dis.readUnsignedShort();
@@ -131,7 +119,7 @@ public class EntityTypeVP extends Object implements Serializable {
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
-        buff.put((byte) recordType);
+        super.marshal(buff);
         buff.put((byte) changeIndicator);
         entityType.marshal(buff);
         buff.putShort((short) padding);
@@ -147,7 +135,7 @@ public class EntityTypeVP extends Object implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        recordType = (short) (buff.get() & 0xFF);
+        super.unmarshal(buff);
         changeIndicator = (short) (buff.get() & 0xFF);
         entityType.unmarshal(buff);
         padding = (int) (buff.getShort() & 0xFFFF);

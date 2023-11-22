@@ -12,12 +12,7 @@ import java.io.*;
  *
  * @author DMcG
  */
-public class ArticulatedParts extends Object implements Serializable {
-
-    /**
-     * the identification of the Variable Parameter record. Enumeration from EBV
-     */
-    protected short recordType = (short) 0;
+public class ArticulatedParts extends VariableParameter implements Serializable {
 
     /**
      * indicate the change of any parameter for any articulated part. Starts at
@@ -48,6 +43,7 @@ public class ArticulatedParts extends Object implements Serializable {
      * Constructor
      */
     public ArticulatedParts() {
+        recordType = 0;
     }
 
     public int getMarshalledSize() {
@@ -60,14 +56,6 @@ public class ArticulatedParts extends Object implements Serializable {
         marshalSize = marshalSize + 8;  // parameterValue
 
         return marshalSize;
-    }
-
-    public void setRecordType(short pRecordType) {
-        recordType = pRecordType;
-    }
-
-    public short getRecordType() {
-        return recordType;
     }
 
     public void setChangeIndicator(short pChangeIndicator) {
@@ -104,7 +92,7 @@ public class ArticulatedParts extends Object implements Serializable {
 
     public void marshal(DataOutputStream dos) {
         try {
-            dos.writeByte((byte) recordType);
+            super.marshal(dos);
             dos.writeByte((byte) changeIndicator);
             dos.writeShort((short) partAttachedTo);
             dos.writeInt((int) parameterType);
@@ -117,7 +105,7 @@ public class ArticulatedParts extends Object implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
-            recordType = (short) dis.readUnsignedByte();
+            super.unmarshal(dis);
             changeIndicator = (short) dis.readUnsignedByte();
             partAttachedTo = (int) dis.readUnsignedShort();
             parameterType = dis.readInt();
@@ -138,7 +126,7 @@ public class ArticulatedParts extends Object implements Serializable {
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
-        buff.put((byte) recordType);
+        super.marshal(buff);
         buff.put((byte) changeIndicator);
         buff.putShort((short) partAttachedTo);
         buff.putInt((int) parameterType);
@@ -154,7 +142,7 @@ public class ArticulatedParts extends Object implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        recordType = (short) (buff.get() & 0xFF);
+        super.unmarshal(buff);
         changeIndicator = (short) (buff.get() & 0xFF);
         partAttachedTo = (int) (buff.getShort() & 0xFFFF);
         parameterType = buff.getInt();

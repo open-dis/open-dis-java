@@ -11,12 +11,7 @@ import java.io.*;
  *
  * @author DMcG
  */
-public class SeparationVP extends Object implements Serializable {
-
-    /**
-     * the identification of the Variable Parameter record. Enumeration from EBV
-     */
-    protected short recordType = (short) 2;
+public class SeparationVP extends VariableParameter implements Serializable {
 
     /**
      * Reason for separation. EBV
@@ -52,12 +47,13 @@ public class SeparationVP extends Object implements Serializable {
      * Constructor
      */
     public SeparationVP() {
+        recordType = (short) 2;
     }
 
     public int getMarshalledSize() {
         int marshalSize = 0;
 
-        marshalSize = marshalSize + 1;  // recordType
+        marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + 1;  // reasonForSeparation
         marshalSize = marshalSize + 1;  // preEntityIndicator
         marshalSize = marshalSize + 1;  // padding1
@@ -66,14 +62,6 @@ public class SeparationVP extends Object implements Serializable {
         marshalSize = marshalSize + 4;  // stationLocation
 
         return marshalSize;
-    }
-
-    public void setRecordType(short pRecordType) {
-        recordType = pRecordType;
-    }
-
-    public short getRecordType() {
-        return recordType;
     }
 
     public void setReasonForSeparation(short pReasonForSeparation) {
@@ -126,7 +114,7 @@ public class SeparationVP extends Object implements Serializable {
 
     public void marshal(DataOutputStream dos) {
         try {
-            dos.writeByte((byte) recordType);
+            super.marshal(dos);
             dos.writeByte((byte) reasonForSeparation);
             dos.writeByte((byte) preEntityIndicator);
             dos.writeByte((byte) padding1);
@@ -141,7 +129,7 @@ public class SeparationVP extends Object implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
-            recordType = (short) dis.readUnsignedByte();
+            super.unmarshal(dis);
             reasonForSeparation = (short) dis.readUnsignedByte();
             preEntityIndicator = (short) dis.readUnsignedByte();
             padding1 = (short) dis.readUnsignedByte();
@@ -164,7 +152,7 @@ public class SeparationVP extends Object implements Serializable {
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
-        buff.put((byte) recordType);
+        super.marshal(buff);
         buff.put((byte) reasonForSeparation);
         buff.put((byte) preEntityIndicator);
         buff.put((byte) padding1);
@@ -182,7 +170,7 @@ public class SeparationVP extends Object implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        recordType = (short) (buff.get() & 0xFF);
+        super.unmarshal(buff);
         reasonForSeparation = (short) (buff.get() & 0xFF);
         preEntityIndicator = (short) (buff.get() & 0xFF);
         padding1 = (short) (buff.get() & 0xFF);
