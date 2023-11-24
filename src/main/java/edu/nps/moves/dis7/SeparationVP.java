@@ -129,7 +129,6 @@ public class SeparationVP extends VariableParameter implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
-            super.unmarshal(dis);
             reasonForSeparation = (short) dis.readUnsignedByte();
             preEntityIndicator = (short) dis.readUnsignedByte();
             padding1 = (short) dis.readUnsignedByte();
@@ -170,7 +169,6 @@ public class SeparationVP extends VariableParameter implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        super.unmarshal(buff);
         reasonForSeparation = (short) (buff.get() & 0xFF);
         preEntityIndicator = (short) (buff.get() & 0xFF);
         padding1 = (short) (buff.get() & 0xFF);

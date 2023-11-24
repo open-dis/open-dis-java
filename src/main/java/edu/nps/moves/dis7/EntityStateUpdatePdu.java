@@ -232,24 +232,30 @@ public class EntityStateUpdatePdu extends EntityInformationFamilyPdu implements 
             entityAppearance = dis.readInt();
             for (int idx = 0; idx < numberOfVariableParameters; idx++) {
                 VariableParameter anX = new VariableParameter();
+                anX.unmarshal(dis);
                 switch (anX.getRecordType()) {
                     case 0:
+                        anX = new ArticulatedParts();
                         ((ArticulatedParts) anX).unmarshal(dis);
                         break;
                     case 1:
+                        anX = new AttachedParts();
                         ((AttachedParts) anX).unmarshal(dis);
                         break;
                     case 2:
+                        anX = new SeparationVP();
                         ((SeparationVP) anX).unmarshal(dis);
                         break;
                     case 3:
+                        anX = new EntityTypeVP();
                         ((EntityTypeVP) anX).unmarshal(dis);
                         break;
                     case 4:
+                        anX = new EntityAssociation();
                         ((EntityAssociation) anX).unmarshal(dis);
                         break;
                 }
-                
+
                 variableParameters.add(anX);
             }
 
@@ -322,20 +328,26 @@ public class EntityStateUpdatePdu extends EntityInformationFamilyPdu implements 
         entityAppearance = buff.getInt();
         for (int idx = 0; idx < numberOfVariableParameters; idx++) {
             VariableParameter anX = new VariableParameter();
+            anX.unmarshal(buff);
             switch (anX.getRecordType()) {
                 case 0:
+                    anX = new ArticulatedParts();
                     ((ArticulatedParts) anX).unmarshal(buff);
                     break;
                 case 1:
+                    anX = new AttachedParts();
                     ((AttachedParts) anX).unmarshal(buff);
                     break;
                 case 2:
+                    anX = new SeparationVP();
                     ((SeparationVP) anX).unmarshal(buff);
                     break;
                 case 3:
+                    anX = new EntityTypeVP();
                     ((EntityTypeVP) anX).unmarshal(buff);
                     break;
                 case 4:
+                    anX = new EntityAssociation();
                     ((EntityAssociation) anX).unmarshal(buff);
                     break;
             }

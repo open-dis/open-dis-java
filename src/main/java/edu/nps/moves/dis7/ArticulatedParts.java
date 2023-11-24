@@ -105,7 +105,6 @@ public class ArticulatedParts extends VariableParameter implements Serializable 
 
     public void unmarshal(DataInputStream dis) {
         try {
-            super.unmarshal(dis);
             changeIndicator = (short) dis.readUnsignedByte();
             partAttachedTo = (int) dis.readUnsignedShort();
             parameterType = dis.readInt();
@@ -142,7 +141,6 @@ public class ArticulatedParts extends VariableParameter implements Serializable 
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        super.unmarshal(buff);
         changeIndicator = (short) (buff.get() & 0xFF);
         partAttachedTo = (int) (buff.getShort() & 0xFFFF);
         parameterType = buff.getInt();

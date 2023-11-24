@@ -98,7 +98,6 @@ public class EntityTypeVP extends VariableParameter implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
-            super.unmarshal(dis);
             changeIndicator = (short) dis.readUnsignedByte();
             entityType.unmarshal(dis);
             padding = (int) dis.readUnsignedShort();
@@ -135,7 +134,6 @@ public class EntityTypeVP extends VariableParameter implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        super.unmarshal(buff);
         changeIndicator = (short) (buff.get() & 0xFF);
         entityType.unmarshal(buff);
         padding = (int) (buff.getShort() & 0xFFFF);

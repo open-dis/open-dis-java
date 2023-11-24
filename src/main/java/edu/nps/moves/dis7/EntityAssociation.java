@@ -159,7 +159,6 @@ public class EntityAssociation extends VariableParameter implements Serializable
 
     public void unmarshal(DataInputStream dis) {
         try {
-            super.unmarshal(dis);
             changeIndicator = (short) dis.readUnsignedByte();
             associationStatus = (short) dis.readUnsignedByte();
             associationType = (short) dis.readUnsignedByte();
@@ -204,7 +203,6 @@ public class EntityAssociation extends VariableParameter implements Serializable
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        super.unmarshal(buff);
         changeIndicator = (short) (buff.get() & 0xFF);
         associationStatus = (short) (buff.get() & 0xFF);
         associationType = (short) (buff.get() & 0xFF);

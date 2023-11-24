@@ -104,11 +104,26 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
         marshalSize = marshalSize + deadReckoningParameters.getMarshalledSize();  // deadReckoningParameters
         marshalSize = marshalSize + marking.getMarshalledSize();  // marking
         marshalSize = marshalSize + 4;  // capabilities
-        for (int idx = 0; idx < variableParameters.size(); idx++) {
+         for (int idx = 0; idx < variableParameters.size(); idx++) {
             VariableParameter listElement = variableParameters.get(idx);
-            marshalSize = marshalSize + listElement.getMarshalledSize();
-        }
-
+            switch (listElement.recordType) {
+                case 0:
+                    marshalSize = marshalSize + ((ArticulatedParts) listElement).getMarshalledSize();
+                    break;
+                case 1:
+                    marshalSize = marshalSize + ((AttachedParts) listElement).getMarshalledSize();
+                    break;
+                case 2:
+                    marshalSize = marshalSize + ((SeparationVP) listElement).getMarshalledSize();
+                    break;
+                case 3:
+                    marshalSize = marshalSize + ((EntityTypeVP) listElement).getMarshalledSize();
+                    break;
+                case 4:
+                    marshalSize = marshalSize + ((EntityAssociation) listElement).getMarshalledSize();
+                    break;
+            }
+        }    
         return marshalSize;
     }
 
@@ -241,7 +256,24 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
 
             for (int idx = 0; idx < variableParameters.size(); idx++) {
                 VariableParameter aVariableParameter = variableParameters.get(idx);
-                aVariableParameter.marshal(dos);
+                switch (aVariableParameter.recordType) {
+                    case 0:
+                        ((ArticulatedParts) aVariableParameter).marshal(dos);
+                        break;
+                    case 1:
+                        ((AttachedParts) aVariableParameter).marshal(dos);
+                        break;
+                    case 2:
+                        ((SeparationVP) aVariableParameter).marshal(dos);
+                        break;
+                    case 3:
+                        ((EntityTypeVP) aVariableParameter).marshal(dos);
+                        break;
+                    case 4:
+                        ((EntityAssociation) aVariableParameter).marshal(dos);
+                        break;
+                }
+
             } // end of list marshalling
 
         } // end try 
@@ -269,6 +301,29 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
             for (int idx = 0; idx < numberOfVariableParameters; idx++) {
                 VariableParameter anX = new VariableParameter();
                 anX.unmarshal(dis);
+                switch (anX.getRecordType()) {
+                    case 0:
+                        anX = new ArticulatedParts();
+                        ((ArticulatedParts) anX).unmarshal(dis);
+                        break;
+                    case 1:
+                        anX = new AttachedParts();
+                        ((AttachedParts) anX).unmarshal(dis);
+                        break;
+                    case 2:
+                        anX = new SeparationVP();
+                        ((SeparationVP) anX).unmarshal(dis);
+                        break;
+                    case 3:
+                        anX = new EntityTypeVP();
+                        ((EntityTypeVP) anX).unmarshal(dis);
+                        break;
+                    case 4:
+                        anX = new EntityAssociation();
+                        ((EntityAssociation) anX).unmarshal(dis);
+                        break;
+                }
+
                 variableParameters.add(anX);
             }
 
@@ -303,8 +358,25 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
         buff.putInt((int) capabilities);
 
         for (int idx = 0; idx < variableParameters.size(); idx++) {
-            VariableParameter aVariableParameter = (VariableParameter) variableParameters.get(idx);
-            aVariableParameter.marshal(buff);
+            VariableParameter aVariableParameter = variableParameters.get(idx);
+            switch (aVariableParameter.getRecordType()) {
+                case 0:
+                    ((ArticulatedParts) aVariableParameter).marshal(buff);
+                    break;
+                case 1:
+                    ((AttachedParts) aVariableParameter).marshal(buff);
+                    break;
+                case 2:
+                    ((SeparationVP) aVariableParameter).marshal(buff);
+                    break;
+                case 3:
+                    ((EntityTypeVP) aVariableParameter).marshal(buff);
+                    break;
+                case 4:
+                    ((EntityAssociation) aVariableParameter).marshal(buff);
+                    break;
+            }
+
         } // end of list marshalling
 
     } // end of marshal method
@@ -335,6 +407,29 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
         for (int idx = 0; idx < numberOfVariableParameters; idx++) {
             VariableParameter anX = new VariableParameter();
             anX.unmarshal(buff);
+            switch (anX.getRecordType()) {
+                case 0:
+                    anX = new ArticulatedParts();
+                    ((ArticulatedParts) anX).unmarshal(buff);
+                    break;
+                case 1:
+                    anX = new AttachedParts();
+                    ((AttachedParts) anX).unmarshal(buff);
+                    break;
+                case 2:
+                    anX = new SeparationVP();
+                    ((SeparationVP) anX).unmarshal(buff);
+                    break;
+                case 3:
+                    anX = new EntityTypeVP();
+                    ((EntityTypeVP) anX).unmarshal(buff);
+                    break;
+                case 4:
+                    anX = new EntityAssociation();
+                    ((EntityAssociation) anX).unmarshal(buff);
+                    break;
+            }
+
             variableParameters.add(anX);
         }
 
@@ -410,8 +505,36 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
         }
 
         for (int idx = 0; idx < variableParameters.size(); idx++) {
-            if (!(variableParameters.get(idx).equals(rhs.variableParameters.get(idx)))) {
+            if (variableParameters.get(idx).getRecordType() != rhs.variableParameters.get(idx).getRecordType()) {
                 ivarsEqual = false;
+            } else {
+                switch (variableParameters.get(idx).getRecordType()) {
+                    case 0:
+                        if (!((ArticulatedParts) variableParameters.get(idx)).equalsImpl(((ArticulatedParts) rhs.variableParameters.get(idx)))) {
+                            ivarsEqual = false;
+                        }
+                        break;
+                    case 1:
+                        if (!((AttachedParts) variableParameters.get(idx)).equalsImpl(((AttachedParts) rhs.variableParameters.get(idx)))) {
+                            ivarsEqual = false;
+                        }
+                        break;
+                    case 2:
+                        if (!((SeparationVP) variableParameters.get(idx)).equalsImpl(((AttachedParts) rhs.variableParameters.get(idx)))) {
+                            ivarsEqual = false;
+                        }
+                        break;
+                    case 3:
+                        if (!((EntityTypeVP) variableParameters.get(idx)).equalsImpl(((EntityTypeVP) rhs.variableParameters.get(idx)))) {
+                            ivarsEqual = false;
+                        }
+                        break;
+                    case 4:
+                        if (!((EntityAssociation) variableParameters.get(idx)).equalsImpl(((EntityAssociation) rhs.variableParameters.get(idx)))) {
+                            ivarsEqual = false;
+                        }
+                        break;
+                }
             }
         }
 

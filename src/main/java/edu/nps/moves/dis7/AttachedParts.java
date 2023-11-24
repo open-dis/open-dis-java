@@ -103,7 +103,6 @@ public class AttachedParts extends VariableParameter implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
-            super.unmarshal(dis);
             detachedIndicator = (short) dis.readUnsignedByte();
             partAttachedTo = (int) dis.readUnsignedShort();
             parameterType = dis.readInt();
@@ -140,7 +139,6 @@ public class AttachedParts extends VariableParameter implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        super.unmarshal(buff);
         detachedIndicator = (short) (buff.get() & 0xFF);
         partAttachedTo = (int) (buff.getShort() & 0xFFFF);
         parameterType = buff.getInt();
