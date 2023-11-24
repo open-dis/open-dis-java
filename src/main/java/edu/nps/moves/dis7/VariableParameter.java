@@ -28,10 +28,6 @@ public class VariableParameter extends Object implements Serializable {
         return marshalSize;
     }
     
-    public void setRecordType(short pRecordType) {
-        recordType = pRecordType;
-    }
-
     public short getRecordType() {
         return recordType;
     } 
