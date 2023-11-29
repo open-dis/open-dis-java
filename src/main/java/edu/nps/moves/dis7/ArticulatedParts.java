@@ -37,8 +37,13 @@ public class ArticulatedParts extends VariableParameter implements Serializable 
      * The definition of the 64 bits shall be determined based on the type of
      * parameter specified in the Parameter Type field
      */
-    protected long parameterValue;
+    protected float parameterValue;
 
+    /**
+     * padding
+     */
+    protected int padding = (int) 0;
+    
     /**
      * Constructor
      */
@@ -53,7 +58,8 @@ public class ArticulatedParts extends VariableParameter implements Serializable 
         marshalSize = marshalSize + 1;  // changeIndicator
         marshalSize = marshalSize + 2;  // partAttachedTo
         marshalSize = marshalSize + 4;  // parameterType
-        marshalSize = marshalSize + 8;  // parameterValue
+        marshalSize = marshalSize + 4;  // parameterValue
+        marshalSize = marshalSize + 4;  // padding
 
         return marshalSize;
     }
@@ -82,21 +88,30 @@ public class ArticulatedParts extends VariableParameter implements Serializable 
         return parameterType;
     }
 
-    public void setParameterValue(long pParameterValue) {
+    public void setParameterValue(float pParameterValue) {
         parameterValue = pParameterValue;
     }
 
-    public long getParameterValue() {
+    public float getParameterValue() {
         return parameterValue;
     }
 
+    public void setPadding(int pPadding) {
+        padding = pPadding;
+    }
+
+    public int getPadding() {
+        return padding;
+    }    
+    
     public void marshal(DataOutputStream dos) {
         try {
             super.marshal(dos);
             dos.writeByte((byte) changeIndicator);
             dos.writeShort((short) partAttachedTo);
             dos.writeInt((int) parameterType);
-            dos.writeLong((long) parameterValue);
+            dos.writeFloat(parameterValue);
+            dos.writeInt(padding);
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -108,7 +123,8 @@ public class ArticulatedParts extends VariableParameter implements Serializable 
             changeIndicator = (short) dis.readUnsignedByte();
             partAttachedTo = (int) dis.readUnsignedShort();
             parameterType = dis.readInt();
-            parameterValue = dis.readLong();
+            parameterValue = dis.readFloat();
+            padding = dis.readInt();
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -129,7 +145,8 @@ public class ArticulatedParts extends VariableParameter implements Serializable 
         buff.put((byte) changeIndicator);
         buff.putShort((short) partAttachedTo);
         buff.putInt((int) parameterType);
-        buff.putLong((long) parameterValue);
+        buff.putFloat((float) parameterValue);
+        buff.putInt(padding);
     } // end of marshal method
 
     /**
@@ -144,7 +161,8 @@ public class ArticulatedParts extends VariableParameter implements Serializable 
         changeIndicator = (short) (buff.get() & 0xFF);
         partAttachedTo = (int) (buff.getShort() & 0xFFFF);
         parameterType = buff.getInt();
-        parameterValue = buff.getLong();
+        parameterValue = buff.getFloat();
+        padding = buff.getInt();
     } // end of unmarshal method 
 
 
@@ -200,7 +218,10 @@ public class ArticulatedParts extends VariableParameter implements Serializable 
         if (!(parameterValue == rhs.parameterValue)) {
             ivarsEqual = false;
         }
-
+        if (!(padding == rhs.padding)) {
+            ivarsEqual = false;
+        }
+        
         return ivarsEqual;
     }
 } // end of class
