@@ -182,8 +182,6 @@ public class EntityStatePduTest
         assertEquals(0.00916304, espdu.getEntityOrientation().getTheta(), 0.001);
         assertEquals( -2.54929, espdu.getEntityOrientation().getPhi(), 0.001);
 
-        // Dead Reckoning Parameters
-        // TODO assertEquals(???, espdu.getDeadReckoningParameters());
         // Entity Marking
         assertEquals("Leopard2", new String(espdu.getMarking().getCharacters()).trim());
 
@@ -209,5 +207,88 @@ public class EntityStatePduTest
         assertEquals(1.28147,((ArticulatedParts)varParam2).getParameterValue(),0.001);
         assertEquals(0,((ArticulatedParts)varParam2).getPadding());
                
+    }
+    @Test
+    public void unmarshalAttachedParts()
+            throws IOException {
+        PduFactory factory = new PduFactory();
+        Pdu pdu = factory.createPdu(PduFileLoader.load("EntityStatePdu-attached_parts.raw"));
+
+        // Expected field values were determined from Wireshark: Decode As -> DIS.
+        // Header
+        assertEquals(7, pdu.getProtocolVersion());
+        assertEquals(1, pdu.getExerciseID());
+        assertEquals(1, pdu.getPduType());
+        assertEquals(1, pdu.getProtocolFamily());
+        assertEquals(160, pdu.getLength());
+        assertEquals(11, pdu.getPduStatus());
+        assertEquals(0, pdu.getPadding());
+
+        EntityStatePdu espdu = (EntityStatePdu) pdu;
+
+        // Entity ID
+        assertEquals(1, espdu.getEntityID().getSiteID());
+        assertEquals(200, espdu.getEntityID().getApplicationID());
+        assertEquals(1, espdu.getEntityID().getEntityID());
+
+        // Force ID
+        assertEquals(1, espdu.getForceId());
+
+        // Entity Type (aka DIS Enumeration)
+        assertEquals(1, espdu.getEntityType().getEntityKind());
+        assertEquals(2, espdu.getEntityType().getDomain());
+        assertEquals(57, espdu.getEntityType().getCountry());
+        assertEquals(1, espdu.getEntityType().getCategory());
+        assertEquals(1, espdu.getEntityType().getSubcategory());
+        assertEquals(1, espdu.getEntityType().getSpecific());
+        assertEquals(0, espdu.getEntityType().getExtra());
+
+        // Alternative Entity Type
+        assertEquals(1, espdu.getAlternativeEntityType().getEntityKind());
+        assertEquals(2, espdu.getAlternativeEntityType().getDomain());
+        assertEquals(57, espdu.getAlternativeEntityType().getCountry());
+        assertEquals(1, espdu.getAlternativeEntityType().getCategory());
+        assertEquals(1, espdu.getAlternativeEntityType().getSubcategory());
+        assertEquals(1, espdu.getAlternativeEntityType().getSpecific());
+        assertEquals(0, espdu.getAlternativeEntityType().getExtra());
+
+        // Entity Linear Velocity
+        assertEquals(0, espdu.getEntityLinearVelocity().getX(), 0);
+        assertEquals(0, espdu.getEntityLinearVelocity().getY(), 0);
+        assertEquals(0, espdu.getEntityLinearVelocity().getZ(), 0);
+
+        // Entity Location
+        assertEquals(3521841.22294917, espdu.getEntityLocation().getX(), 0.001);
+        assertEquals(523619.366070285, espdu.getEntityLocation().getY(), 0.001);
+        assertEquals(5274056.14015442, espdu.getEntityLocation().getZ(), 0.001);
+
+        // Entity Orientation
+        assertEquals(1.72458, espdu.getEntityOrientation().getPsi(), 0.001);
+        assertEquals(0.00916304, espdu.getEntityOrientation().getTheta(), 0.001);
+        assertEquals(-2.54929, espdu.getEntityOrientation().getPhi(), 0.001);
+
+        // Entity Marking
+        assertEquals("Leopard2", new String(espdu.getMarking().getCharacters()).trim());
+
+        // Capabilities
+        assertEquals(0, espdu.getCapabilities());
+
+        // Variable Parameters
+        final VariableParameter varParam1 = espdu.getVariableParameters().get(0);
+
+        assertEquals(1, varParam1.getRecordType());
+        assertEquals(0, ((AttachedParts) varParam1).getDetachedIndicator());
+        assertEquals(0, ((AttachedParts) varParam1).getPartAttachedTo());
+        assertEquals(898, ((AttachedParts) varParam1).getParameterType());
+        EntityType attachedType = new EntityType();
+        attachedType.setEntityKind((short) 2);
+        attachedType.setDomain((short) 2);
+        attachedType.setCountry(225);
+        attachedType.setCategory((short) 2);
+        attachedType.setSubcategory((short) 2);
+        attachedType.setSpecific((short) 3);
+        attachedType.setExtra((short) 0);
+        assertEquals(attachedType, ((AttachedParts) varParam1).getAttachedPartType());
+
     }
 }
