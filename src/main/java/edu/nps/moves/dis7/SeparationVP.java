@@ -41,7 +41,7 @@ public class SeparationVP extends VariableParameter implements Serializable {
     /**
      * Station separated from
      */
-    protected long stationLocation = (long) 0;
+    protected NamedLocationIdentification stationLocation = new NamedLocationIdentification();
 
     /**
      * Constructor
@@ -59,7 +59,7 @@ public class SeparationVP extends VariableParameter implements Serializable {
         marshalSize = marshalSize + 1;  // padding1
         marshalSize = marshalSize + parentEntityID.getMarshalledSize();  // parentEntityID
         marshalSize = marshalSize + 2;  // padding2
-        marshalSize = marshalSize + 4;  // stationLocation
+        marshalSize = marshalSize + stationLocation.getMarshalledSize();  // stationLocation
 
         return marshalSize;
     }
@@ -104,11 +104,11 @@ public class SeparationVP extends VariableParameter implements Serializable {
         return padding2;
     }
 
-    public void setStationLocation(long pStationLocation) {
+    public void setStationLocation(NamedLocationIdentification pStationLocation) {
         stationLocation = pStationLocation;
     }
 
-    public long getStationLocation() {
+    public NamedLocationIdentification getStationLocation() {
         return stationLocation;
     }
 
@@ -120,7 +120,7 @@ public class SeparationVP extends VariableParameter implements Serializable {
             dos.writeByte((byte) padding1);
             parentEntityID.marshal(dos);
             dos.writeShort((short) padding2);
-            dos.writeInt((int) stationLocation);
+            stationLocation.marshal(dos);
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -134,7 +134,7 @@ public class SeparationVP extends VariableParameter implements Serializable {
             padding1 = (short) dis.readUnsignedByte();
             parentEntityID.unmarshal(dis);
             padding2 = (int) dis.readUnsignedShort();
-            stationLocation = dis.readInt();
+            stationLocation.unmarshal(dis);
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -157,7 +157,7 @@ public class SeparationVP extends VariableParameter implements Serializable {
         buff.put((byte) padding1);
         parentEntityID.marshal(buff);
         buff.putShort((short) padding2);
-        buff.putInt((int) stationLocation);
+        stationLocation.marshal(buff);
     } // end of marshal method
 
     /**
@@ -174,7 +174,7 @@ public class SeparationVP extends VariableParameter implements Serializable {
         padding1 = (short) (buff.get() & 0xFF);
         parentEntityID.unmarshal(buff);
         padding2 = (int) (buff.getShort() & 0xFFFF);
-        stationLocation = buff.getInt();
+        stationLocation.unmarshal(buff);
     } // end of unmarshal method 
 
 
@@ -233,7 +233,7 @@ public class SeparationVP extends VariableParameter implements Serializable {
         if (!(padding2 == rhs.padding2)) {
             ivarsEqual = false;
         }
-        if (!(stationLocation == rhs.stationLocation)) {
+        if (!(stationLocation.equalsImpl(rhs.stationLocation))) {
             ivarsEqual = false;
         }
 
