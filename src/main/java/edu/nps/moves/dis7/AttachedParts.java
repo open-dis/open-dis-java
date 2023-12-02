@@ -11,12 +11,7 @@ import java.io.*;
  *
  * @author DMcG
  */
-public class AttachedParts extends Object implements Serializable {
-
-    /**
-     * the identification of the Variable Parameter record. Enumeration from EBV
-     */
-    protected short recordType = (short) 1;
+public class AttachedParts extends VariableParameter implements Serializable {
 
     /**
      * 0 = attached, 1 = detached. See I.2.3.1 for state transition diagram
@@ -40,32 +35,25 @@ public class AttachedParts extends Object implements Serializable {
      * The definition of the 64 bits shall be determined based on the type of
      * parameter specified in the Parameter Type field
      */
-    protected long parameterValue;
+    protected EntityType attachedPartType = new EntityType();
 
     /**
      * Constructor
      */
     public AttachedParts() {
+        recordType = (short) 1;
     }
 
     public int getMarshalledSize() {
         int marshalSize = 0;
 
-        marshalSize = marshalSize + 1;  // recordType
+        marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + 1;  // detachedIndicator
         marshalSize = marshalSize + 2;  // partAttachedTo
         marshalSize = marshalSize + 4;  // parameterType
-        marshalSize = marshalSize + 8;  // parameterValue
+        marshalSize = marshalSize + attachedPartType.getMarshalledSize();  // entityType
 
         return marshalSize;
-    }
-
-    public void setRecordType(short pRecordType) {
-        recordType = pRecordType;
-    }
-
-    public short getRecordType() {
-        return recordType;
     }
 
     public void setDetachedIndicator(short pDetachedIndicator) {
@@ -92,22 +80,22 @@ public class AttachedParts extends Object implements Serializable {
         return parameterType;
     }
 
-    public void setParameterValue(long pParameterValue) {
-        parameterValue = pParameterValue;
+    public void setAttachedPartType(EntityType aAttachedPartType) {
+        attachedPartType = aAttachedPartType;
     }
 
-    public long getParameterValue() {
-        return parameterValue;
+    public EntityType getAttachedPartType() {
+        return attachedPartType;
     }
 
     public void marshal(DataOutputStream dos) {
         try {
-            dos.writeByte((byte) recordType);
+            super.marshal(dos);
             dos.writeByte((byte) detachedIndicator);
             dos.writeShort((short) partAttachedTo);
             dos.writeInt((int) parameterType);
-            dos.writeLong((long) parameterValue);
-        } // end try 
+            attachedPartType.marshal(dos);
+        } // end try  // end try  // end try  // end try 
         catch (Exception e) {
             System.out.println(e);
         }
@@ -115,12 +103,11 @@ public class AttachedParts extends Object implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
-            recordType = (short) dis.readUnsignedByte();
             detachedIndicator = (short) dis.readUnsignedByte();
             partAttachedTo = (int) dis.readUnsignedShort();
             parameterType = dis.readInt();
-            parameterValue = dis.readLong();
-        } // end try 
+            attachedPartType.unmarshal(dis);
+        } // end try  // end try  // end try  // end try 
         catch (Exception e) {
             System.out.println(e);
         }
@@ -136,11 +123,11 @@ public class AttachedParts extends Object implements Serializable {
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
-        buff.put((byte) recordType);
+        super.marshal(buff);
         buff.put((byte) detachedIndicator);
         buff.putShort((short) partAttachedTo);
         buff.putInt((int) parameterType);
-        buff.putLong((long) parameterValue);
+        attachedPartType.marshal(buff);
     } // end of marshal method
 
     /**
@@ -152,11 +139,10 @@ public class AttachedParts extends Object implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        recordType = (short) (buff.get() & 0xFF);
         detachedIndicator = (short) (buff.get() & 0xFF);
         partAttachedTo = (int) (buff.getShort() & 0xFFFF);
         parameterType = buff.getInt();
-        parameterValue = buff.getLong();
+        attachedPartType.unmarshal(buff);
     } // end of unmarshal method 
 
 
@@ -209,7 +195,7 @@ public class AttachedParts extends Object implements Serializable {
         if (!(parameterType == rhs.parameterType)) {
             ivarsEqual = false;
         }
-        if (!(parameterValue == rhs.parameterValue)) {
+        if (!(attachedPartType.equalsImpl(rhs.attachedPartType))) {
             ivarsEqual = false;
         }
 

@@ -11,12 +11,7 @@ import java.io.*;
  *
  * @author DMcG
  */
-public class EntityAssociation extends Object implements Serializable {
-
-    /**
-     * the identification of the Variable Parameter record. Enumeration from EBV
-     */
-    protected short recordType = (short) 4;
+public class EntityAssociation extends VariableParameter implements Serializable {
 
     /**
      * Indicates if this VP has changed since last issuance
@@ -62,12 +57,13 @@ public class EntityAssociation extends Object implements Serializable {
      * Constructor
      */
     public EntityAssociation() {
+        recordType = (short) 4;
     }
 
     public int getMarshalledSize() {
         int marshalSize = 0;
 
-        marshalSize = marshalSize + 1;  // recordType
+        marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + 1;  // changeIndicator
         marshalSize = marshalSize + 1;  // associationStatus
         marshalSize = marshalSize + 1;  // associationType
@@ -78,14 +74,6 @@ public class EntityAssociation extends Object implements Serializable {
         marshalSize = marshalSize + 2;  // groupNumber
 
         return marshalSize;
-    }
-
-    public void setRecordType(short pRecordType) {
-        recordType = pRecordType;
-    }
-
-    public short getRecordType() {
-        return recordType;
     }
 
     public void setChangeIndicator(short pChangeIndicator) {
@@ -154,7 +142,7 @@ public class EntityAssociation extends Object implements Serializable {
 
     public void marshal(DataOutputStream dos) {
         try {
-            dos.writeByte((byte) recordType);
+            super.marshal(dos);
             dos.writeByte((byte) changeIndicator);
             dos.writeByte((byte) associationStatus);
             dos.writeByte((byte) associationType);
@@ -171,7 +159,6 @@ public class EntityAssociation extends Object implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
-            recordType = (short) dis.readUnsignedByte();
             changeIndicator = (short) dis.readUnsignedByte();
             associationStatus = (short) dis.readUnsignedByte();
             associationType = (short) dis.readUnsignedByte();
@@ -196,7 +183,7 @@ public class EntityAssociation extends Object implements Serializable {
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
-        buff.put((byte) recordType);
+        super.marshal(buff);
         buff.put((byte) changeIndicator);
         buff.put((byte) associationStatus);
         buff.put((byte) associationType);
@@ -216,7 +203,6 @@ public class EntityAssociation extends Object implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        recordType = (short) (buff.get() & 0xFF);
         changeIndicator = (short) (buff.get() & 0xFF);
         associationStatus = (short) (buff.get() & 0xFF);
         associationType = (short) (buff.get() & 0xFF);

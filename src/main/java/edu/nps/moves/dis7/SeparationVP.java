@@ -11,12 +11,7 @@ import java.io.*;
  *
  * @author DMcG
  */
-public class SeparationVP extends Object implements Serializable {
-
-    /**
-     * the identification of the Variable Parameter record. Enumeration from EBV
-     */
-    protected short recordType = (short) 2;
+public class SeparationVP extends VariableParameter implements Serializable {
 
     /**
      * Reason for separation. EBV
@@ -46,34 +41,27 @@ public class SeparationVP extends Object implements Serializable {
     /**
      * Station separated from
      */
-    protected long stationLocation = (long) 0;
+    protected NamedLocationIdentification stationLocation = new NamedLocationIdentification();
 
     /**
      * Constructor
      */
     public SeparationVP() {
+        recordType = (short) 2;
     }
 
     public int getMarshalledSize() {
         int marshalSize = 0;
 
-        marshalSize = marshalSize + 1;  // recordType
+        marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + 1;  // reasonForSeparation
         marshalSize = marshalSize + 1;  // preEntityIndicator
         marshalSize = marshalSize + 1;  // padding1
         marshalSize = marshalSize + parentEntityID.getMarshalledSize();  // parentEntityID
         marshalSize = marshalSize + 2;  // padding2
-        marshalSize = marshalSize + 4;  // stationLocation
+        marshalSize = marshalSize + stationLocation.getMarshalledSize();  // stationLocation
 
         return marshalSize;
-    }
-
-    public void setRecordType(short pRecordType) {
-        recordType = pRecordType;
-    }
-
-    public short getRecordType() {
-        return recordType;
     }
 
     public void setReasonForSeparation(short pReasonForSeparation) {
@@ -116,23 +104,23 @@ public class SeparationVP extends Object implements Serializable {
         return padding2;
     }
 
-    public void setStationLocation(long pStationLocation) {
+    public void setStationLocation(NamedLocationIdentification pStationLocation) {
         stationLocation = pStationLocation;
     }
 
-    public long getStationLocation() {
+    public NamedLocationIdentification getStationLocation() {
         return stationLocation;
     }
 
     public void marshal(DataOutputStream dos) {
         try {
-            dos.writeByte((byte) recordType);
+            super.marshal(dos);
             dos.writeByte((byte) reasonForSeparation);
             dos.writeByte((byte) preEntityIndicator);
             dos.writeByte((byte) padding1);
             parentEntityID.marshal(dos);
             dos.writeShort((short) padding2);
-            dos.writeInt((int) stationLocation);
+            stationLocation.marshal(dos);
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -141,13 +129,12 @@ public class SeparationVP extends Object implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
-            recordType = (short) dis.readUnsignedByte();
             reasonForSeparation = (short) dis.readUnsignedByte();
             preEntityIndicator = (short) dis.readUnsignedByte();
             padding1 = (short) dis.readUnsignedByte();
             parentEntityID.unmarshal(dis);
             padding2 = (int) dis.readUnsignedShort();
-            stationLocation = dis.readInt();
+            stationLocation.unmarshal(dis);
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -164,13 +151,13 @@ public class SeparationVP extends Object implements Serializable {
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
-        buff.put((byte) recordType);
+        super.marshal(buff);
         buff.put((byte) reasonForSeparation);
         buff.put((byte) preEntityIndicator);
         buff.put((byte) padding1);
         parentEntityID.marshal(buff);
         buff.putShort((short) padding2);
-        buff.putInt((int) stationLocation);
+        stationLocation.marshal(buff);
     } // end of marshal method
 
     /**
@@ -182,13 +169,12 @@ public class SeparationVP extends Object implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        recordType = (short) (buff.get() & 0xFF);
         reasonForSeparation = (short) (buff.get() & 0xFF);
         preEntityIndicator = (short) (buff.get() & 0xFF);
         padding1 = (short) (buff.get() & 0xFF);
         parentEntityID.unmarshal(buff);
         padding2 = (int) (buff.getShort() & 0xFFFF);
-        stationLocation = buff.getInt();
+        stationLocation.unmarshal(buff);
     } // end of unmarshal method 
 
 
@@ -247,7 +233,7 @@ public class SeparationVP extends Object implements Serializable {
         if (!(padding2 == rhs.padding2)) {
             ivarsEqual = false;
         }
-        if (!(stationLocation == rhs.stationLocation)) {
+        if (!(stationLocation.equalsImpl(rhs.stationLocation))) {
             ivarsEqual = false;
         }
 
