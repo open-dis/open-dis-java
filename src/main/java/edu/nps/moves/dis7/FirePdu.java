@@ -47,7 +47,7 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
      * records: Munition Descriptor (6.2.20.2) or Expendable Descriptor
      * (6.2.20.4).
      */
-    protected MunitionDescriptor descriptor = new MunitionDescriptor();
+    protected Descriptor descriptor = new Descriptor();
 
     /**
      * This field shall specify the velocity of the fired munition at the point
@@ -83,7 +83,12 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
         marshalSize = marshalSize + eventID.getMarshalledSize();  // eventID
         marshalSize = marshalSize + 4;  // fireMissionIndex
         marshalSize = marshalSize + locationInWorldCoordinates.getMarshalledSize();  // locationInWorldCoordinates
-        marshalSize = marshalSize + descriptor.getMarshalledSize();  // descriptor
+        int fireTypeIndicator = getFireTypeIndicator();
+        if (fireTypeIndicator == 0) {
+            marshalSize = marshalSize + ((MunitionDescriptor) descriptor).getMarshalledSize();  //Munition descriptor
+        } else {
+            marshalSize = marshalSize + ((ExpendableDescriptor) descriptor).getMarshalledSize();  //Expendable descriptor
+        }
         marshalSize = marshalSize + velocity.getMarshalledSize();  // velocity
         marshalSize = marshalSize + 4;  // range
 
@@ -122,11 +127,11 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
         return locationInWorldCoordinates;
     }
 
-    public void setDescriptor(MunitionDescriptor pDescriptor) {
+    public void setDescriptor(Descriptor pDescriptor) {
         descriptor = pDescriptor;
     }
 
-    public MunitionDescriptor getDescriptor() {
+    public Descriptor getDescriptor() {
         return descriptor;
     }
 
@@ -153,7 +158,12 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
             eventID.marshal(dos);
             dos.writeInt((int) fireMissionIndex);
             locationInWorldCoordinates.marshal(dos);
-            descriptor.marshal(dos);
+            int fireTypeIndicator = getFireTypeIndicator();
+            if (fireTypeIndicator == 0) {
+                ((MunitionDescriptor) descriptor).marshal(dos);
+            } else {
+                ((ExpendableDescriptor) descriptor).marshal(dos);
+            }
             velocity.marshal(dos);
             dos.writeFloat((float) range);
         } // end try 
@@ -170,7 +180,12 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
             eventID.unmarshal(dis);
             fireMissionIndex = dis.readInt();
             locationInWorldCoordinates.unmarshal(dis);
-            descriptor.unmarshal(dis);
+            int fireTypeIndicator = getFireTypeIndicator();
+            if (fireTypeIndicator == 0) {
+                ((MunitionDescriptor) descriptor).unmarshal(dis);
+            } else {
+                ((ExpendableDescriptor) descriptor).unmarshal(dis);
+            }
             velocity.unmarshal(dis);
             range = dis.readFloat();
         } // end try 
@@ -194,7 +209,12 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
         eventID.marshal(buff);
         buff.putInt((int) fireMissionIndex);
         locationInWorldCoordinates.marshal(buff);
-        descriptor.marshal(buff);
+        int fireTypeIndicator = getFireTypeIndicator();
+        if (fireTypeIndicator == 0) {
+            ((MunitionDescriptor) descriptor).marshal(buff);
+        } else {
+            ((ExpendableDescriptor) descriptor).marshal(buff);
+        }
         velocity.marshal(buff);
         buff.putFloat((float) range);
     } // end of marshal method
@@ -214,7 +234,12 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
         eventID.unmarshal(buff);
         fireMissionIndex = buff.getInt();
         locationInWorldCoordinates.unmarshal(buff);
-        descriptor.unmarshal(buff);
+        int fireTypeIndicator = getFireTypeIndicator();
+        if (fireTypeIndicator == 0) {
+            ((MunitionDescriptor) descriptor).unmarshal(buff);
+        } else {
+            ((ExpendableDescriptor) descriptor).unmarshal(buff);
+        }
         velocity.unmarshal(buff);
         range = buff.getFloat();
     } // end of unmarshal method 
@@ -274,5 +299,9 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
         }
 
         return ivarsEqual && super.equalsImpl(rhs);
+    }
+    
+    private int getFireTypeIndicator(){
+        return (pduStatus & 0x10) >> 4;
     }
 } // end of class

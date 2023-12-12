@@ -11,7 +11,7 @@ import java.io.*;
  *
  * @author DMcG
  */
-public class MunitionDescriptor extends Object implements Serializable {
+public class MunitionDescriptor extends Descriptor {
 
     /**
      * What munition was used in the burst
@@ -42,6 +42,7 @@ public class MunitionDescriptor extends Object implements Serializable {
      * Constructor
      */
     public MunitionDescriptor() {
+        super();
     }
 
     public int getMarshalledSize() {

@@ -11,7 +11,7 @@ import java.io.*;
  *
  * @author DMcG
  */
-public class ExplosionDescriptor extends Object implements Serializable {
+public class ExplosionDescriptor extends Descriptor {
 
     /**
      * Type of the object that exploded. See 6.2.30
@@ -38,6 +38,7 @@ public class ExplosionDescriptor extends Object implements Serializable {
      * Constructor
      */
     public ExplosionDescriptor() {
+        super();
     }
 
     public int getMarshalledSize() {
