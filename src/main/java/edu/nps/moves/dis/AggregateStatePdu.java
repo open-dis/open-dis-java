@@ -337,7 +337,7 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
     }
 
     /**
-     * This function returns the number of padding bits dependendant on´how many Aggregate and Entity ID's
+     * This function returns the number of padding bits dependendant on how many Aggregate and Entity ID's
      * are in ID lists
      *  
      */
