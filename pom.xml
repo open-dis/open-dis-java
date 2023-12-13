@@ -4,7 +4,7 @@
     <artifactId>open-dis</artifactId>
     <packaging>jar</packaging>
     <name>Open-DIS</name>
-    <version>5.5</version>
+    <version>5.6-SNAPSHOT</version>
     <description>An open source implementation of the Distributed Interactive Simulation (DIS) IEEE-1278 protocol</description>
     <url>http://www.open-dis.org</url>
     <licenses>
@@ -52,7 +52,7 @@
         <url>https://github.com/open-dis/open-dis-java</url>
         <connection>scm:git:git@github.com:open-dis/open-dis-java.git</connection>
         <developerConnection>scm:git:git@github.com:open-dis/open-dis-java.git</developerConnection>
-      <tag>v5.5</tag>
+      <tag>HEAD</tag>
   </scm>
     <dependencies>
         <dependency>
