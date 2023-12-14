@@ -45,9 +45,9 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
      * This field shall describe the firing or launch of a munition or
      * expendable represented by one of the following types of Descriptor
      * records: Munition Descriptor (6.2.20.2) or Expendable Descriptor
-     * (6.2.20.4).
+     * (6.2.20.4), depending on Fire Type Indicator bit 4 in Pdu Status (6.2.67).
      */
-    protected Descriptor descriptor = new Descriptor();
+    protected Descriptor descriptor = new MunitionDescriptor();
 
     /**
      * This field shall specify the velocity of the fired munition at the point
@@ -182,8 +182,10 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
             locationInWorldCoordinates.unmarshal(dis);
             int fireTypeIndicator = getFireTypeIndicator();
             if (fireTypeIndicator == 0) {
+                descriptor = new MunitionDescriptor();
                 ((MunitionDescriptor) descriptor).unmarshal(dis);
             } else {
+                descriptor = new ExpendableDescriptor();
                 ((ExpendableDescriptor) descriptor).unmarshal(dis);
             }
             velocity.unmarshal(dis);
@@ -236,8 +238,10 @@ public class FirePdu extends WarfareFamilyPdu implements Serializable {
         locationInWorldCoordinates.unmarshal(buff);
         int fireTypeIndicator = getFireTypeIndicator();
         if (fireTypeIndicator == 0) {
+            descriptor = new MunitionDescriptor();
             ((MunitionDescriptor) descriptor).unmarshal(buff);
         } else {
+            descriptor = new ExpendableDescriptor();
             ((ExpendableDescriptor) descriptor).unmarshal(buff);
         }
         velocity.unmarshal(buff);
