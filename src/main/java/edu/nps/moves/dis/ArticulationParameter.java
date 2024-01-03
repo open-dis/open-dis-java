@@ -26,7 +26,7 @@ public class ArticulationParameter extends Object implements Serializable {
 
     protected double parameterValue;
 
-    protected EntityType entityType;
+    protected EntityType entityType = new EntityType();
 
     protected final int ARTICULATED_PART = 0;
 
