@@ -32,7 +32,6 @@ import edu.nps.moves.dis.EntityStateUpdatePdu;
 import edu.nps.moves.dis.EnvironmentalProcessPdu;
 import edu.nps.moves.dis.EventReportPdu;
 import edu.nps.moves.dis.EventReportReliablePdu;
-import edu.nps.moves.dis.FastEntityStatePdu;
 import edu.nps.moves.dis.FirePdu;
 import edu.nps.moves.dis.GriddedDataPdu;
 import edu.nps.moves.dis.IntercomControlPdu;
@@ -156,19 +155,6 @@ public class PduFactoryTest {
         PduFactory pduFactory = new PduFactory();
         assertTrue(pduFactory.createPdu(ByteBuffer.wrap(new EntityStatePdu().marshal())) instanceof EntityStatePdu);
         // etc.  previous test gives coverage
-    }
-
-    @Test
-    public void testUseFastPdu() {
-        PduFactory pduFactory = new PduFactory(false);
-        // No matter which you start with, createPdu returns EntityStatePdu
-        assertTrue(pduFactory.createPdu(new EntityStatePdu().marshal()) instanceof EntityStatePdu);
-        assertTrue(pduFactory.createPdu(new FastEntityStatePdu().marshal()) instanceof EntityStatePdu);
-        
-        pduFactory = new PduFactory(true);
-        // No matter which you start with, createPdu returns FastEntityStatePdu
-        assertTrue(pduFactory.createPdu(new EntityStatePdu().marshal()) instanceof FastEntityStatePdu);
-        assertTrue(pduFactory.createPdu(new FastEntityStatePdu().marshal()) instanceof FastEntityStatePdu);
     }
     
     @Test

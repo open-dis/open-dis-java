@@ -24,7 +24,6 @@ import edu.nps.moves.dis7.EntityStatePdu;
 import edu.nps.moves.dis7.EntityStateUpdatePdu;
 import edu.nps.moves.dis7.EventReportPdu;
 import edu.nps.moves.dis7.EventReportReliablePdu;
-import edu.nps.moves.dis7.FastEntityStatePdu;
 import edu.nps.moves.dis7.FirePdu;
 import edu.nps.moves.dis7.IntercomControlPdu;
 import edu.nps.moves.dis7.IntercomSignalPdu;
@@ -64,26 +63,11 @@ import java.util.logging.Logger;
 
 public class PduFactory {
 
-    private boolean useFastPdu;
     private Logger logger;
 
     public PduFactory() {
-        this(false);
-    }
-
-    public PduFactory(boolean useFastPdu) {
-        this.useFastPdu = false;
-        this.useFastPdu = useFastPdu;
         this.logger = Logger.getLogger(edu.nps.moves.disutil.PduFactory.class.getName());
         this.logger.setLevel(Level.OFF);
-    }
-
-    public boolean getUseFastPdu() {
-        return this.useFastPdu;
-    }
-
-    public void setUseFastPdu(boolean use) {
-        this.useFastPdu = use;
     }
 
     public void setLoggingLevel(Level loggingLevel) {
@@ -106,11 +90,7 @@ public class PduFactory {
             Pdu aPdu = null;
             switch (pduTypeEnum) {
                 case ENTITY_STATE:
-                    if (this.useFastPdu) {
-                        aPdu = new FastEntityStatePdu();
-                    } else {
-                        aPdu = new EntityStatePdu();
-                    }
+                    aPdu = new EntityStatePdu();
                     break;
                 case FIRE:
                     aPdu = new FirePdu();

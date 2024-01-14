@@ -16,42 +16,15 @@ import edu.nps.moves.disenum.PduType;
  */
 public class PduFactory {
 
-    /**
-     * whether we should use return flattened, "fast" espdus with fewer objects
-     */
-    private boolean useFastPdu = false;
-
     private Logger logger;
 
-    /**
-     * Creates a new instance of PduFactory
-     */
-    public PduFactory() {
-        this(false);
-    }
 
-    /**
-     * Create a new PDU factory; if true is passed in, we use "fast PDUs", which
-     * minimize the memory garbage generated at the cost of being somewhat less
-     * pleasant to work with.
-     *
-     * @param useFastPdu
-     */
-    public PduFactory(boolean useFastPdu) {
-        this.useFastPdu = useFastPdu;
+    public PduFactory() {
 
         // By default don't log anything
         logger = Logger.getLogger(PduFactory.class.getName());
         logger.setLevel(Level.OFF);
 
-    }
-
-    public void setUseFastPdu(boolean use) {
-        this.useFastPdu = use;
-    }
-
-    public boolean getUseFastPdu() {
-        return this.useFastPdu;
     }
 
     /**
@@ -98,12 +71,7 @@ public class PduFactory {
                 // NOTE: OTHER is a valid pduTypeEnum, but has no corresponding object
 
                 case ENTITY_STATE:
-                    // if the user has created the factory requesting that he get fast espdus back, give him those.
-                    if (useFastPdu) {
-                        aPdu = new FastEntityStatePdu();
-                    } else {
-                        aPdu = new EntityStatePdu();
-                    }
+                    aPdu = new EntityStatePdu();
                     break;
 
                 case FIRE:
