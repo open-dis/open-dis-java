@@ -18,12 +18,7 @@ import edu.nps.moves.disenum.DeadReckoningAlgorithm;
  * Tenth Workshop on Standards for the Interoperability of Defense Simulations, Orlando, FL, pp. 431-462, Mar. 1994.
  * Available at http://www.sisostds.org/DigitalLibrary.aspx?EntryId=31599
  * 
- * This provides an alternate to the existing classes
- * (DIS_DeadReckoning, DIS_DR_Static_01, DIS_DR_FPW_02, etc.)
- * in the Java Open-DIS library.
- * 
  * @author camejia
- *
  */
 public class DeadReckoner {
 
