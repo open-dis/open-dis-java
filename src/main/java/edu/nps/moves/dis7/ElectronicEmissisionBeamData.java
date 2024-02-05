@@ -229,7 +229,7 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
             fundamentalParameterData.marshal(dos);
             beamData.marshal(dos);
             dos.writeByte((byte) beamFunction);
-            dos.writeByte((byte) numberOfTargets);
+            dos.writeByte((byte) trackJamData.size());
             dos.writeByte((byte) highDensityTrackJam);
             beamStatus.marshal(dos);
             jammingTechnique.marshal(dos);
@@ -259,7 +259,7 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
         fundamentalParameterData.marshal(buff);
         beamData.marshal(buff);
         buff.put((byte) beamFunction);
-        buff.put((byte) numberOfTargets);
+        buff.put((byte) trackJamData.size());
         buff.put((byte) highDensityTrackJam);
         beamStatus.marshal(buff);
         jammingTechnique.marshal(buff);
@@ -276,9 +276,9 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
             beamParameterIndex = dis.readUnsignedShort();
             fundamentalParameterData.unmarshal(dis);
             beamData.unmarshal(dis);
-            beamFunction = (short) dis.readUnsignedShort();
-            numberOfTargets = (short) dis.readUnsignedShort();
-            highDensityTrackJam = (short) dis.readUnsignedShort();
+            beamFunction = (short) dis.readByte();
+            numberOfTargets = (short) dis.readByte();
+            highDensityTrackJam = (short) dis.readByte();
             beamStatus.unmarshal(dis);
             jammingTechnique.unmarshal(dis);
             for (int idx = 0; idx < numberOfTargets; idx++) {
