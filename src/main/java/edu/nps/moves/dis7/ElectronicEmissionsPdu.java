@@ -3,6 +3,8 @@ package edu.nps.moves.dis7;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Section 5.3.7.1. Information about active electronic warfare (EW) emissions
@@ -47,37 +49,9 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
     protected int paddingForEmissionsPdu;
 
     /**
-     * this field shall specify the length of this emitter system's data in
-     * 32-bit words.
-     */
-    protected short systemDataLength;
-
-    /**
-     * the number of beams being described in the current PDU for the emitter
-     * system being described.
-     */
-    protected short numberOfBeams;
-
-    /**
-     * information about a particular emitter system and shall be represented by
-     * an Emitter System record (see 6.2.23).
-     */
-    protected EmitterSystem emitterSystem = new EmitterSystem();
-
-    /**
-     * the location of the antenna beam source with respect to the emitting
-     * entity's coordinate system. This location shall be the origin of the
-     * emitter coordinate system that shall have the same orientation as the
-     * entity coordinate system. This field shall be represented by an Entity
-     * Coordinate Vector record see 6.2.95
-     */
-    protected Vector3Float location = new Vector3Float();
-
-    /**
      * Electronic emmissions systems
      */
-    protected ElectronicEmissisionBeamData electronicEmissisionBeamData = new ElectronicEmissisionBeamData();
-
+    protected List< ElectronicEmissionSystemData> systems = new ArrayList< ElectronicEmissionSystemData>();    
     /**
      * Constructor
      */
@@ -98,10 +72,10 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         marshalSize = marshalSize + 1;  // systemDataLength
         marshalSize = marshalSize + 1;  // numberOfBeams
         marshalSize = marshalSize + 2;  // paddingForEmissionsPdu
-        marshalSize = marshalSize + emitterSystem.getMarshalledSize();  // emitterSystem
-        marshalSize = marshalSize + location.getMarshalledSize();  // location
-        marshalSize = marshalSize + electronicEmissisionBeamData.getMarshalledSize(); // electronicEmissisionBeamData
-
+        for (int idx = 0; idx < systems.size(); idx++) {
+            ElectronicEmissionSystemData listElement = systems.get(idx);
+            marshalSize = marshalSize + listElement.getMarshalledSize();
+        }
         return marshalSize;
     }
 
@@ -133,14 +107,6 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         return numberOfSystems;
     }
 
-    public ElectronicEmissisionBeamData getElectronicEmissionBeamData() {
-        return electronicEmissisionBeamData;
-    }
-
-    public void setElectronicEmissionBeamData(ElectronicEmissisionBeamData electronicEmissisionBeamData) {
-        this.electronicEmissisionBeamData = electronicEmissisionBeamData;
-    }
-
     /**
      * Note that setting this value will not change the marshalled value. The
      * list whose length this describes is used for that purpose. The
@@ -160,37 +126,15 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         paddingForEmissionsPdu = pPaddingForEmissionsPdu;
     }
 
-    public short getSystemDataLength() {
-        return systemDataLength;
+    public List<ElectronicEmissionSystemData> getSystems() {
+        return systems;
     }
 
-    public void setSystemDataLength(short pSystemDataLength) {
-        systemDataLength = pSystemDataLength;
+    public void setSystems(List<ElectronicEmissionSystemData> systems) {
+        this.systems = systems;
     }
-
-    public short getNumberOfBeams() {
-        return numberOfBeams;
-    }
-
-    public void setNumberOfBeams(short pNumberOfBeams) {
-        numberOfBeams = pNumberOfBeams;
-    }
-
-    public EmitterSystem getEmitterSystem() {
-        return emitterSystem;
-    }
-
-    public void setEmitterSystem(EmitterSystem pEmitterSystem) {
-        emitterSystem = pEmitterSystem;
-    }
-
-    public Vector3Float getLocation() {
-        return location;
-    }
-
-    public void setLocation(Vector3Float pLocation) {
-        location = pLocation;
-    }
+    
+    
 
     public void marshal(DataOutputStream dos) {
         super.marshal(dos);
@@ -198,14 +142,12 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
             emittingEntityID.marshal(dos);
             eventID.marshal(dos);
             dos.writeByte((byte) stateUpdateIndicator);
-            dos.writeByte((byte) numberOfSystems);
+            dos.writeByte((byte) systems.size());
             dos.writeShort((short) paddingForEmissionsPdu);
-            dos.writeByte((byte) systemDataLength);
-            dos.writeByte((byte) numberOfBeams);
-            emitterSystem.marshal(dos);
-            location.marshal(dos);
-            electronicEmissisionBeamData.marshal(dos);
-
+            for (int idx = 0; idx < systems.size(); idx++) {
+                ElectronicEmissionSystemData aElectronicEmissionSystemData = (ElectronicEmissionSystemData) systems.get(idx);
+                aElectronicEmissionSystemData.marshal(dos);
+            } // end of list marshalling
         } // end try
         catch (Exception e) {
             System.out.println(e);
@@ -221,12 +163,11 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
             stateUpdateIndicator = (short) dis.readUnsignedByte();
             numberOfSystems = (short) dis.readUnsignedByte();
             paddingForEmissionsPdu = (int) dis.readUnsignedShort();
-            systemDataLength = (short) dis.readUnsignedByte();
-            numberOfBeams = (short) dis.readUnsignedByte();
-            emitterSystem.unmarshal(dis);
-            location.unmarshal(dis);
-            electronicEmissisionBeamData.unmarshal(dis);
-
+        for (int idx = 0; idx < numberOfSystems; idx++) {
+            ElectronicEmissionSystemData anX = new ElectronicEmissionSystemData();
+            anX.unmarshal(dis);
+            systems.add(anX);
+        }
         } // end try
         catch (Exception e) {
             System.out.println(e);
@@ -247,14 +188,12 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         emittingEntityID.marshal(buff);
         eventID.marshal(buff);
         buff.put((byte) stateUpdateIndicator);
-        buff.put((byte) numberOfSystems);
+        buff.put((byte) systems.size());
         buff.putShort((short) paddingForEmissionsPdu);
-        buff.put((byte) systemDataLength);
-        buff.put((byte) numberOfBeams);
-        emitterSystem.marshal(buff);
-        location.marshal(buff);
-        electronicEmissisionBeamData.marshal(buff);
-
+        for (int idx = 0; idx < systems.size(); idx++) {
+            ElectronicEmissionSystemData aElectronicEmissionSystemData = (ElectronicEmissionSystemData) systems.get(idx);
+            aElectronicEmissionSystemData.marshal(buff);
+        }
     } // end of marshal method
 
     /**
@@ -273,13 +212,11 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         stateUpdateIndicator = (short) (buff.get() & 0xFF);
         numberOfSystems = (short) (buff.get() & 0xFF);
         paddingForEmissionsPdu = (int) (buff.getShort() & 0xFFFF);
-        systemDataLength = (short) (buff.get() & 0xFF);
-        numberOfBeams = (short) (buff.get() & 0xFF);
-        buff.getShort(); // remove padding
-        emitterSystem.unmarshal(buff);
-        location.unmarshal(buff);
-        electronicEmissisionBeamData.unmarshal(buff);
-
+        for (int idx = 0; idx < numberOfSystems; idx++) {
+            ElectronicEmissionSystemData anX = new ElectronicEmissionSystemData();
+            anX.unmarshal(buff);
+            systems.add(anX);
+        }
     } // end of unmarshal method
 
 
@@ -329,22 +266,11 @@ public class ElectronicEmissionsPdu extends DistributedEmissionsFamilyPdu implem
         if (!(paddingForEmissionsPdu == rhs.paddingForEmissionsPdu)) {
             ivarsEqual = false;
         }
-        if (!(systemDataLength == rhs.systemDataLength)) {
-            ivarsEqual = false;
+        for (int idx = 0; idx < systems.size(); idx++) {
+            if (!(systems.get(idx).equals(rhs.systems.get(idx)))) {
+                ivarsEqual = false;
+            }
         }
-        if (!(numberOfBeams == rhs.numberOfBeams)) {
-            ivarsEqual = false;
-        }
-        if (!(emitterSystem.equals(rhs.emitterSystem))) {
-            ivarsEqual = false;
-        }
-        if (!(location.equals(rhs.location))) {
-            ivarsEqual = false;
-        }
-        if (!(electronicEmissisionBeamData.equals(rhs.electronicEmissisionBeamData))) {
-            ivarsEqual = false;
-        }
-
         return ivarsEqual && super.equalsImpl(rhs);
     }
 } // end of class

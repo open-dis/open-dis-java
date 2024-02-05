@@ -3,6 +3,8 @@ package edu.nps.moves.dis7;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -97,7 +99,7 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
      * included, this field shall be represented by a series of Track/Jam Data
      * records (see 6.2.90).
      */
-    protected TrackJamData trackJamData = new TrackJamData();
+    protected List<TrackJamData> trackJamData = new ArrayList<TrackJamData>();
 
     /**
      * Constructor
@@ -118,8 +120,9 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
         marshalSize = marshalSize + 1;  // highDensityTrackJam
         marshalSize = marshalSize + beamStatus.getMarshalledSize();  // beamStatus
         marshalSize = marshalSize + jammingTechnique.getMarshalledSize();  // jammingTechnique
-        if (numberOfTargets != 0) {
-            marshalSize = marshalSize + trackJamData.getMarshalledSize();  // trackJamData
+        for (int idx = 0; idx < trackJamData.size(); idx++) {
+            TrackJamData listElement = trackJamData.get(idx);
+            marshalSize = marshalSize + listElement.getMarshalledSize();
         }
 
         return marshalSize;
@@ -181,16 +184,21 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
         this.jammingTechnique = jammingTechnique;
     }
 
-    public TrackJamData getTrackJamData() {
+    public List<TrackJamData> getTrackJamData() {
         return trackJamData;
     }
 
-    public void setTrackJamData(TrackJamData trackJamData) {
+    public void setTrackJamData(List<TrackJamData> trackJamData) {
         this.trackJamData = trackJamData;
     }
 
     public int getBeamDataLength() {
         return beamDataLength;
+    }
+
+    short calculateBeamDataLength() {
+        //beam length = 13 + 2*track/jamTargets
+        return (short) ((2 * getTrackJamData().size()) + 13);
     }
 
     public void setBeamDataLength(short beamDataLength) {
@@ -221,13 +229,14 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
             fundamentalParameterData.marshal(dos);
             beamData.marshal(dos);
             dos.writeByte((byte) beamFunction);
-            dos.writeByte((byte) numberOfTargets);
+            dos.writeByte((byte) trackJamData.size());
             dos.writeByte((byte) highDensityTrackJam);
             beamStatus.marshal(dos);
             jammingTechnique.marshal(dos);
-            if (numberOfTargets != 0) { //When the Number of Targets value is zero, this field shall be omitted
-                trackJamData.marshal(dos);
-            }
+            for (int idx = 0; idx < trackJamData.size(); idx++) {
+                TrackJamData aTrackJamTarget = (TrackJamData) trackJamData.get(idx);
+                aTrackJamTarget.marshal(dos);
+            } // end of list marshalling            
         } // end try
         catch (Exception e) {
             System.out.println(e);
@@ -250,13 +259,14 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
         fundamentalParameterData.marshal(buff);
         beamData.marshal(buff);
         buff.put((byte) beamFunction);
-        buff.put((byte) numberOfTargets);
+        buff.put((byte) trackJamData.size());
         buff.put((byte) highDensityTrackJam);
         beamStatus.marshal(buff);
         jammingTechnique.marshal(buff);
-        if (numberOfTargets != 0) { //When the Number of Targets value is zero, this field shall be omitted
-            trackJamData.marshal(buff);
-        }
+        for (int idx = 0; idx < trackJamData.size(); idx++) {
+            TrackJamData aTrackJamTarget = (TrackJamData) trackJamData.get(idx);
+            aTrackJamTarget.marshal(buff);
+        } // end of list marshalling
     } // end of marshal method
 
     public void unmarshal(DataInputStream dis) {
@@ -266,13 +276,15 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
             beamParameterIndex = dis.readUnsignedShort();
             fundamentalParameterData.unmarshal(dis);
             beamData.unmarshal(dis);
-            beamFunction = (short) dis.readUnsignedShort();
-            numberOfTargets = (short) dis.readUnsignedShort();
-            highDensityTrackJam = (short) dis.readUnsignedShort();
+            beamFunction = (short) dis.readByte();
+            numberOfTargets = (short) dis.readByte();
+            highDensityTrackJam = (short) dis.readByte();
             beamStatus.unmarshal(dis);
             jammingTechnique.unmarshal(dis);
-            if (numberOfTargets != 0) { //When the Number of Targets value is zero, this field shall be omitted
-                trackJamData.unmarshal(dis);
+            for (int idx = 0; idx < numberOfTargets; idx++) {
+                TrackJamData anX = new TrackJamData();
+                anX.unmarshal(dis);
+                trackJamData.add(anX);
             }
 
         } // end try
@@ -300,8 +312,10 @@ public class ElectronicEmissisionBeamData extends Object implements Serializable
         highDensityTrackJam = (short) (buff.get() & 0xFF);
         beamStatus.unmarshal(buff);
         jammingTechnique.unmarshal(buff);
-        if (numberOfTargets != 0) { //When the Number of Targets value is zero, this field shall be omitted
-            trackJamData.unmarshal(buff);
+        for (int idx = 0; idx < numberOfTargets; idx++) {
+            TrackJamData anX = new TrackJamData();
+            anX.unmarshal(buff);
+            trackJamData.add(anX);
         }
     } // end of unmarshal method
 
