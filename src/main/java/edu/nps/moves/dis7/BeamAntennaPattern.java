@@ -13,7 +13,7 @@ import java.io.*;
  *
  * @author DMcG
  */
-public class BeamAntennaPattern extends Object implements Serializable {
+public class BeamAntennaPattern extends AntennaPattern {
 
     /**
      * The rotation that transforms the reference coordinate sytem into the beam
@@ -65,11 +65,13 @@ public class BeamAntennaPattern extends Object implements Serializable {
      * Constructor
      */
     public BeamAntennaPattern() {
+        super();
     }
 
     public int getMarshalledSize() {
         int marshalSize = 0;
-
+        
+        marshalSize = marshalSize + super.getMarshalledSize();
         marshalSize = marshalSize + beamDirection.getMarshalledSize();  // beamDirection
         marshalSize = marshalSize + 4;  // azimuthBeamwidth
         marshalSize = marshalSize + 4;  // elevationBeamwidth
@@ -166,6 +168,7 @@ public class BeamAntennaPattern extends Object implements Serializable {
 
     public void marshal(DataOutputStream dos) {
         try {
+            super.marshal(dos);
             beamDirection.marshal(dos);
             dos.writeFloat((float) azimuthBeamwidth);
             dos.writeFloat((float) elevationBeamwidth);
@@ -184,6 +187,7 @@ public class BeamAntennaPattern extends Object implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
+            super.unmarshal(dis);
             beamDirection.unmarshal(dis);
             azimuthBeamwidth = dis.readFloat();
             elevationBeamwidth = dis.readFloat();
@@ -210,6 +214,7 @@ public class BeamAntennaPattern extends Object implements Serializable {
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
+        super.marshal(buff);
         beamDirection.marshal(buff);
         buff.putFloat((float) azimuthBeamwidth);
         buff.putFloat((float) elevationBeamwidth);
@@ -231,6 +236,7 @@ public class BeamAntennaPattern extends Object implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
+        super.unmarshal(buff);
         beamDirection.unmarshal(buff);
         azimuthBeamwidth = buff.getFloat();
         elevationBeamwidth = buff.getFloat();

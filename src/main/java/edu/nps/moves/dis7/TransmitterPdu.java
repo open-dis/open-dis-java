@@ -118,7 +118,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
     /**
      * variable length list of antenna pattern records
      */
-    protected List< Vector3Float> antennaPatternList = new ArrayList< Vector3Float>();
+    protected AntennaPattern antennaPattern = new AntennaPattern();
 
     /**
      * Constructor
@@ -203,11 +203,16 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                     break;
             }
         }
-        for (int idx = 0; idx < antennaPatternList.size(); idx++) {
-            Vector3Float listElement = antennaPatternList.get(idx);
-            marshalSize = marshalSize + listElement.getMarshalledSize();
+        switch (antennaPatternType) {
+            case 2:
+                marshalSize = marshalSize + ((BeamAntennaPattern) antennaPattern).getMarshalledSize();
+                break;
+            case 6:
+                break;
+            default:
+                marshalSize = marshalSize + ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
+                break;
         }
-
         return marshalSize;
     }
 
@@ -284,7 +289,18 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
     }
 
     public int getAntennaPatternCount() {
-        return (int) antennaPatternList.size();
+        int antennaPatternCount = 0;
+        switch (antennaPatternType) {
+            case 2:
+                antennaPatternCount =  ((BeamAntennaPattern) antennaPattern).getMarshalledSize();
+                break;
+            case 6:
+                break;
+            default:
+                antennaPatternCount =  ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
+                break;
+        }        
+        return antennaPatternCount;
     }
 
     /**
@@ -371,14 +387,14 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         return (short) modulationParameterOctets;
     }
 
-/**
- * Note that setting this value will not change the marshalled value. The list
- * whose length this describes is used for that purpose. The
- * getmodulationParameterCount method will also be based on the actual list
- * length rather than this value. The method is simply here for java bean
- * completeness.
- */
-public void setModulationParameterCount(short pModulationParameterCount) {
+    /**
+     * Note that setting this value will not change the marshalled value. The
+     * list whose length this describes is used for that purpose. The
+     * getmodulationParameterCount method will also be based on the actual list
+     * length rather than this value. The method is simply here for java bean
+     * completeness.
+     */
+    public void setModulationParameterCount(short pModulationParameterCount) {
         modulationParameterCount = pModulationParameterCount;
     }
 
@@ -406,12 +422,12 @@ public void setModulationParameterCount(short pModulationParameterCount) {
         return modulationParameters;
     }
 
-    public void setAntennaPatternList(List<Vector3Float> pAntennaPatternList) {
-        antennaPatternList = pAntennaPatternList;
+    public void setAntennaPattern(BeamAntennaPattern pAntennaPatternList) {
+        antennaPattern = pAntennaPatternList;
     }
 
-    public List<Vector3Float> getAntennaPatternList() {
-        return antennaPatternList;
+    public AntennaPattern getAntennaPattern() {
+        return antennaPattern;
     }
 
     public void marshal(DataOutputStream dos) {
@@ -426,7 +442,7 @@ public void setModulationParameterCount(short pModulationParameterCount) {
             antennaLocation.marshal(dos);
             relativeAntennaLocation.marshal(dos);
             dos.writeShort((short) antennaPatternType);
-            dos.writeShort((short) antennaPatternList.size());
+            dos.writeShort((short) getAntennaPatternCount());
             dos.writeLong((long) frequency);
             dos.writeFloat((float) transmitFrequencyBandwidth);
             dos.writeFloat((float) power);
@@ -488,16 +504,22 @@ public void setModulationParameterCount(short pModulationParameterCount) {
                         remainder = 1;
                         break;
                 }
-                for(int i = 1; i<= remainder;i++){
+                for (int i = 1; i <= remainder; i++) {
                     dos.writeByte(0);
                 }
             }
-            for (int idx = 0; idx < antennaPatternList.size(); idx++) {
-                Vector3Float aVector3Float = antennaPatternList.get(idx);
-                aVector3Float.marshal(dos);
-            } // end of list marshalling
+            switch (antennaPatternType) {
+                case 2://Beam
+                    ((BeamAntennaPattern) antennaPattern).marshal(dos);
+                    break;
+                case 6://Omnidirectional (Toroidal Radiation Pattern)
+                    break;
+                default://Generic record
+                    ((AntennaPatternGeneric) antennaPattern).marshal(dos);
+                    break;
+            }
 
-        } // end try  // end try 
+        } // end try  // end try  // end try  // end try 
         catch (Exception e) {
             System.out.println(e);
         }
@@ -562,13 +584,24 @@ public void setModulationParameterCount(short pModulationParameterCount) {
                     dis.readByte();
                 }
             }
-            for (int idx = 0; idx < antennaPatternCount; idx++) {
-                Vector3Float anX = new Vector3Float();
-                anX.unmarshal(dis);
-                antennaPatternList.add(anX);
+            switch (antennaPatternType) {
+                case 2://Beam
+                    BeamAntennaPattern beamAntennaPattern = new BeamAntennaPattern();
+                    beamAntennaPattern.unmarshal(dis);
+                    antennaPattern = beamAntennaPattern;
+                    break;
+                case 6://Omnidirectional (Toroidal Radiation Pattern)
+                    break;
+                default://Generic record
+                    AntennaPatternGeneric antennaPatternGeneric = new AntennaPatternGeneric();
+                    for (int i = 0; i < antennaPatternCount; i++) {
+                        antennaPatternGeneric.unmarshal(dis, antennaPatternCount);
+                    }
+                    antennaPattern = antennaPatternGeneric;
+                    break;
             }
 
-        } // end try  // end try 
+        } // end try  // end try  // end try  // end try 
         catch (Exception e) {
             System.out.println(e);
         }
@@ -594,7 +627,7 @@ public void setModulationParameterCount(short pModulationParameterCount) {
         antennaLocation.marshal(buff);
         relativeAntennaLocation.marshal(buff);
         buff.putShort((short) antennaPatternType);
-        buff.putShort((short) antennaPatternList.size());
+        buff.putShort((short) getAntennaPatternCount());
         buff.putLong((long) frequency);
         buff.putFloat((float) transmitFrequencyBandwidth);
         buff.putFloat((float) power);
@@ -660,11 +693,16 @@ public void setModulationParameterCount(short pModulationParameterCount) {
                 buff.put((byte) 0);
             }
         }
-
-        for (int idx = 0; idx < antennaPatternList.size(); idx++) {
-            Vector3Float aVector3Float = (Vector3Float) antennaPatternList.get(idx);
-            aVector3Float.marshal(buff);
-        } // end of list marshalling
+        switch (antennaPatternType) {
+            case 2://Beam
+                ((BeamAntennaPattern) antennaPattern).marshal(buff);
+                break;
+            case 6://Omnidirectional (Toroidal Radiation Pattern)
+                break;
+            default://generic record
+                ((AntennaPatternGeneric) antennaPattern).marshal(buff);
+                break;
+        }
 
     } // end of marshal method
 
@@ -735,10 +773,22 @@ public void setModulationParameterCount(short pModulationParameterCount) {
             }
         }
 
-        for (int idx = 0; idx < antennaPatternCount; idx++) {
-            Vector3Float anX = new Vector3Float();
-            anX.unmarshal(buff);
-            antennaPatternList.add(anX);
+        switch (antennaPatternType) {
+            case 2://Beam
+                BeamAntennaPattern beamAntennaPattern = new BeamAntennaPattern();
+                beamAntennaPattern.unmarshal(buff);
+                antennaPattern = beamAntennaPattern;
+                break;
+                
+            case 6://Omnidirectional (Toroidal Radiation Pattern)
+                break;
+            default://generic record
+                AntennaPatternGeneric antennaPatternGeneric = new AntennaPatternGeneric();
+                for (int i = 0; i < antennaPatternCount; i++) {
+                    antennaPatternGeneric.unmarshal(buff, antennaPatternCount);
+                }
+                antennaPattern = antennaPatternGeneric;
+                break;
         }
 
     } // end of unmarshal method 
@@ -748,7 +798,7 @@ public void setModulationParameterCount(short pModulationParameterCount) {
   * The equals method doesn't always work--mostly it works only on classes that consist only of primitives. Be careful.
      */
     @Override
-        public boolean equals(Object obj) {
+    public boolean equals(Object obj) {
 
         if (this == obj) {
             return true;
@@ -766,7 +816,7 @@ public void setModulationParameterCount(short pModulationParameterCount) {
     }
 
     @Override
-        public boolean equalsImpl(Object obj) {
+    public boolean equalsImpl(Object obj) {
         boolean ivarsEqual = true;
 
         if (!(obj instanceof TransmitterPdu)) {
@@ -857,13 +907,18 @@ public void setModulationParameterCount(short pModulationParameterCount) {
                 }
                 break;
         }
-
-        for (int idx = 0; idx < antennaPatternList.size(); idx++) {
-            if (!(antennaPatternList.get(idx).equals(rhs.antennaPatternList.get(idx)))) {
-                ivarsEqual = false;
-            }
+        switch (antennaPatternType) {
+            case 2:
+                if (!(((BeamAntennaPattern) antennaPattern).equals(((BeamAntennaPattern) rhs.antennaPattern)))) {
+                    ivarsEqual = false;
+                }
+                break;
+            default:
+                if (!(antennaPattern.equals(rhs.antennaPattern))) {
+                    ivarsEqual = false;
+                }
+                break;
         }
-
         return ivarsEqual && super.equalsImpl(rhs);
     }
 } // end of class
