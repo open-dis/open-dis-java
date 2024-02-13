@@ -1,6 +1,9 @@
 package edu.nps.moves.dis7;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Relates to radios. NOT COMPLETE. Section 6.2.94
@@ -24,6 +27,11 @@ public class VariableTransmitterParameters extends Object implements Serializabl
     protected long recordLength = (long) 4;
 
     /**
+     * transmitter parameters
+     */
+    protected List<Byte> recordSpecificFieldsList = new ArrayList<>();
+
+    /**
      * Constructor
      */
     public VariableTransmitterParameters() {
@@ -33,7 +41,12 @@ public class VariableTransmitterParameters extends Object implements Serializabl
         int marshalSize = 0;
 
         marshalSize = marshalSize + 4;  // recordType
-        marshalSize = marshalSize + 4;  // recordLength
+        marshalSize = marshalSize + 2;  // recordLength
+        marshalSize = marshalSize + recordSpecificFieldsList.size(); // recordParameters
+        int remainder = recordSpecificFieldsList.size() % 8;
+        if (remainder > 0) {
+            marshalSize = marshalSize + calculatePaddingByteNr(remainder);
+        }
 
         return marshalSize;
     }
@@ -54,10 +67,59 @@ public class VariableTransmitterParameters extends Object implements Serializabl
         return recordLength;
     }
 
+    public List<Byte> getRecordSpecificFieldsList() {
+        return recordSpecificFieldsList;
+    }
+
+    public void setRecordSpecificFieldsList(List<Byte> recordSpecificFieldsList) {
+        this.recordSpecificFieldsList = recordSpecificFieldsList;
+    }
+
+    private int calculatePaddingByteNr(final int remainder) {
+        int paddingByteNr = 0;
+        switch (remainder) {
+            case 1:
+                paddingByteNr = 7;
+                break;
+            case 2:
+                paddingByteNr = 6;
+                break;
+            case 3:
+                paddingByteNr = 5;
+                break;
+            case 4:
+                paddingByteNr = 4;
+                break;
+            case 5:
+                paddingByteNr = 3;
+                break;
+            case 6:
+                paddingByteNr = 2;
+                break;
+            case 7:
+                paddingByteNr = 1;
+                break;
+        }
+        return paddingByteNr;
+    }
+
     public void marshal(DataOutputStream dos) {
         try {
             dos.writeInt((int) recordType);
-            dos.writeInt((int) recordLength);
+            dos.writeShort((int) getMarshalledSize());
+            Iterator<Byte> iter = recordSpecificFieldsList.iterator();
+            while (iter.hasNext()) {
+                byte nextByte = iter.next();
+                dos.writeByte(nextByte);
+            }
+            final int remainder = recordSpecificFieldsList.size() % 8;
+            if (remainder > 0) {
+                int paddingByteNr = 0;
+                paddingByteNr = calculatePaddingByteNr(remainder);
+                for (int i = 0; i < paddingByteNr; i++) {
+                    dos.writeByte(0);
+                }
+            }
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -68,6 +130,10 @@ public class VariableTransmitterParameters extends Object implements Serializabl
         try {
             recordType = dis.readInt();
             recordLength = dis.readInt();
+            for (int i = 0; i < recordLength; i++) {
+                byte nextByte = dis.readByte();
+                recordSpecificFieldsList.add(nextByte);
+            }
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -85,7 +151,20 @@ public class VariableTransmitterParameters extends Object implements Serializabl
      */
     public void marshal(java.nio.ByteBuffer buff) {
         buff.putInt((int) recordType);
-        buff.putInt((int) recordLength);
+        buff.putShort((short) getMarshalledSize());
+        Iterator<Byte> iter = recordSpecificFieldsList.iterator();
+        while (iter.hasNext()) {
+            byte nextByte = iter.next();
+            buff.put(nextByte);
+        }
+        final int remainder = recordSpecificFieldsList.size() % 8;
+        if (remainder > 0) {
+            int paddingByteNr = 0;
+            paddingByteNr = calculatePaddingByteNr(remainder);
+            for (int i = 0; i < paddingByteNr; i++) {
+                buff.put((byte) 0);
+            }
+        }
     } // end of marshal method
 
     /**
@@ -99,6 +178,10 @@ public class VariableTransmitterParameters extends Object implements Serializabl
     public void unmarshal(java.nio.ByteBuffer buff) {
         recordType = buff.getInt();
         recordLength = buff.getInt();
+        for (int i = 0; i < recordLength; i++) {
+            byte nextByte = buff.get();
+            recordSpecificFieldsList.add(nextByte);
+        }
     } // end of unmarshal method 
 
 
@@ -144,6 +227,12 @@ public class VariableTransmitterParameters extends Object implements Serializabl
         }
         if (!(recordLength == rhs.recordLength)) {
             ivarsEqual = false;
+        }
+
+        for (int idx = 0; idx < recordSpecificFieldsList.size(); idx++) {
+            if (!(recordSpecificFieldsList.get(idx).equals(rhs.recordSpecificFieldsList.get(idx)))) {
+                ivarsEqual = false;
+            }
         }
 
         return ivarsEqual;

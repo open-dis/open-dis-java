@@ -133,8 +133,10 @@ public class AntennaPatternGeneric extends AntennaPattern {
      */
     public void unmarshal(java.nio.ByteBuffer buff, int byteCount) {
         try {
-            byte nextByte = buff.get();
-            listAntennaPatternOctets.add(nextByte);
+            for (int i = 0; i < byteCount; i++) {
+                byte nextByte = buff.get();
+                listAntennaPatternOctets.add(nextByte);
+            }
             final int remainder = byteCount % 8;
             if (remainder > 0) {
                 int paddingByteNr = 0;

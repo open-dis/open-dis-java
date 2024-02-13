@@ -112,13 +112,18 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
     protected short padding3 = (short) 0;
 
     /**
-     * variable length list of modulation parameters
+     * modulation parameters
      */
     protected ModulationParameters modulationParameters = new ModulationParameters();
     /**
-     * variable length list of antenna pattern records
+     * antenna pattern records
      */
     protected AntennaPattern antennaPattern = new AntennaPattern();
+
+    /**
+     * optional Variable Transmitter Parameters records
+     */
+    protected List<VariableTransmitterParameters> variableTransmitterParametersList = new ArrayList<>();
 
     /**
      * Constructor
@@ -126,10 +131,10 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
     public TransmitterPdu() {
         setPduType((short) 25);
     }
-
+    
     public int getMarshalledSize() {
         int marshalSize = 0;
-
+        
         marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + radioReferenceID.getMarshalledSize();  // radioReferenceID
         marshalSize = marshalSize + 2;  // radioNumber
@@ -176,7 +181,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                 nrOfModulationBytes = nrOfModulationBytes + listElement.getMarshalledSize();
                 break;
         }
-
+        
         if (nrOfModulationBytes % 8 > 0) {
             int remainder = nrOfModulationBytes % 8;
             switch (remainder) {
@@ -213,91 +218,95 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                 marshalSize = marshalSize + ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
                 break;
         }
+        Iterator<VariableTransmitterParameters> iter = variableTransmitterParametersList.iterator();
+        while (iter.hasNext()) {
+            marshalSize = marshalSize + iter.next().getMarshalledSize();
+        }
         return marshalSize;
     }
-
+    
     public void setRadioReferenceID(EntityID pRadioReferenceID) {
         radioReferenceID = pRadioReferenceID;
     }
-
+    
     public EntityID getRadioReferenceID() {
         return radioReferenceID;
     }
-
+    
     public void setRadioNumber(int pRadioNumber) {
         radioNumber = pRadioNumber;
     }
-
+    
     public int getRadioNumber() {
         return radioNumber;
     }
-
+    
     public void setRadioEntityType(EntityType pRadioEntityType) {
         radioEntityType = pRadioEntityType;
     }
-
+    
     public EntityType getRadioEntityType() {
         return radioEntityType;
     }
-
+    
     public void setTransmitState(short pTransmitState) {
         transmitState = pTransmitState;
     }
-
+    
     public short getTransmitState() {
         return transmitState;
     }
-
+    
     public void setInputSource(short pInputSource) {
         inputSource = pInputSource;
     }
-
+    
     public short getInputSource() {
         return inputSource;
     }
-
+    
     public void setVariableTransmitterParameterCount(int pVariableTransmitterParameterCount) {
         variableTransmitterParameterCount = pVariableTransmitterParameterCount;
     }
-
+    
     public int getVariableTransmitterParameterCount() {
         return variableTransmitterParameterCount;
     }
-
+    
     public void setAntennaLocation(Vector3Double pAntennaLocation) {
         antennaLocation = pAntennaLocation;
     }
-
+    
     public Vector3Double getAntennaLocation() {
         return antennaLocation;
     }
-
+    
     public void setRelativeAntennaLocation(Vector3Float pRelativeAntennaLocation) {
         relativeAntennaLocation = pRelativeAntennaLocation;
     }
-
+    
     public Vector3Float getRelativeAntennaLocation() {
         return relativeAntennaLocation;
     }
-
+    
     public void setAntennaPatternType(int pAntennaPatternType) {
         antennaPatternType = pAntennaPatternType;
     }
-
+    
     public int getAntennaPatternType() {
         return antennaPatternType;
     }
-
+    
     public int getAntennaPatternCount() {
         int antennaPatternCount = 0;
         switch (antennaPatternType) {
             case 2:
-                antennaPatternCount =  ((BeamAntennaPattern) antennaPattern).getMarshalledSize();
+                antennaPatternCount = ((BeamAntennaPattern) antennaPattern).getMarshalledSize();
                 break;
             case 6:
                 break;
             default:
-                antennaPatternCount =  ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
+                antennaPatternCount = ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
                 break;
         }        
         return antennaPatternCount;
@@ -313,55 +322,55 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
     public void setAntennaPatternCount(int pAntennaPatternCount) {
         antennaPatternCount = pAntennaPatternCount;
     }
-
+    
     public void setFrequency(long pFrequency) {
         frequency = pFrequency;
     }
-
+    
     public long getFrequency() {
         return frequency;
     }
-
+    
     public void setTransmitFrequencyBandwidth(float pTransmitFrequencyBandwidth) {
         transmitFrequencyBandwidth = pTransmitFrequencyBandwidth;
     }
-
+    
     public float getTransmitFrequencyBandwidth() {
         return transmitFrequencyBandwidth;
     }
-
+    
     public void setPower(float pPower) {
         power = pPower;
     }
-
+    
     public float getPower() {
         return power;
     }
-
+    
     public void setModulationType(ModulationType pModulationType) {
         modulationType = pModulationType;
     }
-
+    
     public ModulationType getModulationType() {
         return modulationType;
     }
-
+    
     public void setCryptoSystem(int pCryptoSystem) {
         cryptoSystem = pCryptoSystem;
     }
-
+    
     public int getCryptoSystem() {
         return cryptoSystem;
     }
-
+    
     public void setCryptoKeyId(int pCryptoKeyId) {
         cryptoKeyId = pCryptoKeyId;
     }
-
+    
     public int getCryptoKeyId() {
         return cryptoKeyId;
     }
-
+    
     public short getModulationParameterCount() {
         int modulationParameterOctets = 0;
         switch (getModulationType().getRadioSystem()) {
@@ -397,39 +406,47 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
     public void setModulationParameterCount(short pModulationParameterCount) {
         modulationParameterCount = pModulationParameterCount;
     }
-
+    
     public void setPadding2(int pPadding2) {
         padding2 = pPadding2;
     }
-
+    
     public int getPadding2() {
         return padding2;
     }
-
+    
     public void setPadding3(short pPadding3) {
         padding3 = pPadding3;
     }
-
+    
     public short getPadding3() {
         return padding3;
     }
-
-    public void setModulationParametersList(ModulationParameters pModulationParametersList) {
+    
+    public void setModulationParameters(ModulationParameters pModulationParametersList) {
         modulationParameters = pModulationParametersList;
     }
-
-    public ModulationParameters getModulationParametersList() {
+    
+    public ModulationParameters getModulationParameters() {
         return modulationParameters;
     }
-
+    
     public void setAntennaPattern(BeamAntennaPattern pAntennaPatternList) {
         antennaPattern = pAntennaPatternList;
     }
-
+    
     public AntennaPattern getAntennaPattern() {
         return antennaPattern;
     }
-
+    
+    public List<VariableTransmitterParameters> getVariableTransmitterParametersList() {
+        return variableTransmitterParametersList;
+    }
+    
+    public void setVariableTransmitterParametersList(List<VariableTransmitterParameters> variableTransmitterParametersList) {
+        this.variableTransmitterParametersList = variableTransmitterParametersList;
+    }
+    
     public void marshal(DataOutputStream dos) {
         super.marshal(dos);
         try {
@@ -438,7 +455,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             radioEntityType.marshal(dos);
             dos.writeByte((byte) transmitState);
             dos.writeByte((byte) inputSource);
-            dos.writeShort((short) variableTransmitterParameterCount);
+            dos.writeShort((short) variableTransmitterParametersList.size());
             antennaLocation.marshal(dos);
             relativeAntennaLocation.marshal(dos);
             dos.writeShort((short) antennaPatternType);
@@ -452,7 +469,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             dos.writeByte((byte) getModulationParameterCount());
             dos.writeShort((short) padding2);
             dos.writeByte((byte) padding3);
-
+            
             int nrOfModulationBytes = 0;
             switch (getModulationType().getRadioSystem()) {
                 case 6:                                  // CCTT SINCGARS
@@ -518,7 +535,10 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                     ((AntennaPatternGeneric) antennaPattern).marshal(dos);
                     break;
             }
-
+            
+            for (int idx = 0; idx < variableTransmitterParametersList.size(); idx++) {
+                variableTransmitterParametersList.get(idx).marshal(dos);
+            }
         } // end try  // end try  // end try  // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -527,7 +547,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
 
     public void unmarshal(DataInputStream dis) {
         super.unmarshal(dis);
-
+        
         try {
             radioReferenceID.unmarshal(dis);
             radioNumber = (int) dis.readUnsignedShort();
@@ -600,7 +620,11 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                     antennaPattern = antennaPatternGeneric;
                     break;
             }
-
+            for (int idx = 0; idx < variableTransmitterParameterCount; idx++) {
+                VariableTransmitterParameters varTransPar = new VariableTransmitterParameters();
+                varTransPar.unmarshal(dis);
+                variableTransmitterParametersList.add(varTransPar);
+            }
         } // end try  // end try  // end try  // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -623,7 +647,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         radioEntityType.marshal(buff);
         buff.put((byte) transmitState);
         buff.put((byte) inputSource);
-        buff.putShort((short) variableTransmitterParameterCount);
+        buff.putShort((short) variableTransmitterParametersList.size());
         antennaLocation.marshal(buff);
         relativeAntennaLocation.marshal(buff);
         buff.putShort((short) antennaPatternType);
@@ -637,7 +661,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         buff.put((byte) getModulationParameterCount());
         buff.putShort((short) padding2);
         buff.put((byte) padding3);
-
+        
         int nrOfModulationBytes = 0;
         switch (getModulationType().getRadioSystem()) {
             case 6:                                  // CCTT SINCGARS
@@ -703,7 +727,11 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                 ((AntennaPatternGeneric) antennaPattern).marshal(buff);
                 break;
         }
-
+        
+        for (int idx = 0; idx < variableTransmitterParametersList.size(); idx++) {
+            variableTransmitterParametersList.get(idx).marshal(buff);
+        }        
+        
     } // end of marshal method
 
     /**
@@ -716,7 +744,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
         super.unmarshal(buff);
-
+        
         radioReferenceID.unmarshal(buff);
         radioNumber = (int) (buff.getShort() & 0xFFFF);
         radioEntityType.unmarshal(buff);
@@ -772,14 +800,14 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                 buff.get();
             }
         }
-
+        
         switch (antennaPatternType) {
             case 2://Beam
                 BeamAntennaPattern beamAntennaPattern = new BeamAntennaPattern();
                 beamAntennaPattern.unmarshal(buff);
                 antennaPattern = beamAntennaPattern;
                 break;
-                
+            
             case 6://Omnidirectional (Toroidal Radiation Pattern)
                 break;
             default://generic record
@@ -790,7 +818,13 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                 antennaPattern = antennaPatternGeneric;
                 break;
         }
-
+        
+        for (int idx = 0; idx < variableTransmitterParameterCount; idx++) {
+            VariableTransmitterParameters varTransPar = new VariableTransmitterParameters();
+            varTransPar.unmarshal(buff);
+            variableTransmitterParametersList.add(varTransPar);
+        }        
+        
     } // end of unmarshal method 
 
 
@@ -799,32 +833,32 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
      */
     @Override
     public boolean equals(Object obj) {
-
+        
         if (this == obj) {
             return true;
         }
-
+        
         if (obj == null) {
             return false;
         }
-
+        
         if (getClass() != obj.getClass()) {
             return false;
         }
-
+        
         return equalsImpl(obj);
     }
-
+    
     @Override
     public boolean equalsImpl(Object obj) {
         boolean ivarsEqual = true;
-
+        
         if (!(obj instanceof TransmitterPdu)) {
             return false;
         }
-
+        
         final TransmitterPdu rhs = (TransmitterPdu) obj;
-
+        
         if (!(radioReferenceID.equals(rhs.radioReferenceID))) {
             ivarsEqual = false;
         }
@@ -882,7 +916,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         if (!(padding3 == rhs.padding3)) {
             ivarsEqual = false;
         }
-
+        
         switch (getModulationType().getRadioSystem()) {
             case 6:                                  // CCTT SINCGARS
                 if (!(((CcttSincgarsModulationParameters) modulationParameters).equals(((CcttSincgarsModulationParameters) rhs.modulationParameters)))) {
@@ -913,11 +947,19 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                     ivarsEqual = false;
                 }
                 break;
+            case 6:
+                break;
             default:
                 if (!(antennaPattern.equals(rhs.antennaPattern))) {
                     ivarsEqual = false;
                 }
                 break;
+        }
+        
+        for (int idx = 0; idx < variableTransmitterParametersList.size(); idx++) {
+            if (!(variableTransmitterParametersList.get(idx).equals(rhs.variableTransmitterParametersList.get(idx)))) {
+                ivarsEqual = false;
+            }            
         }
         return ivarsEqual && super.equalsImpl(rhs);
     }
