@@ -176,9 +176,9 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             case 5:                                  // SINCGARS
             case 7:                                  // EPLRS                
             default:
-                ModulationParameters listElement = modulationParameters;
-                marshalSize = marshalSize + listElement.getMarshalledSize();
-                nrOfModulationBytes = nrOfModulationBytes + listElement.getMarshalledSize();
+                ModulationParametersGeneric modPar = (ModulationParametersGeneric) modulationParameters;
+                marshalSize = marshalSize + modPar.getMarshalledSize();
+                nrOfModulationBytes = nrOfModulationBytes + modPar.getMarshalledSize();
                 break;
         }
         
@@ -390,7 +390,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             case 5:                                  // SINCGARS
             case 7:                                  // EPLRS                
             default:
-                modulationParameterOctets = modulationParameters.getMarshalledSize();
+                modulationParameterOctets = ((ModulationParametersGeneric) modulationParameters).getMarshalledSize();
                 break;
         }
         return (short) modulationParameterOctets;
@@ -490,7 +490,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                 case 5:                                  // SINCGARS
                 case 7:                                  // EPLRS
                 default:
-                    ModulationParameters modulationParameter = modulationParameters;
+                    ModulationParametersGeneric modulationParameter = (ModulationParametersGeneric) modulationParameters;
                     modulationParameter.marshal(dos);
                     nrOfModulationBytes += nrOfModulationBytes + modulationParameter.getMarshalledSize();
                     break;
@@ -591,10 +591,10 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                 case 5:                                  // SINCGARS
                 case 7:                                  // EPLRS
                 default:
-                    ModulationParameters modPar = new ModulationParameters();
+                    ModulationParametersGeneric modPar = new ModulationParametersGeneric();
                     modPar.unmarshal(dis);
                     modulationParameters = modPar;
-                    modRecordSize = 8;
+                    modRecordSize = modPar.getMarshalledSize();
                     break;
             }
             //Calculate how many bytes need to be read to end on a 64 bit border
@@ -682,7 +682,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             case 5:                                  // SINCGARS
             case 7:                                  // EPLRS
             default:
-                ModulationParameters modulationParameter = modulationParameters;
+                ModulationParametersGeneric modulationParameter = (ModulationParametersGeneric) modulationParameters;
                 modulationParameter.marshal(buff);
                 nrOfModulationBytes += nrOfModulationBytes + modulationParameter.getMarshalledSize();
                 break;
@@ -790,7 +790,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                 ModulationParameters modPar = new ModulationParameters();
                 modPar.unmarshal(buff);
                 modulationParameters = modPar;
-                modRecordSize = 8;
+                modRecordSize = modPar.getMarshalledSize();
                 break;
         }
         //Calculate how many bytes need to be read to end on a 64 bit border
@@ -936,7 +936,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             case 5:                                  // SINCGARS
             case 7:                                  // EPLRS
             default:
-                if (!(modulationParameters.equals(rhs.modulationParameters))) {
+                if (!((ModulationParametersGeneric) modulationParameters).equals(((ModulationParametersGeneric) rhs.modulationParameters))) {
                     ivarsEqual = false;
                 }
                 break;
