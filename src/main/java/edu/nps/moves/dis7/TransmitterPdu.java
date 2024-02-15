@@ -159,14 +159,18 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         int nrOfModulationBytes = 0;
         switch (getModulationType().getRadioSystem()) {
             case 6:// CCTT SINCGARS
-                CcttSincgarsModulationParameters ccttSincgarsModulationParameters = (CcttSincgarsModulationParameters) modulationParameters;
-                marshalSize = marshalSize + ccttSincgarsModulationParameters.getMarshalledSize();
-                nrOfModulationBytes = nrOfModulationBytes + ccttSincgarsModulationParameters.getMarshalledSize();
+                if (modulationParameters instanceof CcttSincgarsModulationParameters) {
+                    CcttSincgarsModulationParameters ccttSincgarsModulationParameters = (CcttSincgarsModulationParameters) modulationParameters;
+                    marshalSize = marshalSize + ccttSincgarsModulationParameters.getMarshalledSize();
+                    nrOfModulationBytes = nrOfModulationBytes + ccttSincgarsModulationParameters.getMarshalledSize();
+                }
                 break;
             case 8:// JTIDS/MIDS
-                JtidsMidsModulationParameters jtidsMidsModulationParameters = (JtidsMidsModulationParameters) modulationParameters;
-                marshalSize = marshalSize + jtidsMidsModulationParameters.getMarshalledSize();
-                nrOfModulationBytes = nrOfModulationBytes + jtidsMidsModulationParameters.getMarshalledSize();
+                if (modulationParameters instanceof JtidsMidsModulationParameters) {
+                    JtidsMidsModulationParameters jtidsMidsModulationParameters = (JtidsMidsModulationParameters) modulationParameters;
+                    marshalSize = marshalSize + jtidsMidsModulationParameters.getMarshalledSize();
+                    nrOfModulationBytes = nrOfModulationBytes + jtidsMidsModulationParameters.getMarshalledSize();
+                }
                 break;
             case 0:                                  // Other
             case 1:                                  // Generic
@@ -176,9 +180,11 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             case 5:                                  // SINCGARS
             case 7:                                  // EPLRS                
             default:
-                ModulationParametersGeneric modPar = (ModulationParametersGeneric) modulationParameters;
-                marshalSize = marshalSize + modPar.getMarshalledSize();
-                nrOfModulationBytes = nrOfModulationBytes + modPar.getMarshalledSize();
+                if (modulationParameters instanceof ModulationParametersGeneric) {
+                    ModulationParametersGeneric modPar = (ModulationParametersGeneric) modulationParameters;
+                    marshalSize = marshalSize + modPar.getMarshalledSize();
+                    nrOfModulationBytes = nrOfModulationBytes + modPar.getMarshalledSize();
+                }
                 break;
         }
         
@@ -210,12 +216,16 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         }
         switch (antennaPatternType) {
             case 2:
-                marshalSize = marshalSize + ((BeamAntennaPattern) antennaPattern).getMarshalledSize();
+                if (antennaPattern instanceof BeamAntennaPattern) {
+                    marshalSize = marshalSize + ((BeamAntennaPattern) antennaPattern).getMarshalledSize();
+                }
                 break;
             case 6:
                 break;
             default:
-                marshalSize = marshalSize + ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
+                if (antennaPattern instanceof AntennaPatternGeneric) {
+                    marshalSize = marshalSize + ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
+                }
                 break;
         }
         Iterator<VariableTransmitterParameters> iter = variableTransmitterParametersList.iterator();
@@ -301,14 +311,18 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         int antennaPatternCount = 0;
         switch (antennaPatternType) {
             case 2:
-                antennaPatternCount = ((BeamAntennaPattern) antennaPattern).getMarshalledSize();
+                if (antennaPattern instanceof BeamAntennaPattern) {
+                    antennaPatternCount = ((BeamAntennaPattern) antennaPattern).getMarshalledSize();
+                }
                 break;
             case 6:
                 break;
             default:
-                antennaPatternCount = ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
+                if (antennaPattern instanceof AntennaPatternGeneric) {
+                    antennaPatternCount = ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
+                }
                 break;
-        }        
+        }
         return antennaPatternCount;
     }
 
@@ -375,12 +389,16 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         int modulationParameterOctets = 0;
         switch (getModulationType().getRadioSystem()) {
             case 6:// CCTT SINCGARS
-                CcttSincgarsModulationParameters ccttSincgarsModulationParameters = (CcttSincgarsModulationParameters) modulationParameters;
-                modulationParameterOctets = ccttSincgarsModulationParameters.getMarshalledSize();
+                if (modulationParameters instanceof CcttSincgarsModulationParameters) {
+                    CcttSincgarsModulationParameters ccttSincgarsModulationParameters = (CcttSincgarsModulationParameters) modulationParameters;
+                    modulationParameterOctets = ccttSincgarsModulationParameters.getMarshalledSize();
+                }
                 break;
             case 8:// JTIDS/MIDS
-                JtidsMidsModulationParameters jtidsMidsModulationParameters = (JtidsMidsModulationParameters) modulationParameters;
-                modulationParameterOctets = jtidsMidsModulationParameters.getMarshalledSize();
+                if (modulationParameters instanceof JtidsMidsModulationParameters) {
+                    JtidsMidsModulationParameters jtidsMidsModulationParameters = (JtidsMidsModulationParameters) modulationParameters;
+                    modulationParameterOctets = jtidsMidsModulationParameters.getMarshalledSize();
+                }
                 break;
             case 0:                                  // Other
             case 1:                                  // Generic
@@ -390,7 +408,9 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             case 5:                                  // SINCGARS
             case 7:                                  // EPLRS                
             default:
-                modulationParameterOctets = ((ModulationParametersGeneric) modulationParameters).getMarshalledSize();
+                if (modulationParameters instanceof ModulationParametersGeneric) {
+                    modulationParameterOctets = ((ModulationParametersGeneric) modulationParameters).getMarshalledSize();
+                }
                 break;
         }
         return (short) modulationParameterOctets;
@@ -473,14 +493,18 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             int nrOfModulationBytes = 0;
             switch (getModulationType().getRadioSystem()) {
                 case 6:                                  // CCTT SINCGARS
-                    CcttSincgarsModulationParameters ccttSincgarsModulationParameters = (CcttSincgarsModulationParameters) modulationParameters;
-                    ccttSincgarsModulationParameters.marshal(dos);
-                    nrOfModulationBytes = nrOfModulationBytes + ccttSincgarsModulationParameters.getMarshalledSize();
+                    if (modulationParameters instanceof CcttSincgarsModulationParameters) {
+                        CcttSincgarsModulationParameters ccttSincgarsModulationParameters = (CcttSincgarsModulationParameters) modulationParameters;
+                        ccttSincgarsModulationParameters.marshal(dos);
+                        nrOfModulationBytes = nrOfModulationBytes + ccttSincgarsModulationParameters.getMarshalledSize();
+                    }
                     break;
                 case 8:                                  // JTIDS/MIDS
-                    JtidsMidsModulationParameters parameterRecord = (JtidsMidsModulationParameters) modulationParameters;
-                    parameterRecord.marshal(dos);
-                    nrOfModulationBytes = nrOfModulationBytes + parameterRecord.getMarshalledSize();
+                    if (modulationParameters instanceof JtidsMidsModulationParameters) {
+                        JtidsMidsModulationParameters parameterRecord = (JtidsMidsModulationParameters) modulationParameters;
+                        parameterRecord.marshal(dos);
+                        nrOfModulationBytes = nrOfModulationBytes + parameterRecord.getMarshalledSize();
+                    }
                     break;
                 case 0:                                  // Other
                 case 1:                                  // Generic
@@ -490,10 +514,12 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
                 case 5:                                  // SINCGARS
                 case 7:                                  // EPLRS
                 default:
-                    ModulationParametersGeneric modulationParameter = (ModulationParametersGeneric) modulationParameters;
-                    modulationParameter.marshal(dos);
-                    nrOfModulationBytes += nrOfModulationBytes + modulationParameter.getMarshalledSize();
-                    break;
+                    if (modulationParameters instanceof ModulationParametersGeneric) {
+                        ModulationParametersGeneric modulationParameter = (ModulationParametersGeneric) modulationParameters;
+                        modulationParameter.marshal(dos);
+                        nrOfModulationBytes += nrOfModulationBytes + modulationParameter.getMarshalledSize();
+                        break;
+                    }
             }
             //Add padding up to 64 bit border
             if (nrOfModulationBytes % 8 > 0) {
@@ -527,12 +553,16 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             }
             switch (antennaPatternType) {
                 case 2://Beam
-                    ((BeamAntennaPattern) antennaPattern).marshal(dos);
+                    if (antennaPattern instanceof BeamAntennaPattern) {
+                        ((BeamAntennaPattern) antennaPattern).marshal(dos);
+                    }
                     break;
                 case 6://Omnidirectional (Toroidal Radiation Pattern)
                     break;
                 default://Generic record
-                    ((AntennaPatternGeneric) antennaPattern).marshal(dos);
+                    if (antennaPattern instanceof AntennaPatternGeneric) {
+                        ((AntennaPatternGeneric) antennaPattern).marshal(dos);
+                    }
                     break;
             }
             
