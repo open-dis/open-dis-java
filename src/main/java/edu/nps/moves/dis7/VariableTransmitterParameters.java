@@ -31,6 +31,9 @@ public class VariableTransmitterParameters extends Object implements Serializabl
      */
     protected List<Byte> recordSpecificFieldsList = new ArrayList<>();
 
+    private final int RECORD_TYPE_FIELD_SIZE = 4;
+    
+    private final int RECORD_LENGTH_FIELD_SIZE = 2;
     /**
      * Constructor
      */
@@ -43,7 +46,7 @@ public class VariableTransmitterParameters extends Object implements Serializabl
         marshalSize = marshalSize + 4;  // recordType
         marshalSize = marshalSize + 2;  // recordLength
         marshalSize = marshalSize + recordSpecificFieldsList.size(); // recordParameters
-        int remainder = recordSpecificFieldsList.size() % 8;
+        int remainder = marshalSize % 8;
         if (remainder > 0) {
             marshalSize = marshalSize + calculatePaddingByteNr(remainder);
         }
@@ -112,7 +115,7 @@ public class VariableTransmitterParameters extends Object implements Serializabl
                 byte nextByte = iter.next();
                 dos.writeByte(nextByte);
             }
-            final int remainder = recordSpecificFieldsList.size() % 8;
+            final int remainder = (recordSpecificFieldsList.size() + RECORD_TYPE_FIELD_SIZE + RECORD_LENGTH_FIELD_SIZE) % 8;
             if (remainder > 0) {
                 int paddingByteNr = 0;
                 paddingByteNr = calculatePaddingByteNr(remainder);
@@ -129,8 +132,9 @@ public class VariableTransmitterParameters extends Object implements Serializabl
     public void unmarshal(DataInputStream dis) {
         try {
             recordType = dis.readInt();
-            recordLength = dis.readInt();
-            for (int i = 0; i < recordLength; i++) {
+            recordLength = dis.readShort();
+            final long dataLength = recordLength - RECORD_TYPE_FIELD_SIZE - RECORD_LENGTH_FIELD_SIZE;
+            for (int i = 0; i < (dataLength); i++) {
                 byte nextByte = dis.readByte();
                 recordSpecificFieldsList.add(nextByte);
             }
@@ -177,8 +181,9 @@ public class VariableTransmitterParameters extends Object implements Serializabl
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
         recordType = buff.getInt();
-        recordLength = buff.getInt();
-        for (int i = 0; i < recordLength; i++) {
+        recordLength = buff.getShort();
+        final long dataLength = recordLength - RECORD_TYPE_FIELD_SIZE - RECORD_LENGTH_FIELD_SIZE;
+        for (int i = 0; i < dataLength; i++) {
             byte nextByte = buff.get();
             recordSpecificFieldsList.add(nextByte);
         }
