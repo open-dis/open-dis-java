@@ -501,7 +501,7 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
      *
      * @param pAntennaPatternList
      */
-    public void setAntennaPattern(BeamAntennaPattern pAntennaPatternList) {
+    public void setAntennaPattern(AntennaPattern pAntennaPatternList) {
         antennaPattern = pAntennaPatternList;
     }
 
