@@ -29,10 +29,6 @@ public class RadioIdentifier extends Object implements Serializable {
      */
     protected int referenceNumber;
 
-    /**
-     * Radio number
-     */
-    protected int radioNumber;
 
     /**
      * Constructor
@@ -46,7 +42,6 @@ public class RadioIdentifier extends Object implements Serializable {
         marshalSize = marshalSize + 2;  // siteNumber
         marshalSize = marshalSize + 2;  // applicationNumber
         marshalSize = marshalSize + 2;  // referenceNumber
-        marshalSize = marshalSize + 2;  // radioNumber
 
         return marshalSize;
     }
@@ -75,20 +70,13 @@ public class RadioIdentifier extends Object implements Serializable {
         return referenceNumber;
     }
 
-    public void setRadioNumber(int pRadioNumber) {
-        radioNumber = pRadioNumber;
-    }
 
-    public int getRadioNumber() {
-        return radioNumber;
-    }
 
     public void marshal(DataOutputStream dos) {
         try {
             dos.writeShort((short) siteNumber);
             dos.writeShort((short) applicationNumber);
             dos.writeShort((short) referenceNumber);
-            dos.writeShort((short) radioNumber);
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -100,7 +88,6 @@ public class RadioIdentifier extends Object implements Serializable {
             siteNumber = (int) dis.readUnsignedShort();
             applicationNumber = (int) dis.readUnsignedShort();
             referenceNumber = (int) dis.readUnsignedShort();
-            radioNumber = (int) dis.readUnsignedShort();
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -120,7 +107,6 @@ public class RadioIdentifier extends Object implements Serializable {
         buff.putShort((short) siteNumber);
         buff.putShort((short) applicationNumber);
         buff.putShort((short) referenceNumber);
-        buff.putShort((short) radioNumber);
     } // end of marshal method
 
     /**
@@ -135,7 +121,6 @@ public class RadioIdentifier extends Object implements Serializable {
         siteNumber = (int) (buff.getShort() & 0xFFFF);
         applicationNumber = (int) (buff.getShort() & 0xFFFF);
         referenceNumber = (int) (buff.getShort() & 0xFFFF);
-        radioNumber = (int) (buff.getShort() & 0xFFFF);
     } // end of unmarshal method 
 
 
@@ -183,9 +168,6 @@ public class RadioIdentifier extends Object implements Serializable {
             ivarsEqual = false;
         }
         if (!(referenceNumber == rhs.referenceNumber)) {
-            ivarsEqual = false;
-        }
-        if (!(radioNumber == rhs.radioNumber)) {
             ivarsEqual = false;
         }
 
