@@ -22,6 +22,11 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     protected RadioIdentifier radioIdentifier = new RadioIdentifier();
 
     /**
+     * Radio number
+     */
+    protected int radioNumber;
+    
+    /**
      * encoding scheme used, and enumeration
      */
     protected int encodingScheme;
@@ -63,6 +68,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
 
         marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + radioIdentifier.getMarshalledSize();
+        marshalSize = marshalSize + 2;  // radioNumber        
         marshalSize = marshalSize + 2; // encodingScheme
         marshalSize = marshalSize + 2; // tdlType
         marshalSize = marshalSize + 4; // sampleRate
@@ -94,6 +100,14 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         return radioIdentifier;
     }
 
+    public void setRadioNumber(int pRadioNumber) {
+        radioNumber = pRadioNumber;
+    }
+
+    public int getRadioNumber() {
+        return radioNumber;
+    }
+    
     public void setEncodingScheme(int pEncodingScheme) {
         encodingScheme = pEncodingScheme;
     }
@@ -101,7 +115,53 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     public int getEncodingScheme() {
         return encodingScheme;
     }
+    
+    public void setEncodingClass(int pEncodingClass) {
+        int newEncodingClass = 0;
+        int newEncodingScheme = 0;
+        // Save encoding class and create the encoding scheme
+        newEncodingClass = pEncodingClass << 14;                 // Move bits 0 - 1 to bit position 14 - 15
+        newEncodingScheme = newEncodingClass | this.getEncodingType();
+        this.setEncodingScheme(newEncodingScheme);
+    }
 
+    public int getEncodingClass() {
+        int extractEncodingClass = 0;
+        extractEncodingClass = this.getEncodingScheme() & 0xC000;  // Lose bits 0 - 13
+        extractEncodingClass = extractEncodingClass >>> 14;                // Move bits 14 - 15 to bit position 0 - 1
+        return extractEncodingClass;
+    }
+
+    public void setEncodingType(int pEncodingType) {
+        int newEncodingScheme = 0;
+        // Save encoding type and create the encoding scheme
+        newEncodingScheme = this.getEncodingScheme() & 0xC000;
+        newEncodingScheme = newEncodingScheme | pEncodingType;
+        this.setEncodingScheme(newEncodingScheme);  //
+    }
+
+    public int getEncodingType() {
+        int extractEncodingType = 0;
+        extractEncodingType = this.getEncodingScheme() & 0x3FFF; // Lose bits 14 - 15
+        return extractEncodingType;
+    }
+
+    public void setNumberofTDLMessages(int pEncodingType) {
+        int newEncodingScheme = 0;
+        // Save number of TDLs and create the encoding scheme
+        newEncodingScheme = this.getEncodingScheme() & 0xC000; // Lose bits 0 - 13
+        newEncodingScheme = newEncodingScheme | pEncodingType;
+        this.setEncodingScheme(newEncodingScheme); //
+
+    }
+
+    public int getNumberofTDLMessages() {
+        int extractEncodingType = 0;
+        extractEncodingType = this.getEncodingScheme() & 0x3FFF; // Lose bits 14 - 15
+        return extractEncodingType;
+
+    }
+    
     public void setTdlType(int pTdlType) {
         tdlType = pTdlType;
     }
@@ -150,6 +210,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         super.marshal(dos);
         try {
             radioIdentifier.marshal(dos);
+            dos.writeShort((short) radioNumber);
             dos.writeShort((short) encodingScheme);
             dos.writeShort((short) tdlType);
             dos.writeInt((int) sampleRate);
@@ -184,6 +245,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
 
         try {
             radioIdentifier.unmarshal(dis);
+            radioNumber = (int) dis.readUnsignedShort();            
             encodingScheme = (int) dis.readUnsignedShort();
             tdlType = (int) dis.readUnsignedShort();
             sampleRate = dis.readInt();
@@ -209,6 +271,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     public void marshal(java.nio.ByteBuffer buff) {
         super.marshal(buff);
         radioIdentifier.marshal(buff);
+        buff.putShort((short) radioNumber);        
         buff.putShort((short) encodingScheme);
         buff.putShort((short) tdlType);
         buff.putInt((int) sampleRate);
@@ -245,6 +308,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
     public void unmarshal(java.nio.ByteBuffer buff) {
         super.unmarshal(buff);
         radioIdentifier.unmarshal(buff);
+        radioNumber = (int) (buff.getShort() & 0xFFFF);        
         encodingScheme = (int) (buff.getShort() & 0xFFFF);
         tdlType = (int) (buff.getShort() & 0xFFFF);
         sampleRate = buff.getInt();
@@ -287,6 +351,9 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         final SignalPdu rhs = (SignalPdu) obj;
 
         if (!(radioIdentifier.equals(rhs.radioIdentifier))) {
+            ivarsEqual = false;
+        }
+        if (!(radioNumber == rhs.radioNumber)) {
             ivarsEqual = false;
         }
         if (!(encodingScheme == rhs.encodingScheme)) {
