@@ -112,13 +112,18 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
     protected short padding3 = (short) 0;
 
     /**
-     * variable length list of modulation parameters
+     * modulation parameters
      */
-    protected List< Vector3Float> modulationParametersList = new ArrayList< Vector3Float>();
+    protected ModulationParameters modulationParameters = new ModulationParameters();
     /**
-     * variable length list of antenna pattern records
+     * antenna pattern records
      */
-    protected List< Vector3Float> antennaPatternList = new ArrayList< Vector3Float>();
+    protected AntennaPattern antennaPattern = new AntennaPattern();
+
+    /**
+     * optional Variable Transmitter Parameters records
+     */
+    protected List<VariableTransmitterParameters> variableTransmitterParametersList = new ArrayList<>();
 
     /**
      * Constructor
@@ -150,15 +155,83 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         marshalSize = marshalSize + 1;  // modulationParameterCount
         marshalSize = marshalSize + 2;  // padding2
         marshalSize = marshalSize + 1;  // padding3
-        for (int idx = 0; idx < modulationParametersList.size(); idx++) {
-            Vector3Float listElement = modulationParametersList.get(idx);
-            marshalSize = marshalSize + listElement.getMarshalledSize();
-        }
-        for (int idx = 0; idx < antennaPatternList.size(); idx++) {
-            Vector3Float listElement = antennaPatternList.get(idx);
-            marshalSize = marshalSize + listElement.getMarshalledSize();
+
+        int nrOfModulationBytes = 0;
+        switch (getModulationType().getRadioSystem()) {
+            case 6:// CCTT SINCGARS
+                if (modulationParameters instanceof CcttSincgarsModulationParameters) {
+                    CcttSincgarsModulationParameters ccttSincgarsModulationParameters = (CcttSincgarsModulationParameters) modulationParameters;
+                    marshalSize = marshalSize + ccttSincgarsModulationParameters.getMarshalledSize();
+                    nrOfModulationBytes = nrOfModulationBytes + ccttSincgarsModulationParameters.getMarshalledSize();
+                }
+                break;
+            case 8:// JTIDS/MIDS
+                if (modulationParameters instanceof JtidsMidsModulationParameters) {
+                    JtidsMidsModulationParameters jtidsMidsModulationParameters = (JtidsMidsModulationParameters) modulationParameters;
+                    marshalSize = marshalSize + jtidsMidsModulationParameters.getMarshalledSize();
+                    nrOfModulationBytes = nrOfModulationBytes + jtidsMidsModulationParameters.getMarshalledSize();
+                }
+                break;
+            case 0:                                  // Other
+            case 1:                                  // Generic
+            case 2:                                  // HQ
+            case 3:                                  // HQII
+            case 4:                                  // HQIIA
+            case 5:                                  // SINCGARS
+            case 7:                                  // EPLRS                
+            default:
+                if (modulationParameters instanceof ModulationParametersGeneric) {
+                    ModulationParametersGeneric modPar = (ModulationParametersGeneric) modulationParameters;
+                    marshalSize = marshalSize + modPar.getMarshalledSize();
+                    nrOfModulationBytes = nrOfModulationBytes + modPar.getMarshalledSize();
+                }
+                break;
         }
 
+        if (nrOfModulationBytes % 8 > 0) {
+            int remainder = nrOfModulationBytes % 8;
+            switch (remainder) {
+                case 1:
+                    marshalSize = marshalSize + 7;
+                    break;
+                case 2:
+                    marshalSize = marshalSize + 6;
+                    break;
+                case 3:
+                    marshalSize = marshalSize + 5;
+                    break;
+                case 4:
+                    marshalSize = marshalSize + 4;
+                    break;
+                case 5:
+                    marshalSize = marshalSize + 3;
+                    break;
+                case 6:
+                    marshalSize = marshalSize + 2;
+                    break;
+                case 7:
+                    marshalSize = marshalSize + 1;
+                    break;
+            }
+        }
+        switch (antennaPatternType) {
+            case 1:
+                if (antennaPattern instanceof BeamAntennaPattern) {
+                    marshalSize = marshalSize + ((BeamAntennaPattern) antennaPattern).getMarshalledSize();
+                }
+                break;
+            case 6:
+                break;
+            default:
+                if (antennaPattern instanceof AntennaPatternGeneric) {
+                    marshalSize = marshalSize + ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
+                }
+                break;
+        }
+        Iterator<VariableTransmitterParameters> iter = variableTransmitterParametersList.iterator();
+        while (iter.hasNext()) {
+            marshalSize = marshalSize + iter.next().getMarshalledSize();
+        }
         return marshalSize;
     }
 
@@ -235,7 +308,22 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
     }
 
     public int getAntennaPatternCount() {
-        return (int) antennaPatternList.size();
+        int antennaPatternCount = 0;
+        switch (antennaPatternType) {
+            case 1:
+                if (antennaPattern instanceof BeamAntennaPattern) {
+                    antennaPatternCount = ((BeamAntennaPattern) antennaPattern).getMarshalledSize();
+                }
+                break;
+            case 6:
+                break;
+            default:
+                if (antennaPattern instanceof AntennaPatternGeneric) {
+                    antennaPatternCount = ((AntennaPatternGeneric) antennaPattern).getMarshalledSize();
+                }
+                break;
+        }
+        return antennaPatternCount;
     }
 
     /**
@@ -298,7 +386,34 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
     }
 
     public short getModulationParameterCount() {
-        return (short) modulationParametersList.size();
+        int modulationParameterOctets = 0;
+        switch (getModulationType().getRadioSystem()) {
+            case 6:// CCTT SINCGARS
+                if (modulationParameters instanceof CcttSincgarsModulationParameters) {
+                    CcttSincgarsModulationParameters ccttSincgarsModulationParameters = (CcttSincgarsModulationParameters) modulationParameters;
+                    modulationParameterOctets = ccttSincgarsModulationParameters.getMarshalledSize();
+                }
+                break;
+            case 8:// JTIDS/MIDS
+                if (modulationParameters instanceof JtidsMidsModulationParameters) {
+                    JtidsMidsModulationParameters jtidsMidsModulationParameters = (JtidsMidsModulationParameters) modulationParameters;
+                    modulationParameterOctets = jtidsMidsModulationParameters.getMarshalledSize();
+                }
+                break;
+            case 0:                                  // Other
+            case 1:                                  // Generic
+            case 2:                                  // HQ
+            case 3:                                  // HQII
+            case 4:                                  // HQIIA
+            case 5:                                  // SINCGARS
+            case 7:                                  // EPLRS                
+            default:
+                if (modulationParameters instanceof ModulationParametersGeneric) {
+                    modulationParameterOctets = ((ModulationParametersGeneric) modulationParameters).getMarshalledSize();
+                }
+                break;
+        }
+        return (short) modulationParameterOctets;
     }
 
     /**
@@ -328,20 +443,96 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         return padding3;
     }
 
-    public void setModulationParametersList(List<Vector3Float> pModulationParametersList) {
-        modulationParametersList = pModulationParametersList;
+    /**
+     * This method sets the modulation parameters associated with the radio
+     * system type. Modulation parameters can be one of the following records:
+     * <ul>
+     * <li>{@link edu.nps.moves.dis7.CcttSincgarsModulationParameters}: radio
+     * system = 6</li>
+     * <li>{@link edu.nps.moves.dis7.JtidsMidsModulationParameters}: radio
+     * system = 8</li>
+     * <li>{@link edu.nps.moves.dis7.ModulationParametersGeneric}: others</li>
+     * </ul>
+     * The modulation parameters records above can be set as modulation
+     * parameters and the
+     * {@link edu.nps.moves.dis7.ModulationType#setRadioSystem(int)} should be
+     * set accordingly
+     *
+     *
+     * @param pModulationParameters the modulation parameters to set from the
+     * list above
+     */
+    public void setModulationParameters(ModulationParameters pModulationParameters) {
+        modulationParameters = pModulationParameters;
     }
 
-    public List<Vector3Float> getModulationParametersList() {
-        return modulationParametersList;
+    /**
+     * This method returns the modulation parameters associated with the radio
+     * system type: {@link edu.nps.moves.dis7.ModulationType#getRadioSystem()}
+     * and according to this the Modulation parameters can be one of the
+     * following records:
+     * <ul>
+     * <li>6: {@link edu.nps.moves.dis7.CcttSincgarsModulationParameters}</li>
+     * <li>8: {@link edu.nps.moves.dis7.JtidsMidsModulationParameters}</li>
+     * <li>other: {@link edu.nps.moves.dis7.ModulationParametersGeneric}</li>
+     * </ul>
+     * The modulation parameters can then be cast as the above records and the
+     * parameters can then be accessed from that record e.g.
+     * <p>
+     * <i>((edu.nps.moves.dis7.CcttSincgarsModulationParameters)
+     * getModulationParameters()).getStartOfMessage()</i></p>
+     *
+     * @return Modulation parameters record from list above
+     */
+    public ModulationParameters getModulationParameters() {
+        return modulationParameters;
     }
 
-    public void setAntennaPatternList(List<Vector3Float> pAntennaPatternList) {
-        antennaPatternList = pAntennaPatternList;
+    /**
+     * This method sets the antenna patterns associated with the radio antenna
+     * pattern type. Antenna patterns can be one of the following records:
+     * <ul>
+     * <li>{@link edu.nps.moves.dis7.BeamAntennaPattern}</li>
+     * <li>{@link edu.nps.moves.dis7.AntennaPatternGeneric}</li>
+     * </ul>
+     * The antenna patterns above can be set as antenna pattern and the
+     * {@link edu.nps.moves.dis7.TransmitterPdu#setAntennaPatternType(int)}
+     * should be set accordingly
+     *
+     * @param pAntennaPatternList
+     */
+    public void setAntennaPattern(AntennaPattern pAntennaPatternList) {
+        antennaPattern = pAntennaPatternList;
     }
 
-    public List<Vector3Float> getAntennaPatternList() {
-        return antennaPatternList;
+    /**
+     * This method returns the antenna pattern associated with the radio antenna
+     * pattern type:
+     * {@link edu.nps.moves.dis7.TransmitterPdu#getAntennaPatternType()} and
+     * according to this the antenna pattern can be one of the following
+     * records:
+     * <ul>
+     * <li>1: {@link edu.nps.moves.dis7.BeamAntennaPattern}</li>
+     * <li>other: {@link edu.nps.moves.dis7.AntennaPatternGeneric}</li>
+     * </ul>
+     * The antenna pattern can then be cast as the above records and the
+     * parameters can then be accessed from that record e.g.
+     * <p>
+     * <i>((edu.nps.moves.dis7.BeamAntennaPattern)
+     * pdu.getAntennaPattern()).getAzimuthBeamwidth()</i></p>
+     *
+     * @return antenna pattern from the list above
+     */
+    public AntennaPattern getAntennaPattern() {
+        return antennaPattern;
+    }
+
+    public List<VariableTransmitterParameters> getVariableTransmitterParametersList() {
+        return variableTransmitterParametersList;
+    }
+
+    public void setVariableTransmitterParametersList(List<VariableTransmitterParameters> variableTransmitterParametersList) {
+        this.variableTransmitterParametersList = variableTransmitterParametersList;
     }
 
     public void marshal(DataOutputStream dos) {
@@ -352,32 +543,101 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             radioEntityType.marshal(dos);
             dos.writeByte((byte) transmitState);
             dos.writeByte((byte) inputSource);
-            dos.writeShort((short) variableTransmitterParameterCount);
+            dos.writeShort((short) variableTransmitterParametersList.size());
             antennaLocation.marshal(dos);
             relativeAntennaLocation.marshal(dos);
             dos.writeShort((short) antennaPatternType);
-            dos.writeShort((short) antennaPatternList.size());
+            dos.writeShort((short) getAntennaPatternCount());
             dos.writeLong((long) frequency);
             dos.writeFloat((float) transmitFrequencyBandwidth);
             dos.writeFloat((float) power);
             modulationType.marshal(dos);
             dos.writeShort((short) cryptoSystem);
             dos.writeShort((short) cryptoKeyId);
-            dos.writeByte((byte) modulationParametersList.size());
+            dos.writeByte((byte) getModulationParameterCount());
             dos.writeShort((short) padding2);
             dos.writeByte((byte) padding3);
 
-            for (int idx = 0; idx < modulationParametersList.size(); idx++) {
-                Vector3Float aVector3Float = modulationParametersList.get(idx);
-                aVector3Float.marshal(dos);
-            } // end of list marshalling
+            int nrOfModulationBytes = 0;
+            switch (getModulationType().getRadioSystem()) {
+                case 6:                                  // CCTT SINCGARS
+                    if (modulationParameters instanceof CcttSincgarsModulationParameters) {
+                        CcttSincgarsModulationParameters ccttSincgarsModulationParameters = (CcttSincgarsModulationParameters) modulationParameters;
+                        ccttSincgarsModulationParameters.marshal(dos);
+                        nrOfModulationBytes = nrOfModulationBytes + ccttSincgarsModulationParameters.getMarshalledSize();
+                    }
+                    break;
+                case 8:                                  // JTIDS/MIDS
+                    if (modulationParameters instanceof JtidsMidsModulationParameters) {
+                        JtidsMidsModulationParameters parameterRecord = (JtidsMidsModulationParameters) modulationParameters;
+                        parameterRecord.marshal(dos);
+                        nrOfModulationBytes = nrOfModulationBytes + parameterRecord.getMarshalledSize();
+                    }
+                    break;
+                case 0:                                  // Other
+                case 1:                                  // Generic
+                case 2:                                  // HQ
+                case 3:                                  // HQII
+                case 4:                                  // HQIIA
+                case 5:                                  // SINCGARS
+                case 7:                                  // EPLRS
+                default:
+                    if (modulationParameters instanceof ModulationParametersGeneric) {
+                        ModulationParametersGeneric modulationParameter = (ModulationParametersGeneric) modulationParameters;
+                        modulationParameter.marshal(dos);
+                        nrOfModulationBytes += nrOfModulationBytes + modulationParameter.getMarshalledSize();
+                        break;
+                    }
+            }
+            //Add padding up to 64 bit border
+            if (nrOfModulationBytes % 8 > 0) {
+                int remainder = 0;
+                switch (nrOfModulationBytes % 8) {
+                    case 1:
+                        remainder = 7;
+                        break;
+                    case 2:
+                        remainder = 6;
+                        break;
+                    case 3:
+                        remainder = 5;
+                        break;
+                    case 4:
+                        remainder = 4;
+                        break;
+                    case 5:
+                        remainder = 3;
+                        break;
+                    case 6:
+                        remainder = 2;
+                        break;
+                    case 7:
+                        remainder = 1;
+                        break;
+                }
+                for (int i = 1; i <= remainder; i++) {
+                    dos.writeByte(0);
+                }
+            }
+            switch (antennaPatternType) {
+                case 1://Beam
+                    if (antennaPattern instanceof BeamAntennaPattern) {
+                        ((BeamAntennaPattern) antennaPattern).marshal(dos);
+                    }
+                    break;
+                case 6://Omnidirectional (Toroidal Radiation Pattern)
+                    break;
+                default://Generic record
+                    if (antennaPattern instanceof AntennaPatternGeneric) {
+                        ((AntennaPatternGeneric) antennaPattern).marshal(dos);
+                    }
+                    break;
+            }
 
-            for (int idx = 0; idx < antennaPatternList.size(); idx++) {
-                Vector3Float aVector3Float = antennaPatternList.get(idx);
-                aVector3Float.marshal(dos);
-            } // end of list marshalling
-
-        } // end try 
+            for (int idx = 0; idx < variableTransmitterParametersList.size(); idx++) {
+                variableTransmitterParametersList.get(idx).marshal(dos);
+            }
+        } // end try  // end try  // end try  // end try 
         catch (Exception e) {
             System.out.println(e);
         }
@@ -406,19 +666,64 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             modulationParameterCount = (short) dis.readUnsignedByte();
             padding2 = (int) dis.readUnsignedShort();
             padding3 = (short) dis.readUnsignedByte();
-            for (int idx = 0; idx < modulationParameterCount; idx++) {
-                Vector3Float anX = new Vector3Float();
-                anX.unmarshal(dis);
-                modulationParametersList.add(anX);
+            int remainder = 0;
+            int modRecordSize = 0;
+            switch (getModulationType().getRadioSystem()) {
+                case 6:                                  // CCTT SINCGARS
+                    CcttSincgarsModulationParameters ccttSincgarsModulationParameters = new CcttSincgarsModulationParameters();
+                    ccttSincgarsModulationParameters.unmarshal(dis);
+                    modulationParameters = ccttSincgarsModulationParameters;
+                    modRecordSize = 15;
+                    break;
+                case 8:                                  // JTIDS/MIDS
+                    JtidsMidsModulationParameters jtidsMidsModulationParameters = new JtidsMidsModulationParameters();
+                    jtidsMidsModulationParameters.unmarshal(dis);
+                    modulationParameters = jtidsMidsModulationParameters;
+                    modRecordSize = 8;
+                    break;
+                case 0:                                  // Other
+                case 1:                                  // Generic
+                case 2:                                  // HQ
+                case 3:                                  // HQII
+                case 4:                                  // HQIIA
+                case 5:                                  // SINCGARS
+                case 7:                                  // EPLRS
+                default:
+                    ModulationParametersGeneric modPar = new ModulationParametersGeneric();
+                    modPar.unmarshal(dis, modulationParameterCount);
+                    modulationParameters = modPar;
+                    modRecordSize = modPar.getMarshalledSize();
+                    break;
             }
-
-            for (int idx = 0; idx < antennaPatternCount; idx++) {
-                Vector3Float anX = new Vector3Float();
-                anX.unmarshal(dis);
-                antennaPatternList.add(anX);
+            //Calculate how many bytes need to be read to end on a 64 bit border
+            if (modRecordSize % 8 != 0) {
+                remainder = 8 - (modRecordSize % 8);
+                for (int i = 1; i <= remainder; i++) {
+                    dis.readByte();
+                }
             }
-
-        } // end try 
+            switch (antennaPatternType) {
+                case 1://Beam
+                    BeamAntennaPattern beamAntennaPattern = new BeamAntennaPattern();
+                    beamAntennaPattern.unmarshal(dis);
+                    antennaPattern = beamAntennaPattern;
+                    break;
+                case 6://Omnidirectional (Toroidal Radiation Pattern)
+                    break;
+                default://Generic record
+                    AntennaPatternGeneric antennaPatternGeneric = new AntennaPatternGeneric();
+                    for (int i = 0; i < antennaPatternCount; i++) {
+                        antennaPatternGeneric.unmarshal(dis, antennaPatternCount);
+                    }
+                    antennaPattern = antennaPatternGeneric;
+                    break;
+            }
+            for (int idx = 0; idx < variableTransmitterParameterCount; idx++) {
+                VariableTransmitterParameters varTransPar = new VariableTransmitterParameters();
+                varTransPar.unmarshal(dis);
+                variableTransmitterParametersList.add(varTransPar);
+            }
+        } // end try  // end try  // end try  // end try 
         catch (Exception e) {
             System.out.println(e);
         }
@@ -440,30 +745,90 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         radioEntityType.marshal(buff);
         buff.put((byte) transmitState);
         buff.put((byte) inputSource);
-        buff.putShort((short) variableTransmitterParameterCount);
+        buff.putShort((short) variableTransmitterParametersList.size());
         antennaLocation.marshal(buff);
         relativeAntennaLocation.marshal(buff);
         buff.putShort((short) antennaPatternType);
-        buff.putShort((short) antennaPatternList.size());
+        buff.putShort((short) getAntennaPatternCount());
         buff.putLong((long) frequency);
         buff.putFloat((float) transmitFrequencyBandwidth);
         buff.putFloat((float) power);
         modulationType.marshal(buff);
         buff.putShort((short) cryptoSystem);
         buff.putShort((short) cryptoKeyId);
-        buff.put((byte) modulationParametersList.size());
+        buff.put((byte) getModulationParameterCount());
         buff.putShort((short) padding2);
         buff.put((byte) padding3);
 
-        for (int idx = 0; idx < modulationParametersList.size(); idx++) {
-            Vector3Float aVector3Float = (Vector3Float) modulationParametersList.get(idx);
-            aVector3Float.marshal(buff);
-        } // end of list marshalling
+        int nrOfModulationBytes = 0;
+        switch (getModulationType().getRadioSystem()) {
+            case 6:                                  // CCTT SINCGARS
+                CcttSincgarsModulationParameters ccttSincgarsModulationParameters = (CcttSincgarsModulationParameters) modulationParameters;
+                ccttSincgarsModulationParameters.marshal(buff);
+                nrOfModulationBytes = nrOfModulationBytes + ccttSincgarsModulationParameters.getMarshalledSize();
+                break;
+            case 8:                                  // JTIDS/MIDS
+                JtidsMidsModulationParameters parameterRecord = (JtidsMidsModulationParameters) modulationParameters;
+                parameterRecord.marshal(buff);
+                nrOfModulationBytes = nrOfModulationBytes + parameterRecord.getMarshalledSize();
+                break;
+            case 0:                                  // Other
+            case 1:                                  // Generic
+            case 2:                                  // HQ
+            case 3:                                  // HQII
+            case 4:                                  // HQIIA
+            case 5:                                  // SINCGARS
+            case 7:                                  // EPLRS
+            default:
+                ModulationParametersGeneric modulationParameter = (ModulationParametersGeneric) modulationParameters;
+                modulationParameter.marshal(buff);
+                nrOfModulationBytes += nrOfModulationBytes + modulationParameter.getMarshalledSize();
+                break;
+        }
+        //Add padding up to 64 bit border
+        if (nrOfModulationBytes % 8 > 0) {
+            int remainder = 0;
+            switch (nrOfModulationBytes % 8) {
+                case 1:
+                    remainder = 7;
+                    break;
+                case 2:
+                    remainder = 6;
+                    break;
+                case 3:
+                    remainder = 5;
+                    break;
+                case 4:
+                    remainder = 4;
+                    break;
+                case 5:
+                    remainder = 3;
+                    break;
+                case 6:
+                    remainder = 2;
+                    break;
+                case 7:
+                    remainder = 1;
+                    break;
+            }
+            for (int i = 1; i <= remainder; i++) {
+                buff.put((byte) 0);
+            }
+        }
+        switch (antennaPatternType) {
+            case 1://Beam
+                ((BeamAntennaPattern) antennaPattern).marshal(buff);
+                break;
+            case 6://Omnidirectional (Toroidal Radiation Pattern)
+                break;
+            default://generic record
+                ((AntennaPatternGeneric) antennaPattern).marshal(buff);
+                break;
+        }
 
-        for (int idx = 0; idx < antennaPatternList.size(); idx++) {
-            Vector3Float aVector3Float = (Vector3Float) antennaPatternList.get(idx);
-            aVector3Float.marshal(buff);
-        } // end of list marshalling
+        for (int idx = 0; idx < variableTransmitterParametersList.size(); idx++) {
+            variableTransmitterParametersList.get(idx).marshal(buff);
+        }
 
     } // end of marshal method
 
@@ -497,16 +862,65 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
         modulationParameterCount = (short) (buff.get() & 0xFF);
         padding2 = (int) (buff.getShort() & 0xFFFF);
         padding3 = (short) (buff.get() & 0xFF);
-        for (int idx = 0; idx < modulationParameterCount; idx++) {
-            Vector3Float anX = new Vector3Float();
-            anX.unmarshal(buff);
-            modulationParametersList.add(anX);
+        int remainder = 0;
+        int modRecordSize = 0;
+        switch (getModulationType().getRadioSystem()) {
+            case 6:                                  // CCTT SINCGARS
+                CcttSincgarsModulationParameters ccttSincgarsModulationParameters = new CcttSincgarsModulationParameters();
+                ccttSincgarsModulationParameters.unmarshal(buff);
+                modulationParameters = ccttSincgarsModulationParameters;
+                modRecordSize = 15;
+                break;
+            case 8:                                  // JTIDS/MIDS
+                JtidsMidsModulationParameters jtidsMidsModulationParameters = new JtidsMidsModulationParameters();
+                jtidsMidsModulationParameters.unmarshal(buff);
+                modulationParameters = jtidsMidsModulationParameters;
+                modRecordSize = 8;
+                break;
+            case 0:                                  // Other
+            case 1:                                  // Generic
+            case 2:                                  // HQ
+            case 3:                                  // HQII
+            case 4:                                  // HQIIA
+            case 5:                                  // SINCGARS
+            case 7:                                  // EPLRS
+            default:
+                ModulationParametersGeneric modPar = new ModulationParametersGeneric();
+                modPar.unmarshal(buff, modulationParameterCount);
+                modulationParameters = modPar;
+                modRecordSize = modPar.getMarshalledSize();
+                break;
+        }
+        //Calculate how many bytes need to be read to end on a 64 bit border
+        if (modRecordSize % 8 != 0) {
+            remainder = 8 - (modRecordSize % 8);
+            for (int i = 1; i <= remainder; i++) {
+                buff.get();
+            }
         }
 
-        for (int idx = 0; idx < antennaPatternCount; idx++) {
-            Vector3Float anX = new Vector3Float();
-            anX.unmarshal(buff);
-            antennaPatternList.add(anX);
+        switch (antennaPatternType) {
+            case 1://Beam
+                BeamAntennaPattern beamAntennaPattern = new BeamAntennaPattern();
+                beamAntennaPattern.unmarshal(buff);
+                antennaPattern = beamAntennaPattern;
+                break;
+
+            case 6://Omnidirectional (Toroidal Radiation Pattern)
+                break;
+            default://generic record
+                AntennaPatternGeneric antennaPatternGeneric = new AntennaPatternGeneric();
+                for (int i = 0; i < antennaPatternCount; i++) {
+                    antennaPatternGeneric.unmarshal(buff, antennaPatternCount);
+                }
+                antennaPattern = antennaPatternGeneric;
+                break;
+        }
+
+        for (int idx = 0; idx < variableTransmitterParameterCount; idx++) {
+            VariableTransmitterParameters varTransPar = new VariableTransmitterParameters();
+            varTransPar.unmarshal(buff);
+            variableTransmitterParametersList.add(varTransPar);
         }
 
     } // end of unmarshal method 
@@ -601,18 +1015,50 @@ public class TransmitterPdu extends RadioCommunicationsFamilyPdu implements Seri
             ivarsEqual = false;
         }
 
-        for (int idx = 0; idx < modulationParametersList.size(); idx++) {
-            if (!(modulationParametersList.get(idx).equals(rhs.modulationParametersList.get(idx)))) {
+        switch (getModulationType().getRadioSystem()) {
+            case 6:                                  // CCTT SINCGARS
+                if (!(((CcttSincgarsModulationParameters) modulationParameters).equals(((CcttSincgarsModulationParameters) rhs.modulationParameters)))) {
+                    ivarsEqual = false;
+                }
+                break;
+            case 8:                                  // JTIDS/MIDS
+                if (!(((JtidsMidsModulationParameters) modulationParameters).equals(((JtidsMidsModulationParameters) rhs.modulationParameters)))) {
+                    ivarsEqual = false;
+                }
+                break;
+            case 0:                                  // Other
+            case 1:                                  // Generic
+            case 2:                                  // HQ
+            case 3:                                  // HQII
+            case 4:                                  // HQIIA
+            case 5:                                  // SINCGARS
+            case 7:                                  // EPLRS
+            default:
+                if (!((ModulationParametersGeneric) modulationParameters).equals(((ModulationParametersGeneric) rhs.modulationParameters))) {
+                    ivarsEqual = false;
+                }
+                break;
+        }
+        switch (antennaPatternType) {
+            case 1:
+                if (!(((BeamAntennaPattern) antennaPattern).equals(((BeamAntennaPattern) rhs.antennaPattern)))) {
+                    ivarsEqual = false;
+                }
+                break;
+            case 6:
+                break;
+            default:
+                if (!(antennaPattern.equals(rhs.antennaPattern))) {
+                    ivarsEqual = false;
+                }
+                break;
+        }
+
+        for (int idx = 0; idx < variableTransmitterParametersList.size(); idx++) {
+            if (!(variableTransmitterParametersList.get(idx).equals(rhs.variableTransmitterParametersList.get(idx)))) {
                 ivarsEqual = false;
             }
         }
-
-        for (int idx = 0; idx < antennaPatternList.size(); idx++) {
-            if (!(antennaPatternList.get(idx).equals(rhs.antennaPatternList.get(idx)))) {
-                ivarsEqual = false;
-            }
-        }
-
         return ivarsEqual && super.equalsImpl(rhs);
     }
 } // end of class
