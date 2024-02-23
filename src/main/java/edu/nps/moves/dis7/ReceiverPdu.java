@@ -13,6 +13,16 @@ import java.io.*;
  */
 public class ReceiverPdu extends RadioCommunicationsFamilyPdu implements Serializable {
 
+        /**
+     * ID of the entitythat is the source of the communication
+     */
+    protected EntityID radioReferenceID = new EntityID();
+
+    /**
+     * particular radio within an entity
+     */
+    protected int radioNumber;
+    
     /**
      * encoding scheme used, and enumeration
      */
@@ -26,7 +36,7 @@ public class ReceiverPdu extends RadioCommunicationsFamilyPdu implements Seriali
     /**
      * received power
      */
-    protected float receivedPoser;
+    protected float receivedPower;
 
     /**
      * ID of transmitter
@@ -49,6 +59,8 @@ public class ReceiverPdu extends RadioCommunicationsFamilyPdu implements Seriali
         int marshalSize = 0;
 
         marshalSize = super.getMarshalledSize();
+        marshalSize = marshalSize + radioReferenceID.getMarshalledSize();  // radioReferenceID
+        marshalSize = marshalSize + 2;  // radioNumber        
         marshalSize = marshalSize + 2;  // receiverState
         marshalSize = marshalSize + 2;  // padding1
         marshalSize = marshalSize + 4;  // receivedPoser
@@ -58,6 +70,22 @@ public class ReceiverPdu extends RadioCommunicationsFamilyPdu implements Seriali
         return marshalSize;
     }
 
+    public void setRadioReferenceID(EntityID pRadioReferenceID) {
+        radioReferenceID = pRadioReferenceID;
+    }
+
+    public EntityID getRadioReferenceID() {
+        return radioReferenceID;
+    }
+
+    public void setRadioNumber(int pRadioNumber) {
+        radioNumber = pRadioNumber;
+    }
+
+    public int getRadioNumber() {
+        return radioNumber;
+    }
+    
     public void setReceiverState(int pReceiverState) {
         receiverState = pReceiverState;
     }
@@ -74,12 +102,12 @@ public class ReceiverPdu extends RadioCommunicationsFamilyPdu implements Seriali
         return padding1;
     }
 
-    public void setReceivedPoser(float pReceivedPoser) {
-        receivedPoser = pReceivedPoser;
+    public void setReceivedPower(float pReceivedPower) {
+        receivedPower = pReceivedPower;
     }
 
-    public float getReceivedPoser() {
-        return receivedPoser;
+    public float getReceivedPower() {
+        return receivedPower;
     }
 
     public void setTransmitterEntityId(EntityID pTransmitterEntityId) {
@@ -101,9 +129,11 @@ public class ReceiverPdu extends RadioCommunicationsFamilyPdu implements Seriali
     public void marshal(DataOutputStream dos) {
         super.marshal(dos);
         try {
+            radioReferenceID.marshal(dos);
+            dos.writeShort((short) radioNumber);            
             dos.writeShort((short) receiverState);
             dos.writeShort((short) padding1);
-            dos.writeFloat((float) receivedPoser);
+            dos.writeFloat((float) receivedPower);
             transmitterEntityId.marshal(dos);
             dos.writeShort((short) transmitterRadioId);
         } // end try 
@@ -116,9 +146,11 @@ public class ReceiverPdu extends RadioCommunicationsFamilyPdu implements Seriali
         super.unmarshal(dis);
 
         try {
+            radioReferenceID.unmarshal(dis);
+            radioNumber = (int) dis.readUnsignedShort();            
             receiverState = (int) dis.readUnsignedShort();
             padding1 = (int) dis.readUnsignedShort();
-            receivedPoser = dis.readFloat();
+            receivedPower = dis.readFloat();
             transmitterEntityId.unmarshal(dis);
             transmitterRadioId = (int) dis.readUnsignedShort();
         } // end try 
@@ -138,9 +170,11 @@ public class ReceiverPdu extends RadioCommunicationsFamilyPdu implements Seriali
      */
     public void marshal(java.nio.ByteBuffer buff) {
         super.marshal(buff);
+        radioReferenceID.marshal(buff);
+        buff.putShort((short) radioNumber);        
         buff.putShort((short) receiverState);
         buff.putShort((short) padding1);
-        buff.putFloat((float) receivedPoser);
+        buff.putFloat((float) receivedPower);
         transmitterEntityId.marshal(buff);
         buff.putShort((short) transmitterRadioId);
     } // end of marshal method
@@ -155,10 +189,11 @@ public class ReceiverPdu extends RadioCommunicationsFamilyPdu implements Seriali
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
         super.unmarshal(buff);
-
+        radioReferenceID.unmarshal(buff);
+        radioNumber = (int) (buff.getShort() & 0xFFFF);
         receiverState = (int) (buff.getShort() & 0xFFFF);
         padding1 = (int) (buff.getShort() & 0xFFFF);
-        receivedPoser = buff.getFloat();
+        receivedPower = buff.getFloat();
         transmitterEntityId.unmarshal(buff);
         transmitterRadioId = (int) (buff.getShort() & 0xFFFF);
     } // end of unmarshal method 
@@ -195,13 +230,19 @@ public class ReceiverPdu extends RadioCommunicationsFamilyPdu implements Seriali
 
         final ReceiverPdu rhs = (ReceiverPdu) obj;
 
+        if (!(radioReferenceID.equals(rhs.radioReferenceID))) {
+            ivarsEqual = false;
+        }
+        if (!(radioNumber == rhs.radioNumber)) {
+            ivarsEqual = false;
+        }
         if (!(receiverState == rhs.receiverState)) {
             ivarsEqual = false;
         }
         if (!(padding1 == rhs.padding1)) {
             ivarsEqual = false;
         }
-        if (!(receivedPoser == rhs.receivedPoser)) {
+        if (!(receivedPower == rhs.receivedPower)) {
             ivarsEqual = false;
         }
         if (!(transmitterEntityId.equals(rhs.transmitterEntityId))) {
