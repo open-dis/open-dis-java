@@ -39,6 +39,38 @@ public class IFFLayer2 extends Object implements Serializable {
     public IFFLayer2() {
     }
 
+    public LayerHeader getLayerHeader() {
+        return layerHeader;
+    }
+
+    public void setLayerHeader(LayerHeader layerHeader) {
+        this.layerHeader = layerHeader;
+    }
+
+    public BeamData getBeamData() {
+        return beamData;
+    }
+
+    public void setBeamData(BeamData beamData) {
+        this.beamData = beamData;
+    }
+
+    public SecondaryOperationalData getSecondaryOperationalData() {
+        return secondaryOperationalData;
+    }
+
+    public void setSecondaryOperationalData(SecondaryOperationalData secondaryOperationalData) {
+        this.secondaryOperationalData = secondaryOperationalData;
+    }
+
+    public List<IFFFundamentalParameterData> getIffFundamentalParameterData() {
+        return iffFundamentalParameterData;
+    }
+
+    public void setIffFundamentalParameterData(List<IFFFundamentalParameterData> iffFundamentalParameterData) {
+        this.iffFundamentalParameterData = iffFundamentalParameterData;
+    }
+
     public int getMarshalledSize() {
         int marshalSize = 0;
         marshalSize = marshalSize + layerHeader.getMarshalledSize();
@@ -150,7 +182,7 @@ public class IFFLayer2 extends Object implements Serializable {
         if (!(secondaryOperationalData.equals(rhs.secondaryOperationalData))) {
             ivarsEqual = false;
         }
- 
+
         for (int idx = 0; idx < iffFundamentalParameterData.size(); idx++) {
             if (!(iffFundamentalParameterData.get(idx).equals(rhs.iffFundamentalParameterData.get(idx)))) {
                 ivarsEqual = false;

@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @author fo
  */
-public class IFFLayer1 extends Pdu implements Serializable {
+public class IFFLayer1 extends Object implements Serializable {
 
     /**
      * Identify the entity that is the source of the emissions
@@ -55,7 +55,6 @@ public class IFFLayer1 extends Pdu implements Serializable {
     public int getMarshalledSize() {
         int marshalSize = 0;
 
-        marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + emittingEntityId.getMarshalledSize();//emittingEntityId
         marshalSize = marshalSize + eventId.getMarshalledSize();//eventId
         marshalSize = marshalSize + relativeAntennaLocation.getMarshalledSize();//relativeAntennaLocation
@@ -123,7 +122,6 @@ public class IFFLayer1 extends Pdu implements Serializable {
     }
 
     public void marshal(DataOutputStream dos) {
-        super.marshal(dos);
         try {
             emittingEntityId.marshal(dos);
             eventId.marshal(dos);
@@ -139,7 +137,6 @@ public class IFFLayer1 extends Pdu implements Serializable {
     } // end of marshal method 
 
     public void unmarshal(DataInputStream dis) {
-        super.unmarshal(dis);
 
         try {
             emittingEntityId.unmarshal(dis);
@@ -156,7 +153,6 @@ public class IFFLayer1 extends Pdu implements Serializable {
     } // end of unmarshal method 
 
     public void marshal(java.nio.ByteBuffer buff) {
-        super.marshal(buff);
         emittingEntityId.marshal(buff);
         eventId.marshal(buff);
         relativeAntennaLocation.marshal(buff);
@@ -167,7 +163,6 @@ public class IFFLayer1 extends Pdu implements Serializable {
     } // end of marshal method
 
     public void unmarshal(java.nio.ByteBuffer buff) {
-        super.unmarshal(buff);
         emittingEntityId.unmarshal(buff);
         eventId.unmarshal(buff);
         relativeAntennaLocation.unmarshal(buff);
@@ -195,7 +190,6 @@ public class IFFLayer1 extends Pdu implements Serializable {
         return equalsImpl(obj);
     }
 
-    @Override
     public boolean equalsImpl(Object obj) {
         boolean ivarsEqual = true;
 
@@ -227,6 +221,6 @@ public class IFFLayer1 extends Pdu implements Serializable {
             ivarsEqual = false;
         }
 
-        return ivarsEqual && super.equalsImpl(rhs);
+        return ivarsEqual;
     }
 }

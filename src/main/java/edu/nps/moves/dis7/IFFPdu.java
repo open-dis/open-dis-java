@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
  *
  * @author fo
  */
-public class IFFPdu extends Object implements Serializable {
+public class IFFPdu extends Pdu implements Serializable {
 
     /**
      * Basic System Data. This is the only layer that is required to be included
@@ -30,14 +30,30 @@ public class IFFPdu extends Object implements Serializable {
 //    protected IFFLayer5 layer5 = null;
 //    protected IFFLayer6 layer6 = null;
 //    protected IFFLayer7 layer7 = null;
-
     public int getMarshalledSize() {
         int marshalSize = 0;
+        marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + layer1.getMarshalledSize();//emittingEntityId
         if (layer2 != null) {
             marshalSize = marshalSize + layer2.getMarshalledSize();
         }
         return marshalSize;
+    }
+
+    public IFFLayer1 getLayer1() {
+        return layer1;
+    }
+
+    public void setLayer1(IFFLayer1 layer1) {
+        this.layer1 = layer1;
+    }
+
+    public IFFLayer2 getLayer2() {
+        return layer2;
+    }
+
+    public void setLayer2(IFFLayer2 layer2) {
+        this.layer2 = layer2;
     }
 
     private void updateInformationLayersPresent() {
@@ -49,6 +65,7 @@ public class IFFPdu extends Object implements Serializable {
     }
 
     public void marshal(DataOutputStream dos) {
+        super.marshal(dos);
         try {
             layer1.marshal(dos);
             if (layer2 != null) {
@@ -62,7 +79,7 @@ public class IFFPdu extends Object implements Serializable {
     } // end of marshal method 
 
     public void unmarshal(DataInputStream dis) {
-
+        super.unmarshal(dis);
         try {
             layer1.unmarshal(dis);
             if (isLayerPresent(2)) {
@@ -75,6 +92,7 @@ public class IFFPdu extends Object implements Serializable {
     } // end of unmarshal method 
 
     public void marshal(java.nio.ByteBuffer buff) {
+        super.marshal(buff);
         layer1.marshal(buff);
         if (layer2 != null) {
             updateInformationLayersPresent();
@@ -83,6 +101,7 @@ public class IFFPdu extends Object implements Serializable {
     } // end of marshal method
 
     public void unmarshal(java.nio.ByteBuffer buff) {
+        super.unmarshal(buff);
         layer1.unmarshal(buff);
         if (isLayerPresent(2)) {
             layer2.unmarshal(buff);
@@ -110,7 +129,8 @@ public class IFFPdu extends Object implements Serializable {
 
         return equalsImpl(obj);
     }
-
+    
+    @Override
     public boolean equalsImpl(Object obj) {
         boolean ivarsEqual = true;
 
@@ -131,6 +151,6 @@ public class IFFPdu extends Object implements Serializable {
             ivarsEqual = false;
         }
 
-        return ivarsEqual;
+        return ivarsEqual && super.equalsImpl(rhs);
     }
 }
