@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
  *
  * @author fo
  */
-public class IFFPdu extends Pdu implements Serializable {
+public class IFFPdu extends DistributedEmissionsFamilyPdu implements Serializable {
 
     /**
      * Basic System Data. This is the only layer that is required to be included
@@ -30,6 +30,11 @@ public class IFFPdu extends Pdu implements Serializable {
 //    protected IFFLayer5 layer5 = null;
 //    protected IFFLayer6 layer6 = null;
 //    protected IFFLayer7 layer7 = null;
+
+    public IFFPdu() {
+        setPduType((short) 28);
+    }
+    
     public int getMarshalledSize() {
         int marshalSize = 0;
         marshalSize = super.getMarshalledSize();
@@ -83,6 +88,7 @@ public class IFFPdu extends Pdu implements Serializable {
         try {
             layer1.unmarshal(dis);
             if (isLayerPresent(2)) {
+                layer2 = new IFFLayer2();
                 layer2.unmarshal(dis);
             }
         } // end try 

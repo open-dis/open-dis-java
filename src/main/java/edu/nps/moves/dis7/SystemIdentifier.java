@@ -44,7 +44,7 @@ public class SystemIdentifier extends Object implements Serializable {
 
         marshalSize = marshalSize + 2;  // systemType
         marshalSize = marshalSize + 2;  // systemName
-        marshalSize = marshalSize + 2;  // systemMode
+        marshalSize = marshalSize + 1;  // systemMode
         marshalSize = marshalSize + changeOptions.getMarshalledSize();  // changeOptions
 
         return marshalSize;
@@ -86,7 +86,7 @@ public class SystemIdentifier extends Object implements Serializable {
         try {
             dos.writeShort((short) systemType);
             dos.writeShort((short) systemName);
-            dos.writeShort((short) systemMode);
+            dos.writeByte((byte) systemMode);
             changeOptions.marshal(dos);
         } // end try 
         catch (Exception e) {
@@ -98,7 +98,7 @@ public class SystemIdentifier extends Object implements Serializable {
         try {
             systemType = (int) dis.readUnsignedShort();
             systemName = (int) dis.readUnsignedShort();
-            systemMode = (int) dis.readUnsignedShort();
+            systemMode = (int) dis.readUnsignedByte();
             changeOptions.unmarshal(dis);
         } // end try 
         catch (Exception e) {
@@ -118,7 +118,7 @@ public class SystemIdentifier extends Object implements Serializable {
     public void marshal(java.nio.ByteBuffer buff) {
         buff.putShort((short) systemType);
         buff.putShort((short) systemName);
-        buff.putShort((short) systemMode);
+        buff.put((byte) systemMode);
         changeOptions.marshal(buff);
     } // end of marshal method
 
@@ -133,7 +133,7 @@ public class SystemIdentifier extends Object implements Serializable {
     public void unmarshal(java.nio.ByteBuffer buff) {
         systemType = (int) (buff.getShort() & 0xFFFF);
         systemName = (int) (buff.getShort() & 0xFFFF);
-        systemMode = (int) (buff.getShort() & 0xFFFF);
+        systemMode = (int) (buff.get()& 0xFF);
         changeOptions.unmarshal(buff);
     } // end of unmarshal method 
 
