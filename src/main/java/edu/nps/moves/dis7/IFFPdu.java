@@ -39,9 +39,10 @@ public class IFFPdu extends DistributedEmissionsFamilyPdu implements Serializabl
         int marshalSize = 0;
         marshalSize = super.getMarshalledSize();
         marshalSize = marshalSize + layer1.getMarshalledSize();//emittingEntityId
-        if (layer2 != null) {
+        if (isLayerPresent(2)) {
             marshalSize = marshalSize + layer2.getMarshalledSize();
         }
+        
         return marshalSize;
     }
 
@@ -59,6 +60,7 @@ public class IFFPdu extends DistributedEmissionsFamilyPdu implements Serializabl
 
     public void setLayer2(IFFLayer2 layer2) {
         this.layer2 = layer2;
+        updateInformationLayersPresent();
     }
 
     private void updateInformationLayersPresent() {
@@ -109,7 +111,8 @@ public class IFFPdu extends DistributedEmissionsFamilyPdu implements Serializabl
     public void unmarshal(java.nio.ByteBuffer buff) {
         super.unmarshal(buff);
         layer1.unmarshal(buff);
-        if (isLayerPresent(2)) {
+        if (isLayerPresent(2) ) {
+            layer2 = new IFFLayer2();
             layer2.unmarshal(buff);
         }
     } // end of unmarshal method  
