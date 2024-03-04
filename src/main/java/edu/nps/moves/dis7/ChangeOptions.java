@@ -13,6 +13,8 @@ import java.io.*;
  */
 public class ChangeOptions extends Object implements Serializable {
 
+    
+    protected short changeOptions;
     /**
      * Constructor
      */
@@ -21,12 +23,21 @@ public class ChangeOptions extends Object implements Serializable {
 
     public int getMarshalledSize() {
         int marshalSize = 0;
-
+        marshalSize = marshalSize + 1;
         return marshalSize;
+    }
+
+    public short getValue() {
+        return changeOptions;
+    }
+
+    public void setValue(short changeOptions) {
+        this.changeOptions = changeOptions;
     }
 
     public void marshal(DataOutputStream dos) {
         try {
+            dos.writeByte((byte) changeOptions);
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -35,6 +46,7 @@ public class ChangeOptions extends Object implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
+            changeOptions = (short) dis.readByte();
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -51,6 +63,7 @@ public class ChangeOptions extends Object implements Serializable {
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
+        buff.put((byte) changeOptions);
     } // end of marshal method
 
     /**
@@ -62,6 +75,7 @@ public class ChangeOptions extends Object implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
+        changeOptions = (short) buff.get();
     } // end of unmarshal method 
 
 
@@ -102,6 +116,9 @@ public class ChangeOptions extends Object implements Serializable {
 
         final ChangeOptions rhs = (ChangeOptions) obj;
 
+        if(!(changeOptions == rhs.changeOptions)){
+            ivarsEqual = false;
+        }
         return ivarsEqual;
     }
 } // end of class

@@ -242,6 +242,9 @@ public class PduFactory {
                 case ENTITY_STATE_UPDATE:
                     aPdu = new EntityStateUpdatePdu();
                     break;
+                case IFF_ATC_NAVAIDS:
+                    aPdu = new IFFPdu();
+                    break;
                 default:
                     this.logger.log(Level.INFO, "PDU not implemented. Type = " + pduType + "\n");
                     if (pduTypeEnum != null) {
