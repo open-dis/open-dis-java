@@ -245,6 +245,9 @@ public class PduFactory {
                 case IFF_ATC_NAVAIDS:
                     aPdu = new IFFPdu();
                     break;
+                case AGGREGATE_STATE:
+                    aPdu = new AggregateStatePdu();
+                    break;
                 default:
                     this.logger.log(Level.INFO, "PDU not implemented. Type = " + pduType + "\n");
                     if (pduTypeEnum != null) {

@@ -121,7 +121,8 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
 
     public int getMarshalledSize() {
         int marshalSize = 0;
-
+        
+        marshalSize = marshalSize + super.getMarshalledSize();
         marshalSize = marshalSize + aggregateID.getMarshalledSize();//aggregateID
         marshalSize = marshalSize + 1;//forceID
         marshalSize = marshalSize + 1;//aggregateState
@@ -326,7 +327,7 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
         dimensions.marshal(buff);
         orientation.marshal(buff);
         centerOfMass.marshal(buff);
-        velocity.marshal(buff);
+        velocity.marshal(buff); 
         buff.putShort((short) aggregateIDList.size());
         buff.putShort((short) entityIDList.size());
         buff.putShort((short) silentAggregateSystemList.size());
