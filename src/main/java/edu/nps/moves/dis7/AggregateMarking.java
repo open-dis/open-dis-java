@@ -22,7 +22,9 @@ public class AggregateMarking extends Object implements Serializable {
     /**
      * The characters
      */
-    protected short characters;
+    protected byte[] characters = new byte[31];
+
+    ;
 
     /**
      * Constructor
@@ -34,7 +36,7 @@ public class AggregateMarking extends Object implements Serializable {
         int marshalSize = 0;
 
         marshalSize = marshalSize + 1;  // characterSet
-        marshalSize = marshalSize + 1;  // characters
+        marshalSize = marshalSize + characters.length;  // characters
 
         return marshalSize;
     }
@@ -47,18 +49,35 @@ public class AggregateMarking extends Object implements Serializable {
         return characterSet;
     }
 
-    public void setCharacters(short pCharacters) {
-        characters = pCharacters;
+    /**
+     * Ensure what is set does not go over 31 characters, and anything under 31
+     * characters zero-fills. post-processing patch
+     *
+     * @param pCharacters an array of characters to set
+     */
+    public void setCharacters(byte[] pCharacters) {
+        if (pCharacters.length >= characters.length) {
+            System.arraycopy(pCharacters, 0, characters, 0, characters.length);
+        } else {
+            int pCharactersLength = pCharacters.length;
+            System.arraycopy(pCharacters, 0, characters, 0, pCharactersLength);
+            for (int ix = pCharactersLength; ix < characters.length; ix++) {
+                // Ensure all zeros in unfilled fields
+                characters[ix] = 0;
+            }
+        }
     }
 
-    public short getCharacters() {
+    public byte[] getCharacters() {
         return characters;
     }
 
     public void marshal(DataOutputStream dos) {
         try {
             dos.writeByte((byte) characterSet);
-            dos.writeByte((byte) characters);
+            for (int idx = 0; idx < characters.length; idx++) {
+                dos.writeByte((byte) characters[idx]);
+            } // end of array marshaling            
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -68,7 +87,9 @@ public class AggregateMarking extends Object implements Serializable {
     public void unmarshal(DataInputStream dis) {
         try {
             characterSet = (short) dis.readUnsignedByte();
-            characters = (short) dis.readUnsignedByte();
+            for (int idx = 0; idx < characters.length; idx++) {
+                characters[idx] = (byte) dis.readUnsignedByte();
+            }
         } // end try 
         catch (Exception e) {
             System.out.println(e);
@@ -86,7 +107,9 @@ public class AggregateMarking extends Object implements Serializable {
      */
     public void marshal(java.nio.ByteBuffer buff) {
         buff.put((byte) characterSet);
-        buff.put((byte) characters);
+        for (int idx = 0; idx < characters.length; idx++) {
+            buff.put((byte) characters[idx]);
+        } // end of array marshaling
     } // end of marshal method
 
     /**
@@ -99,7 +122,9 @@ public class AggregateMarking extends Object implements Serializable {
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
         characterSet = (short) (buff.get() & 0xFF);
-        characters = (short) (buff.get() & 0xFF);
+        for (int idx = 0; idx < characters.length; idx++) {
+            characters[idx] = buff.get();
+        } // end of array unmarshaling
     } // end of unmarshal method 
 
 
@@ -143,8 +168,10 @@ public class AggregateMarking extends Object implements Serializable {
         if (!(characterSet == rhs.characterSet)) {
             ivarsEqual = false;
         }
-        if (!(characters == rhs.characters)) {
-            ivarsEqual = false;
+        for (int idx = 0; idx < 31; idx++) {
+            if (!(characters[idx] == rhs.characters[idx])) {
+                ivarsEqual = false;
+            }
         }
 
         return ivarsEqual;
