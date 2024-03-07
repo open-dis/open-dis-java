@@ -63,7 +63,7 @@ Add the following to your `pom.xml`.
 <dependency>
     <groupId>edu.nps.moves</groupId>
     <artifactId>open-dis</artifactId>
-    <version>5.4</version>
+    <version>5.7</version>
 </dependency>
 ```
 
