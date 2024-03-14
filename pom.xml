@@ -4,7 +4,7 @@
     <artifactId>open-dis</artifactId>
     <packaging>jar</packaging>
     <name>Open-DIS</name>
-    <version>5.8-SNAPSHOT</version>
+    <version>5.7-IFAD-13</version>
     <description>An open source implementation of the Distributed Interactive Simulation (DIS) IEEE-1278 protocol</description>
     <url>http://www.open-dis.org</url>
     <licenses>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>edu.nps.moves</groupId>
             <artifactId>dis-enums</artifactId>
-            <version>1.1</version>
+            <version>1.3-IFAD</version>
         </dependency>
         <dependency>
             <groupId>org.sedris</groupId>
