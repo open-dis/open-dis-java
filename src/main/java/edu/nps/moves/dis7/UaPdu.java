@@ -72,17 +72,17 @@ public class UaPdu extends DistributedEmissionsFamilyPdu implements Serializable
     protected short numberOfUAEmitterSystems;
 
     /**
-     * shaft RPM values. THIS IS WRONG. It has the wrong class in the list.
+     * shaft RPM values.
      */
-    protected List< Vector3Float> shaftRPMs = new ArrayList< Vector3Float>();
+    protected List< ShaftRPMs> shaftRPMs = new ArrayList< ShaftRPMs>();
     /**
-     * apaData. THIS IS WRONG. It has the worng class in the list.
+     * apaData.
      */
-    protected List< Vector3Float> apaData = new ArrayList< Vector3Float>();
+    protected List< ApaData> apaData = new ArrayList< ApaData>();
     /**
-     * THIS IS WRONG. It has the wrong class in the list.
+     * THIS IS WRONG.
      */
-    protected List< Vector3Float> emitterSystems = new ArrayList< Vector3Float>();
+    protected List< AcousticEmitterSystemData> emitterSystems = new ArrayList< AcousticEmitterSystemData>();
 
     /**
      * Constructor
@@ -105,15 +105,15 @@ public class UaPdu extends DistributedEmissionsFamilyPdu implements Serializable
         marshalSize = marshalSize + 1;  // numberOfAPAs
         marshalSize = marshalSize + 1;  // numberOfUAEmitterSystems
         for (int idx = 0; idx < shaftRPMs.size(); idx++) {
-            Vector3Float listElement = shaftRPMs.get(idx);
+            ShaftRPMs listElement = shaftRPMs.get(idx);
             marshalSize = marshalSize + listElement.getMarshalledSize();
         }
         for (int idx = 0; idx < apaData.size(); idx++) {
-            Vector3Float listElement = apaData.get(idx);
+            ApaData listElement = apaData.get(idx);
             marshalSize = marshalSize + listElement.getMarshalledSize();
         }
         for (int idx = 0; idx < emitterSystems.size(); idx++) {
-            Vector3Float listElement = emitterSystems.get(idx);
+            AcousticEmitterSystemData listElement = emitterSystems.get(idx);
             marshalSize = marshalSize + listElement.getMarshalledSize();
         }
 
@@ -213,27 +213,27 @@ public class UaPdu extends DistributedEmissionsFamilyPdu implements Serializable
         numberOfUAEmitterSystems = pNumberOfUAEmitterSystems;
     }
 
-    public void setShaftRPMs(List<Vector3Float> pShaftRPMs) {
+    public void setShaftRPMs(List<ShaftRPMs> pShaftRPMs) {
         shaftRPMs = pShaftRPMs;
     }
 
-    public List<Vector3Float> getShaftRPMs() {
+    public List<ShaftRPMs> getShaftRPMs() {
         return shaftRPMs;
     }
 
-    public void setApaData(List<Vector3Float> pApaData) {
+    public void setApaData(List<ApaData> pApaData) {
         apaData = pApaData;
     }
 
-    public List<Vector3Float> getApaData() {
+    public List<ApaData> getApaData() {
         return apaData;
     }
 
-    public void setEmitterSystems(List<Vector3Float> pEmitterSystems) {
+    public void setEmitterSystems(List<AcousticEmitterSystemData> pEmitterSystems) {
         emitterSystems = pEmitterSystems;
     }
 
-    public List<Vector3Float> getEmitterSystems() {
+    public List<AcousticEmitterSystemData> getEmitterSystems() {
         return emitterSystems;
     }
 
@@ -251,17 +251,17 @@ public class UaPdu extends DistributedEmissionsFamilyPdu implements Serializable
             dos.writeByte((byte) emitterSystems.size());
 
             for (int idx = 0; idx < shaftRPMs.size(); idx++) {
-                Vector3Float aVector3Float = shaftRPMs.get(idx);
-                aVector3Float.marshal(dos);
+                ShaftRPMs aShaftRPMs = shaftRPMs.get(idx);
+                aShaftRPMs.marshal(dos);
             } // end of list marshalling
 
             for (int idx = 0; idx < apaData.size(); idx++) {
-                Vector3Float aVector3Float = apaData.get(idx);
-                aVector3Float.marshal(dos);
+                ApaData aApaData = apaData.get(idx);
+                aApaData.marshal(dos);
             } // end of list marshalling
 
             for (int idx = 0; idx < emitterSystems.size(); idx++) {
-                Vector3Float aVector3Float = emitterSystems.get(idx);
+                AcousticEmitterSystemData aVector3Float = emitterSystems.get(idx);
                 aVector3Float.marshal(dos);
             } // end of list marshalling
 
@@ -285,19 +285,19 @@ public class UaPdu extends DistributedEmissionsFamilyPdu implements Serializable
             numberOfAPAs = (short) dis.readUnsignedByte();
             numberOfUAEmitterSystems = (short) dis.readUnsignedByte();
             for (int idx = 0; idx < numberOfShafts; idx++) {
-                Vector3Float anX = new Vector3Float();
+                ShaftRPMs anX = new ShaftRPMs();
                 anX.unmarshal(dis);
                 shaftRPMs.add(anX);
             }
 
             for (int idx = 0; idx < numberOfAPAs; idx++) {
-                Vector3Float anX = new Vector3Float();
+                ApaData anX = new ApaData();
                 anX.unmarshal(dis);
                 apaData.add(anX);
             }
 
             for (int idx = 0; idx < numberOfUAEmitterSystems; idx++) {
-                Vector3Float anX = new Vector3Float();
+                AcousticEmitterSystemData anX = new AcousticEmitterSystemData();
                 anX.unmarshal(dis);
                 emitterSystems.add(anX);
             }
@@ -330,17 +330,17 @@ public class UaPdu extends DistributedEmissionsFamilyPdu implements Serializable
         buff.put((byte) emitterSystems.size());
 
         for (int idx = 0; idx < shaftRPMs.size(); idx++) {
-            Vector3Float aVector3Float = (Vector3Float) shaftRPMs.get(idx);
-            aVector3Float.marshal(buff);
+            ShaftRPMs aShaftRPMs = (ShaftRPMs) shaftRPMs.get(idx);
+            aShaftRPMs.marshal(buff);
         } // end of list marshalling
 
         for (int idx = 0; idx < apaData.size(); idx++) {
-            Vector3Float aVector3Float = (Vector3Float) apaData.get(idx);
-            aVector3Float.marshal(buff);
+            ApaData aApaData = (ApaData) apaData.get(idx);
+            aApaData.marshal(buff);
         } // end of list marshalling
 
         for (int idx = 0; idx < emitterSystems.size(); idx++) {
-            Vector3Float aVector3Float = (Vector3Float) emitterSystems.get(idx);
+            AcousticEmitterSystemData aVector3Float = (AcousticEmitterSystemData) emitterSystems.get(idx);
             aVector3Float.marshal(buff);
         } // end of list marshalling
 
@@ -367,19 +367,19 @@ public class UaPdu extends DistributedEmissionsFamilyPdu implements Serializable
         numberOfAPAs = (short) (buff.get() & 0xFF);
         numberOfUAEmitterSystems = (short) (buff.get() & 0xFF);
         for (int idx = 0; idx < numberOfShafts; idx++) {
-            Vector3Float anX = new Vector3Float();
+            ShaftRPMs anX = new ShaftRPMs();
             anX.unmarshal(buff);
             shaftRPMs.add(anX);
         }
 
         for (int idx = 0; idx < numberOfAPAs; idx++) {
-            Vector3Float anX = new Vector3Float();
+            ApaData anX = new ApaData();
             anX.unmarshal(buff);
             apaData.add(anX);
         }
 
         for (int idx = 0; idx < numberOfUAEmitterSystems; idx++) {
-            Vector3Float anX = new Vector3Float();
+            AcousticEmitterSystemData anX = new AcousticEmitterSystemData();
             anX.unmarshal(buff);
             emitterSystems.add(anX);
         }
