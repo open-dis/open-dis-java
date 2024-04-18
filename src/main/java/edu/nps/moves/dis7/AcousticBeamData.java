@@ -16,7 +16,7 @@ public class AcousticBeamData extends Object implements Serializable {
     /**
      * beam data length
      */
-    protected int beamDataLength;
+    protected short beamDataLength;
 
     /**
      * beamIDNumber
@@ -42,7 +42,7 @@ public class AcousticBeamData extends Object implements Serializable {
     public int getMarshalledSize() {
         int marshalSize = 0;
 
-        marshalSize = marshalSize + 2;  // beamDataLength
+        marshalSize = marshalSize + 1;  // beamDataLength
         marshalSize = marshalSize + 1;  // beamIDNumber
         marshalSize = marshalSize + 2;  // pad2
         marshalSize = marshalSize + fundamentalDataParameters.getMarshalledSize();  // fundamentalDataParameters
@@ -50,11 +50,11 @@ public class AcousticBeamData extends Object implements Serializable {
         return marshalSize;
     }
 
-    public void setBeamDataLength(int pBeamDataLength) {
+    public void setBeamDataLength(short pBeamDataLength) {
         beamDataLength = pBeamDataLength;
     }
 
-    public int getBeamDataLength() {
+    public short getBeamDataLength() {
         return beamDataLength;
     }
 
@@ -92,7 +92,7 @@ public class AcousticBeamData extends Object implements Serializable {
      * @since ??
      */
     public void marshal(java.nio.ByteBuffer buff) {
-        buff.putShort((short) beamDataLength);
+        buff.put((byte) beamDataLength);
         buff.put((byte) beamIDNumber);
         buff.putShort((short) pad2);
         fundamentalDataParameters.marshal(buff);
@@ -107,7 +107,7 @@ public class AcousticBeamData extends Object implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
-        beamDataLength = (int) (buff.getShort() & 0xFFFF);
+        beamDataLength = (short) (buff.get() & 0xFF);
         beamIDNumber = (short) (buff.get() & 0xFF);
         pad2 = (int) (buff.getShort() & 0xFFFF);
         fundamentalDataParameters.unmarshal(buff);
@@ -115,7 +115,7 @@ public class AcousticBeamData extends Object implements Serializable {
 
     public void marshal(DataOutputStream dos) {
         try {
-            dos.writeShort((short) beamDataLength);
+            dos.writeByte((byte) beamDataLength);
             dos.writeByte((byte) beamIDNumber);
             dos.writeShort((short) pad2);
             fundamentalDataParameters.marshal(dos);
@@ -127,7 +127,7 @@ public class AcousticBeamData extends Object implements Serializable {
 
     public void unmarshal(DataInputStream dis) {
         try {
-            beamDataLength = (int) dis.readShort();
+            beamDataLength = (short) dis.readByte();
             beamIDNumber = (short) dis.readByte();
             pad2 = (int) dis.readShort();
             fundamentalDataParameters.unmarshal(dis);
