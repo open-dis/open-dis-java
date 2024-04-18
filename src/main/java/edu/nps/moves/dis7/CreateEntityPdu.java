@@ -13,15 +13,6 @@ import java.io.*;
  */
 public class CreateEntityPdu extends SimulationManagementFamilyPdu implements Serializable {
 
-    /**
-     * Identifier for the request
-     */
-    protected EntityID originatingID = new EntityID();
-
-    /**
-     * Identifier for the request
-     */
-    protected EntityID receivingID = new EntityID();
 
     /**
      * Identifier for the request. See 6.2.75
@@ -39,27 +30,25 @@ public class CreateEntityPdu extends SimulationManagementFamilyPdu implements Se
         int marshalSize = 0;
 
         marshalSize = super.getMarshalledSize();
-        marshalSize = marshalSize + originatingID.getMarshalledSize();  // originatingID
-        marshalSize = marshalSize + receivingID.getMarshalledSize();  // receivingID
         marshalSize = marshalSize + 4;  // requestID
 
         return marshalSize;
     }
 
     public void setOriginatingID(EntityID pOriginatingID) {
-        originatingID = pOriginatingID;
+        setOriginatingEntityID(pOriginatingID);
     }
 
     public EntityID getOriginatingID() {
-        return originatingID;
+        return getOriginatingEntityID();
     }
 
     public void setReceivingID(EntityID pReceivingID) {
-        receivingID = pReceivingID;
+        setReceivingEntityID(pReceivingID);
     }
 
     public EntityID getReceivingID() {
-        return receivingID;
+        return getReceivingEntityID();
     }
 
     public void setRequestID(long pRequestID) {
@@ -73,8 +62,6 @@ public class CreateEntityPdu extends SimulationManagementFamilyPdu implements Se
     public void marshal(DataOutputStream dos) {
         super.marshal(dos);
         try {
-            originatingID.marshal(dos);
-            receivingID.marshal(dos);
             dos.writeInt((int) requestID);
         } // end try 
         catch (Exception e) {
@@ -86,8 +73,6 @@ public class CreateEntityPdu extends SimulationManagementFamilyPdu implements Se
         super.unmarshal(dis);
 
         try {
-            originatingID.unmarshal(dis);
-            receivingID.unmarshal(dis);
             requestID = dis.readInt();
         } // end try 
         catch (Exception e) {
@@ -106,8 +91,6 @@ public class CreateEntityPdu extends SimulationManagementFamilyPdu implements Se
      */
     public void marshal(java.nio.ByteBuffer buff) {
         super.marshal(buff);
-        originatingID.marshal(buff);
-        receivingID.marshal(buff);
         buff.putInt((int) requestID);
     } // end of marshal method
 
@@ -122,8 +105,6 @@ public class CreateEntityPdu extends SimulationManagementFamilyPdu implements Se
     public void unmarshal(java.nio.ByteBuffer buff) {
         super.unmarshal(buff);
 
-        originatingID.unmarshal(buff);
-        receivingID.unmarshal(buff);
         requestID = buff.getInt();
     } // end of unmarshal method 
 
@@ -159,10 +140,10 @@ public class CreateEntityPdu extends SimulationManagementFamilyPdu implements Se
 
         final CreateEntityPdu rhs = (CreateEntityPdu) obj;
 
-        if (!(originatingID.equals(rhs.originatingID))) {
+        if (!(getOriginatingEntityID().equals(rhs.getOriginatingEntityID()))) {
             ivarsEqual = false;
         }
-        if (!(receivingID.equals(rhs.receivingID))) {
+        if (!(getReceivingEntityID().equals(rhs.getReceivingEntityID()))) {
             ivarsEqual = false;
         }
         if (!(requestID == rhs.requestID)) {

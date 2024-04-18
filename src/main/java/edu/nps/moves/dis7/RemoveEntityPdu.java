@@ -14,15 +14,6 @@ import java.io.*;
  */
 public class RemoveEntityPdu extends SimulationManagementFamilyPdu implements Serializable {
 
-    /**
-     * Identifier for originating entity(or simulation)
-     */
-    protected EntityID originatingID = new EntityID();
-
-    /**
-     * Identifier for the receiving entity(or simulation)
-     */
-    protected EntityID receivingID = new EntityID();
 
     /**
      * This field shall identify the specific and unique start/resume request
@@ -41,27 +32,25 @@ public class RemoveEntityPdu extends SimulationManagementFamilyPdu implements Se
         int marshalSize = 0;
 
         marshalSize = super.getMarshalledSize();
-        marshalSize = marshalSize + originatingID.getMarshalledSize();  // originatingID
-        marshalSize = marshalSize + receivingID.getMarshalledSize();  // receivingID
         marshalSize = marshalSize + 4;  // requestID
 
         return marshalSize;
     }
 
     public void setOriginatingID(EntityID pOriginatingID) {
-        originatingID = pOriginatingID;
+        setOriginatingEntityID(pOriginatingID);
     }
 
     public EntityID getOriginatingID() {
-        return originatingID;
+        return getOriginatingEntityID();
     }
 
     public void setReceivingID(EntityID pReceivingID) {
-        receivingID = pReceivingID;
+        setReceivingEntityID(pReceivingID);
     }
 
     public EntityID getReceivingID() {
-        return receivingID;
+        return getReceivingEntityID();
     }
 
     public void setRequestID(long pRequestID) {
@@ -75,8 +64,6 @@ public class RemoveEntityPdu extends SimulationManagementFamilyPdu implements Se
     public void marshal(DataOutputStream dos) {
         super.marshal(dos);
         try {
-            originatingID.marshal(dos);
-            receivingID.marshal(dos);
             dos.writeInt((int) requestID);
         } // end try 
         catch (Exception e) {
@@ -88,8 +75,6 @@ public class RemoveEntityPdu extends SimulationManagementFamilyPdu implements Se
         super.unmarshal(dis);
 
         try {
-            originatingID.unmarshal(dis);
-            receivingID.unmarshal(dis);
             requestID = dis.readInt();
         } // end try 
         catch (Exception e) {
@@ -108,8 +93,6 @@ public class RemoveEntityPdu extends SimulationManagementFamilyPdu implements Se
      */
     public void marshal(java.nio.ByteBuffer buff) {
         super.marshal(buff);
-        originatingID.marshal(buff);
-        receivingID.marshal(buff);
         buff.putInt((int) requestID);
     } // end of marshal method
 
@@ -124,8 +107,6 @@ public class RemoveEntityPdu extends SimulationManagementFamilyPdu implements Se
     public void unmarshal(java.nio.ByteBuffer buff) {
         super.unmarshal(buff);
 
-        originatingID.unmarshal(buff);
-        receivingID.unmarshal(buff);
         requestID = buff.getInt();
     } // end of unmarshal method 
 
@@ -161,10 +142,10 @@ public class RemoveEntityPdu extends SimulationManagementFamilyPdu implements Se
 
         final RemoveEntityPdu rhs = (RemoveEntityPdu) obj;
 
-        if (!(originatingID.equals(rhs.originatingID))) {
+        if (!(getOriginatingEntityID().equals(rhs.getOriginatingEntityID()))) {
             ivarsEqual = false;
         }
-        if (!(receivingID.equals(rhs.receivingID))) {
+        if (!(getReceivingEntityID().equals(rhs.getReceivingEntityID()))) {
             ivarsEqual = false;
         }
         if (!(requestID == rhs.requestID)) {
