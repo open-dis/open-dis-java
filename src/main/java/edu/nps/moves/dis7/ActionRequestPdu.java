@@ -15,15 +15,6 @@ import java.io.*;
  */
 public class ActionRequestPdu extends SimulationManagementFamilyPdu implements Serializable {
 
-    /**
-     * Identifier for originating entity(or simulation)
-     */
-    protected EntityID originatingID = new EntityID();
-
-    /**
-     * Identifier for the receiving entity(or simulation)
-     */
-    protected EntityID receivingID = new EntityID();
 
     /**
      * identifies the request being made by the simulaton manager
@@ -66,8 +57,6 @@ public class ActionRequestPdu extends SimulationManagementFamilyPdu implements S
         int marshalSize = 0;
 
         marshalSize = super.getMarshalledSize();
-        marshalSize = marshalSize + originatingID.getMarshalledSize();  // originatingID
-        marshalSize = marshalSize + receivingID.getMarshalledSize();  // receivingID
         marshalSize = marshalSize + 4;  // requestID
         marshalSize = marshalSize + 4;  // actionID
         marshalSize = marshalSize + 4;  // numberOfFixedDatumRecords
@@ -85,19 +74,19 @@ public class ActionRequestPdu extends SimulationManagementFamilyPdu implements S
     }
 
     public void setOriginatingID(EntityID pOriginatingID) {
-        originatingID = pOriginatingID;
+        setOriginatingEntityID(pOriginatingID);
     }
 
     public EntityID getOriginatingID() {
-        return originatingID;
+        return getOriginatingEntityID();
     }
 
     public void setReceivingID(EntityID pReceivingID) {
-        receivingID = pReceivingID;
+        setReceivingEntityID(pReceivingID);
     }
 
     public EntityID getReceivingID() {
-        return receivingID;
+        return getReceivingEntityID();
     }
 
     public void setRequestID(long pRequestID) {
@@ -165,8 +154,6 @@ public class ActionRequestPdu extends SimulationManagementFamilyPdu implements S
     public void marshal(DataOutputStream dos) {
         super.marshal(dos);
         try {
-            originatingID.marshal(dos);
-            receivingID.marshal(dos);
             dos.writeInt((int) requestID);
             dos.writeInt((int) actionID);
             dos.writeInt((int) fixedDatums.size());
@@ -192,8 +179,6 @@ public class ActionRequestPdu extends SimulationManagementFamilyPdu implements S
         super.unmarshal(dis);
 
         try {
-            originatingID.unmarshal(dis);
-            receivingID.unmarshal(dis);
             requestID = dis.readInt();
             actionID = dis.readInt();
             numberOfFixedDatumRecords = dis.readInt();
@@ -227,8 +212,6 @@ public class ActionRequestPdu extends SimulationManagementFamilyPdu implements S
      */
     public void marshal(java.nio.ByteBuffer buff) {
         super.marshal(buff);
-        originatingID.marshal(buff);
-        receivingID.marshal(buff);
         buff.putInt((int) requestID);
         buff.putInt((int) actionID);
         buff.putInt((int) fixedDatums.size());
@@ -257,8 +240,6 @@ public class ActionRequestPdu extends SimulationManagementFamilyPdu implements S
     public void unmarshal(java.nio.ByteBuffer buff) {
         super.unmarshal(buff);
 
-        originatingID.unmarshal(buff);
-        receivingID.unmarshal(buff);
         requestID = buff.getInt();
         actionID = buff.getInt();
         numberOfFixedDatumRecords = buff.getInt();
@@ -309,10 +290,10 @@ public class ActionRequestPdu extends SimulationManagementFamilyPdu implements S
 
         final ActionRequestPdu rhs = (ActionRequestPdu) obj;
 
-        if (!(originatingID.equals(rhs.originatingID))) {
+        if (!(getOriginatingEntityID().equals(rhs.getOriginatingEntityID()))) {
             ivarsEqual = false;
         }
-        if (!(receivingID.equals(rhs.receivingID))) {
+        if (!(getReceivingEntityID().equals(rhs.getReceivingEntityID()))) {
             ivarsEqual = false;
         }
         if (!(requestID == rhs.requestID)) {

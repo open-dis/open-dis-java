@@ -14,15 +14,6 @@ import java.io.*;
  */
 public class AcknowledgePdu extends SimulationManagementFamilyPdu implements Serializable {
 
-    /**
-     * Identifier for originating entity(or simulation)
-     */
-    protected EntityID originatingID = new EntityID();
-
-    /**
-     * Identifier for the receiving entity(or simulation)
-     */
-    protected EntityID receivingID = new EntityID();
 
     /**
      * type of message being acknowledged
@@ -50,8 +41,6 @@ public class AcknowledgePdu extends SimulationManagementFamilyPdu implements Ser
         int marshalSize = 0;
 
         marshalSize = super.getMarshalledSize();
-        marshalSize = marshalSize + originatingID.getMarshalledSize();  // originatingID
-        marshalSize = marshalSize + receivingID.getMarshalledSize();  // receivingID
         marshalSize = marshalSize + 2;  // acknowledgeFlag
         marshalSize = marshalSize + 2;  // responseFlag
         marshalSize = marshalSize + 4;  // requestID
@@ -60,19 +49,19 @@ public class AcknowledgePdu extends SimulationManagementFamilyPdu implements Ser
     }
 
     public void setOriginatingID(EntityID pOriginatingID) {
-        originatingID = pOriginatingID;
+        setOriginatingEntityID(pOriginatingID);
     }
 
     public EntityID getOriginatingID() {
-        return originatingID;
+        return getOriginatingEntityID();
     }
 
     public void setReceivingID(EntityID pReceivingID) {
-        receivingID = pReceivingID;
+        setReceivingEntityID(pReceivingID);
     }
 
     public EntityID getReceivingID() {
-        return receivingID;
+        return getReceivingEntityID();
     }
 
     public void setAcknowledgeFlag(int pAcknowledgeFlag) {
@@ -102,8 +91,6 @@ public class AcknowledgePdu extends SimulationManagementFamilyPdu implements Ser
     public void marshal(DataOutputStream dos) {
         super.marshal(dos);
         try {
-            originatingID.marshal(dos);
-            receivingID.marshal(dos);
             dos.writeShort((short) acknowledgeFlag);
             dos.writeShort((short) responseFlag);
             dos.writeInt((int) requestID);
@@ -117,8 +104,6 @@ public class AcknowledgePdu extends SimulationManagementFamilyPdu implements Ser
         super.unmarshal(dis);
 
         try {
-            originatingID.unmarshal(dis);
-            receivingID.unmarshal(dis);
             acknowledgeFlag = (int) dis.readUnsignedShort();
             responseFlag = (int) dis.readUnsignedShort();
             requestID = dis.readInt();
@@ -139,8 +124,6 @@ public class AcknowledgePdu extends SimulationManagementFamilyPdu implements Ser
      */
     public void marshal(java.nio.ByteBuffer buff) {
         super.marshal(buff);
-        originatingID.marshal(buff);
-        receivingID.marshal(buff);
         buff.putShort((short) acknowledgeFlag);
         buff.putShort((short) responseFlag);
         buff.putInt((int) requestID);
@@ -157,8 +140,6 @@ public class AcknowledgePdu extends SimulationManagementFamilyPdu implements Ser
     public void unmarshal(java.nio.ByteBuffer buff) {
         super.unmarshal(buff);
 
-        originatingID.unmarshal(buff);
-        receivingID.unmarshal(buff);
         acknowledgeFlag = (int) (buff.getShort() & 0xFFFF);
         responseFlag = (int) (buff.getShort() & 0xFFFF);
         requestID = buff.getInt();
@@ -196,10 +177,10 @@ public class AcknowledgePdu extends SimulationManagementFamilyPdu implements Ser
 
         final AcknowledgePdu rhs = (AcknowledgePdu) obj;
 
-        if (!(originatingID.equals(rhs.originatingID))) {
+        if (!(getOriginatingEntityID().equals(rhs.getOriginatingEntityID()))) {
             ivarsEqual = false;
         }
-        if (!(receivingID.equals(rhs.receivingID))) {
+        if (!(getReceivingEntityID().equals(rhs.getReceivingEntityID()))) {
             ivarsEqual = false;
         }
         if (!(acknowledgeFlag == rhs.acknowledgeFlag)) {
