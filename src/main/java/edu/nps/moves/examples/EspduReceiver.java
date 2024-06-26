@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Example code that receives ESPDUs from the network in IEEE format.
+ * Example code that receives ESPDUs from the network in binary format.
  */
 public class EspduReceiver {
 

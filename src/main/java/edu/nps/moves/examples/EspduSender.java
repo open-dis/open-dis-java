@@ -10,13 +10,11 @@ import edu.nps.moves.disutil.DisTime;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Creates and sends ESPDUs in IEEE binary format.
+ * Creates and sends ESPDUs in binary format.
  *
  * @author DMcG
  */
 public class EspduSender {
-
-    public static final int NUMBER_TO_SEND = 100;
 
     public static final String DEFAULT_MULTICAST_GROUP = "239.1.2.3";
 
@@ -30,10 +28,9 @@ public class EspduSender {
 
         EntityStatePdu espdu = new EntityStatePdu();
 
-        // Initialize values in the Entity State PDU object. The exercise ID is 
-        // a way to differentiate between different virtual worlds on one network.
-        // Note that some values (such as the PDU type and PDU family) are set
-        // automatically when you create the ESPDU.
+        // Initialize values in the Entity State PDU object.
+        // The exercise ID is a way to differentiate between different virtual worlds on one network.
+        // Note that some values (such as the PDU type and PDU family) are set automatically when you create the ESPDU.
         espdu.setExerciseID((short) 1);
 
         // The EID is the unique identifier for objects in the world. This 
@@ -44,7 +41,8 @@ public class EspduSender {
         entityID.setApplication(1);
         entityID.setEntity(2);
 
-        // Set the entity type. SISO has a big list of enumerations, so that by
+        // Set the entity type.
+        // SISO has a big list of enumerations, so that by
         // specifying various numbers we can say this is an M1A2 American tank,
         // the USS Enterprise, and so on. We'll make this a tank. There is a 
         // separate project elsehwhere in this project that implements DIS 
@@ -57,6 +55,10 @@ public class EspduSender {
         entityType.setCategory((short) 1);        // Tank
         entityType.setSubcategory((short) 1);     // M1 Abrams
         entityType.setSpec((short) 3);            // M1A2 Abrams
+        
+        Marking m = new Marking();
+        m.setCharactersString("T11");
+        espdu.setMarking(m); // It's common to set the marking field to the callsign.
 
         DisTime disTime = DisTime.getInstance(); // TODO explain
 
@@ -64,9 +66,11 @@ public class EspduSender {
         double lat = 36.595517;
         double lon = -121.877000;
 
+        final int NUMBER_PDU_TO_SEND = 100; // For example purposes, stop after sending 100 times.
+            
         // Loop through sending N ESPDUs
-        System.out.println("Sending " + NUMBER_TO_SEND + " ESPDU packets to " + DEFAULT_MULTICAST_GROUP + ". One packet every " + DIS_HEARTBEAT_SECS + " seconds.");
-        for (int idx = 0; idx < NUMBER_TO_SEND; idx++) {
+        System.out.println("This example will send " + NUMBER_PDU_TO_SEND + " Entity State PDU packets to " + DEFAULT_MULTICAST_GROUP + ". One packet every " + DIS_HEARTBEAT_SECS + " seconds.");
+        for (int idx = 0; idx < NUMBER_PDU_TO_SEND; idx++) {
             // DIS time is a pain in the ass. DIS time units are 2^31-1 units per
             // hour, and time is set to DIS time units from the top of the hour. 
             // This means that if you start sending just before the top of the hour
@@ -96,7 +100,7 @@ public class EspduSender {
             location.setY(disCoordinates[1]);
             location.setZ(disCoordinates[2]);
 
-            // Optionally, we can do some rotation of the entity
+            // Optionally, do some rotation of the entity
             /*
             Orientation orientation = espdu.getEntityOrientation();
             float psi = orientation.getPsi();
@@ -104,17 +108,17 @@ public class EspduSender {
             orientation.setPsi(psi);
             orientation.setTheta((float)(orientation.getTheta() + idx /2.0));
              */
-            // You can set other ESPDU values here, such as the velocity, acceleration,
-            // and so on.
+            // Optionally, set the velocity, acceleration, and so on.
             
             con.send(espdu);
 
-            location = espdu.getEntityLocation();
-
-            System.out.println("Sent ESPDU #" + idx + " Site,App,Id=[" + entityID.getSite() + ", " + entityID.getApplication() + ", " + entityID.getEntity() + "]");
-            System.out.println(" DIS coordinates location=[" + location.getX() + ", " + location.getY() + ", " + location.getZ() + "]");
-            double lla[] = CoordinateConversions.xyzToLatLonDegrees(location.toArray());
-            System.out.println(" Location (lat/lon/alt): [" + lla[0] + ", " + lla[1] + ", " + lla[2] + "]");
+            // Print some info about what was sent.
+            System.out.println("Sent Entity State PDU #" + idx);
+            System.out.println(" Id (Site,App,Id): [" + espdu.getEntityID().getSite() + ", " + espdu.getEntityID().getApplication() + ", " + espdu.getEntityID().getEntity() + "]");
+            System.out.println(" Marking: " + espdu.getMarking().getCharactersString());
+            System.out.println(" Location (X,Y,Z): [" + espdu.getEntityLocation().getX() + ", " + espdu.getEntityLocation().getY() + ", " + espdu.getEntityLocation().getZ() + "]");
+            double lla[] = CoordinateConversions.xyzToLatLonDegrees(espdu.getEntityLocation().toArray());
+            System.out.println(" Location (Lat,Lon,Alt): [" + lla[0] + ", " + lla[1] + ", " + lla[2] + "]");
 
             System.out.println("Sleeping for heartbeat of " + DIS_HEARTBEAT_SECS + " seconds.");
             Thread.sleep(TimeUnit.SECONDS.toMillis(DIS_HEARTBEAT_SECS));
