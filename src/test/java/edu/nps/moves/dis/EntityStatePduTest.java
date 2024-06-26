@@ -16,8 +16,6 @@ import org.junit.Test;
  * @author mcgredo
  */
 public class EntityStatePduTest {
-    
-    private static final int MARKING_STRING_LENGTH = 11;
 
     public EntityStatePduTest() {
     }
@@ -264,7 +262,7 @@ public class EntityStatePduTest {
         final String s = new String("This is a marking that exceeds the maximum length and will be truncated.");
         marking.setCharacters(s.getBytes());
         byte[] buff = marking.getCharacters();
-        assertEquals(buff.length, MARKING_STRING_LENGTH);
+        assertEquals(buff.length, Marking.MARKING_STRING_LENGTH);
     }
 
     @Test
@@ -274,6 +272,6 @@ public class EntityStatePduTest {
         final String s = new String("short");
         marking.setCharacters(s.getBytes());
         byte[] buff = marking.getCharacters();
-        assertEquals(buff.length, MARKING_STRING_LENGTH);
+        assertEquals(buff.length, Marking.MARKING_STRING_LENGTH);
     }
 }

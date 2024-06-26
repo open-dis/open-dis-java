@@ -3,7 +3,7 @@ package edu.nps.moves.dis;
 import java.io.*;
 
 /**
- * Section 5.2.15. Specifies the character set used inthe first byte, followed
+ * Section 5.2.15. Specifies the character set used in the first byte, followed
  * by 11 characters of text data.
  *
  * Copyright (c) 2008-2016, MOVES Institute, Naval Postgraduate School. All
@@ -14,15 +14,17 @@ import java.io.*;
  */
 public class Marking extends Object implements Serializable {
 
+    public static final int MARKING_STRING_LENGTH = 11;
+
     /**
      * The character set
      */
     protected short characterSet;
-
+    
     /**
      * The characters
      */
-    protected byte[] characters = new byte[11];
+    protected byte[] characters = new byte[MARKING_STRING_LENGTH];
 
     /**
      * Constructor
@@ -34,7 +36,7 @@ public class Marking extends Object implements Serializable {
         int marshalSize = 0;
 
         marshalSize = marshalSize + 1;  // characterSet
-        marshalSize = marshalSize + 11 * 1;  // characters
+        marshalSize = marshalSize + MARKING_STRING_LENGTH;  // characters
 
         return marshalSize;
     }
