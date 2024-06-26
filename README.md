@@ -28,7 +28,9 @@ There are two repositories where Open DIS can be found; JitPack and Maven Centra
 
 #### JitPack
 
-[JitPack](https://jitpack.io/) is a terrific service that enables you to include any development snapshot of the Open DIS java library as a Maven dependency in your project. A common use case is someone who wants to try the latest code because it contains a fix that was recently merged in. To use this service do the following: 
+[JitPack](https://jitpack.io/) is a terrific service that enables you to include any development snapshot of the Open DIS java library as a Maven dependency in your project. 
+A common use case for this is wanting to try the very latest code, prior to a formal release to Maven Central being made.
+To do so, do the following: 
 
 1. Add the jitpack repository to your project `pom.xml`.
 
@@ -41,17 +43,20 @@ There are two repositories where Open DIS can be found; JitPack and Maven Centra
 </repositories>
 ```
 
-2. And this to your `<dependencies>` section, replacing the `<version>` value with any SHA1 from this library you wish.
+2. And this to your `<dependencies>` section in your `pom.xml`. And replace the value in `<version>` with any commit SHA1 from this projects history.
 
 ```xml
 <dependency>
     <groupId>com.github.open-dis</groupId>
     <artifactId>open-dis-java</artifactId>
-    <version>d3c2b19aed8e80c5e7ef938dc0982f5ad0282ae6</version> <!-- replace with any git SHA1 -->
+    <version>cc7ea44c1da0611ac67141ede060c4d2c6b0cfc0</version> <!-- replace with any git SHA1 -->
 </dependency>
 ```
 
-Note: When you use the JitPack service for the first time it is common your project build will time out and then fail. This is because your request likely has triggered a new build that no one else has and the JitPack servers are busy doing that for you. If this happens, retry you project build 5-10 minutes later and it should succeed this time. Future builds of your project will be much faster because the library artifact will have been cached on jitpack servers and be stored locally on your disk.
+When the JitPack service is used for the first time it is common your Maven project build will fail while awaiting the Open DIS dependency to be downloaded. 
+This happens if you are the first to request a particular build of the Open DIS dependency -- JitPack is busy compiling the jar and the Maven build will time out.
+Wait 5-10 minutes, then retry your Maven project build.
+Future builds of your project will succeed and be much faster because the jar has been cached.
 
 #### Maven Central
 
@@ -63,7 +68,7 @@ Add the following to your `pom.xml`.
 <dependency>
     <groupId>edu.nps.moves</groupId>
     <artifactId>open-dis</artifactId>
-    <version>5.7</version>
+    <version>5.8</version>
 </dependency>
 ```
 
