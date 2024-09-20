@@ -56,7 +56,7 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
      * a series of bit flags that are used to help draw the entity, such as
      * smoking, on fire, etc.
      */
-    protected int entityAppearance;
+    protected int entityAppearance = 0;
 
     /**
      * parameters used for dead reckoning
@@ -72,7 +72,7 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
     /**
      * a series of bit flags
      */
-    protected int capabilities;
+    protected int capabilities = 0;
 
     /**
      * variable length list of articulation parameters

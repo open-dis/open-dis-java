@@ -57,7 +57,7 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
      * a series of bit flags that are used to help draw the entity, such as
      * smoking, on fire, etc.
      */
-    protected long entityAppearance;
+    protected long entityAppearance = 0;
 
     /**
      * parameters used for dead reckoning
@@ -73,7 +73,7 @@ public class EntityStatePdu extends EntityInformationFamilyPdu implements Serial
     /**
      * a series of bit flags
      */
-    protected long capabilities;
+    protected long capabilities = 0;
 
     /**
      * variable length list of variable parameters. In earlier DIS versions this
