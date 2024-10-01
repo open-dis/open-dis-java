@@ -7,6 +7,12 @@ import edu.nps.moves.dis7.VariableParameter;
 import edu.nps.moves.dis7.Vector3Double;
 import edu.nps.moves.dis7.Vector3Float;
 
+/**
+ * Dis7DeadReckoner
+ * <br>
+ * DIS v7 Dead Reckoning algorithm
+ * @author Alessio Matricardi
+ */
 public final class Dis7DeadReckoner extends AbstractDeadReckoner<EntityStatePdu> {
     @Override
     protected DeadReckoningEntity convertToDeadReckoningEntity(EntityStatePdu entityStatePdu) {

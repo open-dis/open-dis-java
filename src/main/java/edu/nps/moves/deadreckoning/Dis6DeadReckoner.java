@@ -6,6 +6,12 @@ import edu.nps.moves.dis7.Orientation;
 import edu.nps.moves.dis7.Vector3Double;
 import edu.nps.moves.dis7.Vector3Float;
 
+/**
+ * Dis6DeadReckoner
+ * <br>
+ * DIS v6 Dead Reckoning algorithm
+ * @author Alessio Matricardi
+ */
 public final class Dis6DeadReckoner extends AbstractDeadReckoner<EntityStatePdu> {
     @Override
     protected DeadReckoningEntity convertToDeadReckoningEntity(EntityStatePdu entityStatePdu) {

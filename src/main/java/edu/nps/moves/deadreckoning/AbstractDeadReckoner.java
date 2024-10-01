@@ -12,6 +12,12 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
+/**
+ * AbstractDeadReckoner
+ * <br>
+ * Provides the common Dead Reckoning algorithm structure
+ * @author Alessio Matricardi
+ */
 public abstract class AbstractDeadReckoner<T> implements IDeadReckoner<T> {
 
     private static final double MIN_ROTATION_RATE = 0.2 * Math.PI / 180;  // minimum significant rate = 1deg/5sec
