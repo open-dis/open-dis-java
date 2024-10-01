@@ -20,8 +20,15 @@ public abstract class AbstractDeadReckoner<T> implements IDeadReckoner<T> {
     @Override
     public void performDeadReckoning(T entityStatePdu, double deltaTime) {
         DeadReckoningEntity deadReckoningEntity = convertToDeadReckoningEntity(entityStatePdu);
-
         // common Dead Reckoning algorithm
+        performDeadReckoning(deadReckoningEntity, deltaTime);
+        // copy parameters from our custom entity to the Entity State PDU
+        copyParametersToEntityState(deadReckoningEntity, entityStatePdu);
+        // process articulated parameters algorithm phase
+        processArticulatedParameters(entityStatePdu, deltaTime);
+    }
+
+    private void performDeadReckoning(DeadReckoningEntity deadReckoningEntity, double deltaTime) {
         if (!DeadReckoningAlgorithm.enumerationForValueExists(deadReckoningEntity.getDeadReckoningAlgorithm()) || deltaTime < 0.0) {
             throw new IllegalArgumentException();
         }
@@ -247,11 +254,6 @@ public abstract class AbstractDeadReckoner<T> implements IDeadReckoner<T> {
         deadReckoningEntity.getLinearAcceleration().setX((float) acceleration.getX());
         deadReckoningEntity.getLinearAcceleration().setY((float) acceleration.getY());
         deadReckoningEntity.getLinearAcceleration().setZ((float) acceleration.getZ());
-
-        // copy parameters from our custom entity to the Entity State PDU
-        copyParametersToEntityState(deadReckoningEntity, entityStatePdu);
-        // process articulated parameters algorithm phase
-        processArticulatedParameters(entityStatePdu, deltaTime);
     }
 
     protected abstract DeadReckoningEntity convertToDeadReckoningEntity(T entityStatePdu);
