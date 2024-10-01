@@ -38,8 +38,8 @@ public abstract class AbstractDeadReckoner<T> implements IDeadReckoner<T> {
         }
 
         // Update the ESPDU timestamp
-        long updatedTimeStamp = 2 * (long) (deltaTime * 2147483648. / 3600.);
-        deadReckoningEntity.setTimestamp(deadReckoningEntity.getTimestamp() + updatedTimeStamp);
+        long deltaTimeStamp = 2 * (long) (deltaTime * 2147483648. / 3600.);
+        deadReckoningEntity.setTimestamp(deadReckoningEntity.getTimestamp() + deltaTimeStamp);
 
         if (deadReckoningAlgorithm == DeadReckoningAlgorithm.STATIC_ENTITY_DOES_NOT_MOVE) {
             // no time elapsed, nothing further to do
