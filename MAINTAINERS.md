@@ -21,5 +21,5 @@ $ mvn release:clean release:prepare
 $ mvn release:perform
 ```
 
-2. Then log into the [OSSRH user interface](https://oss.sonatype.org/), click "Staging Repositories", select the artifact and click "Close", click "Refresh", then click "Release". For more info view this [guide](https://central.sonatype.org/pages/releasing-the-deployment.html)
+2. Go to [OSSRH user interface](https://oss.sonatype.org/), Login, click "Staging Repositories", select the artifact, click "Close", click "Refresh", then click "Release". For more info view this [guide](https://central.sonatype.org/pages/releasing-the-deployment.html)
 3. Now go to the [Releases for the GitHub project](https://github.com/open-dis/open-dis-java/releases), click "Draft a new Release" button, select the Tag name used just now for the release, click "Generate release notes", and click the "Publish Release" button.
