@@ -13,6 +13,7 @@ import java.io.*;
  *
  * @author DMcG
  */
+@Deprecated
 public class PduStream extends Object implements Serializable
 {
    /** short description of this PDU stream */

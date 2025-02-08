@@ -13,6 +13,7 @@ import java.io.*;
  *
  * @author DMcG
  */
+@Deprecated
 public class PduContainer extends Object implements Serializable
 {
    /** Number of PDUs in the container list */
