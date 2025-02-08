@@ -17,6 +17,7 @@ import edu.nps.moves.dis.*;
  * @author mcgredo
  * @version $Id:$
  */
+@Deprecated
 public class LogWriter implements Runnable {
 
     String exerciseName;

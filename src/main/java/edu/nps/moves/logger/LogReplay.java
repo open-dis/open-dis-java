@@ -34,6 +34,7 @@ public class LogReplay
     
     private int count = 0;
 
+    @Deprecated
     public LogReplay(Properties properties)
     {
         configuration = properties;

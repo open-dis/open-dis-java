@@ -28,6 +28,7 @@ import edu.nps.moves.disutil.*;
  * @author DMcG
  * @version $Id:$
  */
+@Deprecated
 public class DisLogger implements Runnable {
 
     /** Maximum PDU size. Theoretically this can be 8K or more, but all our stuff is smaller */
