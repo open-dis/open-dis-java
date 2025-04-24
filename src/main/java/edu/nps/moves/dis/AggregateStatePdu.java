@@ -2,6 +2,7 @@ package edu.nps.moves.dis;
 
 import java.util.*;
 import java.io.*;
+import java.nio.ByteBuffer;
 
 /**
  * Section 5.3.9.1 informationa bout aggregating entities anc communicating
@@ -337,9 +338,9 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
     }
 
     /**
-     * This function returns the number of padding bits dependendant on how many Aggregate and Entity ID's
-     * are in ID lists
-     *  
+     * This function returns the number of padding bits dependendant on how many
+     * Aggregate and Entity ID's are in ID lists
+     *
      */
     public short getPad2Bits() {
         int val = 16 * ((aggregateIDList.size() + entityIDList.size()) % 2);
@@ -453,6 +454,7 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
+        java.nio.ByteBuffer clone = clone(buff);
         super.unmarshal(buff);
 
         aggregateID.unmarshal(buff);
@@ -498,15 +500,37 @@ public class AggregateStatePdu extends EntityManagementFamilyPdu implements Seri
         }
 
         numberOfVariableDatumRecords = buff.getInt();
-        for (int idx = 0; idx < numberOfVariableDatumRecords; idx++) {
-            VariableDatum anX = new VariableDatum();
-            anX.unmarshal(buff);
-            variableDatumList.add(anX);
+        clone.position(buff.position());
+        try {
+           unmarshalVardatums(buff, true);
+        } catch (Exception e) {
+            try {
+            unmarshalVardatums(clone, false);
+            } catch (Exception ex) {
+            }
         }
-
     } // end of unmarshal method 
 
+    private void unmarshalVardatums(ByteBuffer buff, boolean varDatumLengthIsPayloadLenght) {
+        for (int idx = 0; idx < numberOfVariableDatumRecords; idx++) {
+            VariableDatum anX = new VariableDatum();
+            if (varDatumLengthIsPayloadLenght) {
+                anX.unmarshal(buff);
+            } else {
+                anX.unmarshalPayloadLenght(buff, true);
+            }
+            variableDatumList.add(anX);
+        }
+    }
 
+    public static java.nio.ByteBuffer clone(java.nio.ByteBuffer original) {
+       java.nio.ByteBuffer clone = java.nio.ByteBuffer.allocate(original.capacity());
+       original.rewind();//copy from the beginning
+       clone.put(original);
+       original.rewind();
+       clone.flip();
+       return clone;
+}
     /*
   * The equals method doesn't always work--mostly it works only on classes that consist only of primitives. Be careful.
      */
