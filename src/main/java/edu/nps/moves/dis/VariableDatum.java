@@ -2,6 +2,7 @@ package edu.nps.moves.dis;
 
 import java.util.*;
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 /**
@@ -258,10 +259,16 @@ public class VariableDatum extends Object implements Serializable {
      * @since ??
      */
     public void unmarshal(java.nio.ByteBuffer buff) {
+        unmarshalPayloadLenght(buff, false);
+    } // end of unmarshal method 
+
+    public void unmarshalPayloadLenght(ByteBuffer buff, boolean removeIdAndLengthFieldsFromVaribleDatumLength) {
         variableDatumID = buff.getInt();
         variableDatumLength = buff.getInt();
         int payloadBytes = (int) (variableDatumLength / 8);
-
+        if (removeIdAndLengthFieldsFromVaribleDatumLength) {
+            payloadBytes -= 8;
+        }
         if (variableDatumLength % 8 > 0) {
             payloadBytes++;
         }
@@ -271,7 +278,7 @@ public class VariableDatum extends Object implements Serializable {
 
         padding = createPadding(payloadBytes);
         buff.get(padding);
-    } // end of unmarshal method 
+    }
 
 
     /*
