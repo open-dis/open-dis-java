@@ -1,5 +1,6 @@
 # Open DIS for Java
 
+[![Release](https://jitpack.io/v/open-dis/open-dis-java.svg)](https://jitpack.io/#open-dis/open-dis-java)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/edu.nps.moves/open-dis/badge.svg)](https://maven-badges.herokuapp.com/maven-central/edu.nps.moves/open-dis)
 [![Javadocs](http://www.javadoc.io/badge/edu.nps.moves/open-dis.svg)](http://www.javadoc.io/doc/edu.nps.moves/open-dis)
 
