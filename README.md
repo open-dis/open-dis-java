@@ -29,8 +29,8 @@ There are two repositories where Open DIS can be found; JitPack and Maven Centra
 
 #### JitPack
 
-[JitPack](https://jitpack.io/) is a terrific service that enables you to include any development snapshot of the Open DIS java library as a Maven dependency in your project. 
-A common use case for this is wanting to try the very latest code, prior to a formal release to Maven Central being made.
+[JitPack](https://jitpack.io/) is a terrific service that enables you to fetch any development snapshot or tagged release of the Open DIS java library as a Maven dependency in your project. 
+A use case for JitPack is if you'd like to use changes that have been merged, but a formal release has not been tagged and published to Maven Central yet.
 To do so, do the following: 
 
 1. Add the jitpack repository to your project `pom.xml`.
