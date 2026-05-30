@@ -40,14 +40,14 @@ public class DisConnection implements Runnable {
     }
 
     public void terminate() {
-        socket.disconnect();
         try {
             if (socket instanceof MulticastSocket) {
-                ((MulticastSocket) socket).leaveGroup(socket.getInetAddress());
+                ((MulticastSocket) socket).leaveGroup(addr);
             }
         } catch (IOException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
+        socket.close();
     }
 
     protected void handleMessage(Pdu pdu) {
@@ -85,4 +85,3 @@ public class DisConnection implements Runnable {
         terminate();
     }
 }
-

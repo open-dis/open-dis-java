@@ -123,5 +123,6 @@ public class EspduSender {
             System.out.println("Sleeping for heartbeat of " + DIS_HEARTBEAT_SECS + " seconds.");
             Thread.sleep(TimeUnit.SECONDS.toMillis(DIS_HEARTBEAT_SECS));
         }
+        con.terminate();
     }
 }
