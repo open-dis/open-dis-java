@@ -216,9 +216,9 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
             dos.writeInt((int) sampleRate);
             dos.writeShort((short) dataLength);
             dos.writeShort((short) samples);
-            dos.write(data);
 
             int nrOfBytes = dataLength / Byte.SIZE;
+            dos.write(data, 0, nrOfBytes); // Write only the valid bytes.
             int paddingBytes = nrOfBytes % 4;// Padding to hit 32 bit boundry
             switch (paddingBytes) {
                 case 0:
