@@ -41,7 +41,7 @@ public class SignalPduTest {
     public void marshal() {
         SignalPdu spdu = new SignalPdu();
         final int numChunks = 10;
-        byte[] data = new byte[numChunks];
+        byte[] data = new byte[numChunks+2];
 
         spdu.setData(data);
         spdu.setDataLength((short) numChunks * Byte.SIZE);
