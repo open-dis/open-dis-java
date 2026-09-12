@@ -231,7 +231,7 @@ public class SignalPdu extends RadioCommunicationsFamilyPdu implements Serializa
         int nrOfBytes = 0;
         nrOfBytes = dataLength / Byte.SIZE;
 
-        buff.put(data);
+        buff.put(data, 0, nrOfBytes); // Write only the valid bytes
         int paddingBytes = nrOfBytes % 4;//Padding to hit 32 bit boundry
         switch (paddingBytes) {
             case 0:
